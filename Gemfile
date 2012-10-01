@@ -4,6 +4,8 @@ gem 'rails', '3.2.3'
 gem 'devise'
 gem 'rspec-rails'
 gem 'factory_girl_rails'
+gem 'omniauth'
+gem 'omniauth-twitter'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

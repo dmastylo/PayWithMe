@@ -1,5 +1,6 @@
 PayWithMe::Application.routes.draw do
   devise_for :users
+  match "/users/auth/:provider/callback", to: "sessions#create"
 
   root to: "static_pages#index"
   # The priority is based upon order of creation:
