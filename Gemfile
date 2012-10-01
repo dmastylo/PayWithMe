@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.3'
 gem 'devise'
-gem 'devise-twitter'
 gem 'rspec-rails'
 gem 'factory_girl_rails'
 
