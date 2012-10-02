@@ -6,6 +6,7 @@ gem 'rspec-rails'
 gem 'factory_girl_rails'
 gem 'omniauth'
 gem 'omniauth-twitter'
+gem 'omniauth-facebook'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
