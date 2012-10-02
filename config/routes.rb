@@ -1,5 +1,5 @@
 PayWithMe::Application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { registrations: "registrations" }
   match "/users/auth/:provider/callback", to: "sessions#create"
 
   root to: "static_pages#index"

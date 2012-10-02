@@ -30,7 +30,10 @@
           </a>
           <%= link_to "PayWithMe", root_path, class: "brand" %>
           <div class="container nav-collapse">
-            <ul class="nav">
+            <ul class="nav pull-right">
+              <% if current_user %>
+                <li><%= link_to "Sign Out", destroy_user_session_path, method: :delete  %></li>
+              <% end %>
               <li><%= link_to "Link1", "/path1"  %></li>
               <li><%= link_to "Link2", "/path2"  %></li>
               <li><%= link_to "Link3", "/path3"  %></li>
@@ -67,9 +70,8 @@
         <p>&copy; PayWithMe 2012</p>
       </footer>
 
-      <pre>
-        <%= current_user %>
-      </pre>
+      <%= debug(params) if Rails.env.development? %>
+      <%= debug(current_user) if Rails.env.development? %>
 
     </div> <!-- /container -->
 
