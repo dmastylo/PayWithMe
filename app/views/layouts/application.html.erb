@@ -29,14 +29,20 @@
             <span class="icon-bar"></span>
           </a>
           <%= link_to "PayWithMe", root_path, class: "brand" %>
+          <% if current_user %>
+            <form class="navbar-search pull-left">
+              <input type="text" class="search-query span4" id="search-friends" placeholder="Search for friends..." />
+            </form>
+          <% end %>
           <div class="container nav-collapse">
             <ul class="nav pull-right">
               <% if current_user %>
+                <li>
+                  <% image = image_tag avatar_url(current_user, size: 24), class: 'navbar-profile-image' %>
+                  <%= link_to image + current_user.name, user_path(current_user), class: 'pull-right'  %>
+                </li>
                 <li><%= link_to "Sign Out", destroy_user_session_path, method: :delete  %></li>
               <% end %>
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -46,24 +52,13 @@
     <div class="container">
       <div class="content">
         <div class="row">
-           <div class="span9">
+           <div class="span12">
               <%= content_tag(:div, flash[:error], :class => 'alert alert-error', :id => "flash_error") if flash[:error] %>
               <%= content_tag(:div, flash[:notice], :class => 'alert alert-warning', :id => "flash_notice") if flash[:notice] %>
               <%= content_tag(:div, flash[:alert], :class => 'alert alert-info', :id => "flash_alert") if flash[:alert] %>
-              <%= yield %>
             </div>
-            <div class="span3">
-              <div class="well sidebar-nav">
-                <h3>Sidebar</h3>
-                <ul class="nav nav-list">
-                  <li class="nav-header">Sidebar</li>
-                  <li><%= link_to "Link1", "/path1"  %></li>
-                  <li><%= link_to "Link2", "/path2"  %></li>
-                  <li><%= link_to "Link3", "/path3"  %></li>
-                </ul>
-              </div><!--/.well -->
-            </div><!--/span-->
         </div><!--/row-->
+        <%= yield %>
       </div><!--/content-->
 
       <footer>
@@ -71,7 +66,6 @@
       </footer>
 
       <%= debug(params) if Rails.env.development? %>
-      <%= debug(current_user) if Rails.env.development? %>
 
     </div> <!-- /container -->
 

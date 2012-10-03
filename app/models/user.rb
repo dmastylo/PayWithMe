@@ -10,8 +10,53 @@ class User < ActiveRecord::Base
 
   before_validation :set_password
 
+  validates :username, presence: true, uniqueness: true
+  validates :name, presence: true
+
+  has_many :friendships
+  has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
+
   def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
     User.where(:provider => auth.provider, :uid => auth.uid).first
+  end
+
+  def friends
+    self.friendships concat self.inverse_friendships
+  end
+
+  def send_friend_request!(user)
+    Friendship.create(user_id: self.id, friend_id: user.id, accepted: 0)
+  end
+
+  def friends_with?(user)
+    current_id = self.id
+    friendship = Friendship.where{((user_id == current_id) & (friend_id == user.id)) | ((friend_id == current_id) & (user_id == user.id))}.first
+    !friendship.nil? && friendship.accepted == 1
+  end
+
+  def friends_sent?(user)
+    current_id = self.id
+    friendship = Friendship.where{((user_id == current_id) & (friend_id == user.id))}.first
+    !friendship.nil? && friendship.accepted == 0
+  end
+
+  def friends_received?(user)
+    current_id = self.id
+    friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
+    !friendship.nil? && friendship.accepted == 0
+  end
+
+  def accept_friend!(user)
+    current_id = self.id
+    friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
+    friendship.accepted = 1
+    friendship.save
+  end
+
+  def deny_friend!(user)
+    current_id = self.id
+    friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
+    friendship.destroy
   end
 
   private

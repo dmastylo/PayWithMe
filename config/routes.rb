@@ -1,8 +1,17 @@
 PayWithMe::Application.routes.draw do
+  root to: "static_pages#index"
+
   devise_for :users, controllers: { registrations: "registrations" }
   match "/users/auth/:provider/callback", to: "sessions#create"
 
-  root to: "static_pages#index"
+  resources :users do
+    member do
+      get 'friend'
+      get 'accept_friend'
+      get 'deny_friend'
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
