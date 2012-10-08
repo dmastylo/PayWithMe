@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
     @user = User.find_for_twitter_oauth(request.env["omniauth.auth"], current_user)
 
     unless @user.nil?
-      flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => "Twitter"
+      flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => request.env["omniauth.auth"].provider.capitalize
       sign_in_and_redirect @user, :event => :authentication
     else
       puts request.env["omniauth.auth"]
