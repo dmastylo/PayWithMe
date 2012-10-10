@@ -21,7 +21,21 @@ class User < ActiveRecord::Base
   end
 
   def friends
-    self.friendships concat self.inverse_friendships
+    self.friendships + self.inverse_friendships
+  end
+
+  def find_friends_by_name(name)
+    results = []
+    friends.each { |friendship|
+      if friendship.friend = self
+        friend = friendship.user
+      else
+        friend = friendship.friend
+      end
+
+      results.push({id: friend.id, name: friend.name}) if /#{name}/i.match(friend.name)
+    }
+    results
   end
 
   def send_friend_request!(user)
