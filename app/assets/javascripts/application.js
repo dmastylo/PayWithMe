@@ -14,3 +14,45 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require_tree .
+
+$('#search-friends').typeahead({
+	source: function(query, process)
+	{
+		$.ajax({
+			url: '/users/search/' + query + '.json',
+			success: function(data)
+			{
+				friends = [];
+
+				for(i = 0; i < data.length; ++i)
+				{
+					friends[i] = data[i].name;
+				}
+
+				process(friends);
+			}
+		})
+	},
+	menu: '<ul class="typeahead dropdown-menu dropdown-menu-navigation"></ul>'
+});
+
+/*$("#search-friends").keypress(function()
+{
+	var name = $(this).val();
+
+	if(name) $.ajax({
+		url: '/users/search/' + name + '.json',
+		success: function(data)
+		{
+			var $results = $("#search-results");
+			$results.empty();
+			
+			for(i = 0; i < data.length; ++i)
+			{
+				friend = data[i];
+				$friend = $('<div></div>').attr('data-id', friend.id).html(friend.name);
+				$results.append($friend);
+			}
+		}
+	})
+})*/

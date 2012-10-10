@@ -12,6 +12,8 @@ PayWithMe::Application.routes.draw do
     end
   end
 
+  match 'users/search/:name', to: "users#search"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

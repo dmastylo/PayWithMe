@@ -40,4 +40,10 @@ class UsersController < ApplicationController
       redirect_to @user
     end
   end
+
+  def search
+    @results = current_user.find_friends_by_name(params[:name])
+
+    render json: @results.to_json
+  end
 end
