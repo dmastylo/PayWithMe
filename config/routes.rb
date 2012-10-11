@@ -10,9 +10,11 @@ PayWithMe::Application.routes.draw do
       get 'accept_friend'
       get 'deny_friend'
     end
-  end
 
-  match 'users/search/:name', to: "users#search"
+    collection do
+      post 'search'
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

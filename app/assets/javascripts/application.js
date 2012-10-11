@@ -18,41 +18,30 @@
 $('#search-friends').typeahead({
 	source: function(query, process)
 	{
+		console.log(query);
 		$.ajax({
-			url: '/users/search/' + query + '.json',
+			url: '/users/search.json',
+			type: 'POST',
+			data: { name: query },
+			dataType: 'json',
 			success: function(data)
 			{
-				friends = [];
-
-				for(i = 0; i < data.length; ++i)
-				{
-					friends[i] = data[i].name;
-				}
-
-				process(friends);
+				data[data.length] = {id: -1, name: "Search All Users", query: query}
+				process(data);
 			}
 		})
 	},
-	menu: '<ul class="typeahead dropdown-menu dropdown-menu-navigation"></ul>'
-});
-
-/*$("#search-friends").keypress(function()
-{
-	var name = $(this).val();
-
-	if(name) $.ajax({
-		url: '/users/search/' + name + '.json',
-		success: function(data)
+	menu: '<ul class="typeahead dropdown-menu dropdown-menu-navigation"></ul>',
+	onselect: function(value)
+	{
+		value = $.parseJSON(value);
+		if(value['id'])
 		{
-			var $results = $("#search-results");
-			$results.empty();
-			
-			for(i = 0; i < data.length; ++i)
+			if(value['id'] == '-1')
 			{
-				friend = data[i];
-				$friend = $('<div></div>').attr('data-id', friend.id).html(friend.name);
-				$results.append($friend);
+				$("#search-form").submit();
 			}
+			else window.location = '/users/' + value['id'];
 		}
-	})
-})*/
+	}
+});

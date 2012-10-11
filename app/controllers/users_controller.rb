@@ -42,8 +42,64 @@ class UsersController < ApplicationController
   end
 
   def search
+    puts "test
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    test"
     @results = current_user.find_friends_by_name(params[:name])
 
-    render json: @results.to_json
+    respond_to do |format|
+      format.html
+      format.json { render json: @results }
+    end
   end
 end

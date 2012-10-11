@@ -30,10 +30,10 @@
           </a>
           <%= link_to "PayWithMe", root_path, class: "brand" %>
           <% if current_user %>
-            <form class="navbar-search pull-left">
+            <%= form_tag(search_users_path, { method: :post, class: "navbar-search pull-left", id: "search-form" }) do %>
               <input type="text" class="search-query span4" id="search-friends" placeholder="Search for friends..." />
               <div id="search-results"></div>
-            </form>
+            <% end %>
           <% end %>
           <div class="container nav-collapse">
             <ul class="nav pull-right">
