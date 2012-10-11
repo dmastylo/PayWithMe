@@ -4,7 +4,7 @@ module ApplicationHelper
     #  user.image
     #else
       size = options[:size] || 250
-      default_url = "#{root_url}images/guest.png"
+      default_url = root_url + asset_path("guest.png")
       gravatar_id = Digest::MD5.hexdigest(user.email.downcase)
       "http://gravatar.com/avatar/#{gravatar_id}.png?s=#{size}&d=#{CGI.escape(default_url)}"
     #end
