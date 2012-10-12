@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
 
   has_many :friendships
   has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
+  has_many :notifications
 
   def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
     User.where(:provider => auth.provider, :uid => auth.uid).first
@@ -40,6 +41,7 @@ class User < ActiveRecord::Base
 
   def send_friend_request!(user)
     Friendship.create(user_id: self.id, friend_id: user.id, accepted: 0)
+    user.notifications.create(category: "friend", body: "#{self.name} has sent you a friend request.", foreign_id: self.id)
   end
 
   def friends_with?(user)
@@ -65,12 +67,34 @@ class User < ActiveRecord::Base
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.accepted = 1
     friendship.save
+
+    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}.first
+    notifications.each { |notification| notification.destroy }
   end
 
   def deny_friend!(user)
     current_id = self.id
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.destroy
+
+    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}.first
+    notifications.each { |notification| notification.destroy }
+  end
+
+  def current_notifications
+    self.notifications.slice(0, 5)
+  end
+
+  def has_notifications?
+    !self.notifications.empty?
+  end
+
+  def has_unread_notifications?
+    !unread_notifications.empty?
+  end
+
+  def unread_notifications
+    self.notifications.where({read: 0})
   end
 
   private
