@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="span12">
+    <div class="well">
+      <ul class="users">
+        <% @users.each do |user| %>
+          <li>
+            <%= link_to user.name, user %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
