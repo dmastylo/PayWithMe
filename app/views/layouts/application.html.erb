@@ -31,8 +31,17 @@
           <%= link_to "PayWithMe", root_path, class: "brand" %>
           <% if current_user %>
             <%= form_tag(search_users_path, { method: :post, class: "navbar-search pull-left", id: "search-form" }) do %>
-              <input type="text" class="search-query span4" id="search-friends" placeholder="Search for friends..." />
-              <div id="search-results"></div>
+              <div class="pull-left">
+                <input type="text" class="search-query span4" id="search-friends" placeholder="Search for friends..." />
+              </div>
+              <div class="dropdown pull-left navbar-notifications">
+                <a class="btn btn-small dropdown-toggle" data-toggle="dropdown"href="#"><i class="icon-globe"></i></a>
+                  <ul class="dropdown-menu" role="menu">
+                    <% current_user.current_notifications.each do |notification| %>
+                      <li><a href="#"><%= notification.body %></a></li>
+                    <% end %>
+                  </ul>
+              </div>
             <% end %>
           <% end %>
           <div class="container nav-collapse">

@@ -15,6 +15,7 @@ class User < ActiveRecord::Base
 
   has_many :friendships
   has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
+  has_many :notifications
 
   def self.find_for_twitter_oauth(auth, signed_in_resource=nil)
     User.where(:provider => auth.provider, :uid => auth.uid).first
@@ -40,6 +41,7 @@ class User < ActiveRecord::Base
 
   def send_friend_request!(user)
     Friendship.create(user_id: self.id, friend_id: user.id, accepted: 0)
+    user.notifications.create(category: "friend", body: "#{self.name} has sent you a friend request.", foreign_id: self.id)
   end
 
   def friends_with?(user)
@@ -71,6 +73,10 @@ class User < ActiveRecord::Base
     current_id = self.id
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.destroy
+  end
+
+  def current_notifications
+    self.notifications.slice(0, 5)
   end
 
   private

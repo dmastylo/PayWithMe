@@ -15,6 +15,8 @@
 //= require twitter/bootstrap
 //= require_tree .
 
+$('.dropdown-toggle').dropdown();
+
 $('#search-friends').typeahead({
 	source: function(query, process)
 	{
