@@ -15,7 +15,21 @@
 //= require twitter/bootstrap
 //= require_tree .
 
-$('.dropdown-toggle').dropdown();
+$('.dropdown-toggle').dropdown({
+	onopen: function(dropdown)
+	{
+		$.ajax({
+			url: '/users/read_notifications',
+			type: 'GET'
+		});
+	},
+	onclose: function(dropdown)
+	{
+		$this.parent().find('li.unread').removeClass('unread');
+		$('.unread-notifications-count').hide();
+	}
+});
+
 $('.dropdown-toggle').click(function()
 {
 	$this = $(this);

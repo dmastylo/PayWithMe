@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/austingulati/twitter-bootstrap-rails.git
-  revision: e50d34d8f1c88bb6c6cadc58eb980f64462072c4
+  revision: b8fdaa419f3bfa9d74034815691c61093d7a64ed
   specs:
     twitter-bootstrap-rails (2.1.4)
       actionpack (>= 3.1)
