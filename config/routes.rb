@@ -13,6 +13,7 @@ PayWithMe::Application.routes.draw do
 
     collection do
       post 'search'
+      get 'read_notifications'
     end
   end
 

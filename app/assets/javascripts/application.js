@@ -16,11 +16,28 @@
 //= require_tree .
 
 $('.dropdown-toggle').dropdown();
+$('.dropdown-toggle').click(function()
+{
+	$this = $(this);
+	if($this.parent().hasClass('open'))
+	{
+		$.ajax({
+			url: '/users/read_notifications',
+			type: 'GET'
+		});
+
+		// Likely some updating function here
+	}
+	else
+	{
+		$this.parent().find('li.unread').removeClass('unread');
+		$('.unread-notifications-count').hide();
+	}
+});
 
 $('#search-friends').typeahead({
 	source: function(query, process)
 	{
-		console.log(query);
 		$.ajax({
 			url: '/users/search.json',
 			type: 'POST',
@@ -47,3 +64,4 @@ $('#search-friends').typeahead({
 		}
 	}
 });
+

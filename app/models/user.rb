@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
   def find_friends_by_name(name)
     results = []
     friends.each { |friendship|
-      if friendship.friend = self
+      if friendship.friend == self
         friend = friendship.user
       else
         friend = friendship.friend
@@ -68,8 +68,8 @@ class User < ActiveRecord::Base
     friendship.accepted = 1
     friendship.save
 
-    notification = Notification.where{(category == "friend") && (user_id == current_id) && (foreign_id == user.id)}
-    notification.destroy
+    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}.first
+    notifications.each { |notification| notification.destroy }
   end
 
   def deny_friend!(user)
@@ -77,12 +77,24 @@ class User < ActiveRecord::Base
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.destroy
 
-    notification = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}.first
-    notification.destroy
+    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}.first
+    notifications.each { |notification| notification.destroy }
   end
 
   def current_notifications
     self.notifications.slice(0, 5)
+  end
+
+  def has_notifications?
+    !self.notifications.empty?
+  end
+
+  def has_unread_notifications?
+    !unread_notifications.empty?
+  end
+
+  def unread_notifications
+    self.notifications.where({read: 0})
   end
 
   private

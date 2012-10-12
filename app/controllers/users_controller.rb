@@ -52,4 +52,13 @@ class UsersController < ApplicationController
       end
     end
   end
+
+  def read_notifications
+    current_user.notifications.each do |notification|
+      notification.read = 1
+      notification.save
+    end
+
+    render nothing: true
+  end
 end
