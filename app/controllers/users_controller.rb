@@ -42,64 +42,14 @@ class UsersController < ApplicationController
   end
 
   def search
-    puts "test
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    test"
     @results = current_user.find_friends_by_name(params[:name])
 
     respond_to do |format|
       format.html
-      format.json { render json: @results }
+      format.json do
+        @results = @results.collect { |result| {id: result.id, name: result.name} }
+        render json: @results
+      end
     end
   end
 end

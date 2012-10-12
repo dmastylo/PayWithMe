@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
         friend = friendship.friend
       end
 
-      results.push({id: friend.id, name: friend.name}) if /#{name}/i.match(friend.name)
+      results.push(friend) if /#{name}/i.match(friend.name)
     }
     results
   end
