@@ -27,7 +27,7 @@ class User < ActiveRecord::Base
   def find_friends_by_name(name)
     results = []
     friends.each { |friendship|
-      if friendship.friend = self
+      if friendship.friend == self
         friend = friendship.user
       else
         friend = friendship.friend
