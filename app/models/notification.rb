@@ -9,7 +9,7 @@ class Notification < ActiveRecord::Base
 
   def url
     if self.category == "friend"
-      user_path(user_id)
+      Rails.application.routes.url_helpers.user_path(foreign_id)
     end
   end
 end

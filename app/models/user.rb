@@ -67,12 +67,18 @@ class User < ActiveRecord::Base
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.accepted = 1
     friendship.save
+
+    notification = Notification.where{(category == "friend") && (user_id == current_id) && (foreign_id == user.id)}
+    notification.destroy
   end
 
   def deny_friend!(user)
     current_id = self.id
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.destroy
+
+    notification = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}.first
+    notification.destroy
   end
 
   def current_notifications

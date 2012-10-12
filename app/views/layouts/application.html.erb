@@ -38,7 +38,11 @@
                 <a class="btn btn-small dropdown-toggle" data-toggle="dropdown"href="#"><i class="icon-globe"></i></a>
                   <ul class="dropdown-menu" role="menu">
                     <% current_user.current_notifications.each do |notification| %>
-                      <li><a href="#"><%= notification.body %></a></li>
+                      <li><a href="<%= notification.url %>"><%= notification.body %></a></li>
+                    <% end %>
+
+                    <% if current_user.current_notifications.empty? %>
+                      <li><a href="#">You have no unread notifications.</a></li>
                     <% end %>
                   </ul>
               </div>
