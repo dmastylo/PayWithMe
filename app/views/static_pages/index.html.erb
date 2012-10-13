@@ -1,9 +1,16 @@
-<div class="hero-unit">
-	<h1>Welcome to PayWithMe!</h1>
-	<p>PayWithMe is redefining the social payments scene.</p>
-	<p>
-		<%= link_to "Register or Login With Facebook", "/users/auth/facebook", class: "btn btn-primary btn-large" %>
-		<%= link_to "Register or Login With Twitter", "/users/auth/twitter", class: "btn btn-primary btn-large" %>
-		<%= link_to "Register or Login With Email Address", new_user_registration_path, class: "btn btn-primary btn-large" %>
-	</p>
-</div>
+<% if !signed_in? %>
+	<div class="hero-unit">
+		<h1>Welcome to PayWithMe!</h1>
+		<p>PayWithMe is redefining the social payments scene.</p>
+		<p>
+			<%= link_to "Register or Login With Facebook", "/users/auth/facebook", class: "btn btn-primary btn-large" %>
+			<%= link_to "Register or Login With Twitter", "/users/auth/twitter", class: "btn btn-primary btn-large" %>
+			<%= link_to "Register or Login With Email Address", new_user_registration_path, class: "btn btn-primary btn-large" %>
+		</p>
+	</div>
+<% else %>
+	<div class="hero-unit">
+		<h1>Welcome to PayWithMe!</h1>
+		<p>Logged in homepage is currently blank.</p>
+	</div>
+<% end %>

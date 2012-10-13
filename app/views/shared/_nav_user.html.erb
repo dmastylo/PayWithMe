@@ -1,0 +1,5 @@
+<li>
+  <% image = image_tag avatar_url(current_user, size: 24), class: 'navbar-profile-image' %>
+  <%= link_to image + current_user.name, user_path(current_user), class: 'pull-right'  %>
+</li>
+<li><%= link_to "Sign Out", destroy_user_session_path, method: :delete  %></li>

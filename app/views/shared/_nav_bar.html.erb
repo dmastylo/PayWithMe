@@ -1,0 +1,24 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+      <%= link_to "PayWithMe", root_path, class: "brand" %>
+      <% if current_user %>
+        <%= render 'shared/nav_search' %>
+      <% end %>
+      <div class="container nav-collapse">
+        <ul class="nav pull-right">
+          <% if current_user %>
+            <%= render 'shared/nav_user' %>
+          <% else %>
+            <%= render 'shared/nav_login' %>
+          <% end %>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
