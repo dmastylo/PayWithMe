@@ -9,6 +9,7 @@ gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'squeel'
 gem 'twitter-bootstrap-rails', git: 'git://github.com/austingulati/twitter-bootstrap-rails.git'
+gem 'annotate'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

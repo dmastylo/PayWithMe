@@ -1,17 +1,16 @@
 # == Schema Information
 #
-# Table name: friendships
+# Table name: processors
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer
-#  friend_id  :integer
+#  name       :string(255)
+#  image      :string(255)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  accepted   :integer
 #
 
 require 'spec_helper'
 
-describe Friendship do
+describe Processor do
   pending "add some examples to (or delete) #{__FILE__}"
 end

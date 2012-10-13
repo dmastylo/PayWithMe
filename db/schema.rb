@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121013204026) do
+ActiveRecord::Schema.define(:version => 20121013210357) do
 
   create_table "friendships", :force => true do |t|
     t.integer  "user_id"
@@ -37,6 +37,14 @@ ActiveRecord::Schema.define(:version => 20121013204026) do
     t.float    "amount"
     t.datetime "paid_at"
     t.datetime "desired_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+    t.integer  "processor_id"
+  end
+
+  create_table "processors", :force => true do |t|
+    t.string   "name"
+    t.string   "image"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
