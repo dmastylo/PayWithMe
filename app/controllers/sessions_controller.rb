@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
 
   def create
     # You need to implement the method below in your model (e.g. app/models/user.rb)
-    @user = User.find_for_twitter_oauth(request.env["omniauth.auth"], current_user)
+    @user = User.find_for_oauth(request.env["omniauth.auth"], current_user)
 
     unless @user.nil?
       flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => request.env["omniauth.auth"].provider.capitalize
