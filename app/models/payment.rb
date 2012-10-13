@@ -20,7 +20,7 @@ class Payment < ActiveRecord::Base
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }
-  vaildates :payee_id, presence: true
+  validates :payee_id, presence: true
   validates :payer_id, presence: true
 
   # Relationships

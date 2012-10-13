@@ -1,4 +1,12 @@
 PayWithMe::Application.routes.draw do
+  get "payments/create"
+
+  get "payments/edit"
+
+  get "payments/delete"
+
+  get "payments/pay"
+
   root to: "static_pages#index"
 
   devise_for :users, controllers: { registrations: "registrations" }
@@ -16,6 +24,8 @@ PayWithMe::Application.routes.draw do
       get 'read_notifications'
     end
   end
+
+  resources :payments
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

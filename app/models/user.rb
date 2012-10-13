@@ -51,22 +51,22 @@ class User < ActiveRecord::Base
 
   # Returns all of the users friendships
   def friends
-    self.friendships + self.inverse_friendships
+    friends = []
+    (self.friendships + self.inverse_friendships).each do |friendship|
+      if friendship.friend == self
+        friends.push(friendship.user)
+      else
+        friends.push(friendship.friend)
+      end
+    end
+
+    friends
   end
 
   # Searches the users friends for *name*
   def find_friends_by_name(name)
-    results = []
-    friends.each { |friendship|
-      if friendship.friend == self
-        friend = friendship.user
-      else
-        friend = friendship.friend
-      end
-
-      results.push(friend) if /#{name}/i.match(friend.name)
-    }
-    results
+    friends.collect { |friend| /#{name}/i.match(friend.name) }
+    friends
   end
 
   # Sends a friend request to a user

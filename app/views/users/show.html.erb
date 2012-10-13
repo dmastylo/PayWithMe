@@ -8,6 +8,7 @@
   <div class="span5">
     &nbsp;
   </div>
+
   <% if current_user != @user %>
     <div class="span4">
       <div class="well sidebar-nav">
@@ -21,13 +22,15 @@
         <% else %>
           <%= link_to "Add Friend", friend_user_path(@user), class: "btn btn-primary btn-block push-bottom" %>
         <% end %>
-        <form method="post" action="">
+        <%= form_for @payment do |f| %>
           <div class="input-prepend pull-left">
-            <span class="add-on">$</span><input type="text" class="span2" placeholder="Enter Amount" />
+            <span class="add-on">$</span><%= f.text_field :amount, placeholder: "Enter Amount" %>
           </div>
-          <input type="submit" class="btn pull-right" value="Request Payment" />
+          <%= f.hidden_field :unfinished, value: true %>
+          <%= f.hidden_field :payer_id, value: @user.id %>
+          <%= f.submit "Request", class: "btn pull-right" %>
           <div class="clearfix"></div>
-        </form>
+        <% end %>
       </div>
     </div>
   <% end %>

@@ -1,0 +1,33 @@
+<div class="page-header">
+  <h1>Request Payment</h1>
+</div>
+
+<%= form_for @payment do |f| %>
+  <div class="control-group">
+    <%= f.label :payer, class: 'control-label' %>
+    <div class="controls">
+      <%= collection_select(:payment, :payer, current_user.friends, :id, :name, multiple: true) %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :amount, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :amount %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :desired_at, class: 'control-label' %>
+    <div class="controls">
+      <%= date_select :payment, :desired_at %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :processor, class: 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :processor %>
+    </div>
+  </div>
+<% end %>

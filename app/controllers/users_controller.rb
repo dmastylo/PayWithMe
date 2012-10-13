@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+
+  # Before Filters
   before_filter :authenticate_user!
   # TODO: Make finding the user a before_filter
 
@@ -7,7 +9,7 @@ class UsersController < ApplicationController
     if @user.nil?
       render "notfound"
     else
-
+      @payment = current_user.expected_payments.new
     end
   end
 
@@ -61,4 +63,5 @@ class UsersController < ApplicationController
 
     render nothing: true
   end
+
 end
