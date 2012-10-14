@@ -103,8 +103,10 @@ class User < ActiveRecord::Base
     friendship.accepted = 1
     friendship.save
 
-    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
-    notifications.each { |notification| notification.destroy }
+    #notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
+    #notifications.each { |notification| notification.destroy }
+
+    user.notifications.create(category: "friend", body: "#{self.name} has accepted your friend request.", foreign_id: self.id, read: 0)
   end
 
   # Denies a friend request that was received from a user
@@ -113,8 +115,10 @@ class User < ActiveRecord::Base
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.destroy
 
-    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
-    notifications.each { |notification| notification.destroy }
+    #notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
+    #notifications.each { |notification| notification.destroy }
+
+    # There's no notification for denial
   end
 
   # Gets the five most recent notifications
