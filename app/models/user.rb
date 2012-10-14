@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
   # Sends a friend request to a user
   def send_friend_request!(user)
     Friendship.create(user_id: self.id, friend_id: user.id, accepted: 0)
-    user.notifications.create(category: "friend", body: "#{self.name} has sent you a friend request.", foreign_id: self.id)
+    user.notifications.create(category: "friend", body: "#{self.name} has sent you a friend request.", foreign_id: self.id, read: 0)
   end
 
   # Determines if a user is a friend
@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
     friendship.accepted = 1
     friendship.save
 
-    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}.first
+    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
     notifications.each { |notification| notification.destroy }
   end
 
@@ -113,7 +113,7 @@ class User < ActiveRecord::Base
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.destroy
 
-    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}.first
+    notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
     notifications.each { |notification| notification.destroy }
   end
 
