@@ -1,5 +1,6 @@
 <% if !signed_in? %>
 	<div class="hero-unit">
+        <center>
 		<h1>Welcome to PayWithMe!</h1>
 		<p>PayWithMe is redefining the social payments scene.</p>
 		<p>
@@ -7,10 +8,13 @@
 			<%= link_to "Register or Login With Twitter", "/users/auth/twitter", class: "btn btn-primary btn-large" %>
 			<%= link_to "Register or Login With Email Address", new_user_registration_path, class: "btn btn-primary btn-large" %>
 		</p>
+        </center>
 	</div>
 <% else %>
 	<div class="hero-unit">
+        <center>
 		<h1>Welcome to PayWithMe!</h1>
 		<p>Logged in homepage is currently blank.</p>
+        </center>
 	</div>
 <% end %>
