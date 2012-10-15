@@ -11,7 +11,7 @@ class PaymentsController < ApplicationController
     @payment = current_user.expected_payments.new(params[:payment].except(:unfinished))
 
     if !params[:payment][:unfinished] && @payment.save
-
+      
     else
       render "new"
     end
