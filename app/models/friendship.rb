@@ -10,6 +10,8 @@
 #  accepted   :integer
 #
 
+# Friendship is the junction for User to User relationships
+
 class Friendship < ActiveRecord::Base
 
   # Accessible Attributes

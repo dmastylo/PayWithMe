@@ -5,6 +5,7 @@ class PaymentsController < ApplicationController
 
   def new
     @payment = current_user.expected_payments.new
+    @processors = Processor.all
   end
 
   def create
@@ -13,6 +14,7 @@ class PaymentsController < ApplicationController
     if !params[:payment][:unfinished] && @payment.save
 
     else
+      @processors = Processor.all
       render "new"
     end
   end
