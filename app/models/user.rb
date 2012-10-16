@@ -72,7 +72,6 @@ class User < ActiveRecord::Base
   # Sends a friend request to a user
   def send_friend_request!(user)
     Friendship.create(user_id: self.id, friend_id: user.id, accepted: 0)
-    user.notifications.create(category: "friend", body: "#{self.name} has sent you a friend request.", foreign_id: self.id, read: 0)
   end
 
   # Determines if a user is a friend
@@ -105,8 +104,6 @@ class User < ActiveRecord::Base
 
     #notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
     #notifications.each { |notification| notification.destroy }
-
-    user.notifications.create(category: "friend", body: "#{self.name} has accepted your friend request.", foreign_id: self.id, read: 0)
   end
 
   # Denies a friend request that was received from a user
@@ -123,7 +120,7 @@ class User < ActiveRecord::Base
 
   # Gets the five most recent notifications
   def current_notifications
-    self.notifications.slice(0, 5)
+    self.notifications.find(:all, order: 'created_at DESC').slice(0, 5)
   end
 
   # Determines if a user has any read or unread notifications
@@ -138,7 +135,7 @@ class User < ActiveRecord::Base
 
   # Gets all of a users unread notifications
   def unread_notifications
-    self.notifications.where({read: 0})
+    self.notifications.where(read: 0).order('created_at DESC')
   end
 
 private

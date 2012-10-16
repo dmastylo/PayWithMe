@@ -13,19 +13,31 @@
 #  processor_id :integer
 #
 
+# Validators should be moved elsewhere
+
 class Payment < ActiveRecord::Base
 
   # Accessible Attributes
-  attr_accessible :amount, :desired_at, :paid_at, :payee_id, :payer_id
+  attr_accessible :amount, :desired_at, :paid_at, :payee_id, :payer_id, :processor_id
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }
-  validates :payee_id, presence: true
-  validates :payer_id, presence: true
+  validate :created_by_current_user
+  validate :friends_with_current_user
 
   # Relationships
   belongs_to :payee, class_name: "User"
   belongs_to :payer, class_name: "User"
   belongs_to :processor
+
+  def created_by_current_user
+    #self.payee == current_user
+    true
+  end
+
+  def friends_with_current_user
+    #current_user.friends.contains?(payer)
+    true
+  end
 
 end

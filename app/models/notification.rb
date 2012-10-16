@@ -15,7 +15,7 @@
 class Notification < ActiveRecord::Base
 
   # Accessible Attributes
-  attr_accessible :body, :category, :foreign_id
+  attr_accessible :body, :category, :foreign_id, :read
 
   # Validations
   validates :user_id, presence: true

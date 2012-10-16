@@ -4,9 +4,9 @@
 
 <%= form_for @payment do |f| %>
   <div class="control-group">
-    <%= f.label :payer, class: 'control-label' %>
+    <%= f.label :payer_id, class: 'control-label' %>
     <div class="controls">
-      <%= collection_select(:payment, :payer, current_user.friends, :id, :name, multiple: true) %>
+      <%= collection_select(:payment, :payer_id, current_user.friends, :id, :name, multiple: true) %>
     </div>
   </div>
 
@@ -27,7 +27,16 @@
   <div class="control-group">
     <%= f.label :processor, class: 'control-label' %>
     <div class="controls">
-      <%= f.text_field :processor %>
+      <% @processors.each do |processor| %>
+        <div class="control-processor">
+          <%= image_tag processor.image, class: "processor-logo", "data-name" => processor.name.downcase %>
+          <%= hidden_field :processor, processor.name.downcase %>
+        </div>
+      <% end %>
     </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Request Payment", class: 'btn btn-primary' %>
   </div>
 <% end %>

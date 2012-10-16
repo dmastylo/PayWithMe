@@ -1,0 +1,21 @@
+<% is_payer = current_user == payment.payer %>
+<tr>
+  <td>
+    <% if is_payer %>
+      <%= link_to payment.payee.name, payment.payee %>
+    <% else %>
+      <%= link_to payment.payer.name, payment.payer %>
+    <% end %>
+  </td>
+  <td><%= number_to_currency payment.amount %></td>
+  <td><%= payment.created_at %></td>
+  <td <%= "class=\"danger\"".html_safe if Time.now > payment.desired_at %>>
+    <%= distance_of_time_in_words payment.desired_at, Time.now %><%= " ago" if Time.now > payment.desired_at %></td>
+  <td>
+    <% if is_payer %>
+      <%= link_to "Make Payment", "#", class: "btn btn-primary" %>
+    <% else %>
+      <%= link_to "Delete Request", "#", class: "btn btn-danger" %>
+    <% end %>
+  </td>
+</tr>
