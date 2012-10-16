@@ -21,6 +21,7 @@ $('#search-friends').typeahead({
 		{
 			if(value['id'] == '-1')
 			{
+				$("#search-friends").val(value['query']);
 				$("#search-form").submit();
 			}
 			else window.location = '/users/' + value['id'];

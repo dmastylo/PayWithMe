@@ -1,9 +1,9 @@
-<% provide(:title, 'User Search') %>
+<% provide(:title, "Search Results For #{@query}") %>
 <div class="row">
   <div class="span12">
     <div class="well">
       <ul class="users">
-        <%= render 'shared/search' %>
+        <%= render @users %>
       </ul>
     </div>
   </div>

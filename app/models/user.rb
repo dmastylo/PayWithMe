@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
   end
 
   # Returns all of the users friendships
+  # TODO: Optimize this
   def friends
     friends = []
     (self.friendships + self.inverse_friendships).each do |friendship|
@@ -65,8 +66,9 @@ class User < ActiveRecord::Base
 
   # Searches the users friends for *name*
   def find_friends_by_name(name)
-    friends.collect { |friend| /#{name}/i.match(friend.name) }
-    friends
+    found_friends = friends
+    found_friends.delete_if { |friend| !/#{name}/i.match(friend.name) }
+    found_friends
   end
 
   # Sends a friend request to a user

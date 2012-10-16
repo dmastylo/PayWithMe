@@ -46,7 +46,8 @@ class UsersController < ApplicationController
   end
 
   def search
-    @users = current_user.find_friends_by_name(params[:name])
+    @query = params[:name]
+    @users = current_user.find_friends_by_name(@query)
 
     respond_to do |format|
       format.html
