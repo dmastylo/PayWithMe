@@ -29,6 +29,8 @@ class Notification < ActiveRecord::Base
   def url
     if self.category == "friend"
       Rails.application.routes.url_helpers.user_path(foreign_id)
+    elsif self.category == "payment"
+      Rails.application.routes.url_helpers.payments_path
     end
   end
 

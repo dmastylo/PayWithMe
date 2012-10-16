@@ -1,2 +1,12 @@
-<h1>Payments#edit</h1>
-<p>Find me in app/views/payments/edit.html.erb</p>
+<% provide(:title, 'Edit Payment') %>
+<div class="page-header">
+  <h1>Edit Payment</h1>
+</div>
+
+<%= form_for @payment do |f| %>
+  <%= render 'fields', object: f %>
+
+  <div class="form-actions">
+    <%= f.submit "Update Payment", class: 'btn btn-primary' %>
+  </div>
+<% end %>
