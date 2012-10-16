@@ -24,7 +24,8 @@
   <div class="controls">
     <% @processors.each do |processor| %>
       <div class="control-processor">
-        <%= image_tag processor.image, class: "processor-logo", "data-name" => processor.name.downcase %>
+        <% selected = (@payment.processors.include?(processor))? " selected" : "" %>
+        <%= image_tag processor.image, class: "processor-logo" + selected, "data-name" => processor.name.downcase %>
         <%= hidden_field :processor, processor.name.downcase %>
       </div>
     <% end %>

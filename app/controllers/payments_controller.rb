@@ -3,7 +3,7 @@ class PaymentsController < ApplicationController
   # Before Filters
   before_filter :authenticate_user!
   before_filter :correct_user_to_pay, only: :pay
-  before_filter :correct_user_to_edit, only: [:edit, :delete]
+  before_filter :correct_user_to_edit, only: [:edit, :delete, :update]
 
   def new
     @payment = current_user.expected_payments.new
@@ -11,7 +11,15 @@ class PaymentsController < ApplicationController
   end
 
   def create
-    @payment = current_user.expected_payments.new(params[:payment].except(:unfinished))
+    @processors = Processor.all
+  end
+
+  def edit
+    @processors = Processor.all
+  end
+
+  def update
+    @payment.processors.clear
     @processors = Processor.all
     
     if params[:processor]
@@ -22,28 +30,11 @@ class PaymentsController < ApplicationController
       end
     end
 
-    if !params[:payment][:unfinished] && @payment.save
+    if @payment.save
       @payment.payer.notifications.create(category: "payment", body: "#{current_user.name} has requested money from you.", foreign_id: @payment.id, read: 0)
       redirect_to payments_path
     else
       render "new"
-    end
-  end
-
-  def edit
-    @processors = Processor.all
-  end
-
-  def update
-    @payment.processors = []
-    @processors = Processor.all
-
-    if params[:processor]
-      @processors.each do |processor|
-        if params[:processor][processor.name.downcase]
-          @payment.processors << processor
-        end
-      end
     end
   end
 
