@@ -22,22 +22,19 @@ class Payment < ActiveRecord::Base
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }
-  validate :created_by_current_user
-  validate :friends_with_current_user
+  validate :payer_id, presence: true
+  validate :payee_id, presence: true
 
   # Relationships
   belongs_to :payee, class_name: "User"
   belongs_to :payer, class_name: "User"
-  belongs_to :processor
+  has_and_belongs_to_many :processors
 
-  def created_by_current_user
-    #self.payee == current_user
-    true
-  end
+  def pay!
+    # Likely save some data here, like processor keys or something
 
-  def friends_with_current_user
-    #current_user.friends.contains?(payer)
-    true
+    self.paid_at = Time.now
+    self.save
   end
 
 end

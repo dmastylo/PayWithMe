@@ -8,13 +8,20 @@
     <% end %>
   </td>
   <td><%= number_to_currency payment.amount %></td>
-  <td><%= payment.created_at %></td>
+  <td>
+    <%= distance_of_time_in_words payment.created_at, Time.now %> ago</td>
+  </td>
   <td <%= "class=\"danger\"".html_safe if Time.now > payment.desired_at %>>
-    <%= distance_of_time_in_words payment.desired_at, Time.now %><%= " ago" if Time.now > payment.desired_at %></td>
+    <%= distance_of_time_in_words payment.desired_at, Time.now %><%= " ago" if Time.now > payment.desired_at %>
+  </td>
+  <td>
+    <%= payment.processors %>
+  </td>
   <td>
     <% if is_payer %>
-      <%= link_to "Make Payment", "#", class: "btn btn-primary" %>
+      <%= link_to "Make Payment", pay_payment_path(payment), class: "btn btn-success" %>
     <% else %>
+      <%= link_to "Edit Request", "#", class: "btn btn-primary" %>
       <%= link_to "Delete Request", "#", class: "btn btn-danger" %>
     <% end %>
   </td>

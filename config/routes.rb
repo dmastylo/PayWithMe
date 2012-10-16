@@ -25,7 +25,11 @@ PayWithMe::Application.routes.draw do
     end
   end
 
-  resources :payments
+  resources :payments do
+    member do
+      get 'pay'
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -10,12 +10,20 @@ class PaymentsController < ApplicationController
 
   def create
     @payment = current_user.expected_payments.new(params[:payment].except(:unfinished))
+    @processors = Processor.all
+    
+    if params[:processor]
+      @processors.each do |processor|
+        if params[:processor][processor.name.downcase]
+          @payment.processors << processor
+        end
+      end
+    end
 
     if !params[:payment][:unfinished] && @payment.save
       @payment.payer.notifications.create(category: "payment", body: "#{current_user.name} has requested money from you.", foreign_id: @payment.id, read: 0)
       redirect_to payments_path
     else
-      @processors = Processor.all
       render "new"
     end
   end

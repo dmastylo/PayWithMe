@@ -8,8 +8,9 @@
     <tr>
       <th>Payee</th>
       <th>Amount </th>
-      <th>Requested At</th>
+      <th>Requested</th>
       <th>Desired Payback</th>
+      <th>Processor(s)</th>
       <th>Actions</th>
     </tr>
     <%= render current_user.owed_payments %>
@@ -22,10 +23,11 @@
 <% if !current_user.expected_payments.empty? %>
   <table class="table table-bordered table-striped">
     <tr>
-      <th>Payee</th>
+      <th>Payer</th>
       <th>Amount </th>
-      <th>Requested At</th>
+      <th>Requested</th>
       <th>Desired Payback</th>
+      <th>Processor(s)</th>
       <th>Actions</th>
     </tr>
     <%= render current_user.expected_payments %>

@@ -3,15 +3,9 @@
   <%= link_to image + current_user.name, "#", class: 'pull-right dropdown-toggle', "data-toggle" => "dropdown", id: "dropdown-menu"  %>
 
   <ul class="dropdown-menu" role="menu">
-    <% current_user.current_notifications.each do |notification| %>
-      <li <%= 'class="unread"'.html_safe unless notification.read? %>><a href="<%= notification.url %>"><%= notification.body %></a></li>
-    <% end %>
-
-    <% if current_user.current_notifications.empty? %>
-      <li><%= link_to "View Profile", user_path(current_user) %></li>
-      <li><%= link_to "View Payments", payments_path %></li>
-      <li><%= link_to "Account Settings", "#" %></li>
-    <% end %>
+    <li><%= link_to "View Profile", user_path(current_user) %></li>
+    <li><%= link_to "View Payments", payments_path %></li>
+    <li><%= link_to "Account Settings", "#" %></li>
   </ul>
 </li>
 <li>

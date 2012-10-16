@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121013210357) do
+ActiveRecord::Schema.define(:version => 20121016164545) do
 
   create_table "friendships", :force => true do |t|
     t.integer  "user_id"
@@ -40,6 +40,11 @@ ActiveRecord::Schema.define(:version => 20121013210357) do
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
     t.integer  "processor_id"
+  end
+
+  create_table "payments_processors", :force => true do |t|
+    t.integer "processor_id"
+    t.integer "payment_id"
   end
 
   create_table "processors", :force => true do |t|
