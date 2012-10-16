@@ -10,15 +10,13 @@
       <% if current_user %>
         <%= render 'shared/nav_search' %>
       <% end %>
-      <div class="container nav-collapse">
-        <ul class="nav pull-right">
-          <% if current_user %>
-            <%= render 'shared/nav_user' %>
-          <% else %>
-            <%= render 'shared/nav_login' %>
-          <% end %>
-        </ul>
-      </div><!--/.nav-collapse -->
+      <ul class="nav pull-right">
+        <% if current_user %>
+          <%= render 'shared/nav_user' %>
+        <% else %>
+          <%= render 'shared/nav_login' %>
+        <% end %>
+      </ul>
     </div>
   </div>
 </div>
