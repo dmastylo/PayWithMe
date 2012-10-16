@@ -1,9 +1,14 @@
+<% if @user == current_user %>
+    <% provide(:title, 'Your Profile Page') %>
+<% else %>
+    <% provide(:title, "#{@user.name}'s Profile Page") %>
+<% end %>
 <div class="row">
   <div class="span3">
+    <h2><%= @user.name %> <small>(<%= @user.username %>)</small></h2>
     <div class="well">
       <%= image_tag avatar_url(@user) %>
     </div>
-    <h2><%= @user.name %> <small>(<%= @user.username %>)</small></h2>
   </div>
   <div class="span5">
     &nbsp;
