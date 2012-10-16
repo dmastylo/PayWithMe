@@ -19,12 +19,12 @@ class PaymentsController < ApplicationController
   end
 
   def update
-    @payment.processors.clear
+    @payment.processors.delete_all
     @processors = Processor.all
     
     if params[:processor]
       @processors.each do |processor|
-        if params[:processor][processor.name.downcase]
+        if params[:processor][processor.name.downcase] == "true"
           @payment.processors << processor
         end
       end
