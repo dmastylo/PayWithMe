@@ -15,13 +15,17 @@
     <%= distance_of_time_in_words payment.desired_at, Time.now %><%= " ago" if Time.now > payment.desired_at %>
   </td>
   <td>
-    <%= payment.processors %>
+    <% payment.processors.each do |processor| %>
+      <%= image_tag processor.image %>
+    <% end %>
   </td>
   <td>
     <% if is_payer %>
-      <%= link_to "Make Payment", pay_payment_path(payment), class: "btn btn-success" %>
+      <% payment.processors.each do |processor| %>
+        <%= link_to "Make Payment With " + processor.name, pay_payment_path(payment, processor: processor), class: "btn btn-success" %>
+      <% end %>
     <% else %>
-      <%= link_to "Edit Request", "#", class: "btn btn-primary" %>
+      <%= link_to "Edit Request", edit_payment_path(payment), class: "btn btn-primary" %>
       <%= link_to "Delete Request", "#", class: "btn btn-danger" %>
     <% end %>
   </td>

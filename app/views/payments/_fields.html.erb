@@ -1,0 +1,32 @@
+<div class="control-group">
+  <%= object.label :payer_id, class: 'control-label' %>
+  <div class="controls">
+    <%= collection_select(:payment, :payer_id, current_user.friends, :id, :name, multiple: true) %>
+  </div>
+</div>
+
+<div class="control-group">
+  <%= object.label :amount, class: 'control-label' %>
+  <div class="controls">
+    <%= object.text_field :amount %>
+  </div>
+</div>
+
+<div class="control-group">
+  <%= object.label :desired_at, class: 'control-label' %>
+  <div class="controls">
+    <%= date_select :payment, :desired_at %>
+  </div>
+</div>
+
+<div class="control-group">
+  <%= object.label :processor, class: 'control-label' %>
+  <div class="controls">
+    <% @processors.each do |processor| %>
+      <div class="control-processor">
+        <%= image_tag processor.image, class: "processor-logo", "data-name" => processor.name.downcase %>
+        <%= hidden_field :processor, processor.name.downcase %>
+      </div>
+    <% end %>
+  </div>
+</div>
