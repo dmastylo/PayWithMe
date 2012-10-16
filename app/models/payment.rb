@@ -15,12 +15,6 @@
 
 # Validators should be moved elsewhere
 
-class CurrentUserValidator < ActiveModel::Validator
-end
-
-class FriendsWithCurrentUserValidator < ActiveModel::Validator
-end
-
 class Payment < ActiveRecord::Base
 
   # Accessible Attributes
@@ -28,20 +22,22 @@ class Payment < ActiveRecord::Base
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }
-  validates :payee_id, presence: true, current_user: true
-  validates :payer_id, presence: true, friends_with_current_user: true
+  validate :created_by_current_user
+  validate :friends_with_current_user
 
   # Relationships
   belongs_to :payee, class_name: "User"
   belongs_to :payer, class_name: "User"
   belongs_to :processor
 
-  def is_current_user
-    self.payee = current_user
+  def created_by_current_user
+    #self.payee == current_user
+    true
   end
 
-  def is_friends_with_current_user
-    current_user.friends.contains?(payer)
+  def friends_with_current_user
+    #current_user.friends.contains?(payer)
+    true
   end
 
 end

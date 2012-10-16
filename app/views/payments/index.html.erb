@@ -1,0 +1,34 @@
+<div class="page-heading">
+  <h2>Owed Payments</h2>
+</div>
+
+<% if !current_user.owed_payments.empty? %>
+  <table class="table table-bordered table-striped">
+    <tr>
+      <th>Payee</th>
+      <th>Amount </th>
+      <th>Requested At</th>
+      <th>Desired Payback</th>
+      <th>Actions</th>
+    </tr>
+    <%= render current_user.owed_payments %>
+  </table>
+<% else %>
+  You don't owe anyone money! Nice!
+<% end %>
+
+<h2>Expected Payments</h2>
+<% if !current_user.expected_payments.empty? %>
+  <table class="table table-bordered table-striped">
+    <tr>
+      <th>Payee</th>
+      <th>Amount </th>
+      <th>Requested At</th>
+      <th>Desired Payback</th>
+      <th>Actions</th>
+    </tr>
+    <%= render current_user.expected_payments %>
+  </table>
+<% else %>
+  You don't owe anyone money! Nice!
+<% end %>
