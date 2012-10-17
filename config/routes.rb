@@ -1,17 +1,12 @@
 PayWithMe::Application.routes.draw do
-  get "payments/create"
-
-  get "payments/edit"
-
-  get "payments/delete"
-
-  get "payments/pay"
 
   root to: "static_pages#index"
 
   devise_for :users, controllers: { registrations: "registrations" }
   match "/users/auth/:provider/callback", to: "sessions#create"
 
+  get '/users/settings'
+  post '/users/update_settings'
   resources :users do
     member do
       get 'friend'

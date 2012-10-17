@@ -1,0 +1,37 @@
+<h2>Edit User Settings</h2>
+
+<div class="tabbable tabs-left tabs-settings">
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#accounts" data-toggle="tab">Linked Accounts</a></li>
+    <li><a href="#profile" data-toggle="tab">Profile Information</a></li>
+    <li><a href="#password" data-toggle="tab">Password</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="accounts">
+      <h3>Facebook</h3>
+      <% if !@facebook %>
+        Facebook is not linked. Would you like to link it?
+      <% end %>
+
+      <h3>Twitter</h3>
+      <% if !@twitter %>
+        Twitter is not linked. Would you like to link it?
+      <% else %>
+        Twitter account <strong><%= @twitter.uid %></strong> is currently linked.
+      <% end %>
+
+      <h3>Dwolla</h3>
+      <% if !@dwolla %>
+        Dwolla is not linked. Would you like to link it?
+      <% else %>
+        Dwolla account <strong><%= @twitter.uid %></strong> is currently linked.
+      <% end %>
+    </div>
+    <div class="tab-pane" id="profile">
+      profile
+    </div>
+    <div class="tab-pane" id="password">
+      [pass]
+    </div>
+  </div>
+</div>
