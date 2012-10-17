@@ -1,8 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
   def new
     if session["devise.user_data"]
-      resource = build_resource(session["devise.user_data"])
-      session["devise.user_data"] = nil
+      resource = build_resource(session["devise.user_data"].slice(:name, :username, :email))
     else
       resource = build_resource
     end
@@ -12,14 +11,16 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     build_resource
-    if resource.provider
-      @account = LinkedAccount.new(provider: resource.provider, uid: resource.uid, token: 'test')
-      resource.provider = resource.uid = nil
+    if session["devise.user_data"]
+      @account = LinkedAccount.new(session["devise.user_data"].slice(:provider, :uid, :token))
+      resource.provider = resource.uid = resource.token = nil
       resource.using_oauth = true
     end
 
     if resource.save
       resource.linked_accounts << @account if @account
+      puts @account.inspect
+      resource.save
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up if is_navigational_format?
         sign_in(resource_name, resource)

@@ -32,10 +32,7 @@
         </div>
       </div>
 
-      <% if resource.provider %>
-        <%= f.hidden_field :provider %>
-        <%= f.hidden_field :uid %>
-      <% else %>
+      <% if !session["devise.user_data"] %>
         <div class="control-group">
           <%= f.label :password, class: 'control-label' %>
           <div class="controls">

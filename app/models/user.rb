@@ -28,8 +28,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   # Accessible Attributes
-  attr_accessor :provider, :uid, :using_oauth
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :provider, :uid, :username, :image, :using_oauth
+  attr_accessor :provider, :uid, :token, :using_oauth
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :provider, :uid, :token, :username, :image, :using_oauth
 
   # Callbacks
   before_validation :set_password
