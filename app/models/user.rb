@@ -28,7 +28,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   # Accessible Attributes
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :provider, :uid, :username, :image
+  attr_accessor :provider, :uid, :using_oauth
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :provider, :uid, :username, :image, :using_oauth
 
   # Callbacks
   before_validation :set_password
@@ -43,10 +44,16 @@ class User < ActiveRecord::Base
   has_many :notifications
   has_many :owed_payments, class_name: "Payment", foreign_key: "payer_id"
   has_many :expected_payments, class_name: "Payment", foreign_key: "payee_id"
+  has_many :linked_accounts
 
   # Finds a user based on their oAuth provider and identification
   def self.find_for_oauth(auth, signed_in_resource=nil)
-    User.where(:provider => auth.provider, :uid => auth.uid).first
+    @account = LinkedAccount.where(:provider => auth.provider, :uid => auth.uid).first
+    if @account
+      @account.user
+    else
+      nil
+    end
   end
 
   # Returns all of the users friendships
@@ -103,9 +110,6 @@ class User < ActiveRecord::Base
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.accepted = 1
     friendship.save
-
-    #notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
-    #notifications.each { |notification| notification.destroy }
   end
 
   # Denies a friend request that was received from a user
@@ -113,11 +117,6 @@ class User < ActiveRecord::Base
     current_id = self.id
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
     friendship.destroy
-
-    #notifications = Notification.where{((category == "friend") && (user_id == current_id) && (foreign_id == user.id))}
-    #notifications.each { |notification| notification.destroy }
-
-    # There's no notification for denial
   end
 
   # Gets the five most recent notifications
@@ -144,9 +143,10 @@ private
 
   # Sets a password if a provider is used since a normal login won't
   def set_password
-    if self.provider
+    if self.using_oauth
       self.password = Devise.friendly_token[0,20]
       self.password_confirmation = self.password
+      self.using_oauth = nil
     end
   end
 end
