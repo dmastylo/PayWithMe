@@ -1,7 +1,8 @@
 <% if !signed_in? %>
-  <div class="hero-unit">
+  <div class="hero-unit homepage-hero-unit">
     <center>
     <h1>Welcome to PayWithMe!</h1>
+    <%= image_tag "http://placehold.it/500x300", class: "homepage-video" %>
     <p>PayWithMe is redefining the social payments scene.</p>
     <p>
       <%= link_to "Register or Login With Facebook", "/users/auth/facebook", class: "btn btn-primary btn-large" %>
@@ -13,8 +14,8 @@
 <% else %>
   <div class="hero-unit">
     <center>
-    <h1>Welcome to PayWithMe!</h1>
-    <p>Logged in homepage is currently blank.</p>
+      <h1>Welcome to PayWithMe!</h1>
+      <p>Logged in homepage is currently blank.</p>
     </center>
   </div>
 <% end %>

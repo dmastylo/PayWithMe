@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="span9">
+  <div class="span9 page-body">
     <div class="page-header">
       <h1>Sign in</h1>
     </div>
@@ -30,16 +30,17 @@
       <% end -%>
 
       <div class="form-actions">
-        <%= f.submit "Sign in", class: 'btn btn-primary' %>
+        <%= f.submit "Sign in", class: 'btn btn-primary btn-large' %>
       </div>
     <% end %>
 
-    <%= render :partial => "devise/shared/links" %>
+    <%= #render :partial => "devise/shared/links"
+    %>
   </div>
   <div class="span3">
     <div class="well sidebar-nav">
-      <%= link_to "Login With Facebook", "/users/auth/facebook", class: "btn btn-primary btn-large push-bottom" %>
-      <%= link_to "Login With Twitter", "/users/auth/twitter", class: "btn btn-primary btn-large" %>
+      <%= link_to "Login With Facebook", "/users/auth/facebook", class: "btn btn-primary btn-large btn-full push-bottom" %>
+      <%= link_to "Login With Twitter", "/users/auth/twitter", class: "btn btn-primary btn-large btn-full" %>
     </div>
   </div>
 </div>

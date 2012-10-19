@@ -1,0 +1,258 @@
+/* MIXINS, VARIABLES, ETC. */
+
+$pwmGreen: #007f00;
+
+$darkGreen: #053b0f;
+$lightGreen: #9befab;
+
+/* NAVBAR */
+
+body
+{
+    padding-top: 100px;
+    background-image: url(<%= asset_path 'layout/bg.png' %>);
+    background-repeat: repeat-x;
+}
+
+.navbar-inner
+{
+    background-image: url(<%= asset_path 'layout/navigation_bg.png' %>);
+    height: 78px;
+    border-bottom: 2px solid $darkGreen !important;
+
+    #logo
+    {
+       margin-top: 22px;
+       float: left; 
+    }
+
+    .nav
+    {
+        margin-top: 17px;
+        li
+        {
+            &.open a.dropdown-toggle
+            {
+                background: transparent !important;
+                color: #FFF !important;
+            }
+
+            a
+            {
+                color: $darkGreen; /*$lightGreen;*/
+                text-shadow: none;
+                text-transform: uppercase;
+                -webkit-transition: color 0.15s ease-in; 
+
+                &:hover
+                {
+                    color: #FFF;
+                }
+            }
+
+            .dropdown-menu a
+            {
+                text-transform: none;
+                -webkit-transition: none;
+            }
+        }
+    }
+
+    .navbar-search
+    {
+        margin-top: 22px;
+        margin-left: 20px;
+    }
+
+    /*#logo
+    {
+        float: left;
+        margin-top: 1px;
+        margin-right: 10px;
+        font-size: 1.5em;
+        color: $pwmGreen;
+        letter-spacing: -1px;
+        padding-top: 9px;
+        line-height: 1;
+
+        &:hover
+        {
+          color: #000;
+          text-decoration: none;
+        }
+    }*/
+}
+
+.btn-primary
+{
+    background-image: -webkit-linear-gradient(top, #26963c, #156f26) !important;
+    border-color: #0f631f;
+    color: #FFF;
+    -webkit-transition: color 0.1s ease-in; 
+
+    &:hover
+    {
+        background-color: #167127;
+        color: $lightGreen;
+    }
+}
+
+.page-body
+{
+    background-color: #FFF;
+    border-radius: 4px;
+    margin-bottom: 30px;
+
+    .form-actions, form { margin-bottom: 0; }
+
+    .page-header
+    {
+        border: 0;
+        margin-bottom: 15px;
+
+        h1 { margin-left: 25px; }
+    }
+}
+
+footer
+{
+    color: #999;
+    text-transform: uppercase;
+    text-align: center;
+    width: auto;
+}
+
+.homepage-hero-unit
+{
+    background: transparent;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    .homepage-video
+    {
+        margin: 25px 0;
+    }
+}
+
+.btn-full
+{
+    -webkit-box-sizing: border-box;
+    width: 100%;
+}
+
+.dropdown-menu-navigation
+{
+    width: 384px;
+}
+
+#navbar-notifications
+{
+    margin-left: 10px;
+    margin-top: 6px;
+
+    .dropdown-menu
+    {
+        width: 200px;
+
+        a
+        {
+            white-space: normal;
+        }
+
+        li.unread
+        {
+            a
+            {
+                font-weight: bold;
+            }
+        }
+    }
+
+    .icon-globe
+    {
+        color: $darkGreen;
+        background-image: none;
+        font-size: 24px;
+        -webkit-transition: color 0.15s ease-in; 
+
+        &:hover
+        {
+            color: #FFF;
+            text-decoration: none;
+        }
+    }
+}
+
+.unread-notifications-count
+{
+    background-color: #333;
+    border-radius: 20px;
+    padding: 1px 6px;
+    color: #FFF;
+    float: right;
+    position: absolute;
+    top: 16px;
+    left: 23px;
+}
+
+.navbar-profile-image
+{
+    width: 24px;
+    height: 24px;
+    float: left;
+    margin-top: -3px;
+    margin-right: 5px;
+    border: 1px solid #999;
+}
+
+a.btn-block
+{
+    display: block;
+}
+
+.push-bottom
+{
+    margin-bottom: 10px;
+}
+.push-top
+{
+    margin-top: 10px;
+}
+.push-right
+{
+    margin-right: 10px;
+}
+.push-left
+{
+    margin-left: 10px;
+}
+
+/* SEARCH RESULTS */
+
+ul.users
+{
+    li
+    {
+        list-style-type: none;
+    }
+
+    img
+    {
+        width: 75px;
+        height: 75px;
+    }
+}
+
+/* PAYMENT PROCESSING PAGE */
+.processor-logo
+{
+    padding: 5px;
+    border: 1px solid #CCC;
+    border-radius: 2px;
+
+    &:hover,&.selected
+    {
+        border-color: rgba(82, 168, 236, 0.8);
+        cursor: pointer;        
+    }
+}
