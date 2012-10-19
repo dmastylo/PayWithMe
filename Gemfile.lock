@@ -8,6 +8,15 @@ GIT
       railties (>= 3.1)
       therubyracer (>= 0.10.2)
 
+GIT
+  remote: git://github.com/jeffersongirao/omniauth-dwolla.git
+  revision: 1e4202e770feb415cd64c9220241a66dba345342
+  specs:
+    omniauth-dwolla (0.0.13)
+      dwolla (>= 0.0.13)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -122,6 +131,8 @@ GEM
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
+    quiet_assets (1.0.1)
+      railties (~> 3.1)
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -199,13 +210,14 @@ DEPENDENCIES
   annotate
   coffee-rails (~> 3.2.1)
   devise
-  dwolla
   factory_girl_rails
   jquery-rails
   omniauth
+  omniauth-dwolla!
   omniauth-facebook
   omniauth-twitter
   pg
+  quiet_assets
   rails (= 3.2.3)
   rspec-rails
   sass-rails (~> 3.2.3)

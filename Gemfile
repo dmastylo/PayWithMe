@@ -12,9 +12,11 @@ gem 'devise'
 gem 'omniauth'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
+gem 'omniauth-dwolla', git: 'git://github.com/jeffersongirao/omniauth-dwolla.git'
+# gem 'omniauth-paypal'
 
 # Payment Processing
-gem 'dwolla'
+# gem 'dwolla'
 
 # Database and Models
 gem 'squeel'
@@ -24,6 +26,8 @@ gem 'annotate'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3', :group => [:development, :test]
+gem 'quiet_assets', :group => :development
+gem 'thin', :group => :development
 group :production do
   gem 'thin'
   gem 'pg'
