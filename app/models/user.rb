@@ -56,6 +56,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Will return all the users
+  def users
+    users = []
+    
+  end
+
   # Returns all of the users friendships
   # TODO: Optimize this
   def friends
