@@ -45,7 +45,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def search
+  def search_friends
     @query = params[:name]
     @users = current_user.find_friends_by_name(@query)
 
@@ -53,6 +53,19 @@ class UsersController < ApplicationController
       format.html
       format.json do
         @users = @users.collect { |result| {id: result.id, name: result.name} }
+        render json: @users
+      end
+    end
+  end
+
+  # TODO don't display self
+  def search
+    @users = User.all
+
+    respond_to do |format|
+      format.html
+      format.json do
+        @users = @users.reject{ |result| result == current_user }.collect{ |result| {id: result.id, name: result.name} }
         render json: @users
       end
     end
