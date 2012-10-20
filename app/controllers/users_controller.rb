@@ -58,9 +58,11 @@ class UsersController < ApplicationController
     end
   end
 
-  # TODO don't display self
+  # TODO don't display self on search all users
+  # works just fine on textbox, not on full search
   def search
-    @users = User.all
+    @query = params[:name]
+    @users = current_user.find_users_by_name(@query)
 
     respond_to do |format|
       format.html

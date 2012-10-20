@@ -56,6 +56,19 @@ class User < ActiveRecord::Base
     end
   end
 
+  def users
+    users = User.all
+
+    users
+  end
+
+  def find_users_by_name(name)
+    found_users = users
+    found_users.delete_if { |user| !/#{name}/i.match(user.name) }
+
+    found_users
+  end
+
   # Returns all of the users friendships
   # TODO: Optimize this
   def friends
@@ -75,6 +88,7 @@ class User < ActiveRecord::Base
   def find_friends_by_name(name)
     found_friends = friends
     found_friends.delete_if { |friend| !/#{name}/i.match(friend.name) }
+
     found_friends
   end
 
