@@ -10,19 +10,21 @@
     <div class="tab-pane active" id="accounts">
       <h3>Facebook</h3>
       <% if !@facebook %>
-        Facebook is not linked. Would you like to link it?
+        Facebook is not linked. <a href="/users/auth/facebook">Would you like to link it?</a>
+      <% else %>
+        Facebook account <strong><%= @facebook.uid %></strong> is currently linked.
       <% end %>
 
       <h3>Twitter</h3>
       <% if !@twitter %>
-        Twitter is not linked. Would you like to link it?
+        Twitter is not linked. <a href="/users/auth/twitter">Would you like to link it?</a>
       <% else %>
         Twitter account <strong><%= @twitter.uid %></strong> is currently linked.
       <% end %>
 
       <h3>Dwolla</h3>
       <% if !@dwolla %>
-        Dwolla is not linked. Would you like to link it?
+        Dwolla is not linked. <a href="/users/auth/dwolla">Would you like to link it?</a>
       <% else %>
         Dwolla account <strong><%= @dwolla.uid %></strong> is currently linked.
       <% end %>
