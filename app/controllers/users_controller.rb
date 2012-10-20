@@ -60,6 +60,7 @@ class UsersController < ApplicationController
 
   # TODO don't display self on search all users
   # works just fine on textbox, not on full search
+  # TODO prevent searching with no query
   def search
     @query = params[:name]
     @users = current_user.find_users_by_name(@query)
