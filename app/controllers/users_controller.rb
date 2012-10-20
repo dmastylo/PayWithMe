@@ -63,7 +63,7 @@ class UsersController < ApplicationController
   # TODO prevent searching with no query
   def search
     @query = params[:name]
-    @users = current_user.find_users_by_name(@query)
+    @users = User.search_by_name(@query)
 
     respond_to do |format|
       format.html

@@ -56,14 +56,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def users
-    users = User.all
-
-    users
-  end
-
-  def find_users_by_name(name)
-    found_users = users
+  def self.search_by_name(name)
+    found_users = User.all
     found_users.delete_if { |user| !/#{name}/i.match(user.name) }
 
     found_users
