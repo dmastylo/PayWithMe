@@ -1,4 +1,4 @@
-$('#search-friends').typeahead({
+$('#search-users').typeahead({
 	source: function(query, process)
 	{
 		$.ajax({
@@ -21,7 +21,7 @@ $('#search-friends').typeahead({
 		{
 			if(value['id'] == '-1')
 			{
-				$("#search-friends").val(value['query']);
+				$("#search-users").val(value['query']);
 				$("#search-form").submit();
 			}
 			else window.location = '/users/' + value['id'];
