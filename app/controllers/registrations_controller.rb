@@ -1,6 +1,9 @@
 class RegistrationsController < Devise::RegistrationsController
   def new
+    puts session
     if session["devise.user_data"]
+      puts "test"
+      puts session["devise.user_data"].slice(:name, :username, :email)
       resource = build_resource(session["devise.user_data"].slice(:name, :username, :email))
     else
       resource = build_resource

@@ -11,8 +11,10 @@ class AccountsController < ApplicationController
       token: request.env["omniauth.auth"].credentials.token
     }
 
-    if ["twitter", "facebook"].include?(@provider)
-      user_data.merge({
+    puts @provider
+    if @provider == "twitter" || @provider == "facebook"
+      puts "TESTING"
+      user_data.merge!({
         name: request.env["omniauth.auth"].extra.raw_info.name,
         username: request.env["omniauth.auth"].info.nickname,
         email: request.env["omniauth.auth"].info.email,
@@ -24,8 +26,6 @@ class AccountsController < ApplicationController
 
     if signed_in?
       # We are linking a new account to an existing user that is currently signed in
-      puts user_data
-      
       current_user.linked_accounts << LinkedAccount.new(provider: request.env["omniauth.auth"].provider, uid: request.env["omniauth.auth"].uid, token: request.env["omniauth.auth"].credentials.token)
       current_user.save
       redirect_to users_settings_url
