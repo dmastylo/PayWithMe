@@ -1,0 +1,15 @@
+<h2>Enter PIN</h2>
+
+<%= form_for @payment, url: paid_payment_path(@payment, processor: params[:processor]), method: "post", html: { class: 'form-horizontal' } do |f| %>
+  <div class="control-group">
+    <%= f.label :pin, class: 'control-label' %>
+    <div class="controls">
+      <%= f.password_field :pin %>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit "Make Payment", class: 'btn btn-primary btn-large' %><br />
+    Note: clicking this button will attempt to subtract the funds from your account.
+  </div>
+<% end %>

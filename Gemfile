@@ -16,7 +16,7 @@ gem 'omniauth-dwolla', git: 'git://github.com/jeffersongirao/omniauth-dwolla.git
 # gem 'omniauth-paypal'
 
 # Payment Processing
-# gem 'dwolla'
+gem 'dwolla'
 
 # Database and Models
 gem 'squeel'

@@ -2,7 +2,7 @@ $('#search-friends').typeahead({
 	source: function(query, process)
 	{
 		$.ajax({
-			url: '/users/search.json',
+			url: '/users/search_friends.json',
 			type: 'POST',
 			data: { name: query },
 			dataType: 'json',

@@ -147,6 +147,18 @@ class User < ActiveRecord::Base
     self.notifications.where(read: 0).order('created_at DESC')
   end
 
+  # Gets the linked account at a certain provider
+  # This could probably be revised, maybe method_missing?
+  def facebook
+    self.linked_accounts.where(provider: "facebook").first
+  end
+  def twitter
+    self.linked_accounts.where(provider: "twitter").first
+  end
+  def dwolla
+    self.linked_accounts.where(provider: "dwolla").first
+  end
+
 private
 
   # Sets a password if a provider is used since a normal login won't

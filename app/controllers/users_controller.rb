@@ -84,9 +84,7 @@ class UsersController < ApplicationController
   end
 
   def settings
-    @facebook = current_user.linked_accounts.where(provider: "facebook").first
-    @twitter = current_user.linked_accounts.where(provider: "twitter").first
-    @dwolla = current_user.linked_accounts.where(provider: "dwolla").first
+
   end
 
   def update_settings

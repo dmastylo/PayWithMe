@@ -2,9 +2,9 @@ class PaymentsController < ApplicationController
 
   # Before Filters
   before_filter :authenticate_user!
-  before_filter :correct_user_to_pay, only: :pay
+  before_filter :correct_user_to_pay, only: [:pay, :paid]
   before_filter :correct_user_to_edit, only: [:edit, :delete, :update]
-  before_filter :valid_processor, only: :pay
+  before_filter :valid_processor, only: [:pay, :paid]
 
   def new
     @payment = current_user.expected_payments.new
@@ -62,13 +62,29 @@ class PaymentsController < ApplicationController
 
   def pay
     if @processor.name == "Dwolla"
-      
+      if !current_user.dwolla
+        flash[:error] = "Please link your Dwolla account before sending money with it."
+        redirect_to users_settings_url
+      else
+        # We need their pin to continue
+        render "pay_dwolla" 
+      end
     end
 
     # Initiate payment
   end
 
   def paid
+    if @processor.name == "Dwolla"
+      if !current_user.dwolla # TODO: Move this check somewhere else since it's identical to above
+        flash[:error] = "Please link your Dwolla account before sending money with it."
+        redirect_to users_settings_url
+      else
+        puts params[:payment][:pin]
+      end
+    else
+
+    end
   end
 
   def index

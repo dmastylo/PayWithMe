@@ -16,6 +16,7 @@ PayWithMe::Application.routes.draw do
 
     collection do
       post 'search'
+      post 'search_friends'
       get 'read_notifications'
     end
   end
@@ -23,6 +24,7 @@ PayWithMe::Application.routes.draw do
   resources :payments do
     member do
       get 'pay'
+      post 'paid'
     end
   end
 

@@ -18,7 +18,8 @@
 class Payment < ActiveRecord::Base
 
   # Accessible Attributes
-  attr_accessible :amount, :desired_at, :paid_at, :payee_id, :payer_id, :processor_id
+  attr_accessor :pin
+  attr_accessible :amount, :desired_at, :paid_at, :payee_id, :payer_id, :processor_id, :pin
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }
