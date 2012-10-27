@@ -47,12 +47,16 @@ class UsersController < ApplicationController
 
   def search_friends
     @query = params[:name]
-    @users = current_user.find_friends_by_name(@query)
+    if @query.empty?
+      flash.now[:error] = "Please enter a search term."
+    else
+      @users = current_user.find_friends_by_name(@query)
+      @users = @users.collect { |result| {id: result.id, name: result.name} }
+    end
 
     respond_to do |format|
       format.html
       format.json do
-        @users = @users.collect { |result| {id: result.id, name: result.name} }
         render json: @users
       end
     end
@@ -63,12 +67,16 @@ class UsersController < ApplicationController
   # TODO prevent searching with no query
   def search
     @query = params[:name]
-    @users = User.search_by_name(@query)
-
+    if @query.empty?
+      flash.now[:error] = "Please enter a search term."
+    else
+      @users = User.search_by_name(@query)
+      @users = @users.reject { |result| result == current_user }.collect { |result| {id: result.id, name: result.name} }
+    end
+    
     respond_to do |format|
       format.html
       format.json do
-        @users = @users.reject{ |result| result == current_user }.collect{ |result| {id: result.id, name: result.name} }
         render json: @users
       end
     end

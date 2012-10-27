@@ -2,9 +2,13 @@
 <div class="row">
   <div class="span12">
     <div class="well">
-      <ul class="users">
-        <%= render @users %>
-      </ul>
+      <% if @users and @users.count > 0 %>
+        <ul class="users">
+          <%= render @users %>
+        </ul>
+      <% else %>
+        No users found, please try another search term.
+      <% end %>
     </div>
   </div>
 </div>
