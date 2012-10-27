@@ -12,7 +12,6 @@ class AccountsController < ApplicationController
     }
 
     if @provider == "twitter" || @provider == "facebook"
-      puts "TESTING"
       user_data.merge!({
         name: request.env["omniauth.auth"].extra.raw_info.name,
         username: request.env["omniauth.auth"].info.nickname,

@@ -3,7 +3,7 @@ class PaymentsController < ApplicationController
   # Before Filters
   before_filter :authenticate_user!
   before_filter :correct_user_to_pay, only: [:pay, :paid]
-  before_filter :correct_user_to_edit, only: [:edit, :delete, :update]
+  before_filter :correct_user_to_edit, only: [:edit, :destroy, :update]
   before_filter :valid_processor, only: [:pay, :paid]
 
   def new
@@ -55,8 +55,9 @@ class PaymentsController < ApplicationController
     end
   end
 
-  def delete
+  def destroy
     @payment.destroy
+    @payment.payer.notifications.create(category: "payment", body: "#{current_user.name} has deleted their request for money from you.", foreign_id: @payment.id, read: 0)
     redirect_to payments_url
   end
 
