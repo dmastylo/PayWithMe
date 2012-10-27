@@ -11,7 +11,6 @@ class AccountsController < ApplicationController
       token: request.env["omniauth.auth"].credentials.token
     }
 
-    puts @provider
     if @provider == "twitter" || @provider == "facebook"
       puts "TESTING"
       user_data.merge!({
