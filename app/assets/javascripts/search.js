@@ -28,3 +28,8 @@ $('#search-friends').typeahead({
 		}
 	}
 });
+
+$("#search-form").submit(function(e)
+{
+	if($("#search-friends").val().length == 0) e.preventDefault();
+});
