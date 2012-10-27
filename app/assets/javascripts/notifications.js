@@ -5,11 +5,12 @@ $('#dropdown-notifications').dropdown({
 			url: '/users/read_notifications',
 			type: 'GET'
 		});
+
+		$('.unread-notifications-count').hide();
 	},
 	onclose: function(dropdown)
 	{
 		$this.parent().find('li.unread').removeClass('unread');
-		$('.unread-notifications-count').hide();
 	}
 });
 

@@ -35,18 +35,18 @@ body
 .navbar-inner
 {
     background-image: url(<%= asset_path 'layout/navigation_bg.png' %>);
-    height: 68px;
+    height: 55px;
     border-bottom: 2px solid $darkGreen !important;
 
     #logo
     {
-       margin-top: 17px;
+       margin-top: 16px;
        float: left; 
     }
 
     .nav
     {
-        margin-top: 14px;
+        margin-top: 7px;
 
         li
         {
@@ -78,7 +78,7 @@ body
 
     .navbar-search
     {
-        margin-top: 19px;
+        margin-top: 13px;
         margin-left: 20px;
     }
 }
@@ -105,8 +105,7 @@ body
 .homepage-hero-unit
 {
     background: transparent;
-    padding-top: 0;
-    padding-bottom: 0;
+    padding: 0 20px;
 
     .homepage-video
     {
@@ -169,16 +168,23 @@ a.btn-block { display: block; }
         }
     }
 
-    .icon-globe
+    a.dropdown-toggle
     {
-        color: $darkGreen;
-        background-image: none;
-        font-size: 24px;
-        -webkit-transition: color 0.15s ease-in; 
+        .icon-globe
+        {
+            color: $darkGreen;
+            background-image: none;
+            font-size: 24px;
+            -webkit-transition: color 0.15s ease-in; 
+
+            &:hover
+            {
+                color: #FFF;
+            }
+        }
 
         &:hover
         {
-            color: #FFF;
             text-decoration: none;
         }
     }
@@ -188,12 +194,17 @@ a.btn-block { display: block; }
 {
     background-color: #333;
     border-radius: 20px;
-    padding: 1px 6px;
+    padding: 1px 7px;
     color: #FFF;
     float: right;
     position: absolute;
-    top: 16px;
-    left: 23px;
+    top: 8px;
+    left: 11px;
+
+    &:hover
+    {
+        text-decoration: none;
+    }
 }
 
 /* ========================================================================== */
@@ -235,4 +246,29 @@ footer
     color: #999;
     text-align: center;
     width: auto;
+}
+
+@media (max-width: 979px) {
+    body
+    {
+        padding: 0 !important;
+    }
+    .navbar
+    {
+        .navbar-inner
+        {
+            padding: 5px 20px;
+        }
+    }
+}
+
+@media (max-width: 767px)
+{
+    .navbar
+    {
+        .navbar-inner
+        {
+            padding: 5px 35px;
+        }
+    }
 }
