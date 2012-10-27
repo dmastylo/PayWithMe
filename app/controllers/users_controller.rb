@@ -19,7 +19,7 @@ class UsersController < ApplicationController
       render "notfound"
     else
       current_user.send_friend_request!(@user)
-      @user.notifications.create(category: "friend", body: "#{current_user.name} has sent you a friend request.", foreign_id: current_user.id, read: 0)
+      @user.notifications.create(category: "friend", body: "#{current_user.name} has sent you a friend request", foreign_id: current_user.id, read: 0)
       redirect_to @user
     end
   end
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
       render "notfound"
     else
       current_user.accept_friend!(@user)
-      @user.notifications.create(category: "friend", body: "#{current_user.name} has accepted your friend request.", foreign_id: current_user.id, read: 0)
+      @user.notifications.create(category: "friend", body: "#{current_user.name} has accepted your friend request", foreign_id: current_user.id, read: 0)
       redirect_to @user
     end
   end

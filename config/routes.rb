@@ -28,6 +28,8 @@ PayWithMe::Application.routes.draw do
     end
   end
 
+  resources :notifications, only: [:index]
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
