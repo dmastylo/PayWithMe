@@ -208,6 +208,29 @@ a.btn-block { display: block; }
     }
 }
 
+#all-notifications
+{
+    li
+    {
+        padding: 8px;
+        border: 1px solid #CCC;
+        list-style-type: none;
+
+        unread
+        {
+            a { font-weight: bold; }
+        }
+    }
+
+    a
+    {
+        &:hover
+        {
+            text-decoration: none;
+        }
+    }
+}
+
 /* ========================================================================== */
 /* SEARCH RESULTS */
 ul.users

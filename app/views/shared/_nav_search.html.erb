@@ -20,10 +20,9 @@
 
       <% if current_user.current_notifications.empty? %>
         <li><a href="#">You have no notifications</a></li>
+      <% else %>
+        <li><%= link_to "View all notifications", notifications_path %></li>
       <% end %>
-
-      <li><a href="">View all notifications</a></li>
     </ul>
-
   </div>
 <% end %>
