@@ -68,9 +68,8 @@ class UsersController < ApplicationController
     if @query.empty?
       flash.now[:error] = "Please enter a search term."
     else
-      @users = User.search_by_name(@query)
+      @users = User.paginate(page: params[:page]).search_by_name(@query)
       @users = @users.reject { |result| result == current_user }
-      # @users = User.paginate(page: params[:page])
     end
     
     respond_to do |format|
