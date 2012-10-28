@@ -30,6 +30,8 @@ PayWithMe::Application.routes.draw do
 
   resources :notifications, only: [:index]
 
+  resources :linked_accounts, only: [:destroy]
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
