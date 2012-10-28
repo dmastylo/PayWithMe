@@ -6,6 +6,8 @@
         <ul class="users">
           <%= render @users %>
         </ul>
+
+        <%= will_paginate %>
       <% else %>
         No users found, please try another search term.
       <% end %>
