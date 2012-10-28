@@ -62,9 +62,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # TODO don't display self on search all users
-  # works just fine on textbox, not on full search
-  # TODO prevent searching with no query
+  # Search all users
   def search
     @query = params[:name]
     if @query.empty?
@@ -72,6 +70,7 @@ class UsersController < ApplicationController
     else
       @users = User.search_by_name(@query)
       @users = @users.reject { |result| result == current_user }
+      # @users = User.paginate(page: params[:page])
     end
     
     respond_to do |format|
