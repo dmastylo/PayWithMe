@@ -8,26 +8,32 @@
   </ul>
   <div class="tab-content">
     <div class="tab-pane active" id="accounts">
-      <h3>Facebook</h3>
-      <% if !current_user.facebook %>
-        Facebook is not linked. <a href="/users/auth/facebook">Would you like to link it?</a>
-      <% else %>
-        Facebook account <strong><%= current_user.facebook.uid %></strong> is currently linked.
-      <% end %>
-
-      <h3>Twitter</h3>
-      <% if !current_user.twitter %>
-        Twitter is not linked. <a href="/users/auth/twitter">Would you like to link it?</a>
-      <% else %>
-        Twitter account <strong><%= current_user.twitter.uid %></strong> is currently linked.
-      <% end %>
-
-      <h3>Dwolla</h3>
-      <% if !current_user.dwolla %>
-        Dwolla is not linked. <a href="/users/auth/dwolla">Would you like to link it?</a>
-      <% else %>
-        Dwolla account <strong><%= current_user.dwolla.uid %></strong> is currently linked.
-      <% end %>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Account Provider</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+        <% ["facebook", "twitter", "dwolla"].each do |provider| %>
+          <tr>
+            <td><%= provider.capitalize %></td>
+            <td>
+              <% if !current_user.send(provider) %>
+                <span class="danger">Unlinked</span>
+              <% else %>
+                <span class="success">Linked</span>
+              <% end %>
+            </td>
+            <td>
+              <% if !current_user.send(provider) %>
+                <%= link_to "Link Account", "/users/auth/#{provider}", class: "btn btn-primary" %>
+              <% else %>
+                <%= link_to "Unlink Account", linked_account_path(current_user.send(provider)), class: "btn btn-danger", confirm: "Are you sure that you wish to unlink this account?", method: :delete %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
     </div>
     <div class="tab-pane" id="profile">
       
