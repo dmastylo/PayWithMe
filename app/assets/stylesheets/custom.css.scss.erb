@@ -210,15 +210,29 @@ a.btn-block { display: block; }
 
 #all-notifications
 {
+    border: 1px solid #CCC;
+    border-radius: 4px;
+    margin: 0 0 15px 0;
+
     li
     {
         padding: 8px;
-        border: 1px solid #CCC;
+        border-bottom: 1px solid #CCC;
         list-style-type: none;
 
-        unread
+        &.unread
         {
             a { font-weight: bold; }
+        }
+
+        &.last
+        {
+            border-bottom: 0;
+        }
+
+        &:nth-child(odd)
+        {
+            background-color: #F9F9F9;
         }
     }
 

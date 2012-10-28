@@ -1,12 +1,11 @@
-<% provide(:title, 'Your Payments') %>
+<% provide(:title, 'Your Notifications') %>
 
-<div class = "page-heading">
+<div class="page-heading">
     <h2>Your Notifications</h2>
-    <hr>
 </div>
 
-<ul id = "all-notifications">
-    <% current_user.notifications.each do |notification| %>
-      <li <%= 'class="unread"'.html_safe unless notification.read? %>><a href="<%= notification.url %>"><%= notification.body %></a></li>
+<ul id="all-notifications">
+    <% @notifications.each do |notification| %>
+      <li class="<%= 'unread'.html_safe unless notification.read? %> <%= 'last' if current_user.notifications.last == notification %>"><a href="<%= notification.url %>"><%= notification.body %></a></li>
     <% end %>
 </ul>
