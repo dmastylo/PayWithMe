@@ -1,0 +1,1 @@
+<li class="<%= 'unread'.html_safe unless notification.read? %> <%= 'last' if current_user.notifications.last == notification %>"><a href="<%= notification.url %>"><%= notification.body %></a></li>

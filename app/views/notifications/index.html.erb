@@ -6,9 +6,7 @@
 
 
 <ul id="all-notifications">
-    <% @notifications.each do |notification| %>
-      <li class="<%= 'unread'.html_safe unless notification.read? %> <%= 'last' if current_user.notifications.last == notification %>"><a href="<%= notification.url %>"><%= notification.body %></a></li>
-    <% end %>
+    <%= render @notifications %> 
 </ul>
 
 <%= will_paginate %>
