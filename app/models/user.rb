@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
   # Relationships
   has_many :friendships
   has_many :inverse_friendships, class_name: "Friendship", foreign_key: "friend_id"
-  has_many :notifications
+  has_many :notifications, :order => 'created_at DESC'
   has_many :owed_payments, class_name: "Payment", foreign_key: "payer_id"
   has_many :expected_payments, class_name: "Payment", foreign_key: "payee_id"
   has_many :linked_accounts
