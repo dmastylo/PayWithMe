@@ -6,6 +6,13 @@
 </div>
 
 <div class="control-group">
+  <%= object.label :payee_id, class: 'control-label' %>
+  <div class="controls">
+    <%= collection_select(:payment, :payee_id, current_user.friends, :id, :name, multiple: true) %>
+  </div>
+</div>
+
+<div class="control-group">
   <%= object.label :amount, class: 'control-label' %>
   <div class="controls">
     <%= object.text_field :amount %>

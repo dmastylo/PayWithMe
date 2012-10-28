@@ -12,7 +12,13 @@ class PaymentsController < ApplicationController
   end
 
   def create
-    @payment = current_user.expected_payments.new(params[:payment].except(:unfinished))
+    if params[:payment][:payer_id] == current_user.id
+      puts 'test'
+      @payment = current_user.owed_payments.new(params[:payment].except(:unfinished))
+    else
+      puts 'nope'
+      @payment = current_user.expected_payments.new(params[:payment].except(:unfinished))
+    end
     @processors = Processor.all
     
     if params[:processor]

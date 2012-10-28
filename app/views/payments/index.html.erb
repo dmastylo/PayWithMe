@@ -1,5 +1,5 @@
 <% provide(:title, 'Your Payments') %>
-<div class="page-heading">
+<div class="page-header">
   <h2>Owed Payments</h2>
 </div>
 
@@ -19,7 +19,9 @@
   You don't owe anyone money! Nice!
 <% end %>
 
-<h2>Expected Payments</h2>
+<div class="page-header">
+  <h2>Expected Payments</h2>
+</div>
 <% if !current_user.expected_payments.empty? %>
   <table class="table table-bordered table-striped">
     <tr>
