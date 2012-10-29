@@ -1,12 +1,7 @@
 <% provide(:title, 'Request Payment') %>
 <div class="page-header">
-  <h2>Request Payment</h2>
+  <h2>Create Payment Request</h2>
 </div>
-
-<pre>
-  <%= @payment.to_yaml %>
-  <%= params.to_yaml %>
-</pre>
 
 <%= form_for @payment do |f| %>
   <%= render 'fields', object: f %>
