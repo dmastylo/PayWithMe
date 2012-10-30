@@ -172,7 +172,7 @@ describe User do
     end
 
     describe "unaccepted request" do
-      describe "friends_with?" do 
+      describe "friends_with?" do
         it "should not be true" do
           @user.friends_with?(@other_user).should_not be_true
         end
@@ -195,6 +195,38 @@ describe User do
 
         it "should be true for other user" do
           @other_user.friends_received?(@user).should be_true
+        end
+      end
+    end
+
+    describe "accepted request" do
+      before do
+        @other_user.accept_friend!(@user)
+      end
+
+      describe "friends_with?" do
+        it "should be true" do
+          @user.friends_with?(@other_user).should be_true
+        end
+      end
+
+      describe "friends_sent?" do
+        it "should not be true for user" do
+          @user.friends_sent?(@other_user).should_not be_true
+        end
+
+        it "should not be true for other user" do
+          @other_user.friends_sent?(@user).should_not be_true
+        end
+      end
+
+      describe "friends_received?" do
+        it "should not be true for user" do
+          @user.friends_received?(@other_user).should_not be_true
+        end
+
+        it "should not be true for other user" do
+          @other_user.friends_received?(@user).should_not be_true
         end
       end
     end
