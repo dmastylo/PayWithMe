@@ -1,4 +1,4 @@
-var currentPage = 1;
+/*var currentPage = 1;
 
 function checkScroll()
 {
@@ -30,3 +30,4 @@ function pageHeight()
 }
 
 document.observe('dom:loaded', checkScroll);
+*/
