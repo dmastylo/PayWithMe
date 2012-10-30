@@ -12,9 +12,13 @@ class PaymentsController < ApplicationController
   end
 
   def create
-    @payment = current_user.expected_payments.new(params[:payment].except(:unfinished))
-    @processors = Processor.all
+    if params[:payment][:type] == "owe"
+      @payment = current_user.owed_payments.new(params[:payment].except(:unfinished))
+    else
+      @payment = current_user.expected_payments.new(params[:payment].except(:unfinished))
+    end
     
+    @processors = Processor.all
     if params[:processor]
       @processors.each do |processor|
         if params[:processor][processor.name.downcase]
@@ -24,7 +28,11 @@ class PaymentsController < ApplicationController
     end
 
     if !params[:payment][:unfinished] && @payment.save
-      @payment.payer.notifications.create(category: "payment", body: "#{current_user.name} has requested money from you.", foreign_id: @payment.id, read: 0)
+      if params[:payment][:type] == "owe"
+        @payment.payee.notifications.create(category: "payment", body: "#{current_user.name} has requested to pay you money.", foreign_id: @payment.id, read: 0)
+      else
+        @payment.payer.notifications.create(category: "payment", body: "#{current_user.name} has requested money from you.", foreign_id: @payment.id, read: 0)
+      end
       redirect_to payments_path
     else
       render "new"
@@ -33,6 +41,13 @@ class PaymentsController < ApplicationController
 
   def edit
     @processors = Processor.all
+    if @payment.payer == current_user
+      @payment.type = "owe"
+      @payment.foreign_id = @payment.payee_id
+    else
+      @payment.type = "expect"
+      @payment.foreign_id = @payment.payer_id
+    end
   end
 
   def update

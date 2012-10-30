@@ -10,7 +10,7 @@ $('#dropdown-notifications').dropdown({
 	},
 	onclose: function(dropdown)
 	{
-		$this.parent().find('li.unread').removeClass('unread');
+		if(typeof $this != "undefined") $this.parent().find('li.unread').removeClass('unread');
 	}
 });
 

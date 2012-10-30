@@ -27,13 +27,27 @@
         <% else %>
           <%= link_to "Add Friend", friend_user_path(@user), class: "btn btn-primary btn-block push-bottom" %>
         <% end %>
+        <div class="clearfix"></div>
+
         <%= form_for @payment do |f| %>
-          <div class="input-prepend pull-left">
+          <div class="input-prepend">
             <span class="add-on">$</span><%= f.text_field :amount, placeholder: "Enter Amount" %>
           </div>
           <%= f.hidden_field :unfinished, value: true %>
-          <%= f.hidden_field :payer_id, value: @user.id %>
-          <%= f.submit "Request", class: "btn pull-right" %>
+          <%= f.hidden_field :foreign_id, value: @user.id %>
+          <%= f.hidden_field :type, value: "expect" %>
+          <%= f.submit "Request from #{@user.name}", class: "btn btn-block pull-right" %>
+          <div class="clearfix"></div>
+        <% end %>
+        
+        <%= form_for @payment do |f| %>
+          <div class="input-prepend">
+            <span class="add-on">$</span><%= f.text_field :amount, placeholder: "Enter Amount" %>
+          </div>
+          <%= f.hidden_field :unfinished, value: true %>
+          <%= f.hidden_field :foreign_id, value: @user.id %>
+          <%= f.hidden_field :type, value: "owe" %>
+          <%= f.submit "I owe #{@user.name}", class: "btn btn-block pull-right" %>
           <div class="clearfix"></div>
         <% end %>
       </div>
