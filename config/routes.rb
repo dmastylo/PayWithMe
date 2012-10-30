@@ -3,7 +3,7 @@ PayWithMe::Application.routes.draw do
   root to: "static_pages#index"
 
   devise_for :users, controllers: { registrations: "registrations" }
-  match "/users/auth/:provider/callback", to: "accounts#create"
+  match "/users/auth/:provider/callback", to: "linked_accounts#create"
 
   get '/users/settings'
   post '/users/update_settings'

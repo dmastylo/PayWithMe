@@ -1,4 +1,5 @@
 class RegistrationsController < Devise::RegistrationsController
+
   def new
     puts session
     if session["devise.user_data"]
@@ -58,4 +59,5 @@ class RegistrationsController < Devise::RegistrationsController
       # respond_with resource
     end
   end
+
 end

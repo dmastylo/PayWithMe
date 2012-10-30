@@ -2,10 +2,10 @@ class UsersController < ApplicationController
 
   # Before Filters
   before_filter :authenticate_user!
+  before_filter :find_user, only: [:show, :friend, :accept_friend, :deny_friend]
   # TODO: Make finding the user a before_filter
 
   def show
-    @user = User.find_by_id(params[:id])
     if @user.nil?
       render "notfound"
     else
@@ -14,7 +14,6 @@ class UsersController < ApplicationController
   end
 
   def friend
-    @user = User.find_by_id(params[:id])
     if @user.nil?
       render "notfound"
     else
@@ -25,7 +24,6 @@ class UsersController < ApplicationController
   end
 
   def accept_friend
-    @user = User.find_by_id(params[:id])
     if @user.nil?
       render "notfound"
     else
@@ -36,7 +34,6 @@ class UsersController < ApplicationController
   end
 
   def deny_friend
-    @user = User.find_by_id(params[:id])
     if @user.nil?
       render "notfound"
     else
@@ -91,11 +88,15 @@ class UsersController < ApplicationController
   end
 
   def settings
-
   end
 
   def update_settings
+  end
 
+private
+
+  def find_user
+    @user = User.find_by_id(params[:id])
   end
 
 end

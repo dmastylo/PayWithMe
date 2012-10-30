@@ -16,8 +16,6 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  name                   :string(255)
-#  provider               :string(255)
-#  uid                    :string(255)
 #  username               :string(255)
 #  image                  :string(255)
 #
