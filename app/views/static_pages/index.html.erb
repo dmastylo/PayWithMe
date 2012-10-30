@@ -1,5 +1,5 @@
 <% if !signed_in? %>
-
+  
   <% content_for :footer do %>
     <script type="text/javascript">
       $(function() {
@@ -10,7 +10,7 @@
         var totalSlides = 8; 
         var counter = 0;
   
-        $("h3").click(function(){ start(); });
+        //$("h3").click(function(){ start(); });
 
         function begin(){
           counter++;
@@ -34,7 +34,9 @@
     <!-- <h1>Welcome to PayWithMe!</h1> -->
     <h3>The ultimate redefinition of social payments.</h3>
 
-    <div id="impress_container">
+    <%= image_tag("placeholder.gif", alt: "Pay With Me") %>
+
+    <!--<div id="impress_container">
       <div id="impress">
 
         <div id="imagine" class="step" data-x="0" data-y="0">
@@ -53,17 +55,14 @@
 
         <div id="cover" class="step" data-x="6000" data-y="0">
           <p>So you cover for him today,</p>
-          <!-- Place Image Here -->
         </div>
 
         <div id="need_money" class="step" data-x="8000" data-y="0">
           <p>But you really need that money back for date night on Tuesday...</p>
-          <!-- Place Image Here -->
         </div>
 
         <div id="fix" class="step" data-x="10000" data-y="0">
           <p>Well now in just a few clicks your friend can pay you back online by a requested data.</p>
-          <!-- Calendar Image Maybe -->
         </div>
 
         <div id="explain" class="step" data-x="12000" data-y="0">
@@ -79,7 +78,7 @@
           <p>Simply click one of the links below!</p>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <p>
         Keep track of who owes you money and who isn't paying back. 
