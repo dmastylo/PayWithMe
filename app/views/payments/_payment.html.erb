@@ -11,8 +11,10 @@
   <td>
     <%= distance_of_time_in_words payment.created_at, Time.now %> ago</td>
   </td>
-  <td <%= "class=\"danger\"".html_safe if Time.now > payment.desired_at %>>
-    <%= distance_of_time_in_words payment.desired_at, Time.now %><%= " ago" if Time.now > payment.desired_at %>
+  <td <%= "class=\"danger\"".html_safe if !payment.desired_at.nil? and Time.now > payment.desired_at %>>
+    <% if !payment.desired_at.nil? %>
+      <%= distance_of_time_in_words payment.desired_at, Time.now %><%= " ago" if Time.now > payment.desired_at %>
+    <% end %>
   </td>
   <td>
     <% payment.processors.each do |processor| %>
