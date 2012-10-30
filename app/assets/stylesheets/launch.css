@@ -59,12 +59,11 @@
     letter-spacing: -1px;
 }
 
-.impress_container{
+#impress_container{
     width: 500px;
     max-width: 500px;
     min-width: 500px;
     height: 300px;
     max-height: 300px;
     min-height: 300px;
-    margin-top: 300px;
 }
