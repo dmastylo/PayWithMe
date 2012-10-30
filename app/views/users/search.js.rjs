@@ -1,0 +1,2 @@
+page.insert_html :bottom, :products, partial: @users
+page.call 'checkScroll' if @users.total_pages > @users.current_page
