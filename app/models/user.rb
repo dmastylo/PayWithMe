@@ -114,15 +114,19 @@ class User < ActiveRecord::Base
   def accept_friend!(user)
     current_id = self.id
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
-    friendship.accepted = 1
-    friendship.save
+    if !friendship.nil?
+      friendship.accepted = 1 
+      friendship.save
+    end
   end
 
   # Denies a friend request that was received from a user
   def deny_friend!(user)
     current_id = self.id
     friendship = Friendship.where{((friend_id == current_id) & (user_id == user.id))}.first
-    friendship.destroy
+    if !friendship.nil?
+      friendship.destroy
+    end
   end
 
   # Gets the five most recent notifications
