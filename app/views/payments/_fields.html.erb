@@ -12,7 +12,8 @@
   <div class="payment-block"><%= collection_select(:payment, :foreign_id, current_user.friends, :id, :name, {}, class: "span3") %></div>
   <div class="payment-block text">by</div>
   <div class="payment-block">
-    <%= object.text_field :desired_at, "data-data-format" => "mm/dd/yy", class: "datepicker span3", value: @payment.desired_at.strftime("%m/%d/%Y") %>
+    <!-- TODO: Move this shit to a helper -->
+    <%= object.text_field :desired_at, "data-data-format" => "mm/dd/yy", class: "datepicker span3", value: (!@payment.desired_at.nil?)? @payment.desired_at.strftime("%m/%d/%Y") : (Time.now + 86400).strftime("%m/%d/%Y") %>
     <%= date_select :payment, :desired_at, discard_year: true, discard_day: true, discard_month: true  %>
   </div>
   <div class="clearfix"></div>
