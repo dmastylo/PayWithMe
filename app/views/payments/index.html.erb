@@ -1,39 +1,48 @@
 <% provide(:title, 'Your Payments') %>
-<div class="page-header">
-  <h2>Owed Payments</h2>
-</div>
+<div class="row">
+  <div class="span12 page-body">
+    <div class="page-header">
+      <h2>Owed Payments</h2>
+    </div>
 
-<% if !current_user.owed_payments.empty? %>
-  <table class="table table-bordered table-striped">
-    <tr>
-      <th>Payee</th>
-      <th>Amount </th>
-      <th>Requested</th>
-      <th>Desired Payback</th>
-      <th>Processor(s)</th>
-      <th>Actions</th>
-    </tr>
-    <%= render current_user.owed_payments %>
-  </table>
-<% else %>
-  You don't owe anyone money! Nice!
-<% end %>
+    <div class="page-content">
+      <% if !current_user.owed_payments.empty? %>
+        <table class="table table-bordered table-striped">
+          <tr>
+            <th>Payee</th>
+            <th>Amount </th>
+            <th>Requested</th>
+            <th>Desired Payback</th>
+            <th>Processor(s)</th>
+            <th>Actions</th>
+          </tr>
+          <%= render current_user.owed_payments %>
+        </table>
+      <% else %>
+        You don't owe anyone money! Nice!
+      <% end %>
+    </div>
 
-<div class="page-header">
-  <h2>Expected Payments</h2>
+    <div class="page-header">
+      <h2>Expected Payments</h2>
+    </div>
+
+    <div class="page-content">
+      <% if !current_user.expected_payments.empty? %>
+        <table class="table table-bordered table-striped">
+          <tr>
+            <th>Payer</th>
+            <th>Amount </th>
+            <th>Requested</th>
+            <th>Desired Payback</th>
+            <th>Processor(s)</th>
+            <th>Actions</th>
+          </tr>
+          <%= render current_user.expected_payments %>
+        </table>
+      <% else %>
+        You don't owe anyone money! Nice!
+      <% end %>
+    </div>
+  </div>
 </div>
-<% if !current_user.expected_payments.empty? %>
-  <table class="table table-bordered table-striped">
-    <tr>
-      <th>Payer</th>
-      <th>Amount </th>
-      <th>Requested</th>
-      <th>Desired Payback</th>
-      <th>Processor(s)</th>
-      <th>Actions</th>
-    </tr>
-    <%= render current_user.expected_payments %>
-  </table>
-<% else %>
-  You don't owe anyone money! Nice!
-<% end %>

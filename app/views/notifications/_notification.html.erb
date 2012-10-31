@@ -1,4 +1,4 @@
-<% if !@last_date || @last_date != notification.created_at.to_date %>
+<% if @last_date != notification.created_at.to_date %>
   <li><%= notification.created_at.to_date.strftime("%B %d, %Y") %></li>
   <% @last_date = notification.created_at.to_date %>
 <% end %>
