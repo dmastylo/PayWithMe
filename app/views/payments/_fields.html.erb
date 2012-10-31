@@ -1,3 +1,5 @@
+<%= render 'shared/error_messages', object: object.object %>
+
 <div class="control-group">
   <div class="payment-block first text">I</div>
   <div class="payment-block"><%= object.select(:type, options_for_select(["owe", "expect"], @payment.type), class: "span3") %></div>
@@ -30,31 +32,3 @@
   </div>
   <div class="clearfix"></div>
 </div>
-
-<!-- <div class="control-group">
-  <%= object.label :payer_id, class: 'control-label' %>
-  <div class="controls">
-    
-  </div>
-</div>
-
-<div class="control-group">
-  <%= object.label :payee_id, class: 'control-label' %>
-  <div class="controls">
-    <%= collection_select(:payment, :payee_id, current_user.friends, :id, :name, multiple: true) %>
-  </div>
-</div>
-
-<div class="control-group">
-  <%= object.label :amount, class: 'control-label' %>
-  <div class="controls">
-    <%= object.text_field :amount %>
-  </div>
-</div>
-
-<div class="control-group">
-  <%= object.label :desired_at, class: 'control-label' %>
-  <div class="controls">
-    <%= date_select :payment, :desired_at %>
-  </div>
-</div> -->

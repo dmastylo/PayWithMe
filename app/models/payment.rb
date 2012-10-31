@@ -25,7 +25,7 @@ class Payment < ActiveRecord::Base
   validates :amount, presence: true, numericality: { greater_than: 0 }
   validates :payer_id, presence: true
   validates :payee_id, presence: true
-  validates :desired_at, date: { allow_nil: true, after: Proc.new { Time.now } }
+  validates :desired_at, date: { allow_nil: true, after_or_equal_to: Proc.new { Date.today }, message: 'cannot be in the past' }
 
   # Callbacks
   before_validation :set_attributes

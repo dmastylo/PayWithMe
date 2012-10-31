@@ -3,7 +3,7 @@
     <strong>The form contains <%= pluralize(object.errors.keys.count, "error") %>.</strong>
     <ul class="error-messages">
       <% object.errors.each do |attr, msg| %>
-        <% if object.errors[attr].first == msg %><li>- <%= object.class.human_attribute_name(attr) %> <%= msg %></li><% end %>
+        <% if object.errors[attr].first == msg %><li><%= object.class.human_attribute_name(attr) %> <%= msg %></li><% end %>
       <% end %>
     </ul>
   </div>

@@ -2,9 +2,9 @@
   <div class="span9 page-body">
     <div class="page-header">
       <% if session["devise.user_data"] && session["devise.user_data"][:provider] %>
-        <h1>Finish <%= session["devise.user_data"][:provider].capitalize %> Registration</h1>
+        <h2>Finish <%= session["devise.user_data"][:provider].capitalize %> Registration</h2>
       <% else %>
-        <h1>Register New Account</h1>
+        <h2>Register New Account</h2>
       <% end %>
     </div>
 

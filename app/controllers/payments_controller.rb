@@ -66,7 +66,8 @@ class PaymentsController < ApplicationController
       @payment.payer.notifications.create(category: "payment", body: "#{current_user.name} has updated their request for money from you.", foreign_id: @payment.id, read: 0)
       redirect_to payments_path
     else
-      render "new"
+      @payment.type = params[:payment][:type]
+      render "edit"
     end
   end
 
