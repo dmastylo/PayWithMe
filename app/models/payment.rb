@@ -23,8 +23,9 @@ class Payment < ActiveRecord::Base
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }
-  validate :payer_id, presence: true
-  validate :payee_id, presence: true
+  validates :payer_id, presence: true
+  validates :payee_id, presence: true
+  validates :desired_at, date: { allow_nil: true, after: Proc.new { Time.now } }
 
   # Callbacks
   before_validation :set_attributes

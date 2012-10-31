@@ -21,6 +21,7 @@ gem 'dwolla'
 # Database and Models
 gem 'squeel'
 gem 'annotate'
+gem 'date_validator', git: 'git://github.com/codegram/date_validator.git'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'

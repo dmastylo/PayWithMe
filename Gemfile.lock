@@ -9,6 +9,13 @@ GIT
       therubyracer (>= 0.10.2)
 
 GIT
+  remote: git://github.com/codegram/date_validator.git
+  revision: 69db9042710380eaff2541091aaa74282affea2d
+  specs:
+    date_validator (0.6.3)
+      activemodel (~> 3.0)
+
+GIT
   remote: git://github.com/jeffersongirao/omniauth-dwolla.git
   revision: 1e4202e770feb415cd64c9220241a66dba345342
   specs:
@@ -212,6 +219,7 @@ DEPENDENCIES
   annotate
   bootstrap-will_paginate (= 0.0.6)
   coffee-rails (~> 3.2.1)
+  date_validator!
   devise
   dwolla
   factory_girl_rails
