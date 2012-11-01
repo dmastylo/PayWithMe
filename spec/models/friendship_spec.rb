@@ -13,5 +13,13 @@
 require 'spec_helper'
 
 describe Friendship do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  describe "accessible attributes" do
+    it "should not allow access to accepted" do
+      expect do
+        Friendship.new(accepted: true)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+  end
+
 end

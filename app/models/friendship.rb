@@ -15,7 +15,7 @@
 class Friendship < ActiveRecord::Base
 
   # Accessible Attributes
-  attr_accessible :friend_id, :user_id, :accepted
+  attr_accessible :friend_id, :user_id
 
   # Validations
   validates :friend_id, presence: true

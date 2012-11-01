@@ -15,5 +15,31 @@
 require 'spec_helper'
 
 describe LinkedAccount do
-  pending "add some examples to (or delete) #{__FILE__}"
+
+  describe "accessible attributes" do
+    it "should not allow access to provider" do
+      expect do
+        LinkedAccount.new(provider: true)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+
+    it "should not allow access to uid" do
+      expect do
+        LinkedAccount.new(uid: true)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+
+    it "should not allow access to token" do
+      expect do
+        LinkedAccount.new(token: true)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+
+    it "should not allow access to token_secret" do
+      expect do
+        LinkedAccount.new(token_secret: true)
+      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end
+  end
+
 end

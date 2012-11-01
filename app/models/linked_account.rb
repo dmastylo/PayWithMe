@@ -15,6 +15,7 @@
 class LinkedAccount < ActiveRecord::Base
   
   # Accessible Attributes
+  # I want these to be able to be set but not by the user -- only by us
   attr_accessible :provider, :token, :uid
 
   # Validations
