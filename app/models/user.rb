@@ -26,8 +26,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   # Accessible Attributes
-  attr_accessor :provider, :uid, :token, :using_oauth
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :provider, :uid, :token, :username, :image, :using_oauth
+  attr_accessor :using_oauth
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :username, :image, :using_oauth
 
   # Callbacks
   before_validation :set_password
@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
 
   # Sends a friend request to a user
   def send_friend_request!(user)
-    Friendship.create(user_id: self.id, friend_id: user.id, accepted: 0)
+    Friendship.create(user_id: self.id, friend_id: user.id)
   end
 
   # Determines if a user is a friend

@@ -19,7 +19,9 @@ describe Payment do
   before do
     @payer = FactoryGirl.create(:user)
     @payee = FactoryGirl.create(:user)
-    @payment = Payment.new(amount: 5.95, payer: @payer, payee: @payee)
+    @payment = @payer.owed_payments.new(amount: 5.95)
+    @payee.expected_payments << @payment
+    @payment.save
   end
 
   subject { @payment }
@@ -42,14 +44,14 @@ describe Payment do
     end
 
     describe "when desired at is past" do
-      before { @payment.desired_at = Time.now - 86400 }
+      before { @payment.desired_at = Date.today - 1 }
       it { should_not be_valid }
     end
   end
 
   describe "valid" do
     describe "when desired at is in the future" do
-      before { @payment.desired_at = Time.now + 86400 }
+      before { @payment.desired_at = Date.today + 1 }
       it { should be_valid }
     end
   end
