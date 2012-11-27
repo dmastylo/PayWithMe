@@ -1,18 +1,22 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable,
-  # :lockable, :timeoutable and :omniauthable
+  # Devise modules
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name
-  # attr_accessible :title, :body
+  # Accessible attributes
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image_option, :profile_image, :profile_image_option, :profile_image_url
+  attr_accessor :profile_image_option
+  has_attached_file :profile_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>" }
+  
+  # Callbacks
+  before_save :set_profile_image
 
-  def profile_image_option
-    if profile_image.nil?
-      "gravatar"
+  def profile_image_type
+    if profile_image.present?
+      :upload
+    elsif profile_image_url.present?
+      :url
     else
-      profile_image
+      :gravatar
     end
   end
 
@@ -41,10 +45,23 @@ class User < ActiveRecord::Base
   end
 
   def update_with_password(params, *options)
+    # set_profile_image
     if encrypted_password.blank?
       update_attributes(params, *options)
     else
       super
     end
+  end
+
+private
+  def set_profile_image
+    if self.profile_image_option != "url"
+      self.profile_image_url = nil
+    end
+    if self.profile_image_option != "upload"
+      self.profile_image = nil
+    end
+
+    profile_image_option = nil
   end
 end

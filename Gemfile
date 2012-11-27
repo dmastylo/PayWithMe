@@ -14,6 +14,10 @@ gem 'omniauth-facebook'
 
 # User profiles
 gem 'gravatar_image_tag'
+gem 'paperclip'
+
+# Configuration
+gem 'figaro'
 
 group :development, :test do
   gem 'thin'

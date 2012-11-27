@@ -40,15 +40,39 @@
       <div class="control-group">
         <%= f.label :profile_image, class: 'control-label' %>
         <div class="controls">
-          <%= f.hidden_field :profile_image, id: "user_profile_image" %>
+          <%= f.hidden_field :profile_image_option, id: "user_profile_image" %>
           <div class="btn-group" id="user_profile_image_btn_group" data-toggle="buttons-radio">
-            <button type="button" class="btn <%= "active" if current_user.profile_image_option == "gravatar" %>" data-value="gravatar">Gravatar</button>
-            <button type="button" class="btn <%= "active" if current_user.profile_image_option == "url" %>" data-value="url">URL</button>
-            <button type="button" class="btn <%= "active" if current_user.profile_image_option == "upload" %>" data-value="upload">Image Upload</button>
+            <button type="button" class="btn <%= "active" if current_user.profile_image_type == :gravatar %>" data-value="gravatar">Gravatar</button>
+            <button type="button" class="btn <%= "active" if current_user.profile_image_type == :url %>" data-value="url">URL</button>
+            <button type="button" class="btn <%= "active" if current_user.profile_image_type == :upload %>" data-value="upload">Image Upload</button>
           </div>
 
           <div class="user_profile_image_option push-top" id="user_profile_image_gravatar">
-            asdf
+            Your gravatar:<br />
+            <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
+            <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top" %>
+          </div>
+          <div class="user_profile_image_option push-top" id="user_profile_image_url">
+            <% if current_user.profile_image_url.present? %>
+              <div class="push-bottom">
+                Current URL:
+              </div>
+              <div class="push-bottom">
+                <%= profile_image_tag(current_user, :small) %>
+              </div>
+            <% end %>
+            <%= f.text_field :profile_image_url, placeholder: "Image URL"  %>
+          </div>
+          <div class="user_profile_image_option push-top" id="user_profile_image_upload">
+            <% if current_user.profile_image.present? %>
+              <div class="push-bottom">
+                Current uploaded image:
+              </div>
+              <div class="push-bottom">
+                <%= profile_image_tag(current_user, :small) %>
+              </div>
+            <% end %>
+            <%= f.file_field :profile_image, accept: 'image' %>
           </div>
         </div>
       </div>
@@ -84,7 +108,8 @@
         $("#user_profile_image_"+value).show();
       });
 
-      $("#user_profile_image_<%= current_user.profile_image_option %>").show();
+      $("#user_profile_image_<%= current_user.profile_image_type %>").show();
+      $("")
     });
   </script>
 <% end %>
