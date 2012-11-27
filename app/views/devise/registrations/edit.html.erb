@@ -37,6 +37,22 @@
         </div>
       <% end %>
 
+      <div class="control-group">
+        <%= f.label :profile_image, class: 'control-label' %>
+        <div class="controls">
+          <%= f.hidden_field :profile_image, id: "user_profile_image" %>
+          <div class="btn-group" id="user_profile_image_btn_group" data-toggle="buttons-radio">
+            <button type="button" class="btn <%= "active" if current_user.profile_image_option == "gravatar" %>" data-value="gravatar">Gravatar</button>
+            <button type="button" class="btn <%= "active" if current_user.profile_image_option == "url" %>" data-value="url">URL</button>
+            <button type="button" class="btn <%= "active" if current_user.profile_image_option == "upload" %>" data-value="upload">Image Upload</button>
+          </div>
+
+          <div class="user_profile_image_option push-top" id="user_profile_image_gravatar">
+            asdf
+          </div>
+        </div>
+      </div>
+
       <div class="form-actions">
         <%= f.submit "Update", class: 'btn btn-primary' %>
       </div>
@@ -49,3 +65,26 @@
     </div>
   </div> -->
 </div>
+
+<% content_for(:before_body) do %>
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $("#user_profile_image_btn_group button").click(function()
+      {
+        var $this = $(this);
+        var $input = $("#user_profile_image");
+        var value = $this.data("value");
+
+        // Set the hidden field
+        $input.val(value);
+
+        // Show the hidden box
+        $(".user_profile_image_option").hide();
+        $("#user_profile_image_"+value).show();
+      });
+
+      $("#user_profile_image_<%= current_user.profile_image_option %>").show();
+    });
+  </script>
+<% end %>

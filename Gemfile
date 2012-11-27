@@ -12,6 +12,9 @@ gem 'devise'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 
+# User profiles
+gem 'gravatar_image_tag'
+
 group :development, :test do
   gem 'thin'
   gem 'rspec'

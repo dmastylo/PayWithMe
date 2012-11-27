@@ -33,5 +33,8 @@
     </div>
 
     <%= javascript_include_tag "application" %>
+    <% if content_for?(:before_body) %>
+      <%= yield(:before_body) %>
+    <% end %>
   </body>
 </html>
