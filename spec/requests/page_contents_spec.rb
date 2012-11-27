@@ -12,8 +12,6 @@ describe "PageContents" do
 
 		it "should have proper links on the home page" do
 
-			before{ click_link "Register" }
-
 			click_link "Register"
 			response.should have_selector('title', text: 'PayWithMe | Register')
 			response.should have_selector('h1', content: 'Register')
@@ -30,11 +28,11 @@ describe "PageContents" do
 	end
 
 	describe "Sign up" do
-		before{ visit signup_path }
+		before{ visit new_user_registration_path }
 
-		it{ should have_selector('h1', text: 'Sign Up') }
+		it{ should have_selector('h2', text: 'Register') }
 
-		let(:submit){ "Create Account" }
+		let(:submit){ "Sign up" }
 
 		describe "with invalid information" do
 			it "should not create the user due to blank information" do
@@ -43,43 +41,47 @@ describe "PageContents" do
 
 			it "should not create the user due to mismatching password" do
 				
-				before do
-					fill_in "Name" 				with "John Q Sample"
-					fill_in "Username"			with "sampleuser"
-					fill_in "Email" 			with "test@example.com"
-					fill_in "Password" 			with "foobarbaz"
-					fill_in "Confirm Password" 	with "mismatch"
-				end
+				fill_in "Name", 			with: "John Q Sample"
+				fill_in "Email", 			with: "test@example.com"
+				fill_in "Password", 		with: "foobarbaz"
+				fill_in "Confirm Password", with: "mismatch"
 
 				expect{ click_button submit }.not_to change(User, :count)
 			end
 			
 			it "should not create the user due to no email" do
 				
-				before do
-					fill_in "Name" 				with "John Q Sample"
-					fill_in "Username"			with "sampleuser"
-					fill_in "Email" 			with ""
-					fill_in "Password" 			with "foobarbaz"
-					fill_in "Confirm Password" 	with "mismatch"
-				end
+				fill_in "Name", 			with: "John Q Sample"
+				fill_in "Email", 			with: ""
+				fill_in "Password", 		with: "foobarbaz"
+				fill_in "Confirm Password", with: "mismatch"
 
 				expect{ click_button submit }.not_to change(User, :count)
 			end
 
-			it "should "
+			it "should have a valid email address" do
+				pending
+			end
+
+			it "should have minimum password length" do
+				pending
+			end
+
+			it "should have a unique email address" do
+				pending
+			end
+
 		end
 
 		describe "with valid information" do
-			before do
-				fill_in "Name" 				with "John Q Sample"
-				fill_in "Username"			with "sampleuser"
-				fill_in "Email" 			with "test@example.com"
-				fill_in "Password" 			with "foobarbaz"
-				fill_in "Confirm Password" 	with "foobarbaz"
-			end
-
+				
 			it "should create the user" do
+				
+				fill_in "Name", 			with: "John Q Sample"
+				fill_in "Email", 			with: "test@example.com"
+				fill_in "Password", 		with: "foobarbaz"
+				fill_in "Confirm Password", with: "foobarbaz"
+
 				expect{ click_button submit }.to change(User, :count).by(1)
 			end
 		end

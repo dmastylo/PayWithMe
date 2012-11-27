@@ -15,6 +15,7 @@ gem 'omniauth-facebook'
 group :development, :test do
   gem 'thin'
   gem 'rspec-rails'
+  gem 'capybara'
 end
 
 # Gems used only for assets and not required
