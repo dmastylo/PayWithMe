@@ -17,7 +17,8 @@ gem 'gravatar_image_tag'
 
 group :development, :test do
   gem 'thin'
-  gem 'rspec'
+  gem 'rspec-rails'
+  gem 'capybara'
 end
 
 # Gems used only for assets and not required
