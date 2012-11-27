@@ -1,0 +1,25 @@
+.navbar .container
+{
+	width: 940px;
+
+	#logo { padding-top: 4px; }
+}
+
+.btn-full {
+	width: auto;
+	display: block;
+}
+
+$mediumMargin: 10px;
+
+.push-top { margin-top: $mediumMargin; }
+.push-bottom { margin-bottom: $mediumMargin; }
+
+.alert-error
+{
+	ul.error-messages
+	{
+		list-style-type: none;
+		margin: 0;
+	}
+}

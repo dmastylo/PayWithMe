@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="span9 page-body">
+    <div class="page-header">
+      <h2>Sign in</h2>
+    </div>
+
+    <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { class: 'form-horizontal' }) do |f| %>
+      <%= devise_error_messages! %>
+      
+      <div class="control-group">
+        <%= f.label :email, class: 'control-label' %>
+        <div class="controls">
+          <%= f.email_field :email %>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :password, class: 'control-label' %>
+        <div class="controls">
+          <%= f.password_field :password %>
+        </div>
+      </div>
+
+      <% if devise_mapping.rememberable? -%>
+        <div class="control-group" style="margin-left:160px;">
+          <label class="checkbox">
+            <%= f.check_box :remember_me %> Remember me
+          </label>
+        </div>
+      <% end -%>
+
+      <div class="form-actions">
+        <%= f.submit "Sign in", class: 'btn btn-primary' %>
+      </div>
+    <% end %>
+
+    <%= #render :partial => "devise/shared/links"
+    %>
+  </div>
+  <div class="span3">
+    <div class="well sidebar-nav">
+      <%= link_to "Login With Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-full push-bottom" %>
+      <%= link_to "Login With Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-full" %>
+    </div>
+  </div>
+</div>
