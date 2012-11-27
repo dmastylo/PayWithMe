@@ -6,7 +6,11 @@ gem 'rails', '3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
+
+# User authentication
 gem 'devise'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
 
 group :development, :test do
   gem 'thin'

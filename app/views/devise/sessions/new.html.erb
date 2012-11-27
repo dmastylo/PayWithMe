@@ -39,8 +39,8 @@
   </div>
   <div class="span3">
     <div class="well sidebar-nav">
-      <%= link_to "Login With Facebook", "/users/auth/facebook", class: "btn btn-primary btn-full push-bottom" %>
-      <%= link_to "Login With Twitter", "/users/auth/twitter", class: "btn btn-primary btn-full" %>
+      <%= link_to "Login With Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-full push-bottom" %>
+      <%= link_to "Login With Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-full" %>
     </div>
   </div>
 </div>

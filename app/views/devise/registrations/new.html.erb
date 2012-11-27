@@ -1,8 +1,8 @@
 <div class="row">
   <div class="span9 page-body">
     <div class="page-header">
-      <% if session["devise.user_data"] && session["devise.user_data"][:provider] %>
-        <h2>Finish <%= session["devise.user_data"][:provider].capitalize %> Registration</h2>
+      <% if session["devise.user_attributes"] && session["devise.user_attributes"]["provider"] %>
+        <h2>Finish <%= session["devise.user_attributes"]["provider"].capitalize %> Registration</h2>
       <% else %>
         <h2>Register New Account</h2>
       <% end %>
@@ -32,14 +32,13 @@
         </div>
       </div>
 
-      <% if !session["devise.user_data"] %>
+      <% if f.object.password_required? %>
         <div class="control-group">
           <%= f.label :password, class: 'control-label' %>
           <div class="controls">
             <%= f.password_field :password %>
           </div>
         </div>
-
 
         <div class="control-group">
           <%= f.label :password_confirmation, "Confirm Password", class: 'control-label' %>
@@ -59,8 +58,8 @@
   </div>
   <div class="span3">
     <div class="well sidebar-nav">
-      <%= link_to "Register With Facebook", "/users/auth/facebook", class: "btn btn-primary btn-full push-bottom" %>
-      <%= link_to "Register With Twitter", "/users/auth/twitter", class: "btn btn-primary btn-full" %>
+      <%= link_to "Register With Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-full push-bottom" %>
+      <%= link_to "Register With Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-full" %>
     </div>
   </div>
 </div>
