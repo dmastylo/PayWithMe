@@ -22,7 +22,7 @@ gem 'figaro'
 group :development, :test do
   gem 'thin'
   gem 'rspec-rails'
-  gem 'capybara'
+  gem 'capybara', '1.1.2'
 end
 
 # Gems used only for assets and not required
