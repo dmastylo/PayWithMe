@@ -19,17 +19,21 @@ gem 'paperclip'
 # Configuration
 gem 'figaro'
 
+# Transactions
+gem 'money-rails'
+
 group :development, :test do
   gem 'thin'
   gem 'rspec-rails'
   gem 'capybara'
+  gem 'annotate'
 end
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
-  gem 'bootstrap-sass', '~> 2.2.1.1'
+  gem 'bootstrap-sass', git: 'git@github.com:austingulati/bootstrap-sass.git'
   gem 'coffee-rails', '~> 3.2.1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes

@@ -23,3 +23,19 @@ $mediumMargin: 10px;
 		margin: 0;
 	}
 }
+
+.btn-group
+{
+	button.third, button.half
+	{
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		width: 33.3%;
+	}
+
+	button.half
+	{
+		width: 50%;
+	}
+}

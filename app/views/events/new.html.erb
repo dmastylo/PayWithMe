@@ -3,20 +3,100 @@
     <div class="page-header">
       <h2>New Event</h2>
     </div>
-    <%= form_for @event, html: { class: 'form-horizontal' } do |f| %>
-      <div class="row">
-        <div class="span12">
-          <%= f.text_field :title, placeholder: "Event Title", class: "event-title span12" %>
-        </div>
-      </div>
+    <%= form_for @event do |f| %>
       <div class="row push-top">
         <div class="span6">
-          <%= f.text_area :description, placeholder: "Event Description", class: "span6", rows: 5 %>
+          <h3>Event Information</h3>
+          <%= f.label :title %>
+          <%= f.text_field :title, class: "span6" %>
+          <%= f.label :description %>
+          <%= f.text_area :description, class: "span6", rows: 5 %>
+          <%= f.label :start_at %>
+          <%= f.text_field :start_at, class: "datepicker span6", data: { "date-format" => "mm/dd/yyyy" } %>
         </div>
         <div class="span6">
-          asdfads
+          <h3>Payment Information</h3>
+          <%= f.label :due_on %>
+          <%= f.text_field :due_on, class: "datepicker span6", data: { "date-format" => "mm/dd/yyyy" } %>
+          <!-- <label>Payment division</label> -->
+          <div class="row">
+            <%= f.hidden_field :payment_division %>
+            <div class="btn-group span6 push-bottom" id="payment_division_btn_group" data-toggle="buttons-radio">
+              <button type="button" class="btn third" data-value="total" title="You need a total amount.">Divide Total</button>
+              <button type="button" class="btn third" data-value="person" title="Each person must pay a certain amount.">Amount Per Person</button>
+              <button type="button" class="btn third" data-value="fundraise" title="Any amount can be paid.">Fundraise/Donations</button>
+            </div>
+          </div>
+
+          <div class="payment_division_option" id="payment_division_total">
+            <%= f.label :amount, "Total Amount" %>
+            <div class="input-prepend row">
+              <span class="add-on span1">$</span>
+              <%= f.text_field :amount, class: "span6" %>
+            </div>
+
+            <%= f.label :amount, "Total Amount" %>
+            <div class="input-prepend row">
+              <span class="add-on span1">$</span>
+              <%= f.text_field :amount, class: "span6" %>
+            </div>
+
+            <!-- <label>Fee structure</label>
+            <div class="row">
+              <%= f.hidden_field :payment_division_fees %>
+              <div class="btn-group span6 push-bottom" id="payment_division_fees_btn_group" data-toggle="buttons-radio">
+                <button type="button" class="btn half" data-value="approximate" title="You pay the fees.">I'll Pay</button>
+                <button type="button" class="btn half" data-value="total" title="The members of the group pay the fees.">Members Pay</button>
+              </div>
+            </div> -->
+          </div>
+
+          <div class="payment_division_option" id="payment_division_equal">
+            <label>Set amount</label>
+            <div class="row">
+              <%= f.hidden_field :payment_division_total %>
+              <div class="btn-group span6 push-bottom" id="payment_division_total_btn_group" data-toggle="buttons-radio">
+                <button type="button" class="btn half" data-value="person" title="Each person will pay a specific amount.">By Person</button>
+                <button type="button" class="btn half" data-value="total" title="The total will be divided evenly.">Exact Total</button>
+              </div>
+            </div>
+
+            <%= f.label :amount %>
+            <div class="input-prepend row">
+              <span class="add-on span1">$</span>
+              <%= f.text_field :amount, class: "span6" %>
+            </div>
+          </div>
+
+          <h3>Payment Summary</h3>
         </div>
       </div>
     <% end %>
   </div>
 </div>
+
+<% content_for(:before_body) do %>
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $('.datepicker').datepicker();
+      $('.btn-group .btn').tooltip({
+        container: 'body'
+      });
+
+      $("#payment_division_btn_group button").click(function()
+      {
+        var $this = $(this);
+        var $input = $("#payment_division");
+        var value = $this.data("value");
+
+        // Set the hidden field
+        $input.val(value);
+
+        // Show the hidden box
+        $(".payment_division_option").hide();
+        $("#payment_division_"+value+",.payment_division_"+value).fadeIn();
+      });
+    });
+  </script>
+<% end %>

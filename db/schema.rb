@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121127233422) do
+ActiveRecord::Schema.define(:version => 20121128201404) do
 
   create_table "event_settings", :force => true do |t|
     t.integer  "event_id"
@@ -22,20 +22,25 @@ ActiveRecord::Schema.define(:version => 20121127233422) do
   create_table "event_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
-    t.float    "amount"
+    t.integer  "amount_cents", :default => 0
     t.date     "due_date"
     t.date     "paid_date"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
   create_table "events", :force => true do |t|
     t.string   "title"
     t.text     "description"
-    t.float    "amount"
-    t.date     "due_date"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.integer  "amount_cents",           :default => 0
+    t.date     "due_on"
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
+    t.datetime "start_at"
+    t.string   "division"
+    t.string   "payment_division"
+    t.string   "payment_division_fees"
+    t.string   "payment_division_total"
   end
 
   create_table "users", :force => true do |t|
