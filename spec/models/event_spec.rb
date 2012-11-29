@@ -2,25 +2,24 @@
 #
 # Table name: events
 #
-#  id                     :integer          not null, primary key
-#  title                  :string(255)
-#  description            :text
-#  amount_cents           :integer          default(0)
-#  due_on                 :date
-#  created_at             :datetime         not null
-#  updated_at             :datetime         not null
-#  start_at               :datetime
-#  division               :string(255)
-#  payment_division       :string(255)
-#  payment_division_fees  :string(255)
-#  payment_division_total :string(255)
+#  id                 :integer          not null, primary key
+#  title              :string(255)
+#  description        :text
+#  due_on             :date
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  start_at           :datetime
+#  division_type      :integer
+#  fee_type           :integer
+#  total_amount_cents :integer
+#  split_amount_cents :integer
 #
 
 require 'spec_helper'
 
 describe Event do
   let(:user) { FactoryGirl.create(:user) }
-  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_on: Time.now + 86400, start_at: Time.now + (86400 * 7), payment_division: Event::Fundraise) }
+  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_on: Time.now + 86400, start_at: Time.now + (86400 * 7), division_type: Event::DivisionType::Fundraise) }
   it { should be_valid }
 
   describe "accessible attributes" do

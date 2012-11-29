@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121128201404) do
+ActiveRecord::Schema.define(:version => 20121129011026) do
 
   create_table "event_settings", :force => true do |t|
     t.integer  "event_id"
@@ -32,15 +32,15 @@ ActiveRecord::Schema.define(:version => 20121128201404) do
   create_table "events", :force => true do |t|
     t.string   "title"
     t.text     "description"
-    t.integer  "amount_cents",           :default => 0
     t.date     "due_on"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.datetime "start_at"
-    t.string   "division"
-    t.string   "payment_division"
-    t.string   "payment_division_fees"
-    t.string   "payment_division_total"
+    t.integer  "division_type"
+    t.integer  "fee_type"
+    t.integer  "total_amount_cents"
+    t.integer  "split_amount_cents"
+    t.integer  "organizer_id"
   end
 
   create_table "users", :force => true do |t|

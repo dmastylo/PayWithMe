@@ -26,6 +26,7 @@
 #
 
 class User < ActiveRecord::Base
+  
   # Devise modules
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
@@ -36,6 +37,10 @@ class User < ActiveRecord::Base
   
   # Callbacks
   before_save :set_profile_image
+
+  # Relationships
+  has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
+  has_and_belongs_to_many :member_events, class_name: "Event", join_table: "EventUsers"
 
   def profile_image_type
     if profile_image.present?
