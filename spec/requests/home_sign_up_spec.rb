@@ -66,17 +66,17 @@ describe "Home and Sign up pages" do
 				end
 			end
 
-			describe "when it has a valid email address" do
-				pending
-			end
-
 			describe "when it doesn't meet minimum password length" do
-				before{ @user.password = "x" * 7}
-				it{ should be_invalid }
-			end
+				before{ 
+					fill_in "Name", 			with: "John Q Sample"
+					fill_in "Email", 			with: "test@example.com"
+					fill_in "Password", 		with: "x" * 7
+					fill_in "Confirm Password", with: "x" * 7
+				}
 
-			it "should have a unique email address" do
-				pending
+				it "should not create the user" do
+					expect{ click_button submit }.not_to change(User, :count)
+				end
 			end
 		end
 
