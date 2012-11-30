@@ -9,11 +9,15 @@
     <div class="span4">
         <div class="event-description">
             <%= @event.description %>
-            <%= @event.due_on %>
+            <%= distance_of_time_in_words @event.due_on - Time.now %>
         </div>
+        <div class="event-members">
             Members here
+        </div>
     </div>
     <div class="span8">
-        Chat here
+        <div class="event-chat">
+            Chat here
+        </div>
     </div>
 </div>

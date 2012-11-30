@@ -1,3 +1,6 @@
+/* Variables */
+$eventBorder:; #848484;
+
 .navbar .container
 {
 	// width: 940px;
@@ -52,5 +55,27 @@ $mediumMargin: 10px;
 /* Event Dsiplay */
 .event-title
 {
-    border: 1px #fff;
+    border: 1px $eventBorder;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.event-description
+{
+    border-radius: 15px;
+    -moz-border-radius: 15px;
+    border: 1px $eventBorder;
+}
+
+.event-members {
+    border: 1px $eventBorder;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+
+.event-chat
+{
+    border-radius: 1px $eventBorder;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
 }
