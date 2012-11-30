@@ -17,5 +17,6 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
+    @members = @event.members
   end
 end

@@ -12,7 +12,13 @@
             <%= distance_of_time_in_words @event.due_on - Time.now %>
         </div>
         <div class="event-members">
-            Members here
+            <% if @members.any? %>
+              <ul class="member-list-styling">
+                <%= render @members %>
+              </ul
+            <% else %>
+              There are no members. Add some!</td>
+            <% end %>
         </div>
     </div>
     <div class="span8">
