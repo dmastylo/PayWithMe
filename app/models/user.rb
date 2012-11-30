@@ -67,6 +67,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.search_by_name(name)
+    User.where("name LIKE '%#{name}%'")
+  end
+
   def password_required?
     super && provider.blank?
   end
