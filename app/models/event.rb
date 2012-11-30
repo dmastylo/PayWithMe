@@ -32,9 +32,10 @@ class Event < ActiveRecord::Base
   validates :title, presence: true, length: { minimum: 2 }
   validates :due_at, presence: true
   validates :due_at, date: { after: Proc.new { Time.now } }, if: :due_at_changed?
-  # validates :start_at, presence: true
-  # validates :start_at, date: { after: Proc.new { Time.now } }, if: :start_at_changed?
-  # validates :total_amount, presence: true if (division_type == Event::DivisionType::Total)
+  validates :start_at, presence: true
+  validates :start_at, date: { after: Proc.new { Time.now } }, if: :start_at_changed?
+  validates :total_amount_cents, presence: true, numericality: { only_integer: true, greater_than: 0 }, if: :divide_total?
+  validates :split_amount_cents, presence: true, numericality: { only_integer: true, greater_than: 0 }, if: :divide_per_person?
 
   # Relationships
   belongs_to :organizer, class_name: "User"
@@ -43,10 +44,11 @@ class Event < ActiveRecord::Base
   # Callbacks
   before_validation :clear_amounts
 
+  # Money definitions
   def receive_amount_cents
-    if division_type == DivisionType::Fundraise || members.size == 0
+    if division_type == DivisionType::Fundraise || members.size == 0 || send_amount_cents.nil?
       nil
-    elsif fee_type == FeeType::OrganizerPay
+    elsif fee_type == FeeType::OrganizerPays
       members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f)
     else
       total_amount_cents
@@ -56,7 +58,7 @@ class Event < ActiveRecord::Base
   def send_amount_cents
     if division_type == DivisionType::Fundraise || members.size == 0
       nil
-    elsif fee_type == FeeType::OrganizerPay
+    elsif fee_type == FeeType::OrganizerPays
       split_amount_cents
     else
       (total_amount_cents / members.size + Figaro.env.fee_static.to_f) / (1 - Figaro.env.fee_rate.to_f)
@@ -64,27 +66,45 @@ class Event < ActiveRecord::Base
   end
 
   def total_amount_cents
-    if super
+    if super || division_type == DivisionType::Total
       super
+    elsif members.size == 0 || division_type == DivisionType::Fundraise || split_amount_cents.nil?
+      nil
     else
-      if members.size == 0 || division_type == DivisionType::Fundraise
-        nil
-      else
-        split_amount_cents * members.size
-      end
+      split_amount_cents * members.size
     end
   end
 
   def split_amount_cents
-    if super
+    if super || division_type == DivisionType::Split
       super
+    elsif members.size == 0 || division_type == DivisionType::Fundraise
+      nil
     else
-      if members.size == 0 || division_type == DivisionType::Fundraise
-        nil
-      else
-        total_amount_cents / members.size
-      end
+      total_amount_cents / members.size
     end
+  end
+
+  # Division types
+  def divide_total?
+    division_type == DivisionType::Total
+  end
+
+  def divide_per_person?
+    division_type == DivisionType::Split
+  end
+
+  def fundraiser?
+    division_type == DivisionType::Fundraise
+  end
+
+  # Fee types
+  def organizer_pays?
+    fee_type == FeeType::OrganizerPays
+  end
+
+  def members_pay?
+    fee_type == FeeType::MembersPay
   end
 
   # Constants
@@ -94,7 +114,7 @@ class Event < ActiveRecord::Base
     Fundraise = 3
   end
   class FeeType
-    OrganizerPay = 1
+    OrganizerPays = 1
     MembersPay = 2
   end
 

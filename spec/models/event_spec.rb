@@ -20,7 +20,7 @@ require 'spec_helper'
 
 describe Event do
   let(:user) { FactoryGirl.create(:user) }
-  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_at: Time.now + 86400, start_at: Time.now + (86400 * 7), division_type: Event::DivisionType::Fundraise, fee_type: Event::FeeType::OrganizerPay) }
+  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_at: Time.now + 86400, start_at: Time.now + (86400 * 7), division_type: Event::DivisionType::Fundraise, fee_type: Event::FeeType::OrganizerPays) }
   subject { @event }
   it { should be_valid }
 
@@ -93,7 +93,10 @@ describe Event do
       end
 
       describe "with division_type other" do
-        before { @event.division_type = Event::DivisionType::Total }
+        before do
+          @event.division_type = Event::DivisionType::Total
+          @event.total_amount = "$100.00"
+        end
         it { should be_valid }
       end
     end
@@ -153,7 +156,7 @@ describe Event do
       share_examples_for "division_type calculations" do
         describe "with organizer paying fees" do
           before do
-            @event.fee_type = Event::FeeType::OrganizerPay
+            @event.fee_type = Event::FeeType::OrganizerPays
             @event.save
           end
 
