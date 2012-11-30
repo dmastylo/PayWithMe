@@ -5,7 +5,7 @@
 #  id                 :integer          not null, primary key
 #  title              :string(255)
 #  description        :text
-#  due_on             :date
+#  due_at             :date
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  start_at           :datetime
@@ -13,13 +13,15 @@
 #  fee_type           :integer
 #  total_amount_cents :integer
 #  split_amount_cents :integer
+#  organizer_id       :integer
 #
 
 require 'spec_helper'
 
 describe Event do
   let(:user) { FactoryGirl.create(:user) }
-  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_on: Time.now + 86400, start_at: Time.now + (86400 * 7), division_type: Event::DivisionType::Fundraise) }
+  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_at: Time.now + 86400, start_at: Time.now + (86400 * 7), division_type: Event::DivisionType::Fundraise, fee_type: Event::FeeType::OrganizerPay) }
+  subject { @event }
   it { should be_valid }
 
   describe "accessible attributes" do
@@ -34,71 +36,97 @@ describe Event do
       it { should_not be_valid }
     end
 
-    describe "payment_division not present" do
-      before { @event.payment_division = nil }
+    describe "division_type not present" do
+      before { @event.division_type = nil }
       it { should_not be_valid }
+    end
+
+    describe "division_type not present" do
+      before { @event.fee_type = nil }
+      it { should_not be_valid }
+    end
+
+    describe "total_amount not present" do
+      before { @event.total_amount = nil }
+      describe "with division_type total" do
+        before { @event.division_type = Event::DivisionType::Total }
+        it { should_not be_valid }
+      end
+
+      describe "with division_type other" do
+        before { @event.division_type = Event::DivisionType::Split }
+        it { should be_valid }
+      end
+    end
+
+    describe "split_amount not present" do
+      before { @event.split_amount = nil }
+      describe "with division_type total" do
+        before { @event.division_type = Event::DivisionType::Split }
+        it { should_not be_valid }
+      end
+
+      describe "with division_type other" do
+        before { @event.division_type = Event::DivisionType::Total }
+        it { should be_valid }
+      end
     end
 
     describe "total_amount not a number" do
       before { @event.total_amount = "not.a.number" }
-      describe "with payment_division total" do
-        before { @event.payment_division = Event::DivisionType::Total }
+      describe "with division_type total" do
+        before { @event.division_type = Event::DivisionType::Total }
         it { should_not be_valid }
       end
 
-      describe "with payment_division other" do
-        before { @event.payment_division = Event::DivisionType::Split }
+      describe "with division_type other" do
+        before { @event.division_type = Event::DivisionType::Split }
         it { should be_valid }
       end
     end
 
     describe "split_amount not a number" do
       before { @event.split_amount = "not.a.number" }
-      describe "with payment_division split" do
-        before { @event.payment_division = Event::DivisionType::Split }
+      describe "with division_type split" do
+        before { @event.division_type = Event::DivisionType::Split }
         it { should_not be_valid }
       end
 
-      describe "with payment_division other" do
-        before { @event.payment_division = Event::DivisionType::Total }
+      describe "with division_type other" do
+        before { @event.division_type = Event::DivisionType::Total }
         it { should be_valid }
       end
     end
 
-    share_examples_for "a date column" do |property|
-      describe "#{property} in the past" do
-        describe "on initial creation" do
-          before { @event.send(:"#{property}=", Time.now - 86400) }
+    describe "due_at the past" do
+      describe "on initial creation" do
+        before { @event.due_at = Time.now - 86400 }
+        it { should_not be_valid }
+      end
+
+      describe "on update" do
+        before do
+          @event.due_at = Time.now
+          @event.save
+          Delorean.time_travel_to "1 month from now"
+        end
+        after { Delorean.back_to_the_present }
+
+        describe "without change" do
+          it { should be_valid }
+        end
+
+        describe "with past change" do
+          before { @event.due_at = Time.now + 3600 }
           it { should_not be_valid }
         end
 
-        describe "on update" do
-          before do
-            @event.send(:"#{property}=", Time.now)
-            @event.save
-            Time.stub!(:now).and_return Time.now + 86400
-          end
-
-          describe "without change" do
-            it { should be_valid }
-          end
-
-          describe "with past change" do
-            before { @event.send(:"#{property}=", Time.now + 3600) }
-            it { should_not be_valid }
-          end
-
-          describe "with future change" do
-            before { @event.send(:"#{property}=", Time.now + 86400 + 3600) }
-            it { should be_valid }
-          end
+        describe "with future change" do
+          before { @event.due_at = Time.now + 86400 + 3600 }
+          it { should be_valid }
         end
       end
-
     end
-
-    it_behaves_like "a date column", :due_at
-    it_behaves_like "a date column", :start_at
   end
 
   describe "relationships" do
@@ -129,6 +157,13 @@ describe Event do
             @event.save
           end
 
+          it "should have nonzero entries" do
+            @event.split_amount_cents.should_not == 0
+            @event.total_amount_cents.should_not == 0
+            @event.receive_amount_cents.should_not == 0
+            @event.send_amount_cents.should_not == 0
+          end
+
           it "should have correct split_amount" do
             @event.split_amount_cents.should == @event.total_amount_cents / @event.members.count
           end
@@ -139,21 +174,17 @@ describe Event do
           end
 
           it "should have correct receive_amount" do
-            before do
-              let(:total, @event.total_amount_cents * (1 - Figaro.env.fee_rate) - @event.members.count * Figaro.env.fee_static)
-            end
+            total = @event.total_amount_cents * (1 - Figaro.env.fee_rate.to_f) - @event.members.count * Figaro.env.fee_static.to_f
 
             @event.receive_amount_cents.should == total
           end
 
-          it "should have equal total calculated from send_amount and receive_amount" do
-            before do
-              let(:split, @event.members.count * @event.send_amount_cents)
-              let(:total, @event.receive_amount_cents)
-            end
+          # it "should have equal total calculated from send_amount and total_amount" do
+          #   split = @event.members.count * @event.send_amount_cents
+          #   total = @event.total_amount_cents
             
-            split.should == total
-          end
+          #   split.should == total
+          # end
         end
 
         describe "with members paying fees" do
@@ -167,9 +198,7 @@ describe Event do
           end
 
           it "should have correct send_amount" do
-            before do
-              let(:send, (@event.total_amount_cents / @event.members.count + Figaro.env.fee_static) / (1 - Figaro.env.fee_rate))
-            end
+            send = (@event.total_amount_cents / @event.members.count + Figaro.env.fee_static.to_f) / (1 - Figaro.env.fee_rate.to_f)
 
             @event.send_amount_cents.should == send
           end
@@ -179,14 +208,12 @@ describe Event do
             @event.total_amount_cents.should == @event.receive_amount_cents
           end
 
-          it "should have equal total calculated from send_amount and receive_amount" do
-            before do
-              let(:split, @event.members.count * @event.send_amount_cents)
-              let(:total, @event.receive_amount_cents)
-            end
+          # it "should have equal total calculated from send_amount and receive_amount" do
+          #   split = @event.members.count * @event.send_amount_cents
+          #   total = @event.receive_amount_cents
             
-            split.should == total
-          end
+          #   split.should == total
+          # end
         end
       end
 
@@ -195,6 +222,17 @@ describe Event do
           @event.total_amount = "$100.00"
           @event.division_type = Event::DivisionType::Total
         end
+
+        it_behaves_like "division_type calculations"
+      end
+
+      describe "with split amount set" do
+        before do
+          @event.split_amount = "$10.00"
+          @event.division_type = Event::DivisionType::Split
+        end
+
+        it_behaves_like "division_type calculations"
       end
     end
   end

@@ -22,12 +22,23 @@ gem 'figaro'
 # Transactions
 gem 'money-rails'
 
-group :development, :test do
+# Validations
+gem 'date_validator', git: 'git://github.com/codegram/date_validator.git'
+
+group :development do
   gem 'thin'
+  gem 'annotate'
+end
+
+group :test do
+  gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'capybara'
-  gem 'annotate'
-  gem 'factory_girl_rails'
+  gem 'spork'
+  gem 'guard-spork'
+  gem 'guard-rspec'
+  gem 'rb-inotify', '~> 0.8.8'
+  gem 'delorean'
 end
 
 # Gems used only for assets and not required
