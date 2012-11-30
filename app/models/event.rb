@@ -5,7 +5,7 @@
 #  id                 :integer          not null, primary key
 #  title              :string(255)
 #  description        :text
-#  due_on             :date
+#  due_at             :date
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  start_at           :datetime

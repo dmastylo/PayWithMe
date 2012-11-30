@@ -9,7 +9,7 @@
     <div class="span4">
         <div class="event-description">
             <%= @event.description %>
-            <%= distance_of_time_in_words @event.due_on - Time.now %>
+            <%= distance_of_time_in_words @event.due_at - Time.now %>
         </div>
         <div class="event-members">
             <% if @members.any? %>
