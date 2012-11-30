@@ -1,30 +1,38 @@
 <div class="row">
     <div class="span12">
-        <div class="event-title">
-            <h2><%= @event.title %></h2>
+        <div class="well">
+            <div class="event-title">
+                <h2><%= @event.title %></h2>
+            </div>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="span5">
-        <div class="event-description">
-            <strong>Description</strong>: <%= @event.description %>
-            <br><strong>Time Left</strong>: <%= distance_of_time_in_words_to_now @event.due_at %>
+        <div class="well">
+            <div class="event-description">
+                <strong>Description</strong>: <%= @event.description %>
+                <br><strong>Time Left</strong>: <%= distance_of_time_in_words_to_now @event.due_at %>
+            </div>
         </div>
-        <div class="event-members">
-            <strong>Members:</strong><br>
-            <% if @members.any? %>
-              <ul class="member-list-styling">
-                <%= render @members %>
-              </ul>
-            <% else %>
-              There are no members. Add some!
-            <% end %>
+        <div class="well">
+            <div class="event-members">
+                <strong>Members:</strong><br>
+                <% if @members.any? %>
+                  <ul class="member-list-styling">
+                    <%= render @members %>
+                  </ul>
+                <% else %>
+                  There are no members. Add some!
+                <% end %>
+            </div>
         </div>
     </div>
     <div class="span7">
-        <div class="event-chat">
-            Chat here
+        <div class="well">
+            <div class="event-chat">
+                Chat here
+            </div>
         </div>
     </div>
 </div>
