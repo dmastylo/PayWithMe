@@ -1,0 +1,23 @@
+<div class="row">
+    <div class="span12">
+        <div class="event-title">
+            <h1><%= @event.title %></h1>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="span4">
+        <div class="event-description">
+            <%= @event.description %>
+            <%= distance_of_time_in_words @event.due_on - Time.now %>
+        </div>
+        <div class="event-members">
+            Members here
+        </div>
+    </div>
+    <div class="span8">
+        <div class="event-chat">
+            Chat here
+        </div>
+    </div>
+</div>
