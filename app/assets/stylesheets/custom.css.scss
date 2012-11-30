@@ -39,10 +39,18 @@ $mediumMargin: 10px;
 		width: 50%;
 	}
 }
+    
+#error-explanation
+{
+    ul
+    {
+        list-style-type: none;
+        margin: 0;
+    }
+}
 
 /* Event Dsiplay */
 .event-title
 {
     border: 1px #fff;
-    
 }
