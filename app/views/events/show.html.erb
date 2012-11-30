@@ -12,7 +12,7 @@
             <br><strong>Time Left</strong>: <%= distance_of_time_in_words_to_now @event.due_at %>
         </div>
         <div class="event-members">
-            <h3>Members</h3>
+            <strong>Members:</strong><br>
             <% if @members.any? %>
               <ul class="member-list-styling">
                 <%= render @members %>
