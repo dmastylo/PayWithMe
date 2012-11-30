@@ -2,11 +2,6 @@
 $eventBorder: #D8D8D8;
 
 /* Typography */
-h1, h2, h3, h4, h5, h6
-{
-    line-height: 1;
-}
-
 h1
 {
     font-size: 3em;
@@ -17,9 +12,8 @@ h1
 
 h2
 {
-    font-size: 1.7em;
+    font-size: 1.5em;
     letter-spacing: -1px;
-    margin-bottom: 20px;
     text-align: center;
     font-weight: normal;
 }
@@ -89,31 +83,17 @@ $mediumMargin: 10px;
 /* Event Dsiplay */
 .event-title
 {
-    text-align: center;
-    margin: 20px 20px 45px 20px;
-
-    h2
-    {
-        display: inline;
-        padding: 10px;
-
-        // Border
-        border: 1px solid $eventBorder;
-        -moz-border-radius: 10px;
-        border-radius: 10px;
-    }
+    padding-bottom: 15px;
 }
 
 .event-description
 {
-    height: 130px;
-    padding: 10px 15px;
+    height: 120px;
 }
 
 .event-members
 {
-    height: 349px;
-    padding: 10px 15px;
+    height: 350px;
     overflow: auto;
 
     /* Event members display */
@@ -153,8 +133,7 @@ $mediumMargin: 10px;
 
 .event-chat
 {
-    height: 500px;
-    padding: 10px 15px;
+    height: 530px;
 }
 
 /* Footer */
