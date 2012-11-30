@@ -94,14 +94,17 @@
         var value = $this.data("value");
         var name = $this.data("name");
 
-        // Set the hidden field
-        $input.val(value);
-
-        if(parent == "division_type")
+        if(!$this.hasClass('disabled'))
         {
-          // Show the hidden box
-          $(".payment_division_option").hide();
-          $("#payment_division_"+name+",.payment_division_"+name).fadeIn();
+          // Set the hidden field
+          $input.val(value);
+
+          if(parent == "division_type")
+          {
+            // Show the hidden box
+            $(".payment_division_option").hide();
+            $("#payment_division_"+name+",.payment_division_"+name).fadeIn();
+          }
         }
       });
 
