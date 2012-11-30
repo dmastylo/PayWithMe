@@ -53,7 +53,7 @@ describe "Home and Sign up pages" do
 				end
 			end
 			
-			describe "when email is blank" do
+			describe "when email" do
 				before{
 					fill_in "Name", 			with: "John Q Sample"
 					fill_in "Email", 			with: ""
@@ -61,8 +61,35 @@ describe "Home and Sign up pages" do
 					fill_in "Confirm Password", with: "foobarbaz"
 				}
 
-				it "should not create the user" do
-					expect{ click_button submit }.not_to change(User, :count)
+				describe "is blank" do
+					
+					it "should not create the user" do
+						expect{ click_button submit }.not_to change(User, :count)
+					end
+				end
+
+				describe "has no @" do
+					before{ fill_in "Email", with: "testexample.com" }
+					
+					it "should not create the user" do
+						expect{ click_button submit }.not_to change(User, :count)
+					end
+				end
+
+				describe "has multiple @" do
+					before{ fill_in "Email", with: "test@test@example.com" }
+
+					it "should not create the user" do
+						expect{ click_button submit }.not_to change(User, :count)
+					end	
+				end
+
+				describe "has no domain" do
+					before{ fill_in "Email", with: "test@examplecom" }
+
+					it "should not create the user" do
+						expect{ click_button submit }.not_to change(User, :count)
+					end	
 				end
 			end
 
