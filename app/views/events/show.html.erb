@@ -8,10 +8,11 @@
 <div class="row">
     <div class="span5">
         <div class="event-description">
-            <%= @event.description %>
-            <br><%= distance_of_time_in_words_to_now @event.due_at %> left
+            <strong>Description</strong>: <%= @event.description %>
+            <br><strong>Time Left</strong>: <%= distance_of_time_in_words_to_now @event.due_at %>
         </div>
         <div class="event-members">
+            <h3>Members</h3>
             <% if @members.any? %>
               <ul class="member-list-styling">
                 <%= render @members %>
