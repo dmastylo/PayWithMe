@@ -36,7 +36,7 @@ end
 group :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
-  gem 'capybara'
+  gem 'capybara', '1.1.2'
   gem 'spork'
   gem 'guard-spork'
   gem 'guard-rspec'
