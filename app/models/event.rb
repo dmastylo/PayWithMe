@@ -34,8 +34,8 @@ class Event < ActiveRecord::Base
   validates :due_at, date: { after: Proc.new { Time.now } }, if: :due_at_changed?
   validates :start_at, presence: true
   validates :start_at, date: { after: Proc.new { Time.now } }, if: :start_at_changed?
-  validates :total_amount_cents, presence: true, numericality: { only_integer: true, greater_than: 0 }, if: :divide_total?
-  validates :split_amount_cents, presence: true, numericality: { only_integer: true, greater_than: 0 }, if: :divide_per_person?
+  validates :total_amount, presence: true, numericality: { greater_than: 0 }, if: :divide_total?
+  validates :split_amount, presence: true, numericality: { greater_than: 0 }, if: :divide_per_person?
 
   # Relationships
   belongs_to :organizer, class_name: "User"
