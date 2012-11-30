@@ -2,8 +2,13 @@ PayWithMe::Application.routes.draw do
 
   devise_for :users, controllers: { omniauth_callbacks: "omniauth_callbacks" }
   root to: "pages#index"
-  resources :users, only: [:show]
+
   resources :events
+  resources :users, only: [:show] do
+    collection do
+      get 'search'
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
