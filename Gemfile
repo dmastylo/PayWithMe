@@ -25,6 +25,9 @@ gem 'money-rails'
 # Validations
 gem 'date_validator', git: 'git://github.com/codegram/date_validator.git'
 
+# Dates
+gem 'american_date'
+
 group :development do
   gem 'thin'
   gem 'annotate'
