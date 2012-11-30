@@ -8,16 +8,18 @@ $eventBorder: #848484;
 	#logo { padding-top: 4px; }
 }
 
+// Forms
 .btn-full {
 	width: auto;
 	display: block;
 }
 
+// Utility
 $mediumMargin: 10px;
-
 .push-top { margin-top: $mediumMargin; }
 .push-bottom { margin-bottom: $mediumMargin; }
 
+// Alerts
 .alert-error
 {
 	ul.error-messages
@@ -27,6 +29,7 @@ $mediumMargin: 10px;
 	}
 }
 
+// Button groups
 .btn-group
 {
 	button.third, button.half
@@ -42,7 +45,8 @@ $mediumMargin: 10px;
 		width: 50%;
 	}
 }
-    
+
+// Errors
 #error-explanation
 {
     ul
