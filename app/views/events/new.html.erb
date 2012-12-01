@@ -125,6 +125,29 @@
       {
         e.preventDefault();
       });
+
+      $('#member_name').typeahead({
+        source: function(query, process)
+        {
+          $.ajax({
+            url: '<%= search_users_path(format: :json) %>',
+            type: 'GET',
+            data: { name: query },
+            dataType: 'json',
+            success: function(data)
+            {
+              process(data);
+            }
+          })
+        },
+        menu: '<ul class="typeahead dropdown-menu dropdown-menu-navigation"></ul>',
+        onselect: function(value)
+        {
+          value = $.parseJSON(value);
+          console.log(value);
+          $("#member_name").val(value.name);
+        }
+      });
     });
   </script>
 <% end %>

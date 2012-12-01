@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git@github.com:austingulati/bootstrap-sass.git
-  revision: 91f2741ba8182a0ce78b9a3b4d80433b282fb924
+  revision: dd69bb9a7bb7878ffb6219c5c0ccbd5babf9cf4f
   specs:
     bootstrap-sass (2.2.1.1)
       sass (~> 3.2)
