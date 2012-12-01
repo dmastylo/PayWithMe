@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   # Relationships
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
   has_and_belongs_to_many :member_events, class_name: "Event", join_table: "event_users"
+  has_many :messages
 
   def profile_image_type
     if profile_image.present?

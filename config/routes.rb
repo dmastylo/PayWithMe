@@ -1,9 +1,12 @@
 PayWithMe::Application.routes.draw do
-
   devise_for :users, controllers: { omniauth_callbacks: "omniauth_callbacks" }
   root to: "pages#index"
 
-  resources :events
+  resources :events do
+    resources :messages, only: :create
+  end
+  # resources :messages, only: [:create]
+
   resources :users, only: [:show] do
     collection do
       get 'search'

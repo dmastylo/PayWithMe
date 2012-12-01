@@ -134,6 +134,45 @@ $mediumMargin: 10px;
 .event-chat
 {
     height: 530px;
+
+    .messages
+    {
+        height: 400px;
+        overflow: auto;
+
+        .messages-styling
+        {
+            list-style: none;
+
+            .message
+            {
+                margin-top: -1px;
+                padding: 10px;
+                border-bottom: 1px solid #e8e8e8;
+
+                .picture
+                {
+                    margin-bottom: 5px;
+                    margin-top: 5px;
+                    display: block;
+                }
+
+                .name
+                {
+                    font-size: 1.3em;
+                    color: #848484;
+                    font-weight: bold;
+                    line-height: 1;
+
+                    &:hover
+                    {
+                        color: #000000;
+                        text-decoration: none;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* Footer */
