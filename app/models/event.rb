@@ -29,7 +29,7 @@ class Event < ActiveRecord::Base
   validates :organizer_id, presence: true
   validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3 }
   validates :fee_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }
-  validates :title, presence: true, length: { minimum: 2 }
+  validates :title, presence: true, length: { minimum: 2, maximum: 40 }
   validates :due_at, presence: true
   validates :due_at, date: { after: Proc.new { Time.now } }, if: :due_at_changed?
   validates :start_at, presence: true
