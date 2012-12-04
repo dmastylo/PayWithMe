@@ -153,6 +153,15 @@ textarea,input
     }
 }
 
+.input-append,.input-prepend
+{
+    input
+    {
+        box-sizing: border-box;
+        height: 30px;
+    }
+}
+
 .btn
 {
    border-radius: 0 !important;
@@ -207,11 +216,21 @@ form
 		-webkit-box-sizing: border-box;
 		width: 33.3%;
         padding: 4px 10px;
+
+        &.last
+        {
+            width: 34%;
+        }
 	}
 
 	button.half
 	{
 		width: 50%;
+
+        &.last
+        {
+            width: 50%;
+        }
 	}
 }
 

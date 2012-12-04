@@ -27,7 +27,7 @@
             <div class="btn-group input-block-level push-bottom" id="division_type_btn_group" data-toggle="buttons-radio">
               <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount.">Divide Total</button>
               <button type="button" class="btn third" data-name="split" data-value="2" title="Each person must pay a certain amount.">Amount Per Person</button>
-              <button type="button" class="btn third" data-name="fundraise" data-value="3" title="Any amount can be paid.">Fundraise/Donations</button>
+              <button type="button" class="btn third last" data-name="fundraise" data-value="3" title="Any amount can be paid.">Fundraise/Donations</button>
             </div>
 
             <div class="payment_division_option push-bottom" id="payment_division_total">
@@ -59,13 +59,9 @@
         <div class="span6">
           <h3>Invited Members</h3>
           <div class="well">
-            <div class="row">
-              <div class="span4">
-                <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
-              </div>
-              <div class="span1">
-                <%= link_to "Add", "#", class: "btn", id: "add_member" %>
-              </div>
+            <div class="input-append">
+              <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
+              <%= link_to "Add", "#", class: "btn", id: "add_member" %>
             </div>
           </div>
         </div>
