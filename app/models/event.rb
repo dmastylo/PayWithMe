@@ -40,6 +40,7 @@ class Event < ActiveRecord::Base
   # Relationships
   belongs_to :organizer, class_name: "User"
   has_and_belongs_to_many :members, class_name: "User", join_table: "event_users"
+  has_many :messages
 
   # Callbacks
   before_validation :clear_amounts

@@ -31,7 +31,20 @@
         <h3>Message Board</h3>
         <div class="well">
             <div class="event-chat">
-                Chat here
+                <% if @messages.any? %>
+                    <div class="messages">
+                        <ul class="messages-styling">
+                            <%= render @messages %>
+                        </ul>
+                    </div>
+                <% else %>
+                    It's a bit empty in here...
+                <% end %>
+                <h3>Leave Message</h3>
+                <%= form_for [@event, @event.messages.build]  do |f| %>
+                    <%= f.text_area :message, class: "span5", rows: "2", placeholder: "Compose a message..." %>
+                    <%= f.submit "Post", class: "btn" %>
+                <% end %>
             </div>
         </div>
     </div>

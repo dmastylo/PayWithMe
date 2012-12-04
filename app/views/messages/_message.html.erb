@@ -1,0 +1,11 @@
+<li class="message">
+    <span class="user">
+        <%= link_to message.user.name, message.user, class: 'title' %>:
+    </span>
+    <span class="message-content">
+        <%= message.message %>
+    </span>
+    <span class="timestamp">
+        Posted <%= time_ago_in_words(message.created_at) %> ago.
+    </span>
+</li>
