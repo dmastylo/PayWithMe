@@ -1,11 +1,17 @@
 <li class="message">
-    <span class="user">
-        <%= link_to message.user.name, message.user, class: 'title' %>:
-    </span>
-    <span class="message-content">
-        <%= message.message %>
-    </span>
-    <span class="timestamp">
+  <div class="picture">
+    <%= profile_image_tag message.user, :small %> 
+  </div>
+  <div class="body span5">
+    <div class="user">
+        <%= link_to message.user.name, message.user, class: 'title' %>
+    </div>
+    <div class="timestamp">
         Posted <%= time_ago_in_words(message.created_at) %> ago.
-    </span>
+    </div>
+    <div class="message-content">
+        <%= message.message %>
+    </div>
+  </div>
+  <div class="clearfix"></div>
 </li>

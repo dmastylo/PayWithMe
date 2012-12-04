@@ -18,7 +18,7 @@ class MessagesController < ApplicationController
         def user_in_event
             @event = Event.find(params[:event_id])
 
-            if @event.members.include?(current_user)
+            if @event.members.include?(current_user) || current_user == @event.organizer
                 true
             else
                 flash[:error] = "Trying to do something you're not supposed to...?"

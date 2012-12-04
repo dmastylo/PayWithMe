@@ -8,8 +8,10 @@
         <div class="well event-description">
             <div class="quarter"><strong>Description:</strong></div>
             <div class="three-quarters"><%= @event.description %></div>
-            <div class="quarter"><strong>Money Due In:</strong></div>
+            <div class="clearfix"></div>
+            <div class="quarter"><strong>Money Due:</strong></div>
             <div class="three-quarters"><%= distance_of_time_in_words_to_now @event.due_at %></div>
+            <div class="clearfix"></div>
             <div class="quarter"><strong>Event Starts:</strong></div>
             <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
             <div class="clearfix"></div>
@@ -33,17 +35,17 @@
             <div class="event-chat">
                 <% if @messages.any? %>
                     <div class="messages">
-                        <ul class="messages-styling">
+                        <ul class="message-list">
                             <%= render @messages %>
                         </ul>
                     </div>
                 <% else %>
                     It's a bit empty in here...
                 <% end %>
-                <h3>Leave Message</h3>
+                <h4>Leave Message</h4>
                 <%= form_for [@event, @event.messages.build]  do |f| %>
-                    <%= f.text_area :message, class: "span5", rows: "2", placeholder: "Compose a message..." %>
-                    <%= f.submit "Post", class: "btn" %>
+                    <%= f.text_area :message, class: "input-block-level", rows: "3", placeholder: "Compose a message..." %>
+                    <%= f.submit "Post Message", class: "btn btn-block" %>
                 <% end %>
             </div>
         </div>
