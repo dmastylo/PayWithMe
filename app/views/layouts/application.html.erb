@@ -6,6 +6,7 @@
 
     <title>PayWithMe</title>
     <%= stylesheet_link_tag "application", :media => "all" %>
+    <link href='http://fonts.googleapis.com/css?family=Crete+Round:400,400italic' rel='stylesheet' type='text/css'>
     <%= csrf_meta_tags %>
 
     <%= render 'shared/shim' %>
@@ -21,15 +22,20 @@
               <%= content_tag(:div, flash[:error], :class => 'alert alert-error', :id => "flash_error") if flash[:error] %>
               <%= content_tag(:div, flash[:notice], :class => 'alert alert-warning', :id => "flash_notice") if flash[:notice] %>
               <%= content_tag(:div, flash[:alert], :class => 'alert alert-info', :id => "flash_alert") if flash[:alert] %>
+              <%= content_tag(:div, flash[:success], :class => 'alert alert-success', :id => "flash_alert") if flash[:success] %>
             </div>
         </div><!--/row-->
         <%= yield %>
       </div><!--/content-->
 
       <%= render 'shared/footer' %>
-      
-      <%= debug(params) if Rails.env.development? %>
-      <%= debug(session) if Rails.env.development? %>
+            
+      <% if Rails.env.development? %>
+        <div class="debug">
+          <%= debug(params) %>
+          <%= debug(session) %>
+        </div>
+      <% end %>
     </div><!--/container-->
 
     <%= javascript_include_tag "application" %>

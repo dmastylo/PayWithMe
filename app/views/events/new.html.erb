@@ -9,61 +9,63 @@
       <div class="row push-top">
         <div class="span6">
           <h3>Event Information</h3>
-          <%= f.label :title %>
-          <%= f.text_field :title, class: "span6" %>
-          <%= f.label :description %>
-          <%= f.text_area :description, class: "span6", rows: 5 %>
-          <%= f.label :start_at %>
-          <%= f.text_field :start_at, class: "datepicker span6", data: { "date-format" => "mm/dd/yyyy" } %>
+          <div class="well">
+            <%= f.label :title %>
+            <%= f.text_field :title, class: "input-block-level" %>
+            <%= f.label :description %>
+            <%= f.text_area :description, class: "input-block-level", rows: 5 %>
+            <%= f.label :start_at %>
+            <%= f.text_field :start_at, class: "input-block-level", placeholder:"mm/dd/yyyy hh:mm" %>
+          </div>
         </div>
         <div class="span6">
           <h3>Payment Information</h3>
-          <%= f.label :due_at %>
-          <%= f.text_field :due_at, class: "datepicker span6", data: { "date-format" => "mm/dd/yyyy" } %>
-          <div class="row">
+          <div class="well">
+            <%= f.label :due_at %>
+            <%= f.text_field :due_at, class: "input-block-level", placeholder: "mm/dd/yyyy hh:mm" %>
             <%= f.hidden_field :division_type %>
-            <div class="btn-group span6 push-bottom" id="division_type_btn_group" data-toggle="buttons-radio">
+            <div class="btn-group input-block-level push-bottom" id="division_type_btn_group" data-toggle="buttons-radio">
               <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount.">Divide Total</button>
               <button type="button" class="btn third" data-name="split" data-value="2" title="Each person must pay a certain amount.">Amount Per Person</button>
               <button type="button" class="btn third" data-name="fundraise" data-value="3" title="Any amount can be paid.">Fundraise/Donations</button>
             </div>
-          </div>
 
-          <div class="payment_division_option push-bottom" id="payment_division_total">
-            <%= f.label :total_amount, "Total Amount" %>
-            <div class="input-prepend row">
-              <span class="add-on span1">$</span>
-              <%= f.text_field :total_amount, class: "span6" %>
+            <div class="payment_division_option push-bottom" id="payment_division_total">
+              <%= f.label :total_amount, "Total Amount" %>
+              <div class="input-prepend">
+                <span class="add-on">$</span>
+                <%= f.text_field :total_amount, class: "input-block-level" %>
+              </div>
             </div>
-          </div>
 
-          <div class="payment_division_option push-bottom" id="payment_division_split">
-            <%= f.label :split_amount, "Amount Per Person" %>
-            <div class="input-prepend row">
-              <span class="add-on span1">$</span>
-              <%= f.text_field :split_amount, class: "span6" %>
+            <div class="payment_division_option push-bottom" id="payment_division_split">
+              <%= f.label :split_amount, "Amount Per Person" %>
+              <div class="input-prepend">
+                <span class="add-on">$</span>
+                <%= f.text_field :split_amount, class: "input-block-level" %>
+              </div>
             </div>
-          </div>
 
-          <%= f.label :fee_type, "Fee Setup" %>
-          <div class="row">
+            <%= f.label :fee_type, "Fee Setup" %>
             <%= f.hidden_field :fee_type %>
-            <div class="btn-group span6 push-bottom" id="fee_type_btn_group" data-toggle="buttons-radio">
+            <div class="btn-group input-block-level push-bottom" id="fee_type_btn_group" data-toggle="buttons-radio">
               <button type="button" class="btn half" data-name="organizer" data-value="1" title="You will pay the fees.">I'll Pay</button>
               <button type="button" class="btn half" data-name="members" data-value="2" title="The members will pay the fees.">Members Pay</button>
-            </div>
+              </div>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="span6">
           <h3>Invited Members</h3>
-          <div class="row">
-            <div class="span5">
-              <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span5" %>
-            </div>
-            <div class="span1 pull-right">
-              <%= link_to "Add", "#", class: "btn btn-full", id: "add_member" %>
+          <div class="well">
+            <div class="row">
+              <div class="span4">
+                <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
+              </div>
+              <div class="span1">
+                <%= link_to "Add", "#", class: "btn", id: "add_member" %>
+              </div>
             </div>
           </div>
         </div>

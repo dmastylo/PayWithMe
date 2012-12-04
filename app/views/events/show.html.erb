@@ -1,23 +1,22 @@
 <% provide(:title, @event.title) %>
-<div class="row">
-    <div class="span8 offset2">
-        <div class="event-title">
-            <h2><%= @event.title %></h2>
-        </div>
-    </div>
+<div class="page-header">
+    <h2><%= @event.title %></h2>
 </div>
 <div class="row">
     <div class="span5">
-        <div class="well">
-            <div class="event-description">
-                <strong>Description</strong>: <%= @event.description %>
-                <br><strong>Money Due In</strong>: <%= distance_of_time_in_words_to_now @event.due_at %>
-                <br><strong>Event At</strong>: <%= @event.start_at.to_date.strftime("%m/%d/%Y %I:%M%p") %>
-            </div>
+        <h3>Event Details</h3>
+        <div class="well event-description">
+            <div class="quarter"><strong>Description:</strong></div>
+            <div class="three-quarters"><%= @event.description %></div>
+            <div class="quarter"><strong>Money Due In:</strong></div>
+            <div class="three-quarters"><%= distance_of_time_in_words_to_now @event.due_at %></div>
+            <div class="quarter"><strong>Event Starts:</strong></div>
+            <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
+            <div class="clearfix"></div>
         </div>
+        <h3>Guest List</h3>
         <div class="well">
             <div class="event-members">
-                <strong>Members:</strong><br>
                 <% if @members.any? %>
                   <ul class="member-list-styling">
                     <%= render @members %>
@@ -29,6 +28,7 @@
         </div>
     </div>
     <div class="span7">
+        <h3>Message Board</h3>
         <div class="well">
             <div class="event-chat">
                 Chat here
