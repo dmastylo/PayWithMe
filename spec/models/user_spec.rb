@@ -31,21 +31,20 @@ describe User do
 	
 	before do
 		@user = User.new(name: "John Sample", 
-						 email: "test2@example.com", 
-						 password: "foobar", 
-						 password_confirmation: "foobar")
+			email: "test2@example.com", 
+			password: "foobar", 
+			password_confirmation: "foobar")
  	end
-
 	subject { @user }
 
  	describe "when a password is too short" do
- 		before{ @user.password = @user.password_confirmation = "x" * 7 }
- 		it{ should be_invalid }
+ 		before { @user.password = @user.password_confirmation = "x" * 7 }
+ 		it { should be_invalid }
  	end
 
  	describe "when a password doesn't match confirmation" do
- 		before{ @user.password_confirmation = "Mismatch" }
- 		it{ should be_invalid }
+ 		before { @user.password_confirmation = "mismatch" }
+ 		it { should be_invalid }
  	end
 
  	after do
