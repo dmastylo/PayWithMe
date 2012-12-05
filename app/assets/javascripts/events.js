@@ -1,7 +1,5 @@
 function addMember(member)
 {
-	console.log(member);
-
 	// TODO: Add check to see if already exists
 	if(member.name)
 	{
