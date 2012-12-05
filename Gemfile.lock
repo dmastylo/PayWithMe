@@ -5,9 +5,8 @@ GIT
     date_validator (0.6.3)
       activemodel (~> 3.0)
 
-GIT
-  remote: git@github.com:austingulati/bootstrap-sass.git
-  revision: dd69bb9a7bb7878ffb6219c5c0ccbd5babf9cf4f
+PATH
+  remote: /var/www/bootstrap-sass
   specs:
     bootstrap-sass (2.2.1.1)
       sass (~> 3.2)
@@ -199,7 +198,7 @@ GEM
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
       rspec-mocks (~> 2.12.0)
-    rspec-core (2.12.0)
+    rspec-core (2.12.1)
     rspec-expectations (2.12.0)
       diff-lcs (~> 1.1.3)
     rspec-mocks (2.12.0)

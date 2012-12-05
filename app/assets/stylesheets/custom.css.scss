@@ -100,35 +100,47 @@ p
                         background-color: $mediumBlue;
                     }
                 }
-
-                ul.dropdown-menu
-                {
-                    border-radius: 0;
-                    border: 0;
-                    padding: 0;
-                    margin: 0;
-
-                    li
-                    {
-                        a
-                        {
-                            padding: 10px 12px;
-                            font-size: 16px;
-
-                            &:hover
-                            {
-                                background-color: $lightBlue;
-                                background-image: none;
-                            }
-                        }
-                    }
-
-                    &:before, &:after
-                    {
-                        display: none;
-                    }
-                }
             }
+        }
+    }
+}
+
+ul.dropdown-menu
+{
+    border-radius: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+
+    li
+    {
+        a
+        {
+            padding: 10px 20px 10px 12px;
+            font-size: 16px;
+
+            &:hover
+            {
+                background-color: $lightBlue !important;
+                background-image: none !important;
+            }
+        }
+    }
+
+    &:before, &:after
+    {
+        display: none !important;
+    }
+
+    &.typeahead
+    {
+        width: auto;
+
+        li.active a
+        {
+            background-color: $mediumBlue !important;
+            background-image: none !important;
+            color: $offWhite;
         }
     }
 }
@@ -279,7 +291,6 @@ $mediumMargin: 10px;
 }
 
 // Event Display 
-
 .event-description
 {
     // max-height: 120px;
@@ -403,6 +414,48 @@ $mediumMargin: 10px;
                         text-decoration: none;
                     }
                 }
+            }
+        }
+    }
+}
+
+// Adding users to events
+#invited_members
+{
+    .member
+    {
+        margin-top: 10px;
+
+        .profile_image
+        {
+            float: left;
+        }
+
+        .info
+        {
+            float: left;
+            margin-left: 5px;
+            line-height: 17px;
+        }
+
+        .name
+        {
+            font-weight: bold;
+        }
+
+        .email
+        {
+            color: $mediumGray;
+        }
+
+        &.member_with_email
+        {
+            height: 34px;
+            line-height: 34px;
+            .email
+            {
+                font-weight: bold;
+                color: $offBlack;
             }
         }
     }

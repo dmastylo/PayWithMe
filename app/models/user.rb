@@ -73,8 +73,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.search_by_name(name)
-    User.where("name LIKE '%#{name}%'")
+  def self.search_by_name_and_email(name)
+    User.where("name LIKE '%#{name}%' OR email LIKE '%#{name}%'")
   end
 
   def password_required?

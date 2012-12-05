@@ -63,6 +63,9 @@
               <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
               <%= link_to "Add", "#", class: "btn", id: "add_member" %>
             </div>
+            <div id="invited_members">
+              <div class="clearfix"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -123,6 +126,37 @@
       $("#add_member").click(function(e)
       {
         e.preventDefault();
+
+        var $typeahead = $('.typeahead');
+        if($typeahead.is(':visible'))
+        {
+          $typeahead.find('li.active').trigger('click');
+        }
+        else
+        {
+          var member = {'email': $("#member_name").val()};
+          addMember(member);
+        }
+      });
+
+      $('#member_name').keydown(function(e)
+      {
+        if(e.keyCode == 13)
+        {
+          e.preventDefault();
+
+          var $typeahead = $('.typeahead');
+          console.log($typeahead);
+          if($typeahead.is(':visible'))
+          {
+            $typeahead.find('li.active').trigger('click');
+          }
+          else
+          {
+            var member = {'email': $("#member_name").val()};
+            addMember(member);
+          }
+        }
       });
 
       $('#member_name').typeahead({
@@ -142,9 +176,8 @@
         menu: '<ul class="typeahead dropdown-menu dropdown-menu-navigation"></ul>',
         onselect: function(value)
         {
-          value = $.parseJSON(value);
-          console.log(value);
-          $("#member_name").val(value.name);
+          var value = $.parseJSON(value);
+          addMember(value);
         }
       });
     });

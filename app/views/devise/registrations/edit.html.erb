@@ -1,95 +1,108 @@
 <% provide(:title, "Edit Registration") %>
-<div class="row">
-  <div class="span9 page-body">
     <div class="page-header">
       <h2>Account Settings</h2>
     </div>
 
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: 'form-horizontal' }, ) do |f| %>
-      <%= devise_error_messages! %>
-
-      <div class="control-group">
-        <%= f.label :name, class: 'control-label' %>
-        <div class="controls">
-          <%= f.text_field :name %>
-        </div>
-      </div>
-
-      <div class="control-group">
-        <%= f.label :email, class: 'control-label' %>
-        <div class="controls">
-          <%= f.email_field :email %>
-        </div>
-      </div>
-
-      <% if f.object.password_required? %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= devise_error_messages! %>
+  <div class="row">
+    <div class="span6">
+      <h3>Contact Information</h3>
+      <div class="well">
         <div class="control-group">
-          <%= f.label :password, class: 'control-label' %>
+          <%= f.label :email, class: 'control-label' %>
           <div class="controls">
-            <%= f.password_field :password %>
+            <%= f.email_field :email, class: 'input-block-level' %>
           </div>
         </div>
 
-        <div class="control-group">
-          <%= f.label :password_confirmation, "Confirm Password", class: 'control-label' %>
-          <div class="controls">
-            <%= f.password_field :password_confirmation %>
-          </div>
-        </div>
-      <% end %>
-
-      <div class="control-group">
-        <%= f.label :profile_image, class: 'control-label' %>
-        <div class="controls">
-          <%= f.hidden_field :profile_image_option, id: "user_profile_image" %>
-          <div class="btn-group" id="user_profile_image_btn_group" data-toggle="buttons-radio">
-            <button type="button" class="btn <%= "active" if current_user.profile_image_type == :gravatar %>" data-value="gravatar">Gravatar</button>
-            <button type="button" class="btn <%= "active" if current_user.profile_image_type == :url %>" data-value="url">URL</button>
-            <button type="button" class="btn <%= "active" if current_user.profile_image_type == :upload %>" data-value="upload">Image Upload</button>
+        <% if f.object.password_required? %>
+          <div class="control-group">
+            <%= f.label :password, class: 'control-label' %>
+            <div class="controls">
+              <%= f.password_field :password, class: 'input-block-level' %>
+            </div>
           </div>
 
-          <div class="user_profile_image_option push-top" id="user_profile_image_gravatar">
-            Your gravatar:<br />
-            <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
-            <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top" %>
+          <div class="control-group">
+            <%= f.label :password_confirmation, "Confirm Password", class: 'control-label' %>
+            <div class="controls">
+              <%= f.password_field :password_confirmation, class: 'input-block-level' %>
+            </div>
           </div>
-          <div class="user_profile_image_option push-top" id="user_profile_image_url">
-            <% if current_user.profile_image_url.present? %>
-              <div class="push-bottom">
-                Current URL:
-              </div>
-              <div class="push-bottom">
-                <%= profile_image_tag(current_user, :small) %>
-              </div>
-            <% end %>
-            <%= f.text_field :profile_image_url, placeholder: "Image URL"  %>
+        <% end %>
+
+          <div class="form-actions">
+            <%= f.submit "Update All", class: 'btn btn-primary' %>
           </div>
-          <div class="user_profile_image_option push-top" id="user_profile_image_upload">
-            <% if current_user.profile_image.present? %>
-              <div class="push-bottom">
-                Current uploaded image:
-              </div>
-              <div class="push-bottom">
-                <%= profile_image_tag(current_user, :small) %>
-              </div>
-            <% end %>
-            <%= f.file_field :profile_image, accept: 'image' %>
-          </div>
-        </div>
       </div>
-
-      <div class="form-actions">
-        <%= f.submit "Update", class: 'btn btn-primary' %>
-      </div>
-    <% end %>
-  </div>
-  <!-- <div class="span3">
-    <div class="well sidebar-nav">
-      <strong>Cancel my account</strong><br />
-      Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), :data => { :confirm => "Are you sure?" }, :method => :delete %>.
     </div>
-  </div> -->
-</div>
+    <div class="span6">
+      <h3>Profile Information</h3>
+      <div class="well">
+        <div class="control-group">
+          <%= f.label :name, class: 'control-label' %>
+          <div class="controls">
+            <%= f.text_field :name, class: 'input-block-level' %>
+          </div>
+        </div>
+        <div class="control-group">
+          <%= f.label :profile_image, class: 'control-label' %>
+          <div class="controls">
+            <%= f.hidden_field :profile_image_option, id: "user_profile_image" %>
+            <div class="btn-group input-block-level" id="user_profile_image_btn_group" data-toggle="buttons-radio">
+              <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :gravatar %>" data-value="gravatar">Gravatar</button>
+              <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :url %>" data-value="url">URL</button>
+              <button type="button" class="btn third last <%= "active" if current_user.profile_image_type == :upload %>" data-value="upload">Image Upload</button>
+            </div>
+
+            <div class="user_profile_image_option push-top" id="user_profile_image_gravatar">
+              Your gravatar:<br />
+              <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
+              <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top" %>
+            </div>
+            <div class="user_profile_image_option push-top" id="user_profile_image_url">
+              <% if current_user.profile_image_url.present? %>
+                <div class="push-bottom">
+                  Current URL:
+                </div>
+                <div class="push-bottom">
+                  <%= profile_image_tag(current_user, :small) %>
+                </div>
+              <% end %>
+              <div class="control-group">
+                <%= f.label :profile_image_url, "Profile Image URL", class: 'control-label' %>
+                <div class="controls">
+                  <%= f.text_field :profile_image_url, placeholder: "http://example.com/image.png", class: 'input-block-level'  %>
+                </div>
+              </div>
+            </div>
+            <div class="user_profile_image_option push-top" id="user_profile_image_upload">
+              <% if current_user.profile_image.present? %>
+                <div class="push-bottom">
+                  Current uploaded image:
+                </div>
+                <div class="push-bottom">
+                  <%= profile_image_tag(current_user, :small) %>
+                </div>
+              <% end %>
+              <div class="control-group">
+                <%= f.label :profile_image, "Profile Image File", class: 'control-label' %>
+                <div class="controls">
+                  <%= f.file_field :profile_image, accept: 'image' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit "Update All", class: 'btn btn-primary' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
 
 <% content_for(:before_body_end) do %>
   <script type="text/javascript">
