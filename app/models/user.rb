@@ -34,6 +34,12 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image_option, :profile_image, :profile_image_option, :profile_image_url
   attr_accessor :profile_image_option
   has_attached_file :profile_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>" }
+
+  # Validations
+  validates :name, presence: true, length: { maximum: 50 }, unless: :stub?
+  # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  # validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
+  validates :password, length: { minimum: 6 }, if: :password_required?, unless: :stub?
   
   # Callbacks
   before_save :set_profile_image
@@ -78,7 +84,7 @@ class User < ActiveRecord::Base
   end
 
   def password_required?
-    super && provider.blank?
+    super && provider.blank? && !stub?
   end
 
   def update_with_password(params, *options)

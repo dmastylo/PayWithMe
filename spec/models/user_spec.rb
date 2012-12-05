@@ -42,7 +42,7 @@ describe User do
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:encrypted_password) }
-  it { should repsond_to(:organized_events) }
+  it { should respond_to(:organized_events) }
   it { should respond_to(:member_events) }
   it { should respond_to(:profile_image_url) }
   it { should respond_to(:stub) }
@@ -60,28 +60,28 @@ describe User do
 
   describe "validation" do
     describe "when a password is too short" do
-      before { @user.password = @user.password_confirmation = "x" * 7 }
-      it { should be_invalid }
+      before { @user.password = @user.password_confirmation = "x" * 5 }
+      it { should_not be_valid }
     end
 
     describe "when a password doesn't match confirmation" do
       before { @user.password_confirmation = "mismatch" }
-      it { should be_invalid }
+      it { should_not be_valid }
     end
 
     describe "when name is not present" do
       before { @user.name = nil }
-      it { should be_invalid }
+      it { should_not be_valid }
     end
     
     describe "when email is not present" do
       before { @user.email = nil }
-      it { should be_invalid }
+      it { should_not be_valid }
     end
 
     describe "when email is invalid" do
       before { @user.email = "not.an.email" }
-      it { should be_invalid }
+      it { should_not be_valid }
     end
 
     after do
@@ -93,7 +93,7 @@ describe User do
   describe "when stub" do
     before do
       @user = User.new(email: "email@example.com")
-      @user.toggle!(:stub)
+      @user.stub = true
     end
 
     describe "validation" do
@@ -109,7 +109,7 @@ describe User do
 
       describe "when email is not present" do
         before { @user.email = "" }
-        it { should be_invalid }
+        it { should_not be_valid }
       end
     end
   end
