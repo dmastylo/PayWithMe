@@ -49,6 +49,8 @@ class User < ActiveRecord::Base
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
   has_many :event_users
   has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
+  has_many :group_users
+  has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages
 
   def profile_image_type

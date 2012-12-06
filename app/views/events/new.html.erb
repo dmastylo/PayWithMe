@@ -127,42 +127,7 @@
         }
       });
 
-      $("#add_member").click(function(e)
-      {
-        e.preventDefault();
-        handleAddMember();
-      });
-
-      $('#member_name').keydown(function(e)
-      {
-        if(e.keyCode == 13)
-        {
-          e.preventDefault();
-          handleAddMember();
-        }
-      });
-
-      $('#member_name').typeahead({
-        source: function(query, process)
-        {
-          $.ajax({
-            url: '<%= search_users_path(format: :json) %>',
-            type: 'GET',
-            data: { name: query },
-            dataType: 'json',
-            success: function(data)
-            {
-              process(data);
-            }
-          })
-        },
-        menu: '<ul class="typeahead dropdown-menu dropdown-menu-navigation"></ul>',
-        onselect: function(value)
-        {
-          var value = $.parseJSON(value);
-          addMember(value);
-        }
-      });
+      $('#member_name').add_members();
     });
   </script>
 <% end %>
