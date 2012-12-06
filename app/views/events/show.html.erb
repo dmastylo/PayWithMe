@@ -6,9 +6,11 @@
   <div class="span5">
     <h3>Event Details</h3>
     <div class="well event-description">
-      <div class="quarter"><strong>Description:</strong></div>
-      <div class="three-quarters"><%= @event.description %></div>
-      <div class="clearfix"></div>
+      <% if @event.description.present? %>
+        <div class="quarter"><strong>Description:</strong></div>
+        <div class="three-quarters"><%= @event.description %></div>
+        <div class="clearfix"></div>
+      <% end %>
       <div class="quarter"><strong>Money Due:</strong></div>
       <div class="three-quarters"><%= distance_of_time_in_words_to_now @event.due_at %></div>
       <div class="clearfix"></div>

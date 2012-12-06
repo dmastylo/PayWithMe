@@ -12,4 +12,7 @@
 
 class EventUser < ActiveRecord::Base
   attr_accessible :amount, :due_date, :event_id, :paid_date, :user_id
+
+  belongs_to :member, class_name: "User", foreign_key: "user_id"
+  belongs_to :event
 end

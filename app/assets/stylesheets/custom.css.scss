@@ -255,7 +255,9 @@ form
 
 // Utility
 $mediumMargin: 10px;
+$largeMargin: $mediumMargin * 2.5;
 .push-top { margin-top: $mediumMargin; }
+h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .push-bottom { margin-bottom: $mediumMargin; }
 
 // Alerts
@@ -342,7 +344,7 @@ $mediumMargin: 10px;
             .profile_image
             {
                 // margin-bottom: 5px;
-                // margin-top: 5px;
+                margin-top: 3px;
                 // display: block;
                 float: left;
 
@@ -356,13 +358,18 @@ $mediumMargin: 10px;
         .body
         {
             padding-left: 10px;
-            padding-top: 5px;
+            // padding-top: 5px;
             float: left;
 
             .user a
             {
                 color: $offBlack;
                 font-weight: bold;
+            }
+
+            .status
+            {
+                color: $mediumGray;
             }
         }
     }

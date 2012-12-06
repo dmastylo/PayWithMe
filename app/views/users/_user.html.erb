@@ -7,6 +7,15 @@
         <% name = user.name || user.email %>
         <%= link_to name, user %>
     </div>
+    <div class="status">
+      <% if user == @event.organizer %>
+        Event Organizer
+      <% elsif user.paid_date.present? %>
+        Paid
+      <% else %>
+        Unpaid
+      <% end %>
+    </div>
   </div>
   <div class="clearfix"></div>
 </li>

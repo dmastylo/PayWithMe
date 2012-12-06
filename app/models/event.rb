@@ -39,7 +39,8 @@ class Event < ActiveRecord::Base
 
   # Relationships
   belongs_to :organizer, class_name: "User"
-  has_and_belongs_to_many :members, class_name: "User", join_table: "event_users"
+  has_many :event_users
+  has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
   has_many :messages
 
   # Callbacks
@@ -50,7 +51,7 @@ class Event < ActiveRecord::Base
     if division_type == DivisionType::Fundraise || members.size == 0 || send_amount_cents.nil?
       nil
     elsif fee_type == FeeType::OrganizerPays
-      members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f)
+      members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)
     else
       total_amount_cents
     end
@@ -62,7 +63,7 @@ class Event < ActiveRecord::Base
     elsif fee_type == FeeType::OrganizerPays
       split_amount_cents
     else
-      (total_amount_cents / members.size + Figaro.env.fee_static.to_f) / (1 - Figaro.env.fee_rate.to_f)
+      ((split_amount_cents + Figaro.env.fee_static.to_f * 100.0) / (1.0 - Figaro.env.fee_rate.to_f)).ceil
     end
   end
 

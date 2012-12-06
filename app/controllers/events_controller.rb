@@ -19,9 +19,19 @@ class EventsController < ApplicationController
 
       @event.members << user
     end
+    @event.members << current_user
 
     if @event.save
       flash[:success] = "Event created!"
+
+      @event.event_users.each do |event_user|
+        if event_user.member != current_user
+          event_user.due_date = @event.due_at
+          event_user.amount_cents = @event.send_amount_cents
+          event_user.save
+        end
+      end
+
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)
     else

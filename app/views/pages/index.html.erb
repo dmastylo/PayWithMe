@@ -1,2 +1,15 @@
-<h1>Pages#index</h1>
-<p>Find me in app/views/pages/index.html.erb</p>
+<% if user_signed_in? %>
+  <div class="row">
+    <div class="span8">
+    </div>
+    <div class="span4">
+      <%= link_to "Create New Event", new_event_path, class: "btn btn-block btn-primary" %>
+      <h3 class="push-top">Upcoming Events</h3>
+      <div class="well">
+
+      </div>
+    </div>
+  </div>
+<% else %>
+  nothing
+<% end %>
