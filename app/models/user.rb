@@ -23,6 +23,7 @@
 #  profile_image_file_size    :integer
 #  profile_image_updated_at   :datetime
 #  profile_image_url          :string(255)
+#  stub                       :boolean          default(FALSE)
 #
 
 class User < ActiveRecord::Base
@@ -79,8 +80,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.search_by_name_and_email(name)
-    User.where("name LIKE '%#{name}%' OR email LIKE '%#{name}%'")
+  def self.search_by_name_and_email(query)
+    User.search(name_or_email_cont: query).result
   end
 
   def password_required?

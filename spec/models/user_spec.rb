@@ -23,6 +23,7 @@
 #  profile_image_file_size    :integer
 #  profile_image_updated_at   :datetime
 #  profile_image_url          :string(255)
+#  stub                       :boolean          default(FALSE)
 #
 
 require 'spec_helper'

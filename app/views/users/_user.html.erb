@@ -1,0 +1,12 @@
+<li class="member">
+  <div class="profile_image">
+    <%= profile_image_tag user, :thumb %> 
+  </div>
+  <div class="body">
+    <div class="user">
+        <% name = user.name || user.email %>
+        <%= link_to name, user %>
+    </div>
+  </div>
+  <div class="clearfix"></div>
+</li>

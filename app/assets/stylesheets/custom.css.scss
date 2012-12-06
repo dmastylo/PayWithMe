@@ -15,6 +15,13 @@ body
     color: $offBlack;
 }
 
+.hidden
+{
+    // Only use display: none for .hidden since
+    // jQuery's show() doesn't change visibility
+    visibility: visible;
+}
+
 // Typography 
 h1,h2,h3,h4
 {
@@ -315,105 +322,109 @@ $mediumMargin: 10px;
     overflow: auto;
 
     /* Event members display */
-    .member-list-styling
+    .member-list
     {
         list-style: none;
+        padding: 0;
+        margin: 0;
 
         .member
         {
-            margin-top: -1px;
-            padding: 10px;
-            border-bottom: 1px solid #e8e8e8;
+            margin-bottom: 5px;
+            width: 50%;
+            float: left;
 
-            .picture
+            &:last-child
             {
-                margin-bottom: 5px;
-                margin-top: 5px;
-                display: block;
+                margin-bottom: 0;
             }
 
-            .name
+            .profile_image
             {
-                font-size: 1.3em;
-                color: #848484;
-                font-weight: bold;
-                line-height: 1;
+                // margin-bottom: 5px;
+                // margin-top: 5px;
+                // display: block;
+                float: left;
 
-                &:hover
+                img
                 {
-                    color: #000000;
-                    text-decoration: none;
+                    border: 1px solid $mediumGray;
                 }
+            }
+        }
+
+        .body
+        {
+            padding-left: 10px;
+            padding-top: 5px;
+            float: left;
+
+            .user a
+            {
+                color: $offBlack;
+                font-weight: bold;
             }
         }
     }
 }
 
-.event-chat
+
+.message_list
 {
-    height: 550px;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    height: 380px;
+    overflow: auto;
 
-    .messages
+    .message
     {
-        height: 400px;
-        overflow: auto;
+        // margin-top: -1px;
+        // padding: 10px;
+        border-bottom: 1px solid #e8e8e8;
+        margin-bottom: 10px;
 
-        .message-list
+        .profile_image
         {
-            list-style: none;
-            margin: 0;
-            padding: 0;
+            // margin-bottom: 5px;
+            // margin-top: 5px;
+            // display: block;
+            float: left;
 
-            .message
+            img
             {
-                // margin-top: -1px;
-                // padding: 10px;
-                border-bottom: 1px solid #e8e8e8;
-                margin-bottom: 10px;
+                border: 1px solid $mediumGray;
+            }
+        }
 
-                .picture
-                {
-                    // margin-bottom: 5px;
-                    // margin-top: 5px;
-                    // display: block;
-                    float: left;
+        .body
+        {
+            padding-left: 10px;
+            float: left;
 
-                    img
-                    {
-                        border: 1px solid $mediumGray;
-                    }
-                }
+            .user a
+            {
+                color: $offBlack;
+                font-weight: bold;
+            }
 
-                .body
-                {
-                    padding-left: 10px;
-                    float: left;
+            .timestamp
+            {
+                color: $mediumGray;
+            }
+        }
 
-                    .user a
-                    {
-                        color: $offBlack;
-                        font-weight: bold;
-                    }
+        .name
+        {
+            font-size: 1.3em;
+            color: #848484;
+            font-weight: bold;
+            line-height: 1;
 
-                    .timestamp
-                    {
-                        color: $mediumGray;
-                    }
-                }
-
-                .name
-                {
-                    font-size: 1.3em;
-                    color: #848484;
-                    font-weight: bold;
-                    line-height: 1;
-
-                    &:hover
-                    {
-                        color: #000000;
-                        text-decoration: none;
-                    }
-                }
+            &:hover
+            {
+                color: #000000;
+                text-decoration: none;
             }
         }
     }

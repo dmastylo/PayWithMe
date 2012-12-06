@@ -7,11 +7,23 @@ class EventsController < ApplicationController
   end
 
   def create
+    members = ActiveSupport::JSON.decode(params[:event].delete(:members))
     @event = current_user.organized_events.new(params[:event])
+    members.each do |member|
+      user = User.find_by_email(member)
+      if user.nil?
+        user = User.new(email: member)
+        user.stub = true
+        user.save
+      end
+
+      @event.members << user
+    end
 
     if @event.save
       flash[:success] = "Event created!"
-      redirect_to @event
+      # For some reason, redirect_to @event doesn't work
+      redirect_to event_path(@event)
     else
       render "new"
     end
@@ -23,15 +35,15 @@ class EventsController < ApplicationController
     @messages = @event.messages.all
   end
 
-  private
-      def user_in_event
-          @event = Event.find(params[:id])
+private
+  def user_in_event
+    @event = Event.find(params[:id])
 
-          if @event.members.include?(current_user) || @event.organizer == current_user
-              true
-          else
-              flash[:error] = "You're not on the list."
-              redirect_to root_path
-          end
-      end
+    if @event.members.include?(current_user) || @event.organizer == current_user
+      true
+    else
+      flash[:error] = "You're not on the list."
+      redirect_to root_path
+    end
+  end
 end

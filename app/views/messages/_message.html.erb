@@ -1,10 +1,10 @@
 <li class="message">
-  <div class="picture">
+  <div class="profile_image">
     <%= profile_image_tag message.user, :small %> 
   </div>
   <div class="body span5">
     <div class="user">
-        <%= link_to message.user.name, message.user, class: 'title' %>
+        <%= link_to message.user.name, message.user %>
     </div>
     <div class="timestamp">
         Posted <%= time_ago_in_words(message.created_at) %> ago.

@@ -1,53 +1,49 @@
 <% provide(:title, @event.title) %>
 <div class="page-header">
-    <h2><%= @event.title %></h2>
+  <h2><%= @event.title %></h2>
 </div>
 <div class="row">
-    <div class="span5">
-        <h3>Event Details</h3>
-        <div class="well event-description">
-            <div class="quarter"><strong>Description:</strong></div>
-            <div class="three-quarters"><%= @event.description %></div>
-            <div class="clearfix"></div>
-            <div class="quarter"><strong>Money Due:</strong></div>
-            <div class="three-quarters"><%= distance_of_time_in_words_to_now @event.due_at %></div>
-            <div class="clearfix"></div>
-            <div class="quarter"><strong>Event Starts:</strong></div>
-            <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
-            <div class="clearfix"></div>
-        </div>
-        <h3>Guest List</h3>
-        <div class="well">
-            <div class="event-members">
-                <% if @members.any? %>
-                  <ul class="member-list-styling">
-                    <%= render @members %>
-                  </ul>
-                <% else %>
-                  There are no members. Add some!
-                <% end %>
-            </div>
-        </div>
+  <div class="span5">
+    <h3>Event Details</h3>
+    <div class="well event-description">
+      <div class="quarter"><strong>Description:</strong></div>
+      <div class="three-quarters"><%= @event.description %></div>
+      <div class="clearfix"></div>
+      <div class="quarter"><strong>Money Due:</strong></div>
+      <div class="three-quarters"><%= distance_of_time_in_words_to_now @event.due_at %></div>
+      <div class="clearfix"></div>
+      <div class="quarter"><strong>Event Starts:</strong></div>
+      <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
+      <div class="clearfix"></div>
     </div>
-    <div class="span7">
-        <h3>Message Board</h3>
-        <div class="well">
-            <div class="event-chat">
-                <% if @messages.any? %>
-                    <div class="messages">
-                        <ul class="message-list">
-                            <%= render @messages %>
-                        </ul>
-                    </div>
-                <% else %>
-                    It's a bit empty in here...
-                <% end %>
-                <h4>Leave Message</h4>
-                <%= form_for [@event, @event.messages.build]  do |f| %>
-                    <%= f.text_area :message, class: "input-block-level", rows: "3", placeholder: "Compose a message..." %>
-                    <%= f.submit "Post Message", class: "btn btn-block" %>
-                <% end %>
-            </div>
-        </div>
+    <h3>Guest List</h3>
+    <div class="well">
+      <div class="event-members">
+        <% if @members.any? %>
+          <ul class="member-list">
+            <%= render @members %>
+          </ul>
+        <% else %>
+          There are no members. Add some!
+        <% end %>
+      </div>
     </div>
+  </div>
+  <div class="span7">
+    <h3>Message Board</h3>
+    <div class="well">
+      <ul class="message_list">
+        <% if @messages.any? %>
+            <%= render @messages %>
+        <% else %>
+          There are no messages.
+        <% end %>
+      </ul>
+      <h4>Leave Message</h4>
+      <%= form_for [@event, @event.messages.build]  do |f| %>
+        <%= f.text_area :message, class: "input-block-level", rows: "3", placeholder: "Compose a message..." %>
+        <%= f.submit "Post Message", class: "btn btn-block" %>
+      <% end %>
+    </div>
+  </div>
 </div>
