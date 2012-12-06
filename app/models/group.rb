@@ -21,4 +21,12 @@ class Group < ActiveRecord::Base
   has_many :group_users
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
 
+  def self.search_by_title(query, user = nil)
+    if user.nil?
+      Group.search(title_cont: query).result
+    else
+      user.groups.search(title_cont: query).result
+    end
+  end
+
 end

@@ -47,6 +47,24 @@ class GroupsController < ApplicationController
   def show
   end
 
+  def search
+    @query = params[:name]
+    if @query.nil? || @query.empty?
+      flash.now[:error] = "Please enter a search term."
+    else
+      @groups = Group.search_by_title(@query, current_user)
+    end
+    @groups ||= []
+
+    respond_to do |format|
+      format.html
+      format.json do
+        @groups = @groups.collect { |result| {id: result.id, title: result.title } }
+        render json: @groups
+      end
+    end
+  end
+
 private
   def user_in_group
     @group = Group.find(params[:id])

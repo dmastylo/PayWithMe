@@ -58,7 +58,6 @@
       <h3>Invite Members</h3>
       <div class="well">
         <div class="alert alert-error hidden" id="add_member_error">
-          Please enter a valid email address.
         </div>
         <div class="input-append">
           <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
@@ -66,6 +65,21 @@
         </div>
         <%= f.hidden_field :members %>
         <div id="invited_members">
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </div>
+    <div class="span6">
+      <h3>Invite Groups</h3>
+      <div class="well">
+        <div class="alert alert-error hidden" id="add_group_error">
+        </div>
+        <div class="input-append">
+          <%= text_field :group, :name, placeholder: "Search for groups", class: "span4" %>
+          <%= link_to "Add", "#", class: "btn", id: "add_group" %>
+        </div>
+        <%= f.hidden_field :groups %>
+        <div id="invited_groups">
           <div class="clearfix"></div>
         </div>
       </div>
@@ -123,7 +137,32 @@
         }
       });
 
-      $('#member_name').add_members();
+      $('#member_name').addSomething();
+      $("#group_name").addSomething({
+        addButtonSelector: "#add_group",
+        somethingsInputSelector: "#event_groups",
+        somethingsSelector: "#invited_groups",
+        errorSelector: "#add_group_error",
+        source: "<%= search_groups_path(format: :json) %>",
+        idAttribute: "id",
+        displayAttribute: "title",
+        allowNameless: false,
+        onValidate: function(something)
+        {
+          return;
+        },
+        onCreate: function(something)
+        {
+          var $something;
+          $something = $("<div></div>").addClass("member member_with_email")
+            .append($("<div></div>")
+              .addClass("email")
+            .html(something.title)
+            )
+          ;
+          return $something;
+        }
+      });
     });
   </script>
 <% end %>

@@ -13,7 +13,11 @@ PayWithMe::Application.routes.draw do
     end
   end
 
-  resources :groups
+  resources :groups do
+    collection do
+      get 'search'
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

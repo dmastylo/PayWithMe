@@ -8,6 +8,7 @@ class EventsController < ApplicationController
 
   def create
     members = ActiveSupport::JSON.decode(params[:event].delete(:members))
+    groups = ActiveSupport::JSON.decode(params[:event].delete(:groups))
     @event = current_user.organized_events.new(params[:event])
     members.each do |member|
       user = User.find_by_email(member)
@@ -19,7 +20,19 @@ class EventsController < ApplicationController
 
       @event.members << user
     end
-    @event.members << current_user
+
+    groups.each do |group|
+      group = current_user.groups.find_by_id(group)
+      if group.present?
+        group.members.each do |member|
+          puts member
+          if !@event.members.include?(member)
+            @event.members << member
+          end
+        end
+      end
+    end
+    @event.members << current_user unless @event.members.include?(current_user)
 
     if @event.save
       flash[:success] = "Event created!"
