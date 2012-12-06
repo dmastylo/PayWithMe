@@ -31,10 +31,6 @@
             </div>
           </div>
         <% end %>
-
-          <div class="form-actions">
-            <%= f.submit "Update All", class: 'btn btn-primary' %>
-          </div>
       </div>
     </div>
     <div class="span6">
@@ -95,14 +91,16 @@
             </div>
           </div>
         </div>
-
-        <div class="form-actions">
-          <%= f.submit "Update All", class: 'btn btn-primary' %>
-        </div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <div class="span12">
+        <%= f.submit "Update Info", class: 'btn btn-primary' %>
       </div>
     </div>
   </div>
 <% end %>
+
 
 <% content_for(:before_body_end) do %>
   <script type="text/javascript">
