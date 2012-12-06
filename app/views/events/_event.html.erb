@@ -1,0 +1,7 @@
+<div class="event span3">
+  <div class="well">
+    <h4 style="margin-top: 0;"><%= link_to event.title, event %></h4>
+    <%= event.members.count %> members<br />
+    Starts in <%= distance_of_time_in_words_to_now event.start_at %>
+  </div>
+</div>

@@ -45,6 +45,21 @@ h3
     color: $mediumBlue;
 }
 
+h4
+{
+    a
+    {
+        color: $offBlack;
+        text-decoration: none;
+
+        &:hover
+        {
+            color: $offBlack;
+            text-decoration: underline;
+        }
+    }
+}
+
 p
 {
     font-size: 1em;

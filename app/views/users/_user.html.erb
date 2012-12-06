@@ -16,6 +16,12 @@
         <% else %>
           Unpaid
         <% end %>
+      <% elsif @group.present? %>
+        <% if user.admin == true %>
+          Group Organizer
+        <% else %>
+          Member
+        <% end %>
       <% end %>
     </div>
   </div>

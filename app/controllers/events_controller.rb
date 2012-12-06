@@ -45,6 +45,10 @@ class EventsController < ApplicationController
     @messages = @event.messages.all
   end
 
+  def index
+    @events = current_user.member_events
+  end
+
 private
   def user_in_event
     @event = Event.find(params[:id])
