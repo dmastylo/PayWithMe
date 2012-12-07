@@ -39,9 +39,11 @@ class Event < ActiveRecord::Base
 
   # Relationships
   belongs_to :organizer, class_name: "User"
-  has_many :event_users
+  has_many :event_users, dependent: :destroy
   has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
-  has_many :messages
+  has_many :messages, dependent: :destroy
+  has_many :event_groups, dependent: :destroy
+  has_many :groups, through: :event_groups, source: :group
 
   # Callbacks
   before_validation :clear_amounts
@@ -58,7 +60,7 @@ class Event < ActiveRecord::Base
   end
 
   def send_amount_cents
-    if division_type == DivisionType::Fundraise || members.size == 0
+    if division_type == DivisionType::Fundraise || members.size == 0 || split_amount_cents.nil?
       nil
     elsif fee_type == FeeType::OrganizerPays
       split_amount_cents
@@ -70,7 +72,7 @@ class Event < ActiveRecord::Base
   def total_amount_cents
     if super || division_type == DivisionType::Total
       super
-    elsif members.size == 0 || division_type == DivisionType::Fundraise || split_amount_cents.nil?
+    elsif members.size == 0 || division_type == DivisionType::Fundraise || split_amount_cents.nil? || super.nil?
       nil
     else
       split_amount_cents * members.size
@@ -80,7 +82,7 @@ class Event < ActiveRecord::Base
   def split_amount_cents
     if super || division_type == DivisionType::Split
       super
-    elsif members.size == 0 || division_type == DivisionType::Fundraise
+    elsif members.size == 0 || division_type == DivisionType::Fundraise  || super.nil?
       nil
     else
       total_amount_cents / members.size
@@ -118,6 +120,36 @@ class Event < ActiveRecord::Base
   class FeeType
     OrganizerPays = 1
     MembersPay = 2
+  end
+
+  def add_members(members, exclude=nil)
+    members.each do |member|
+      self.members << member unless self.members.include?(member)
+    end
+
+    self.event_users.each do |event_user|
+      if event_user.member != exclude
+        event_user.due_date = self.due_at
+        event_user.amount_cents = self.send_amount_cents
+        event_user.save
+      end
+    end
+  end
+
+  def add_groups(groups)
+    groups.each do |group|
+      self.groups << group unless self.groups.include?(group)
+    end
+  end
+
+  def independent_members
+    nfgdi_members = self.members
+
+    self.groups.each do |group|
+      nfgdi_members -= group.members
+    end
+
+    nfgdi_members
   end
 
 private

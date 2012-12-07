@@ -1,0 +1,33 @@
+<% provide(:title, @group.title) %>
+<div class="page-header">
+  <h2><%= @group.title %></h2>
+</div>
+<div class="row">
+  <div class="span5">
+    <h3>Group Details</h3>
+    <div class="well event-description">
+      <% if @group.description.present? %>
+        <div class="quarter"><strong>Description:</strong></div>
+        <div class="three-quarters"><%= @group.description %></div>
+        <div class="clearfix"></div>
+      <% end %>
+      <div class="quarter"><strong>Members:</strong></div>
+      <div class="three-quarters"><%= @group.members.count %></div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+  <div class="span7">
+    <h3>Member List</h3>
+    <div class="well">
+      <div class="event-members">
+        <% if @group.members.any? %>
+          <ul class="member-list">
+            <%= render @group.members %>
+          </ul>
+        <% else %>
+          There are no members. Add some!
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

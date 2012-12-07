@@ -47,8 +47,10 @@ class User < ActiveRecord::Base
 
   # Relationships
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
-  has_many :event_users
+  has_many :event_users, dependent: :destroy
   has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
+  has_many :group_users, dependent: :destroy
+  has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages
 
   def profile_image_type
@@ -59,6 +61,25 @@ class User < ActiveRecord::Base
     else
       :gravatar
     end
+  end
+
+  def self.from_params(params)
+    return if params.empty?
+    params = ActiveSupport::JSON.decode(params)
+    users = []
+
+    params.each do |email|
+      user = User.find_by_email(email)
+      if user.nil?
+        user = User.new(email: email)
+        user.stub = true
+        user.save
+      end
+
+      users.push user
+    end
+
+    users.uniq
   end
 
   def self.from_omniauth(auth)

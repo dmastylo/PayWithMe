@@ -8,12 +8,20 @@
         <%= link_to name, user %>
     </div>
     <div class="status">
-      <% if user == @event.organizer %>
+      <% if @event.present? %>
+        <% if user == @event.organizer %>
         Event Organizer
-      <% elsif user.paid_date.present? %>
-        Paid
-      <% else %>
-        Unpaid
+        <% elsif user.paid_date.present? %>
+          Paid
+        <% else %>
+          Unpaid
+        <% end %>
+      <% elsif @group.present? %>
+        <% if user.admin? %>
+          Group Organizer
+        <% else %>
+          Member
+        <% end %>
       <% end %>
     </div>
   </div>

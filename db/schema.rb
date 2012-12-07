@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121205210151) do
+ActiveRecord::Schema.define(:version => 20121207014858) do
+
+  create_table "event_groups", :force => true do |t|
+    t.integer  "event_id"
+    t.integer  "group_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "event_settings", :force => true do |t|
     t.integer  "event_id"
@@ -30,7 +37,7 @@ ActiveRecord::Schema.define(:version => 20121205210151) do
   create_table "events", :force => true do |t|
     t.string   "title"
     t.text     "description"
-    t.date     "due_at"
+    t.datetime "due_at"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.datetime "start_at"
@@ -39,6 +46,21 @@ ActiveRecord::Schema.define(:version => 20121205210151) do
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
     t.integer  "organizer_id"
+  end
+
+  create_table "group_users", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.boolean  "admin",      :default => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
+  create_table "groups", :force => true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "messages", :force => true do |t|

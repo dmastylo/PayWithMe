@@ -1,0 +1,51 @@
+<% provide(:title, "Create Group") %>
+<div class="page-header">
+  <h2>New Group</h2>
+</div>
+<%= form_for @group do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+  <div class="row push-top">
+    <div class="span6">
+      <h3>Group Information</h3>
+      <div class="well">
+        <%= f.label :title %>
+        <%= f.text_field :title, class: "input-block-level" %>
+        <%= f.label :description %>
+        <%= f.text_area :description, class: "input-block-level", rows: 5 %>
+      </div>
+    </div>
+    <div class="span6">
+      <h3>Group Members</h3>
+      <div class="well">
+        <div class="alert alert-error hidden" id="add_member_error">
+          Please enter a valid email address.
+        </div>
+        <div class="input-append">
+          <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
+          <%= link_to "Add", "#", class: "btn", id: "add_member" %>
+        </div>
+        <%= f.hidden_field :members %>
+        <div id="invited_members">
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span12">
+      <%= f.submit "Create group", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>
+
+<% content_for(:before_body_end) do %>
+  <!-- TODO: Move this elsewhere -->
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $('#member_name').addSomething({
+        somethingsInputSelector: "#group_members"
+      });
+    });
+  </script>
+<% end %>

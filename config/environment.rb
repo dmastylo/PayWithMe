@@ -5,6 +5,7 @@ require File.expand_path('../application', __FILE__)
 PayWithMe::Application.initialize!
 
 # Change some date formats
-my_date_formats = { default: '%m/%d/%Y' } 
-Time::DATE_FORMATS.merge!(my_date_formats) 
-Date::DATE_FORMATS.merge!(my_date_formats)
+date_format = '%m/%d/%Y'
+time_format = date_format + ' %I:%M%p'
+Time::DATE_FORMATS[:default] = time_format
+Date::DATE_FORMATS[:default] = date_format

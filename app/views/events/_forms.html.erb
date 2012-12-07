@@ -1,0 +1,168 @@
+<%= render 'shared/error_messages', object: f.object %>
+<div class="row push-top">
+  <div class="span6">
+    <h3>Event Information</h3>
+    <div class="well">
+      <%= f.label :title %>
+      <%= f.text_field :title, class: "input-block-level" %>
+      <%= f.label :description %>
+      <%= f.text_area :description, class: "input-block-level", rows: 5 %>
+      <%= f.label :start_at %>
+      <%= f.text_field :start_at, class: "input-block-level", placeholder: "mm/dd/yyyy hh:mm", value: (@event.start_at.to_s if @event.start_at) %>
+    </div>
+  </div>
+  <div class="span6">
+    <h3>Payment Information</h3>
+    <div class="well">
+      <%= f.label :due_at %>
+      <%= f.text_field :due_at, class: "input-block-level", placeholder: "mm/dd/yyyy hh:mm", value: (@event.due_at.to_s if @event.due_at) %>
+      <%= f.hidden_field :division_type %>
+      <div class="btn-group input-block-level push-bottom" id="division_type_btn_group" data-toggle="buttons-radio">
+        <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount.">Divide Total</button>
+        <button type="button" class="btn third" data-name="split" data-value="2" title="Each person must pay a certain amount.">Amount Per Person</button>
+        <button type="button" class="btn third last" data-name="fundraise" data-value="3" title="Any amount can be paid.">Fundraise/Donations</button>
+      </div>
+
+      <div class="payment_division_option push-bottom" id="payment_division_total">
+        <%= f.label :total_amount, "Total Amount" %>
+        <div class="input-prepend">
+          <span class="add-on">$</span>
+          <%= f.text_field :total_amount, class: "input-block-level" %>
+        </div>
+      </div>
+
+      <div class="payment_division_option push-bottom" id="payment_division_split">
+        <%= f.label :split_amount, "Amount Per Person" %>
+        <div class="input-prepend">
+          <span class="add-on">$</span>
+          <%= f.text_field :split_amount, class: "input-block-level" %>
+        </div>
+      </div>
+
+      <%= f.label :fee_type, "Fee Setup" %>
+      <%= f.hidden_field :fee_type %>
+      <div class="btn-group input-block-level push-bottom" id="fee_type_btn_group" data-toggle="buttons-radio">
+        <button type="button" class="btn half" data-name="organizer" data-value="1" title="You will pay the fees.">I'll Pay</button>
+        <button type="button" class="btn half" data-name="members" data-value="2" title="The members will pay the fees.">Members Pay</button>
+        </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="span6">
+    <h3>Invite Members</h3>
+    <div class="well">
+      <div class="alert alert-error hidden" id="add_member_error">
+      </div>
+      <div class="input-append">
+        <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
+        <%= link_to "Add", "#", class: "btn", id: "add_member" %>
+      </div>
+      <%= f.hidden_field :members, value: @member_emails.to_json if @member_emails %>
+      <div id="invited_members">
+        <%= render partial: "users/invited_user", collection: @event.independent_members %>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+  <div class="span6">
+    <h3>Invite Groups</h3>
+    <div class="well">
+      <div class="alert alert-error hidden" id="add_group_error">
+      </div>
+      <div class="input-append">
+        <%= text_field :group, :name, placeholder: "Search for groups", class: "span4" %>
+        <%= link_to "Add", "#", class: "btn", id: "add_group" %>
+      </div>
+      <%= f.hidden_field :groups, value: @group_ids.to_json if @group_ids %>
+      <div id="invited_groups">
+        <%= render partial: "groups/invited_group", collection: @event.groups %>
+        <div class="clearfix"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <%= f.submit "Create event", class: "btn btn-primary" %>
+  </div>
+</div>
+
+<% content_for(:before_body_end) do %>
+  <!-- TODO: Move this elsewhere -->
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $('.datepicker').datepicker();
+      $('.btn-group .btn').tooltip({
+        container: 'body'
+      });
+
+      $("#division_type_btn_group button,#fee_type_btn_group button").click(function()
+      {
+        var $this = $(this);
+        var parent = $this.parent().attr("id").replace("_btn_group", "");
+        var $input = $("#event_" + parent);
+        var value = $this.data("value");
+        var name = $this.data("name");
+
+        if(!$this.hasClass('disabled'))
+        {
+          // Set the hidden field
+          $input.val(value);
+
+          if(parent == "division_type")
+          {
+            // Show the hidden box
+            $(".payment_division_option").hide();
+            $("#payment_division_"+name+",.payment_division_"+name).fadeIn();
+          }
+        }
+      });
+
+      $.each(["fee_type", "division_type"], function()
+      {
+        var $input = $("#event_" + this);
+        var val = $input.val();
+        if(val)
+        {
+          $("#" + this + "_btn_group button").each(function()
+          {
+            if($(this).data("value") == val) $(this).trigger('click');
+          })
+        }
+      });
+
+      $('#member_name').addSomething({
+        somethings: <%= @member_emails.to_json.html_safe || "[]" %>
+      });
+
+      $("#group_name").addSomething({
+        addButtonSelector: "#add_group",
+        somethingsInputSelector: "#event_groups",
+        somethingsSelector: "#invited_groups",
+        errorSelector: "#add_group_error",
+        source: "<%= search_groups_path(format: :json) %>",
+        idAttribute: "id",
+        displayAttribute: "title",
+        allowNameless: false,
+        somethings: <%= @group_ids.to_json.html_safe || "[]" %>,
+        onValidate: function(something)
+        {
+          return;
+        },
+        onCreate: function(something)
+        {
+          var $something;
+          $something = $("<div></div>").addClass("member member_with_email")
+            .append($("<div></div>")
+              .addClass("email")
+            .html(something.title)
+            )
+          ;
+          return $something;
+        }
+      });
+    });
+  </script>
+<% end %>
