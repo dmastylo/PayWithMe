@@ -34,31 +34,6 @@ describe "PageContents" do
 
 		let(:submit){ "Sign up" }
 
-		describe "with a user already signed in" do
-			before do
-
-				#Sign up and in with one user
-				fill_in "Name", 			with: "Test UserOne"
-				fill_in "Email", 			with: "test1@example.com"
-				fill_in "Password", 		with: "foobarbaz"
-				fill_in "Confirm Password", with: "foobarbaz"
-
-				click_button submit
-
-				#Try again with another while one is already logged in
-				visit new_user_registration_path
-
-				fill_in "Name", 			with: "Test UserTwp"
-				fill_in "Email", 			with: "test2@example.com"
-				fill_in "Password", 		with: "foobarbaz"
-				fill_in "Confirm Password", with: "foobarbaz"
-			end
-
-			it "should not create the new user" do
-				expect{ click_button submit }.not_to change(User, :count)
-			end
-		end
-
 		describe "with invalid information" do
 
 			it "should not create the user due to blank information" do
