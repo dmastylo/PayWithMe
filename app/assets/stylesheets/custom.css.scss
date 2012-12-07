@@ -1,14 +1,3 @@
-// Variables 
-
-$eventBorder: #D8D8D8;
-$darkBlue: #32454b;
-$mediumBlue: #52636b;
-$lightBlue: #6f8594;
-$lightGray: #ececec;
-$mediumGray: #a4a4a4;
-$offWhite: #f9f9f9;
-$offBlack: #292929;
-
 // Global 
 body
 {
@@ -269,8 +258,6 @@ form
 }
 
 // Utility
-$mediumMargin: 10px;
-$largeMargin: $mediumMargin * 2.5;
 .push-top { margin-top: $mediumMargin; }
 h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .push-bottom { margin-bottom: $mediumMargin; }
