@@ -43,7 +43,7 @@
   <div class="span7">
     <h3>Message Board</h3>
     <div class="well">
-      <ul class="message_list">
+      <ul class="message-list">
         <% if @messages.any? %>
             <%= render @messages %>
         <% else %>
@@ -51,7 +51,7 @@
         <% end %>
       </ul>
       <h4>Leave Message</h4>
-      <%= form_for [@event, @event.messages.build]  do |f| %>
+      <%= form_for [@event, @event.messages.build], remote: true do |f| %>
         <%= f.text_area :message, class: "input-block-level", rows: "3", placeholder: "Compose a message..." %>
         <%= f.submit "Post Message", class: "btn btn-block" %>
       <% end %>

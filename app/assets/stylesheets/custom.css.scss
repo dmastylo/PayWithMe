@@ -378,7 +378,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 }
 
 
-.message_list
+.message-list
 {
     list-style-type: none;
     margin: 0;
@@ -393,7 +393,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
         border-bottom: 1px solid #e8e8e8;
         margin-bottom: 10px;
 
-        .profile_image
+        .profile-image
         {
             // margin-bottom: 5px;
             // margin-top: 5px;

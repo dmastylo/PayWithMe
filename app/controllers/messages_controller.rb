@@ -6,8 +6,10 @@ class MessagesController < ApplicationController
         @message = @event.messages.create(params[:message])
         @message.user = current_user
         if @message.save
-            flash[:success] = "Message created!"
-            redirect_to event_path(@event)
+            respond_to do |format|
+                format.html { redirect_to event_path(@event) }
+                format.js
+            end
         else
             flash[:error] = "Message failed!"
             redirect_to event_path(@event)
@@ -16,11 +18,9 @@ class MessagesController < ApplicationController
 
     private
         def user_in_event
-            @event = Event.find(params[:event_id])
+            @event = current_user.member_events.find_by_id(params[:event_id])
 
-            if @event.members.include?(current_user) || current_user == @event.organizer
-                true
-            else
+            if @event.nil?
                 flash[:error] = "Trying to do something you're not supposed to...?"
                 redirect_to root_path
             end
