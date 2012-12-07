@@ -82,6 +82,12 @@ class User < ActiveRecord::Base
     users.uniq
   end
 
+  def self.create_stub(email)
+    user = User.new(email: email)
+    user.stub = true
+    # user.password = user.password_confirmation = 
+  end
+
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
       user.provider = auth.provider
