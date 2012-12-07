@@ -26,7 +26,7 @@ class EventsController < ApplicationController
   end
 
   def show
-    @messages = @event.messages.all # TODO: infinite scroll
+    # @messages = @event.messages.all # TODO: infinite scroll
   end
 
   def index

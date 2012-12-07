@@ -1,6 +1,10 @@
 class MessagesController < ApplicationController
     before_filter :user_in_event
 
+    def index
+        @new_messages = Message.where("event_id = ? AND created_at > ?", params[:event_id], Time.at(params[:after].to_i + 1))
+    end
+
     def create
         # @event = Event.find(params[:event_id])
         @message = @event.messages.create(params[:message])

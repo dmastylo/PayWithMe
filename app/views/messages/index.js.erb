@@ -1,0 +1,3 @@
+<% unless @new_messages.empty? %>
+    $('.message-list').prepend('<%= j render(@new_messages) %>');
+<% end %>

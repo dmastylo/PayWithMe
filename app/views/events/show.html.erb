@@ -43,9 +43,9 @@
   <div class="span7">
     <h3>Message Board</h3>
     <div class="well">
-      <ul class="message-list">
-        <% if @messages.any? %>
-            <%= render @messages %>
+      <ul class="message-list" data-id="<%= @event.id %>">
+        <% if @event.messages.any? %>
+            <%= render @event.messages %>
         <% else %>
           There are no messages.
         <% end %>
