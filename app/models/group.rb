@@ -41,11 +41,12 @@ class Group < ActiveRecord::Base
     base = user.groups if user.present?
     base ||= Group
 
-    users = groups = []
+    users = []
+    groups = []
     params.each do |group|
       group = base.find_by_id(group)
       if group.present?
-        groups += group
+        groups.push group
         users += group.members
       end
     end

@@ -58,8 +58,9 @@
         <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
         <%= link_to "Add", "#", class: "btn", id: "add_member" %>
       </div>
-      <%= f.hidden_field :members %>
+      <%= f.hidden_field :members, value: @member_emails.to_json if @member_emails %>
       <div id="invited_members">
+        <%= render partial: "users/invited_user", collection: @event.independent_members %>
         <div class="clearfix"></div>
       </div>
     </div>
@@ -73,8 +74,9 @@
         <%= text_field :group, :name, placeholder: "Search for groups", class: "span4" %>
         <%= link_to "Add", "#", class: "btn", id: "add_group" %>
       </div>
-      <%= f.hidden_field :groups %>
+      <%= f.hidden_field :groups, value: @group_ids.to_json if @group_ids %>
       <div id="invited_groups">
+        <%= render partial: "groups/invited_group", collection: @event.groups %>
         <div class="clearfix"></div>
       </div>
     </div>
@@ -131,7 +133,10 @@
         }
       });
 
-      $('#member_name').addSomething();
+      $('#member_name').addSomething({
+        somethings: <%= @member_emails.to_json.html_safe || "[]" %>
+      });
+
       $("#group_name").addSomething({
         addButtonSelector: "#add_group",
         somethingsInputSelector: "#event_groups",
@@ -141,6 +146,7 @@
         idAttribute: "id",
         displayAttribute: "title",
         allowNameless: false,
+        somethings: <%= @group_ids.to_json.html_safe || "[]" %>,
         onValidate: function(something)
         {
           return;

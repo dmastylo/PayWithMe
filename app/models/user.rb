@@ -76,7 +76,7 @@ class User < ActiveRecord::Base
         user.save
       end
 
-      users += user
+      users.push user
     end
 
     users.uniq

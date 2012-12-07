@@ -15,7 +15,7 @@ class EventsController < ApplicationController
     if @event.save
       flash[:success] = "Event created!"
 
-      @event.add_members(members_from_users + members_from_groups + current_user, current_user)
+      @event.add_members(members_from_users + members_from_groups + [current_user], current_user)
       @event.add_groups(groups)
 
       # For some reason, redirect_to @event doesn't work
@@ -34,9 +34,30 @@ class EventsController < ApplicationController
   end
 
   def edit
+    @event.members = @event.independent_members
+    @member_emails = @event.members.collect { |member| member.email }
+    @group_ids = @event.groups.collect { |group| group.id }
   end
 
   def update
+    members_from_users = User.from_params(params[:event].delete(:members))
+    groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
+    @event = current_user.organized_events.new(params[:event])
+
+    if @event.save
+      flash[:success] = "Event updated!"
+
+      @event.add_members(members_from_users + members_from_groups + [current_user], current_user)
+      @event.add_groups(groups)
+
+      # For some reason, redirect_to @event doesn't work
+      redirect_to event_path(@event)
+    else
+      @event.members = @event.independent_members
+      @member_emails = @event.members.collect { |member| member.email }
+      @group_ids = @event.groups.collect { |group| group.id }
+      render "edit"
+    end
   end
 
 private

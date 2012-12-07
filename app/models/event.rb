@@ -19,8 +19,7 @@
 class Event < ActiveRecord::Base
 
   # Accessible attributes
-  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :groups
-  attr_accessor :groups
+  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
@@ -44,7 +43,7 @@ class Event < ActiveRecord::Base
   has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
-  has_many :groups, through: :event_groups
+  has_many :groups, through: :event_groups, source: :group
 
   # Callbacks
   before_validation :clear_amounts
@@ -141,6 +140,16 @@ class Event < ActiveRecord::Base
     groups.each do |group|
       self.groups << group unless self.groups.include?(group)
     end
+  end
+
+  def independent_members
+    nfgdi_members = self.members
+
+    self.groups.each do |group|
+      nfgdi_members -= group.members
+    end
+
+    nfgdi_members
   end
 
 private

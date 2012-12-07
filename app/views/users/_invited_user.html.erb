@@ -1,0 +1,19 @@
+<div class="member <% if invited_user.stub? %>member_with_email<% end %>">
+  <% if invited_user.stub? %>
+    <div class="email">
+      <%= invited_user.email %>
+    </div>
+  <% else %>
+    <div class="profile_image">
+      <%= profile_image_tag(invited_user) %>
+    </div>
+    <div class="info">
+      <div class="name">
+        <%= invited_user.name %>
+      </div>
+      <div class="email">
+        <%= invited_user.email %>
+      </div>
+    </div>
+  <% end %>
+</div>
