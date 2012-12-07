@@ -7,36 +7,20 @@ class EventsController < ApplicationController
   end
 
   def create
-    members = ActiveSupport::JSON.decode(params[:event].delete(:members))
-    groups = ActiveSupport::JSON.decode(params[:event].delete(:groups))
+    members_from_users = User.from_params(params[:event].delete(:members))
+    members_from_groups = Group.users_from_params(params[:event].delete(:groups), current_user)
     @event = current_user.organized_events.new(params[:event])
-    members.each do |member|
-      user = User.find_by_email(member)
-      if user.nil?
-        user = User.new(email: member)
-        user.stub = true
-        user.save
-      end
-
-      @event.members << user
-    end
-
-    groups.each do |group|
-      group = current_user.groups.find_by_id(group)
-      if group.present?
-        group.members.each do |member|
-          puts member
-          if !@event.members.include?(member)
-            @event.members << member
-          end
-        end
-      end
-    end
-    @event.members << current_user unless @event.members.include?(current_user)
 
     if @event.save
       flash[:success] = "Event created!"
 
+      [members_from_users, members_from_groups].each do |members|
+        members.each do |member|
+          @event.members << member unless @event.members.include?(member)
+        end
+      end
+
+      @event.members << current_user unless @event.members.include?(current_user)
       @event.event_users.each do |event_user|
         if event_user.member != current_user
           event_user.due_date = @event.due_at

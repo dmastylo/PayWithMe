@@ -29,4 +29,22 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.users_from_params(params, user = nil)
+    return if params.empty?
+    params = ActiveSupport::JSON.decode(params)
+
+    base = user.groups if user.present?
+    base ||= Group
+
+    users = []
+    params.each do |group|
+      group = base.find_by_id(group)
+      if group.present?
+        users += group.members
+      end
+    end
+
+    users.uniq
+  end
+
 end

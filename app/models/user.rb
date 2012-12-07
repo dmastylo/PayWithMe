@@ -63,6 +63,25 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.from_params(params)
+    return if params.empty?
+    params = ActiveSupport::JSON.decode(params)
+    users = []
+
+    params.each do |email|
+      user = User.find_by_email(email)
+      if user.nil?
+        user = User.new(email: email)
+        user.stub = true
+        user.save
+      end
+
+      users += user
+    end
+
+    users.uniq
+  end
+
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_create do |user|
       user.provider = auth.provider

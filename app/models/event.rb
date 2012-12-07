@@ -59,7 +59,7 @@ class Event < ActiveRecord::Base
   end
 
   def send_amount_cents
-    if division_type == DivisionType::Fundraise || members.size == 0
+    if division_type == DivisionType::Fundraise || members.size == 0 || split_amount_cents.nil?
       nil
     elsif fee_type == FeeType::OrganizerPays
       split_amount_cents
@@ -71,7 +71,7 @@ class Event < ActiveRecord::Base
   def total_amount_cents
     if super || division_type == DivisionType::Total
       super
-    elsif members.size == 0 || division_type == DivisionType::Fundraise || split_amount_cents.nil?
+    elsif members.size == 0 || division_type == DivisionType::Fundraise || split_amount_cents.nil? || super.nil?
       nil
     else
       split_amount_cents * members.size
@@ -81,7 +81,7 @@ class Event < ActiveRecord::Base
   def split_amount_cents
     if super || division_type == DivisionType::Split
       super
-    elsif members.size == 0 || division_type == DivisionType::Fundraise
+    elsif members.size == 0 || division_type == DivisionType::Fundraise  || super.nil?
       nil
     else
       total_amount_cents / members.size
