@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :user_in_event, only: [:show]
+  before_filter :user_organizes_event, only: [:edit, :delete]
   
   def new
     @event = current_user.organized_events.new
@@ -8,26 +9,14 @@ class EventsController < ApplicationController
 
   def create
     members_from_users = User.from_params(params[:event].delete(:members))
-    members_from_groups = Group.users_from_params(params[:event].delete(:groups), current_user)
+    groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
     @event = current_user.organized_events.new(params[:event])
 
     if @event.save
       flash[:success] = "Event created!"
 
-      [members_from_users, members_from_groups].each do |members|
-        members.each do |member|
-          @event.members << member unless @event.members.include?(member)
-        end
-      end
-
-      @event.members << current_user unless @event.members.include?(current_user)
-      @event.event_users.each do |event_user|
-        if event_user.member != current_user
-          event_user.due_date = @event.due_at
-          event_user.amount_cents = @event.send_amount_cents
-          event_user.save
-        end
-      end
+      @event.add_members(members_from_users + members_from_groups + current_user, current_user)
+      @event.add_groups(groups)
 
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)
@@ -37,22 +26,33 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event = Event.find(params[:id])
-    @members = @event.members
-    @messages = @event.messages.all
+    @messages = @event.messages.all # TODO: paginate
   end
 
   def index
     @events = current_user.member_events
   end
 
+  def edit
+  end
+
+  def update
+  end
+
 private
   def user_in_event
-    @event = Event.find(params[:id])
+    @event = current_user.member_events.find_by_id(params[:id])
 
-    if @event.members.include?(current_user) || @event.organizer == current_user
-      true
-    else
+    if @event.nil?
+      flash[:error] = "You're not on the list."
+      redirect_to root_path
+    end
+  end
+
+  def user_organizes_event
+    @event = current_user.organized_events.find_by_id(params[:id])
+
+    if @event.nil?
       flash[:error] = "You're not on the list."
       redirect_to root_path
     end

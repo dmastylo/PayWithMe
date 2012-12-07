@@ -18,8 +18,13 @@ class Group < ActiveRecord::Base
   validates :title, presence: true, length: { minimum: 2, maximum: 120 }
 
   # Relationships
-  has_many :group_users
+  has_many :group_users, dependent: :destroy
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
+  has_many :event_groups, dependent: :destroy
+  has_many :events, through: :event_groups, source: :event
+
+  def add_members(members)
+  end
 
   def self.search_by_title(query, user = nil)
     if user.nil?
@@ -29,22 +34,23 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def self.users_from_params(params, user = nil)
+  def self.groups_and_members_from_params(params, user = nil)
     return if params.empty?
     params = ActiveSupport::JSON.decode(params)
 
     base = user.groups if user.present?
     base ||= Group
 
-    users = []
+    users = groups = []
     params.each do |group|
       group = base.find_by_id(group)
       if group.present?
+        groups += group
         users += group.members
       end
     end
 
-    users.uniq
+    return groups.uniq, users.uniq
   end
 
 end

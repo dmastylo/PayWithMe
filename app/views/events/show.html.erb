@@ -1,6 +1,15 @@
 <% provide(:title, @event.title) %>
-<div class="page-header">
-  <h2><%= @event.title %></h2>
+<div class="row">
+  <div class="span9">
+    <div class="page-header">
+      <h2><%= @event.title %></h2>
+    </div>
+  </div>
+  <% if current_user == @event.organizer %>
+    <div class="span3">
+      <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary pull-right push-top" %>
+    </div>
+  <% end %>
 </div>
 <div class="row">
   <div class="span5">
@@ -21,9 +30,9 @@
     <h3>Guest List</h3>
     <div class="well">
       <div class="event-members">
-        <% if @members.any? %>
+        <% if @event.members.any? %>
           <ul class="member-list">
-            <%= render @members %>
+            <%= render @event.members %>
           </ul>
         <% else %>
           There are no members. Add some!

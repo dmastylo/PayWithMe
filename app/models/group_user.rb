@@ -13,7 +13,7 @@
 class GroupUser < ActiveRecord::Base
 
   # Accessible attributes
-  attr_accessible :admin, :group_id, :user_id
+  attr_accessible :group_id, :user_id
 
   # Relationships
   belongs_to :user
