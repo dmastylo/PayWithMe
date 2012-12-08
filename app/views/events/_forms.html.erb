@@ -58,7 +58,7 @@
         <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
         <%= link_to "Add", "#", class: "btn", id: "add_member" %>
       </div>
-      <%= f.hidden_field :members, value: @member_emails.to_json if @member_emails %>
+      <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
       <div id="invited_members">
         <%= render partial: "users/invited_user", collection: @event.independent_members %>
         <div class="clearfix"></div>
@@ -74,7 +74,7 @@
         <%= text_field :group, :name, placeholder: "Search for groups", class: "span4" %>
         <%= link_to "Add", "#", class: "btn", id: "add_group" %>
       </div>
-      <%= f.hidden_field :groups, value: @group_ids.to_json if @group_ids %>
+      <%= f.hidden_field :groups, value: (@group_ids.to_json if @group_ids) %>
       <div id="invited_groups">
         <%= render partial: "groups/invited_group", collection: @event.groups %>
         <div class="clearfix"></div>

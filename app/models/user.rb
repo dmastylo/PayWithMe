@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
   end
 
   def self.from_params(params)
-    return if params.empty?
+    return [] if params.empty?
     params = ActiveSupport::JSON.decode(params)
     users = []
 
