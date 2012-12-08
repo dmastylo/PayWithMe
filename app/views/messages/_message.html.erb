@@ -7,6 +7,7 @@
         <%= link_to message.user.name, message.user %>
     </div>
     <div class="timestamp">
+        <%= message.created_at.to_i %>
         Posted <%= time_ago_in_words(message.created_at) %> ago.
     </div>
     <div class="message-content">
