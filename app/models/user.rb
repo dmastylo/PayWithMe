@@ -71,9 +71,7 @@ class User < ActiveRecord::Base
     params.each do |email|
       user = User.find_by_email(email)
       if user.nil?
-        user = User.new(email: email)
-        user.stub = true
-        user.save
+        user = User.create_stub(email)
       end
 
       users.push user
@@ -85,7 +83,9 @@ class User < ActiveRecord::Base
   def self.create_stub(email)
     user = User.new(email: email)
     user.stub = true
-    # user.password = user.password_confirmation = 
+    user.save
+    user.password = user.password_confirmation = self.password_digest(email + user.created_at.to_s)
+    user.save
   end
 
   def self.from_omniauth(auth)
