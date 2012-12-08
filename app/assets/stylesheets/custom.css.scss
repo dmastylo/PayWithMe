@@ -304,8 +304,6 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 // Event Display 
 .event-description
 {
-    // max-height: 120px;
-
     .quarter
     {
         width: 25%;
@@ -377,7 +375,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-
+// Chat Messages Display
 .message-list
 {
     list-style-type: none;
@@ -401,10 +399,38 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
             }
         }
 
+        .current-user-profile-image
+        {
+            float: right;
+            padding-right: 15px;
+
+            img
+            {
+                border: 1px solid $mediumGray;
+            }
+        }
+
         .body
         {
             padding-left: 10px;
             float: left;
+
+            .user a
+            {
+                color: $offBlack;
+                font-weight: bold;
+            }
+
+            .timestamp
+            {
+                color: $mediumGray;
+            }
+        }
+
+        .current-user-body
+        {
+            padding-right: 10px;
+            text-align: right;
 
             .user a
             {
@@ -431,6 +457,11 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
                 text-decoration: none;
             }
         }
+    }
+
+    .new-message
+    {
+        display: none;
     }
 }
 

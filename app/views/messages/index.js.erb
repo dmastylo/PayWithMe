@@ -1,3 +1,12 @@
 <% unless @new_messages.empty? %>
-    $('.message-list').prepend('<%= j render(@new_messages) %>');
+    // Remove the highlighting on new messages
+    $('.new-message').each(function()
+    {
+        $(this).removeClass('new-message');
+    });
+
+    // Render the new messages
+    <% @new_message = true %>
+    $('.message-list').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
+    fadeInNewMessages();
 <% end %>
