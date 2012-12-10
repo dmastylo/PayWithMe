@@ -497,3 +497,16 @@ footer
 {
     margin-top: 25px;
 }
+
+// Modals
+.modal#stub-login-modal
+{
+    width: 800px;
+    margin-left: -400px;
+    top: 40%;
+
+    .modal-body
+    {
+        max-height: 435px;
+    }
+}

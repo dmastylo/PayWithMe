@@ -42,5 +42,9 @@
     <% if content_for?(:before_body_end) %>
       <%= yield(:before_body_end) %>
     <% end %>
+
+    <% if @display_stub_login %>
+      <%= render 'shared/stub_login' %>
+    <% end %>
   </body>
 </html>

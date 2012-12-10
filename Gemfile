@@ -5,7 +5,9 @@ gem 'rails', '3.2.8'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+group :production do
+  gem 'pg'
+end
 
 # User authentication
 gem 'devise'
@@ -31,8 +33,14 @@ gem 'american_date'
 # Searching
 gem "ransack"
 
+# Web server
+gem 'thin'
+
+group :development, :test do
+  gem 'sqlite3'
+end
+
 group :development do
-  gem 'thin'
   gem 'annotate'
 end
 
@@ -51,7 +59,7 @@ end
 # in production environments by default.
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'
-  gem 'bootstrap-sass', git: 'git@github.com:austingulati/bootstrap-sass.git' # path: '/var/www/bootstrap-sass'
+  gem 'bootstrap-sass', git: 'git://github.com/austingulati/bootstrap-sass.git' # path: '/var/www/bootstrap-sass'
   gem 'coffee-rails', '~> 3.2.1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes

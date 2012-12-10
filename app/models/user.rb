@@ -44,6 +44,7 @@ class User < ActiveRecord::Base
   
   # Callbacks
   before_save :set_profile_image
+  before_save :set_stub
 
   # Relationships
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
@@ -64,22 +65,29 @@ class User < ActiveRecord::Base
   end
 
   def self.from_params(params)
-    return if params.empty?
+    return [] if params.empty?
     params = ActiveSupport::JSON.decode(params)
     users = []
 
     params.each do |email|
       user = User.find_by_email(email)
       if user.nil?
-        user = User.new(email: email)
-        user.stub = true
-        user.save
+        user = User.create_stub(email)
       end
 
       users.push user
     end
 
     users.uniq
+  end
+
+  def self.create_stub(email)
+    user = User.new(email: email)
+    user.stub = true
+    user.save
+    user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s} #{pepper}")
+    user.save
+    user
   end
 
   def self.from_omniauth(auth)
@@ -129,5 +137,12 @@ private
     end
 
     profile_image_option = nil
+  end
+
+  def set_stub
+    if encrypted_password.present? || provider.present?
+      stub = false
+      guest_token = nil
+    end
   end
 end
