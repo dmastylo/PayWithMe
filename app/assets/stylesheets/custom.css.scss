@@ -71,6 +71,7 @@ p
         background-color: $darkBlue;
         background-image: none;
         border-radius: 0;
+        border-color: $darkBlue;
         height: 50px;
         line-height: 50px;
     	
@@ -208,7 +209,8 @@ textarea,input
 {
     padding: 0;
     background-color: transparent;
-    margin: 10px 0 0 0;
+    margin: 10px 0 10px 0;
+    text-align: center;
 }
 
 form

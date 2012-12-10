@@ -35,6 +35,7 @@ describe "PageContents" do
 		let(:submit){ "Sign up" }
 
 		describe "with invalid information" do
+
 			it "should not create the user due to blank information" do
 				expect{ click_button submit }.not_to change(User, :count)
 			end
@@ -54,23 +55,23 @@ describe "PageContents" do
 				fill_in "Name", 			with: "John Q Sample"
 				fill_in "Email", 			with: ""
 				fill_in "Password", 		with: "foobarbaz"
-				fill_in "Confirm Password", with: "mismatch"
+				fill_in "Confirm Password", with: "foobarbaz"
 
 				expect{ click_button submit }.not_to change(User, :count)
 			end
 
-			it "should have a valid email address" do
-				pending
-			end
-
-			it "should have minimum password length" do
-				pending
-			end
-
 			it "should have a unique email address" do
-				pending
-			end
+				before do
+					@user = FactoryGirl.create(:user)
+				end
 
+				fill_in "Name", 			with: "Another Sample"
+				fill_in "Email", 			with: "test@example.com"
+				fill_in "Password", 		with: "foobarbaz"
+				fill_in "Confirm Password", with: "foobarbaz"
+
+				expect{ click_button submit }.not_to change(User, :count)
+			end
 		end
 
 		describe "with valid information" do
