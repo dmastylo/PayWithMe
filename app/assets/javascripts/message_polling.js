@@ -1,7 +1,9 @@
 $(function()
 {
+    // Event specific stuff
     if ($('.message-list').length > 0)
     {
+        // Poll for new messages
         setTimeout(updateMessages, 5000);
     }
 });
@@ -13,6 +15,6 @@ function updateMessages()
               ? $(".message:first-child").attr("data-time")
               : "0";
     $.getScript("/messages.js?event_id=" + event_id + "&after=" + after);
-    
+
     setTimeout(updateMessages, 5000);
 }

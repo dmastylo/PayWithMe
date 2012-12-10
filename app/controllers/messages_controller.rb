@@ -6,16 +6,18 @@ class MessagesController < ApplicationController
     end
 
     def create
-        @message = @event.messages.create(params[:message])
-        @message.user = current_user
-        if @message.save
-            respond_to do |format|
-                format.html { redirect_to event_path(@event) }
-                format.js
+        if Time.now.to_i - @event.messages.first.created_at.to_i > Figaro.env.chat_limit.to_i
+            @message = @event.messages.create(params[:message])
+            @message.user = current_user
+            if @message.save
+                respond_to do |format|
+                    format.html { redirect_to event_path(@event) }
+                    format.js
+                end
+            else
+                flash[:error] = "Message failed!"
+                redirect_to event_path(@event)
             end
-        else
-            flash[:error] = "Message failed!"
-            redirect_to event_path(@event)
         end
     end
 
