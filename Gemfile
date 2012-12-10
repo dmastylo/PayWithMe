@@ -5,7 +5,9 @@ gem 'rails', '3.2.8'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+group :production do
+  gem 'pg'
+end
 
 # User authentication
 gem 'devise'
@@ -30,6 +32,10 @@ gem 'american_date'
 
 # Searching
 gem "ransack"
+
+group :development, :test do
+  gem 'sqlite3'
+end
 
 group :development do
   gem 'thin'
