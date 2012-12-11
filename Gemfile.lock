@@ -61,13 +61,6 @@ GEM
     chronic (0.8.0)
     cocaine (0.4.2)
     coderay (1.0.8)
-    coffee-rails (3.2.2)
-      coffee-script (>= 2.2.0)
-      railties (~> 3.2.0)
-    coffee-script (2.2.0)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.4.0)
     daemons (1.1.9)
     delorean (2.1.0)
       chronic
@@ -262,7 +255,6 @@ DEPENDENCIES
   annotate
   bootstrap-sass!
   capybara (= 1.1.2)
-  coffee-rails (~> 3.2.1)
   date_validator!
   delorean
   devise
