@@ -27,7 +27,6 @@ class EventsController < ApplicationController
   end
 
   def show
-    @messages = @event.messages.all # TODO: paginate
   end
 
   def index

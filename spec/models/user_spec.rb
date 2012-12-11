@@ -31,11 +31,9 @@ require 'spec_helper'
 describe User do
   
   before do
-    @user = User.new(name: "John Sample", 
-      email: "test2@example.com", 
-      password: "foobar", 
-      password_confirmation: "foobar")
+    @user = FactoryGirl.create(:user)
   end
+
   subject { @user }
 
   it { should respond_to(:name) }
@@ -93,7 +91,7 @@ describe User do
 
   describe "when stub" do
     before do
-      @user = User.new(email: "email@example.com")
+      @user = FactoryGirl.create(:user)
       @user.stub = true
     end
 
@@ -111,6 +109,11 @@ describe User do
       describe "when email is not present" do
         before { @user.email = "" }
         it { should_not be_valid }
+      end
+
+      describe "when email is invalid" do
+        before { @user.email = "not.an.email" }
+        it{ should_not be_valid }
       end
     end
   end

@@ -20,7 +20,7 @@
 		
 		// Launch it with none selected
 		this.listen();
-	}
+	};
 
 	AddSomething.prototype = {
 

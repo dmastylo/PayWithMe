@@ -5,7 +5,7 @@ PayWithMe::Application.routes.draw do
   resources :events do
     resources :messages, only: :create
   end
-  # resources :messages, only: [:create]
+  resources :messages, only: :index
 
   resources :users, only: [:show] do
     collection do
