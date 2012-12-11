@@ -1,17 +1,35 @@
-<li class="message">
-  <div class="profile_image">
-    <%= profile_image_tag message.user, :small %> 
-  </div>
-  <div class="body span5">
-    <div class="user">
-        <%= link_to message.user.name, message.user %>
-    </div>
-    <div class="timestamp">
-        Posted <%= time_ago_in_words(message.created_at) %> ago.
-    </div>
-    <div class="message-content">
-        <%= message.message %>
-    </div>
-  </div>
-  <div class="clearfix"></div>
+<li class="message<% unless @new_message.nil? %> new-message<% end %>" data-time="<%= message.created_at.to_i %>">
+    <% if message.user == current_user %>
+        <div class="current-user-body span5">
+            <div class="user">
+                <%= link_to "You", current_user %>
+            </div>
+            <div class="timestamp">
+                Posted <%= time_ago_in_words(message.created_at) %> ago.
+            </div>
+            <div class="message-content">
+                <%= message.message %>
+            </div>
+        </div>
+        <div class="current-user-profile-image">
+            <%= profile_image_tag message.user, :small %> 
+        </div>
+        <div class="clearfix"></div>
+    <% else %>
+        <div class="profile-image">
+            <%= profile_image_tag message.user, :small %> 
+        </div>
+        <div class="body span5">
+            <div class="user">
+                <%= link_to message.user.name, message.user %>
+            </div>
+            <div class="timestamp">
+                Posted <%= time_ago_in_words(message.created_at) %> ago.
+            </div>
+            <div class="message-content">
+                <%= message.message %>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    <% end %>
 </li>

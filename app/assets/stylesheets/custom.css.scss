@@ -307,8 +307,6 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 // Event Display 
 .event-description
 {
-    // max-height: 120px;
-
     .quarter
     {
         width: 25%;
@@ -380,8 +378,8 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-
-.message_list
+// Chat Messages Display
+.message-list
 {
     list-style-type: none;
     margin: 0;
@@ -391,17 +389,23 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 
     .message
     {
-        // margin-top: -1px;
-        // padding: 10px;
         border-bottom: 1px solid #e8e8e8;
         margin-bottom: 10px;
 
-        .profile_image
+        .profile-image
         {
-            // margin-bottom: 5px;
-            // margin-top: 5px;
-            // display: block;
             float: left;
+
+            img
+            {
+                border: 1px solid $mediumGray;
+            }
+        }
+
+        .current-user-profile-image
+        {
+            float: right;
+            padding-right: 15px;
 
             img
             {
@@ -413,6 +417,23 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
         {
             padding-left: 10px;
             float: left;
+
+            .user a
+            {
+                color: $offBlack;
+                font-weight: bold;
+            }
+
+            .timestamp
+            {
+                color: $mediumGray;
+            }
+        }
+
+        .current-user-body
+        {
+            padding-right: 10px;
+            text-align: right;
 
             .user a
             {
@@ -439,6 +460,11 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
                 text-decoration: none;
             }
         }
+    }
+
+    .new-message
+    {
+        display: none;
     }
 }
 
