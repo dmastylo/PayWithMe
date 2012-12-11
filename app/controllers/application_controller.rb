@@ -20,7 +20,7 @@ private
           sign_in user
           @display_stub_login = true
         else
-          redirect_to sign_in_path
+          redirect_to new_user_session_path
         end
       else
         flash[:error] = "Invalid login token."
