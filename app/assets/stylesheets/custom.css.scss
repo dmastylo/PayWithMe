@@ -533,6 +533,11 @@ footer
 
     .modal-body
     {
-        max-height: 445px;
+        max-height: 500px;
+
+        .well
+        {
+            margin-bottom: 0px;
+        }
     }
 }

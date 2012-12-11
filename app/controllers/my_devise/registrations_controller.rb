@@ -21,7 +21,7 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
       user.toggle(:stub)
 
       if user.save
-        flash.now[:success] = "Account successfully updated!"
+        flash[:success] = "Account registration successfully completed!"
         sign_in user, bypass: true
         redirect_to after_sign_in_path_for(resource)
       else

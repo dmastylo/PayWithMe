@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event, only: [:show]
-  before_filter :user_organizes_event, only: [:edit, :delete]
+  before_filter :user_organizes_event, only: [:edit, :delete, :update]
   
   def new
     @event = current_user.organized_events.new
@@ -42,7 +42,7 @@ class EventsController < ApplicationController
   def update
     members_from_users = User.from_params(params[:event].delete(:members))
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
-    @event = current_user.organized_events.new(params[:event])
+    # @event = current_user.organized_events.new(params[:event])
 
     if @event.save
       flash[:success] = "Event updated!"

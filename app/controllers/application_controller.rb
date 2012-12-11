@@ -19,6 +19,7 @@ private
         if user.stub?
           sign_in user
           @display_stub_login = true
+          @stub_user = User.new(email: user.email)
         else
           redirect_to new_user_session_path
         end
