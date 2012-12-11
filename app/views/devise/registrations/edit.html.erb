@@ -54,8 +54,10 @@
 
             <div class="user_profile_image_option push-top" id="user_profile_image_gravatar">
               Your gravatar:<br />
-              <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
-              <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top" %>
+              <center>
+                <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
+                <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top" %>
+              </center>
             </div>
             <div class="user_profile_image_option push-top" id="user_profile_image_url">
               <% if current_user.profile_image_url.present? %>
@@ -100,7 +102,6 @@
     </div>
   </div>
 <% end %>
-
 
 <% content_for(:before_body_end) do %>
   <script type="text/javascript">

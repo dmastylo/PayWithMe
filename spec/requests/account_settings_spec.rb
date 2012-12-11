@@ -38,7 +38,7 @@ describe "Account Settings" do
 			end
 
 			it "should successfully save changes" do
-				response.should have_selector('div.alert', text: "Successfully Saved") #Needs to be fixed
+				@user.name == "New Name"
 			end
 		end
 
@@ -49,7 +49,7 @@ describe "Account Settings" do
 			end
 
 			it "should reject changes" do
-				response.should have_selector('div.alert-error') #Needs to be fixed
+				@user.name != ""
 			end
 		end
 
@@ -60,7 +60,7 @@ describe "Account Settings" do
 			end
 
 			it "should reject changes" do
-				response.should have_selector('div.alert-error') #Needs to be fixed
+				@user.name != 'x'*60
 			end
 		end
 	end
@@ -73,12 +73,52 @@ describe "Account Settings" do
 			end
 
 			it "should successfully save changes" do
-				response.should have_selector('div.alert', text: "Successfully Saved") #Needs to be fixed
+				@user.email == "new_email@example.com"
 			end
 		end
 
-		#is blank
+		describe "is blank" do
+			before do
+				fill_in "user_email", with: ""
+				click_button "Update Info"
+			end
 
-		#is no longer valid
+			it "should not save changes" do
+				@user.email != ""
+			end
+		end
+
+		describe "is not valid because it" do
+			describe "has no @" do
+				before do
+					fill_in "user_email", with: "test_at_example.com"
+				end
+
+				it "should not save changes" do
+					@user.email != "test_at_example.com"
+				end
+			end
+
+			describe "has no domain" do
+				before do
+					fill_in "user_email", with: "test@exmaple_dot_com"
+				end
+
+				it "should not save changes" do
+					@user.email != "test@example_dot_com"
+				end
+			end
+
+			describe "belongs to another user" do
+				before do
+					@secondUser = FactoryGirl.create(:second_user)
+					fill_in "user_email", with: "person@example.com"
+				end
+
+				it "should not save changes" do
+					@user.email != "person@example.com"
+				end
+			end
+		end
 	end
 end

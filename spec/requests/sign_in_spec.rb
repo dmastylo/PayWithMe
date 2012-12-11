@@ -31,7 +31,7 @@ describe "Sign in page" do
 			end
 
 			it "should not sign the user in" do
-				pending
+				response.should have_selector('p', text: "Invalid")
 			end
 		end
 
@@ -43,7 +43,7 @@ describe "Sign in page" do
 			end
 
 			it "should not sign the user in" do
-				pending
+				response.should_not redirect_to user_path(@user)
 			end
 		end
 	end
