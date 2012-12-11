@@ -15,7 +15,7 @@ private
     if params[:token]
       user = User.find_by_guest_token(params[:token])
       if user.present?
-        session[:user_return_to] = url_for(only_path: false, overwrite_params: params.without(:token))
+        session[:user_return_to] = url_for(port: false)
         if user.stub?
           sign_in user
           @display_stub_login = true

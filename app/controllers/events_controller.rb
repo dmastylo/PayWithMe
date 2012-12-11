@@ -81,6 +81,8 @@ private
 
   def user_not_stub
     if current_user.stub?
+      flash[:error] = "A full account is required in order to make an event."
+      session[:user_return_to] = url_for(port: false)
       redirect_to new_user_registration_path(guest: true)
     end
   end

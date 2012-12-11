@@ -17,10 +17,12 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
       build_resource
       user = current_user
       user.update_attributes!(params[:user])
+      user.guest_token = nil
       user.toggle(:stub)
 
       if user.save
         flash.now[:success] = "Account successfully updated!"
+        sign_in user, bypass: true
         redirect_to after_sign_in_path_for(resource)
       else
         clean_up_passwords resource
