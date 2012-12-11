@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
     end
 
     def create
-        if Time.now.to_i - @event.messages.first.created_at.to_i > Figaro.env.chat_limit.to_i
+        if current_user.can_post_message?
             @message = @event.messages.create(params[:message])
             @message.user = current_user
             if @message.save
