@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete]
   
@@ -76,6 +77,12 @@ private
     if @event.nil?
       flash[:error] = "You're not on the list."
       redirect_to root_path
+    end
+  end
+
+  def user_not_stub
+    if current_user.stub?
+      redirect_to new_user_registration_path(guest: true)
     end
   end
 end
