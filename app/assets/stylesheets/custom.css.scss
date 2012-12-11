@@ -205,7 +205,6 @@ textarea,input
     }
 }
 
-
 .form-actions
 {
     padding: 0;
@@ -302,6 +301,19 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
         list-style-type: none;
         margin: 0;
     }
+}
+
+// User Display
+.user-header
+{
+    margin-top: 20px;
+    text-align: center;
+}
+
+.invite-to-event-button
+{
+    margin-top: 35px;
+    text-align: center;
 }
 
 // Event Display 
