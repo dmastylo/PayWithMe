@@ -3,12 +3,12 @@
     <div class="span3">
         <%= profile_image_tag @user, :medium %> 
     </div>
-    <div class="user-header span7">
+    <div class="user-header span6">
         <h2><%= @user.name %></h2>
     </div>
     <% unless @user == current_user %>
-        <div class="invite-to-event-button span2">
-            <a href="#" class="invite-to-events btn btn-primary">Invite To Events</a>
+        <div class="invite-to-event-button span3">
+            <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
             <ul class="events-to-invite">
                 <%= render partial: 'events/invite_events', collection: @events, as: :event %>
             </ul>
@@ -16,11 +16,8 @@
     <% end %>
 </div>
 <div class="row">
-    <div class="span10">
+    <div class="event-list span12">
         <h3>Public and Shared Events</h3>
         <%= render @user.member_events %>
-    </div>
-    <div class="span2">
-        
     </div>
 </div>

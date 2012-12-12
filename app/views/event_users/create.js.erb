@@ -1,4 +1,4 @@
-// TODO images would be better/prettier
 <% unless @event_user.nil? %>
     $('.<%= @event_user.event.title.split.join %><%= @event_user.event.id %>').html('Y');
+    $('.event-list').append('<%= j render(@event_user.event) %>');
 <% end %>

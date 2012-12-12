@@ -321,24 +321,32 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-// TODO make responsive
 .events-to-invite
 {
-    position: absolute;
-    width: 164px;
+    // position: absolute; // using absolute makes it non-responsive
+    margin: 0; // so that it fits in the span perfectly
     list-style: none;
-    margin-left: 3px;
 
+    // matching the same style as the dropdown
     li
     {
-        padding: 2px 0 2px 5px;
-        background-color: $lightBlue;
+        padding: 2px 0 2px 10px;
+        line-height: 30px;
+        background-color: $mediumBlue;
         color: $offWhite;
         text-align: left;
+        font-size: 18px;
 
         a
         {
             color: $offWhite;
+            text-shadow: none;
+            font-family: 'Crete Round';
+        }
+
+        &:hover
+        {
+            background-color: $lightBlue;
         }
     }
 }
