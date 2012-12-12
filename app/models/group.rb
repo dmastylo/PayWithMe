@@ -16,14 +16,26 @@ class Group < ActiveRecord::Base
 
   # Validations
   validates :title, presence: true, length: { minimum: 2, maximum: 120 }
+  # validates :organizer_id, presence: true
 
   # Relationships
+  # belongs_to :organizer, class_name: "User"
   has_many :group_users, dependent: :destroy
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
   has_many :event_groups, dependent: :destroy
   has_many :events, through: :event_groups, source: :event
 
   def add_members(members)
+    members.each do |member|
+      self.members << member unless self.members.include?(member)
+    end
+
+    # Later, add them to open events as of
+    # right now if they are added to the group
+  end
+
+  def is_admin?(user)
+    self.group_users.find_by_user_id(user.id).admin?
   end
 
   def self.search_by_title(query, user = nil)

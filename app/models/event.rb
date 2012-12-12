@@ -50,17 +50,17 @@ class Event < ActiveRecord::Base
 
   # Money definitions
   def receive_amount_cents
-    if division_type == DivisionType::Fundraise || members.size == 0 || send_amount_cents.nil?
+    if division_type == DivisionType::Fundraise || paying_members.size == 0 || send_amount_cents.nil?
       nil
     elsif fee_type == FeeType::OrganizerPays
-      members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)
+      paying_members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)
     else
       total_amount_cents
     end
   end
 
   def send_amount_cents
-    if division_type == DivisionType::Fundraise || members.size == 0 || split_amount_cents.nil?
+    if division_type == DivisionType::Fundraise || paying_members.size == 0 || split_amount_cents.nil?
       nil
     elsif fee_type == FeeType::OrganizerPays
       split_amount_cents
@@ -70,22 +70,22 @@ class Event < ActiveRecord::Base
   end
 
   def total_amount_cents
-    if super || division_type == DivisionType::Total
+    if division_type == DivisionType::Total
       super
-    elsif members.size == 0 || division_type == DivisionType::Fundraise || split_amount_cents.nil? || super.nil?
+    elsif paying_members.size == 0 || division_type == DivisionType::Fundraise || split_amount_cents.nil?
       nil
     else
-      split_amount_cents * members.size
+      split_amount_cents * paying_members.size
     end
   end
 
   def split_amount_cents
-    if super || division_type == DivisionType::Split
+    if division_type == DivisionType::Split
       super
-    elsif members.size == 0 || division_type == DivisionType::Fundraise  || super.nil?
+    elsif paying_members.size == 0 || division_type == DivisionType::Fundraise
       nil
     else
-      total_amount_cents / members.size
+      total_amount_cents / paying_members.size
     end
   end
 
@@ -122,6 +122,11 @@ class Event < ActiveRecord::Base
     MembersPay = 2
   end
 
+  # Member definitions
+  def paying_members
+    self.members - [self.organizer]
+  end
+  
   def add_member(member)
     add_members([member])
   end
@@ -171,7 +176,6 @@ private
       total_amount_cents = nil
       total_amount = nil
     end
-
   end
 
 end

@@ -48,7 +48,7 @@ class EventsController < ApplicationController
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
     # @event = current_user.organized_events.new(params[:event])
 
-    if @event.save
+    if @event.update_attributes(params[:event])
       flash[:success] = "Event updated!"
 
       @event.add_members(members_from_users + members_from_groups + [current_user], current_user)
@@ -61,33 +61,6 @@ class EventsController < ApplicationController
       @member_emails = @event.members.collect { |member| member.email }
       @group_ids = @event.groups.collect { |group| group.id }
       render "edit"
-    end
-  end
-
-private
-  def user_in_event
-    @event = current_user.member_events.find_by_id(params[:id])
-
-    if @event.nil?
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
-    end
-  end
-
-  def user_organizes_event
-    @event = current_user.organized_events.find_by_id(params[:id])
-
-    if @event.nil?
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
-    end
-  end
-
-  def user_not_stub
-    if current_user.stub?
-      flash[:error] = "A full account is required in order to make an event."
-      session[:user_return_to] = url_for(port: false)
-      redirect_to new_user_registration_path(guest: true)
     end
   end
 end

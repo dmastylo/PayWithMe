@@ -1,6 +1,15 @@
 <% provide(:title, @group.title) %>
-<div class="page-header">
-  <h2><%= @group.title %></h2>
+<div class="row">
+  <div class="span9">
+    <div class="page-header">
+      <h2><%= @group.title %></h2>
+    </div>
+  </div>
+  <% if @group.is_admin?(current_user) %>
+    <div class="span3">
+      <%= link_to "Edit group", edit_group_path(@group), class: "btn btn-primary pull-right push-top" %>
+    </div>
+  <% end %>
 </div>
 <div class="row">
   <div class="span5">

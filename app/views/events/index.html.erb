@@ -1,6 +1,15 @@
 <% provide(:title, "Your Events") %>
-<div class="page-header">
-  <h2>Your Events</h2>
+<div class="row">
+  <div class="span9">
+    <div class="page-header">
+      <h2>Your Events</h2>
+    </div>
+  </div>
+  <div class="span3">
+    <% if !current_user.stub? %>
+      <%= link_to "New event", new_event_path, class: "btn btn-primary push-top pull-right" %>
+    <% end %>
+  </div>
 </div>
 
 <div class="row">

@@ -1,8 +1,16 @@
 <% provide(:title, "Your Groups") %>
-<div class="page-header">
-  <h2>Your Groups</h2>
+<div class="row">
+  <div class="span9">
+    <div class="page-header">
+      <h2>Your Groups</h2>
+    </div>
+  </div>
+  <div class="span3">
+    <% if !current_user.stub? %>
+      <%= link_to "New group", new_group_path, class: "btn btn-primary push-top pull-right" %>
+    <% end %>
+  </div>
 </div>
-
 <div class="row">
   <%= render @groups %>
 </div>

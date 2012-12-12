@@ -1,16 +1,15 @@
 GIT
-  remote: git://github.com/austingulati/bootstrap-sass.git
-  revision: 3560e5eb20023243a41ea11989d8fe64909f159e
-  specs:
-    bootstrap-sass (2.2.1.1)
-      sass (~> 3.2)
-
-GIT
   remote: git://github.com/codegram/date_validator.git
   revision: 69db9042710380eaff2541091aaa74282affea2d
   specs:
     date_validator (0.6.3)
       activemodel (~> 3.0)
+
+PATH
+  remote: /var/www/bootstrap-sass
+  specs:
+    bootstrap-sass (2.2.1.1)
+      sass (~> 3.2)
 
 GEM
   remote: https://rubygems.org/

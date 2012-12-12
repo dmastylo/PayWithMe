@@ -1,43 +1,50 @@
 class GroupsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_group, only: [:show]
+  before_filter :user_organizes_group, only: [:edit, :update, :delete]
 
   def new
     @group = Group.new
   end
 
   def create
-    members = ActiveSupport::JSON.decode(params[:group].delete(:members))
+    members = User.from_params(params[:group].delete(:members))
     @group = Group.new(params[:group])
-    members.each do |member|
-      user = User.find_by_email(member)
-      if user.nil?
-        user = User.new(email: member)
-        user.stub = true
-        user.save
-      end
-
-      @group.members << user
-    end
-    @group.members << current_user
 
     if @group.save
       flash[:success] = "Group created!"
 
+      @group.add_members(members + [current_user])
+      
       group_owner = current_user.group_users.where(group_id: @group.id).first
       group_owner.admin = true
       group_owner.save
 
       redirect_to group_path(@group)
     else
+      @member_emails = @group.members.collect { |member| member.email }
       render "new"
     end
   end
 
   def edit
+    @member_emails = @group.members.collect { |member| member.email }
   end
 
   def update
+    members = User.from_params(params[:group].delete(:members))
+
+    if @group.update_attributes(params[:group])
+      flash[:success] = "Group updated!"
+
+      @group.add_members(members + [current_user])
+
+      redirect_to group_path(@group)
+    else
+      @member_emails = @group.members.collect { |member| member.email }
+      render "edit"
+    end
   end
 
   def index
@@ -62,18 +69,6 @@ class GroupsController < ApplicationController
         @groups = @groups.collect { |result| {id: result.id, title: result.title } }
         render json: @groups
       end
-    end
-  end
-
-private
-  def user_in_group
-    @group = Group.find(params[:id])
-
-    if @group.members.include?(current_user)
-      true
-    else
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
     end
   end
 end
