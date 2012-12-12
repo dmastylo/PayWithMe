@@ -1,0 +1,4 @@
+<% unless @event_user.nil? %>
+    $('.<%= @event_user.event.title.split.join %><%= @event_user.event.id %>').html('<i class="icon-check icon-white"></i>');
+    $('.event-list').append('<%= j render(@event_user.event) %>');
+<% end %>

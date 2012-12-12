@@ -1,0 +1,32 @@
+<% provide(:title, @user.name) %>
+<div class="row">
+    <div class="span3">
+        <%= profile_image_tag @user, :medium %> 
+    </div>
+    <div class="user-header span6">
+        <h2><%= @user.name %></h2>
+    </div>
+    <% unless @user == current_user %>
+        <div class="invite-to-event-button span3">
+            <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
+            <ul class="events-to-invite">
+                <% unless @events.empty? %>
+                    <%= render partial: 'events/invite_events', collection: @events, as: :event %>
+                <% else %>
+                    <li>You don't have any events!</li>
+                <% end %>
+            </ul>
+        </div>
+    <% end %>
+</div>
+<div class="row">
+    <div class="span12">
+        <h3>Public and Shared Events</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="event-list span12">
+        <!-- TODO: make this only display public/shared once privacy is implemented -->
+        <%= render @user.member_events %>
+    </div>
+</div>
