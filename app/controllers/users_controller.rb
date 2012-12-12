@@ -17,7 +17,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html
       format.json do
-        @users = @users.collect { |result| {id: result.id, name: result.name, profile_image: view_context.profile_image_tag(result), email: result.email } }
+        @users = @users.collect { |result| {id: result.id, name: result.name || result.email, profile_image: view_context.profile_image_tag(result), email: result.email } }
         render json: @users
       end
     end

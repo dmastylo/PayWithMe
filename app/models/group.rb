@@ -26,6 +26,16 @@ class Group < ActiveRecord::Base
   has_many :events, through: :event_groups, source: :event
 
   def add_members(members)
+    members.each do |member|
+      self.members << member unless self.members.include?(member)
+    end
+
+    # Later, add them to open events as of
+    # right now if they are added to the group
+  end
+
+  def is_admin?(user)
+    self.group_users.find_by_user_id(user.id).admin?
   end
 
   def self.search_by_title(query, user = nil)

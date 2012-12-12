@@ -1,2 +1,7 @@
-<h1>Groups#edit</h1>
-<p>Find me in app/views/groups/edit.html.erb</p>
+<% provide(:title, "Edit Group") %>
+<div class="page-header">
+  <h2>Edit Group</h2>
+</div>
+<%= form_for @group do |f| %>
+  <%= render 'forms', f: f %>
+<% end %>

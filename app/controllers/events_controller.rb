@@ -48,7 +48,7 @@ class EventsController < ApplicationController
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
     # @event = current_user.organized_events.new(params[:event])
 
-    if @event.save
+    if @event.update_attributes(params[:event])
       flash[:success] = "Event updated!"
 
       @event.add_members(members_from_users + members_from_groups + [current_user], current_user)

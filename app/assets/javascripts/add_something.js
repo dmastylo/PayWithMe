@@ -18,7 +18,7 @@
 		this.onValidate = this.options.onValidate || this.onValidate;
 		this.onCreate = this.options.onCreate || this.onCreate;
 		
-		// Launch it with none selected
+		// Launch it
 		this.listen();
 	};
 
@@ -34,7 +34,7 @@
 		, onCreate: function(something)
 		{
 			var $something;
-			if(something.name)
+			if(something[this.options.displayAttribute] && something[this.options.displayAttribute] != something[this.options.idAttribute])
 			{
 				$something = $("<div></div>").addClass("member")
 					.append($("<div></div>")

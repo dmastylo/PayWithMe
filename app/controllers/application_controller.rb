@@ -22,6 +22,15 @@ protected
     end
   end
 
+  def user_organizes_group
+    @group = current_user.groups.find_by_id(params[:id])
+
+    if @group.nil? || !@group.is_admin?(current_user)
+      flash[:error] = "You're not on the list."
+      redirect_to root_path
+    end
+  end
+
   def user_in_event
     @event = current_user.member_events.find_by_id(params[:id])
 
