@@ -209,8 +209,7 @@ textarea,input
 {
     padding: 0;
     background-color: transparent;
-    margin: 10px 0 10px 0;
-    text-align: center;
+    margin: 10px 0 0 0;
 }
 
 form
@@ -567,6 +566,11 @@ footer
 
     .modal-body
     {
-        max-height: 435px;
+        max-height: 500px;
+
+        .well
+        {
+            margin-bottom: 0px;
+        }
     }
 }

@@ -84,7 +84,8 @@
 </div>
 <div class="row">
   <div class="span12">
-    <%= f.submit "Create event", class: "btn btn-primary" %>
+    <% submit_text = (@event.persisted?)? "Update" : "Create" %>
+    <%= f.submit "#{submit_text} event", class: "btn btn-primary" %>
   </div>
 </div>
 

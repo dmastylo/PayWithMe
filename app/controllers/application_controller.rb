@@ -15,12 +15,13 @@ private
     if params[:token]
       user = User.find_by_guest_token(params[:token])
       if user.present?
-        session[:user_return_to] = request.url
+        session[:user_return_to] = url_for(port: false)
         if user.stub?
           sign_in user
           @display_stub_login = true
+          @stub_user = User.new(email: user.email)
         else
-          redirect_to sign_in_path
+          redirect_to new_user_session_path
         end
       else
         flash[:error] = "Invalid login token."

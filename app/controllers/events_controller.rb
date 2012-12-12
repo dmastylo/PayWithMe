@@ -1,7 +1,8 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event, only: [:show]
-  before_filter :user_organizes_event, only: [:edit, :delete]
+  before_filter :user_organizes_event, only: [:edit, :delete, :update]
   
   def new
     @event = current_user.organized_events.new
@@ -21,6 +22,10 @@ class EventsController < ApplicationController
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)
     else
+      @event.members = members_from_users - members_from_groups
+      @member_emails = members_from_users.collect { |member| member.email }
+      @event.groups = groups
+      @group_ids = @event.groups.collect { |group| group.id }
       render "new"
     end
   end
@@ -41,7 +46,7 @@ class EventsController < ApplicationController
   def update
     members_from_users = User.from_params(params[:event].delete(:members))
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
-    @event = current_user.organized_events.new(params[:event])
+    # @event = current_user.organized_events.new(params[:event])
 
     if @event.save
       flash[:success] = "Event updated!"
@@ -75,6 +80,14 @@ private
     if @event.nil?
       flash[:error] = "You're not on the list."
       redirect_to root_path
+    end
+  end
+
+  def user_not_stub
+    if current_user.stub?
+      flash[:error] = "A full account is required in order to make an event."
+      session[:user_return_to] = url_for(port: false)
+      redirect_to new_user_registration_path(guest: true)
     end
   end
 end
