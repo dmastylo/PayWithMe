@@ -1,6 +1,6 @@
 <li>
     <% unless Time.now > event.start_at || Time.now > event.due_at %>
-        <%= form_for @event_user, remote: true do |f| %>
+        <%= form_for [event, @event_user], remote: true do |f| %>
             <span class="<%= event.title.split.join %><%= event.id %>">
                 <% if event.members.include?(@user) %>
                     <i class="icon-check icon-white"></i>

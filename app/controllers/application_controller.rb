@@ -40,7 +40,7 @@ protected
     end
   end
 
-  def user_organizes_event
+  def user_organizes_event(id = params[:id])
     @event = current_user.organized_events.find_by_id(params[:id])
 
     if @event.nil?

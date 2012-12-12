@@ -10,7 +10,11 @@
         <div class="invite-to-event-button span3">
             <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
             <ul class="events-to-invite">
-                <%= render partial: 'events/invite_events', collection: @events, as: :event %>
+                <% unless @events.empty? %>
+                    <%= render partial: 'events/invite_events', collection: @events, as: :event %>
+                <% else %>
+                    <li>You don't have any events!</li>
+                <% end %>
             </ul>
         </div>
     <% end %>
