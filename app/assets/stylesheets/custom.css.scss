@@ -324,7 +324,8 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 
 .events-to-invite
 {
-    // position: absolute; // using absolute makes it non-responsive
+    position: absolute;
+    width: 100%; // make it responsive
     margin: 0; // so that it fits in the span perfectly
     list-style: none;
 
