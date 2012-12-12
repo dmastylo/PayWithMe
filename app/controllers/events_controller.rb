@@ -21,16 +21,15 @@ class EventsController < ApplicationController
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)
     else
-      @event.members = @event.independent_members
+      @event.members = members_from_users - members_from_groups
       @member_emails = members_from_users.collect { |member| member.email }
-      puts @member_emails
+      @event.groups = groups
       @group_ids = @event.groups.collect { |group| group.id }
       render "new"
     end
   end
 
   def show
-    @messages = @event.messages.all # TODO: paginate
   end
 
   def index

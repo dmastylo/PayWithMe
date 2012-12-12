@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   # Accessible attributes
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image_option, :profile_image, :profile_image_option, :profile_image_url
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_option, :profile_image_url
   attr_accessor :profile_image_option
   has_attached_file :profile_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>" }
 
@@ -40,10 +40,11 @@ class User < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 50 }, unless: :stub?
   # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   # validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
-  validates :password, length: { minimum: 6 }, if: :password_required?, unless: :stub?
+  validates :password, length: { minimum: 8 }, if: :password_required?, unless: :stub?
   
   # Callbacks
   before_save :set_profile_image
+  before_save :set_stub
 
   # Relationships
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
@@ -71,15 +72,22 @@ class User < ActiveRecord::Base
     params.each do |email|
       user = User.find_by_email(email)
       if user.nil?
-        user = User.new(email: email)
-        user.stub = true
-        user.save
+        user = User.create_stub(email)
       end
 
       users.push user
     end
 
     users.uniq
+  end
+
+  def self.create_stub(email)
+    user = User.new(email: email)
+    user.stub = true
+    user.save
+    user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s} #{pepper}")
+    user.save
+    user
   end
 
   def self.from_omniauth(auth)
@@ -119,6 +127,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  def can_post_message?
+    unless self.messages.all.empty?
+        Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
+    else
+        true
+    end
+  end
+
 private
   def set_profile_image
     if self.profile_image_option != "url"
@@ -129,5 +145,12 @@ private
     end
 
     profile_image_option = nil
+  end
+
+  def set_stub
+    if encrypted_password.present? || provider.present?
+      stub = false
+      guest_token = nil
+    end
   end
 end

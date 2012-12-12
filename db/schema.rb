@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121207014858) do
+ActiveRecord::Schema.define(:version => 20121208004848) do
 
   create_table "event_groups", :force => true do |t|
     t.integer  "event_id"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(:version => 20121207014858) do
     t.datetime "profile_image_updated_at"
     t.string   "profile_image_url"
     t.boolean  "stub",                       :default => false
+    t.string   "guest_token"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

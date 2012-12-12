@@ -1,16 +1,16 @@
 GIT
+  remote: git://github.com/austingulati/bootstrap-sass.git
+  revision: 3560e5eb20023243a41ea11989d8fe64909f159e
+  specs:
+    bootstrap-sass (2.2.1.1)
+      sass (~> 3.2)
+
+GIT
   remote: git://github.com/codegram/date_validator.git
   revision: 69db9042710380eaff2541091aaa74282affea2d
   specs:
     date_validator (0.6.3)
       activemodel (~> 3.0)
-
-GIT
-  remote: git@github.com:austingulati/bootstrap-sass.git
-  revision: 3560e5eb20023243a41ea11989d8fe64909f159e
-  specs:
-    bootstrap-sass (2.2.1.1)
-      sass (~> 3.2)
 
 GEM
   remote: https://rubygems.org/
@@ -61,13 +61,6 @@ GEM
     chronic (0.8.0)
     cocaine (0.4.2)
     coderay (1.0.8)
-    coffee-rails (3.2.2)
-      coffee-script (>= 2.2.0)
-      railties (~> 3.2.0)
-    coffee-script (2.2.0)
-      coffee-script-source
-      execjs
-    coffee-script-source (1.4.0)
     daemons (1.1.9)
     delorean (2.1.0)
       chronic
@@ -163,6 +156,7 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.4.0)
       mime-types
+    pg (0.14.1)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
@@ -261,7 +255,6 @@ DEPENDENCIES
   annotate
   bootstrap-sass!
   capybara (= 1.1.2)
-  coffee-rails (~> 3.2.1)
   date_validator!
   delorean
   devise
@@ -275,6 +268,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-twitter
   paperclip
+  pg
   rails (= 3.2.8)
   ransack
   rb-inotify (~> 0.8.8)

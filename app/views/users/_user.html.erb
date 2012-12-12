@@ -4,8 +4,7 @@
   </div>
   <div class="body">
     <div class="user">
-        <% name = user.name || user.email %>
-        <%= link_to name, user %>
+        <%= link_to user_name(user), user %>
     </div>
     <div class="status">
       <% if @event.present? %>

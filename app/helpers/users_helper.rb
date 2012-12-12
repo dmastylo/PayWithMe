@@ -16,4 +16,8 @@ module UsersHelper
     end
     link_to image, user
   end
+
+  def user_name(user)
+    user.name || user.email
+  end
 end

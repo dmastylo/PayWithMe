@@ -1,0 +1,22 @@
+<% unless @new_messages.empty? %>
+    // Remove the highlighting on new messages
+    $('.new-message').each(function()
+    {
+        $(this).removeClass('new-message');
+    });
+
+    // Render the new messages
+    <% @new_message = true %>
+    $('.message-list').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
+    
+    // Fade the messages in for a cool effect (events.js)
+    fadeInNewMessages();
+
+    // Flash the title if page is not in focus (jquery.titlealert.min.js)
+    $.titleAlert("New Chat Message!", {
+        requireBlur: true,
+        stopOnFocus: true,
+        stopOnMouseMove: true,
+        interval: 500
+    });
+<% end %>

@@ -43,17 +43,17 @@
   <div class="span7">
     <h3>Message Board</h3>
     <div class="well">
-      <ul class="message_list">
-        <% if @messages.any? %>
-            <%= render @messages %>
+      <ul class="message-list" data-id="<%= @event.id %>">
+        <% if @event.messages.any? %>
+            <%= render @event.messages %>
         <% else %>
           There are no messages.
         <% end %>
       </ul>
       <h4>Leave Message</h4>
-      <%= form_for [@event, @event.messages.build]  do |f| %>
-        <%= f.text_area :message, class: "input-block-level", rows: "3", placeholder: "Compose a message..." %>
-        <%= f.submit "Post Message", class: "btn btn-block" %>
+      <%= form_for [@event, @event.messages.build], remote: true do |f| %>
+        <%= f.text_area :message, class: "input-block-level message-text-field", rows: "3", placeholder: "Compose a message..." %>
+        <%= f.submit "Post Message", class: "post-message btn btn-block" %>
       <% end %>
     </div>
   </div>

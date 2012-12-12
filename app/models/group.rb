@@ -35,7 +35,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.groups_and_members_from_params(params, user = nil)
-    return [] if params.nil? || params.empty?
+    return [], [] if params.nil? || params.empty?
     params = ActiveSupport::JSON.decode(params)
 
     base = user.groups if user.present?

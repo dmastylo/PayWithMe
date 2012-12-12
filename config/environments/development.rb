@@ -31,10 +31,13 @@ PayWithMe::Application.configure do
 
   # Do not compress assets
   config.assets.compress = false
+  # Don't serve static assets
+  config.serve_static_assets = false
 
   # Expands the lines which load the assets
   config.assets.debug = true
 
   # Default URL
   routes.default_url_options[:host] = "localhost:3000"
+
 end

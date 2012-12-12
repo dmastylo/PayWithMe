@@ -20,7 +20,7 @@
 		
 		// Launch it with none selected
 		this.listen();
-	}
+	};
 
 	AddSomething.prototype = {
 
@@ -108,7 +108,7 @@
 			else if(this.options.allowNameless)
 			{
 				var something = {};
-				somthing[this.option.idAttribute] = this.$input.val();
+				something[this.options.idAttribute] = this.$input.val();
 				this.select(something);
 			}
 		}
