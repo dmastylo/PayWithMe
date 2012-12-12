@@ -2,17 +2,24 @@
 <div class="page-header">
   <% if session["devise.user_attributes"] && session["devise.user_attributes"]["provider"] %>
     <h2>Finish <%= session["devise.user_attributes"]["provider"].capitalize %> Registration</h2>
+  <% elsif params[:guest] %>
+    <h2>Complete Account Registration</h2>
   <% else %>
     <h2>Register New Account</h2>
   <% end %>
 </div>
 
 <div class="row">
+  <% if params[:guest] %>
+    <div class="span12">
+      Hey, you're logged in as a guest! You should consider making a full account. Full accounts are more secure and are essential for taking advantage of all that PayWithMe has to offer.
+    </div>
+  <% end %>
   <div class="span7">
     <h3>Register With Email</h3>
     <div class="well">
       <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-        <%= devise_error_messages! %>
+      <%= devise_error_messages! %>
 
         <div class="control-group">
           <%= f.label :name, class: 'control-label' %>
