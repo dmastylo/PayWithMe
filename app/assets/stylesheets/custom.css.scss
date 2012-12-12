@@ -311,6 +311,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 
 .invite-to-event-button
 {
+    position: relative;
     margin-top: 35px;
     text-align: center;
 
@@ -320,15 +321,20 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
+// TODO make responsive
 .events-to-invite
 {
+    position: absolute;
+    width: 164px;
     list-style: none;
+    margin-left: 3px;
 
     li
     {
         padding: 2px 0 2px 5px;
         background-color: $lightBlue;
         color: $offWhite;
+        text-align: left;
 
         a
         {
