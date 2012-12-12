@@ -89,8 +89,6 @@ describe Event do
         before do
           @event.split_amount = "$100.00"
           @event.division_type = Event::DivisionType::Split
-          @event.valid?
-          puts @event.errors.messages
         end
         it { should be_valid }
       end
@@ -172,14 +170,18 @@ describe Event do
           end
 
           it "should have nonzero entries" do
+            @event.split_amount_cents.should_not be_nil
             @event.split_amount_cents.should_not == 0
+            @event.total_amount_cents.should_not be_nil
             @event.total_amount_cents.should_not == 0
+            @event.receive_amount_cents.should_not be_nil
             @event.receive_amount_cents.should_not == 0
+            @event.send_amount_cents.should_not be_nil
             @event.send_amount_cents.should_not == 0
           end
 
           it "should have correct split_amount" do
-            @event.split_amount_cents.should == @event.total_amount_cents / @event.members.count
+            @event.split_amount_cents.should == @event.total_amount_cents / @event.paying_members.count
           end
 
           it "should have equal split_amount and send_amount" do
@@ -188,7 +190,7 @@ describe Event do
           end
 
           it "should have correct receive_amount" do
-            total = @event.total_amount_cents * (1 - Figaro.env.fee_rate.to_f) - @event.members.count * Figaro.env.fee_static.to_f
+            total = @event.total_amount_cents * (1 - Figaro.env.fee_rate.to_f) - @event.paying_members.count * Figaro.env.fee_static.to_f
 
             @event.receive_amount_cents.should == total
           end
@@ -208,7 +210,7 @@ describe Event do
           end
 
           it "should have correct split_amount" do
-            @event.split_amount_cents.should == @event.total_amount_cents / @event.members.count
+            @event.split_amount_cents.should == @event.total_amount_cents / @event.paying_members.count
           end
 
           it "should have correct send_amount" do
