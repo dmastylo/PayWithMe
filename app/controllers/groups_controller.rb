@@ -1,5 +1,6 @@
 class GroupsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_group, only: [:show]
 
   def new
@@ -7,23 +8,13 @@ class GroupsController < ApplicationController
   end
 
   def create
-    members = ActiveSupport::JSON.decode(params[:group].delete(:members))
+    members = User.from_params(params[:group].delete(:members))
     @group = Group.new(params[:group])
-    members.each do |member|
-      user = User.find_by_email(member)
-      if user.nil?
-        user = User.new(email: member)
-        user.stub = true
-        user.save
-      end
-
-      @group.members << user
-    end
     @group.members << current_user
 
     if @group.save
       flash[:success] = "Group created!"
-
+      
       group_owner = current_user.group_users.where(group_id: @group.id).first
       group_owner.admin = true
       group_owner.save

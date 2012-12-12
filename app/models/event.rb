@@ -163,7 +163,6 @@ private
       total_amount_cents = nil
       total_amount = nil
     end
-
   end
 
 end

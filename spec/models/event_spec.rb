@@ -54,7 +54,10 @@ describe Event do
       end
 
       describe "with division_type other" do
-        before { @event.division_type = Event::DivisionType::Split }
+        before do
+          @event.split_amount = "$100.00"
+          @event.division_type = Event::DivisionType::Split
+        end
         it { should be_valid }
       end
     end
@@ -67,7 +70,10 @@ describe Event do
       end
 
       describe "with division_type other" do
-        before { @event.division_type = Event::DivisionType::Total }
+        before do
+          @event.total_amount = "$100.00"
+          @event.division_type = Event::DivisionType::Total
+        end
         it { should be_valid }
       end
     end
@@ -80,7 +86,12 @@ describe Event do
       end
 
       describe "with division_type other" do
-        before { @event.division_type = Event::DivisionType::Split }
+        before do
+          @event.split_amount = "$100.00"
+          @event.division_type = Event::DivisionType::Split
+          @event.valid?
+          puts @event.errors.messages
+        end
         it { should be_valid }
       end
     end

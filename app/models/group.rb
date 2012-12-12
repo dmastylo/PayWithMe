@@ -16,8 +16,10 @@ class Group < ActiveRecord::Base
 
   # Validations
   validates :title, presence: true, length: { minimum: 2, maximum: 120 }
+  # validates :organizer_id, presence: true
 
   # Relationships
+  # belongs_to :organizer, class_name: "User"
   has_many :group_users, dependent: :destroy
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
   has_many :event_groups, dependent: :destroy
