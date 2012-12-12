@@ -84,6 +84,7 @@ p
         ul.nav
         {
             z-index: 1001;
+
             li
             {
                 line-height: 30px;
@@ -349,6 +350,11 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
             background-color: $lightBlue;
         }
     }
+}
+
+.event-list
+{
+    margin-left: 0;
 }
 
 // Event Display 
