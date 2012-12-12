@@ -1,5 +1,5 @@
 class EventUsersController < ApplicationController
-    before_filter :user_is_organizer
+    before_filter :user_organizes_event
 
     def create
         # for some reason member_ids.include? does not work
@@ -18,14 +18,4 @@ class EventUsersController < ApplicationController
             end
         end
     end
-
-    private
-        def user_is_organizer
-            @event = current_user.organized_events.find_by_id(params[:event_user][:event_id])
-
-            if @event.nil?
-              flash[:error] = "You're not the organizer of this event."
-              redirect_to root_path
-            end
-        end
 end

@@ -1,5 +1,5 @@
-<li>
-    <% unless Time.now > event.start_at || Time.now > event.due_at %>
+<% unless Time.now > event.start_at || Time.now > event.due_at %>
+    <li>
         <%= form_for [event, @event_user], remote: true do |f| %>
             <span class="<%= event.title.split.join %><%= event.id %>">
                 <% if event.members.include?(@user) %>
@@ -12,5 +12,5 @@
             <%= f.hidden_field :event_id, :value => event.id %>
             <%= f.hidden_field :user_id, :value => @user.id %>
         <% end %>
-    <% end %>
-</li>
+    </li>
+<% end %>
