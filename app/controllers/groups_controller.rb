@@ -55,16 +55,4 @@ class GroupsController < ApplicationController
       end
     end
   end
-
-private
-  def user_in_group
-    @group = Group.find(params[:id])
-
-    if @group.members.include?(current_user)
-      true
-    else
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
-    end
-  end
 end

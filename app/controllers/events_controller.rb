@@ -63,31 +63,4 @@ class EventsController < ApplicationController
       render "edit"
     end
   end
-
-private
-  def user_in_event
-    @event = current_user.member_events.find_by_id(params[:id])
-
-    if @event.nil?
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
-    end
-  end
-
-  def user_organizes_event
-    @event = current_user.organized_events.find_by_id(params[:id])
-
-    if @event.nil?
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
-    end
-  end
-
-  def user_not_stub
-    if current_user.stub?
-      flash[:error] = "A full account is required in order to make an event."
-      session[:user_return_to] = url_for(port: false)
-      redirect_to new_user_registration_path(guest: true)
-    end
-  end
 end
