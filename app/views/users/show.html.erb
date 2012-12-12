@@ -3,19 +3,25 @@
     <div class="span3">
         <%= profile_image_tag @user, :medium %> 
     </div>
-    <div class="user-header span6">
+    <div class="user-header span7">
         <h2><%= @user.name %></h2>
     </div>
-    <div class="invite-to-event-button span3">
-        <a href="#" class="btn btn-primary">Invite To Event</a>
-    </div>
+    <% unless @user == current_user %>
+        <div class="invite-to-event-button span2">
+            <a href="#" class="invite-to-events btn btn-primary">Invite To Events</a>
+        </div>
+    <% end %>
 </div>
 <div class="row">
-    <div class="span9">
+    <div class="span10">
         <h3>Public and Shared Events</h3>
         <%= render @user.member_events %>
     </div>
-    <div class="span3">
-        Form goes here
+    <div class="span2">
+        <% unless @user == current_user %>
+            <ul class="events-to-invite">
+                <%= render partial: 'events/invite_events', collection: @events, as: :event %>
+            </ul>
+        <% end %>
     </div>
 </div>

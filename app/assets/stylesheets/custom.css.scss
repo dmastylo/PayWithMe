@@ -303,7 +303,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-// User Display
+// User-Show
 .user-header
 {
     margin-top: 20px;
@@ -314,6 +314,27 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 {
     margin-top: 35px;
     text-align: center;
+
+    .btn
+    {
+        padding: 4px 30px;
+    }
+}
+
+.events-to-invite
+{
+    list-style: none;
+
+    li
+    {
+        padding: 2px 0 2px 5px;
+        background-color: $lightBlue;
+
+        a
+        {
+            color: $offWhite;
+        }
+    }
 }
 
 // Event Display 

@@ -122,11 +122,19 @@ class Event < ActiveRecord::Base
     MembersPay = 2
   end
 
+  def add_member(member)
+    add_members([member])
+  end
+
   def add_members(members, exclude=nil)
     members.each do |member|
       self.members << member unless self.members.include?(member)
     end
 
+    set_event_user_attributes(exclude)
+  end
+
+  def set_event_user_attributes(exclude)
     self.event_users.each do |event_user|
       if event_user.member != exclude
         event_user.due_date = self.due_at

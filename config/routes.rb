@@ -13,6 +13,8 @@ PayWithMe::Application.routes.draw do
     end
   end
 
+  resources :event_users, only: [:create]
+
   resources :groups do
     collection do
       get 'search'

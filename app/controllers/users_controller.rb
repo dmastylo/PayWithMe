@@ -3,8 +3,10 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    @events = current_user.organized_events
+    @event_user = EventUser.new
   end
-  
+
   def search
     @query = params[:name]
     if @query.nil? || @query.empty?
