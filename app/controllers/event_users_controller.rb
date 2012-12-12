@@ -2,17 +2,19 @@ class EventUsersController < ApplicationController
     before_filter :user_is_organizer
 
     def create
-        @event_user = EventUser.create(params[:event_user])
-        if @event_user.save
-            Event.find(params[:event_user][:event_id]).set_event_user_attributes(current_user)
+        unless @event.members.include?(User.find(params[:event_user][:user_id]))
+            @event_user = EventUser.create(params[:event_user])
+            if @event_user.save
+                @event.set_event_user_attributes(current_user)
 
-            respond_to do |format|
-                format.html { redirect_to user_path(@user) }
-                format.js
+                respond_to do |format|
+                    format.html { redirect_to user_path(@user) }
+                    format.js
+                end
+            else
+                flash[:error] = "Adding user failed!"
+                redirect_to user_path(@user)
             end
-        else
-            flash[:error] = "Message failed!"
-            redirect_to user_path(@user)
         end
     end
 

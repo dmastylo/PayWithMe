@@ -1,3 +1,5 @@
 // TODO pretty this up
 // Just debugging at the moment 
-$('.events-to-invite').append('<li>Posted</li>');
+<% unless @event_user.nil? %>
+    $('.events-to-invite').append('<li>Posted</li>');
+<% end %>
