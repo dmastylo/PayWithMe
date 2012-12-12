@@ -1,5 +1,4 @@
-// TODO pretty this up
-// Just debugging at the moment 
+// TODO images would be better/prettier
 <% unless @event_user.nil? %>
-    $('.events-to-invite').append('<li>Posted</li>');
+    $('.<%= @event_user.event.title.split.join %><%= @event_user.event.id %>').html('Y');
 <% end %>

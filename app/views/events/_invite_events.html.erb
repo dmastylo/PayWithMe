@@ -1,6 +1,13 @@
 <li>
     <%= form_for @event_user, remote: true do |f| %>
-        <a href="#" class="event-to-invite"><%= event.title %></a>
+        <span class="<%= event.title.split.join %><%= event.id %>">
+            <% if event.members.include?(@user) %>
+                Y
+            <% else %>
+                N
+            <% end %>
+        </span>
+        | <a href="#" class="event-to-invite"><%= event.title %></a>
         <%= f.hidden_field :event_id, :value => event.id %>
         <%= f.hidden_field :user_id, :value => @user.id %>
     <% end %>

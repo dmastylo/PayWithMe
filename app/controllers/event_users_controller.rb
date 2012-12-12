@@ -2,6 +2,7 @@ class EventUsersController < ApplicationController
     before_filter :user_is_organizer
 
     def create
+        # for some reason member_ids.include? does not work
         unless @event.members.include?(User.find(params[:event_user][:user_id]))
             @event_user = EventUser.create(params[:event_user])
             if @event_user.save
