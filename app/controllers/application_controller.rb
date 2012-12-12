@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
 protected
   def user_in_group
-    @group = Group.find(params[:id])
+    @group = Group.find(params[:group_id] || params[:id])
 
     if @group.members.include?(current_user)
       true
@@ -23,7 +23,7 @@ protected
   end
 
   def user_organizes_group
-    @group = current_user.groups.find_by_id(params[:id])
+    @group = current_user.groups.find_by_id(params[:group_id] || params[:id])
 
     if @group.nil? || !@group.is_admin?(current_user)
       flash[:error] = "You're not on the list."
@@ -32,7 +32,7 @@ protected
   end
 
   def user_in_event
-    @event = current_user.member_events.find_by_id(params[:id])
+    @event = current_user.member_events.find_by_id(params[:event_id] || params[:id])
 
     if @event.nil?
       flash[:error] = "You're not on the list."
@@ -41,7 +41,7 @@ protected
   end
 
   def user_organizes_event
-    @event = current_user.organized_events.find_by_id(params[:id])
+    @event = current_user.organized_events.find_by_id(params[:event_id] || params[:id])
 
     if @event.nil?
       flash[:error] = "You're not on the list."

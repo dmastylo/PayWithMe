@@ -1,6 +1,6 @@
 $(function()
 {
-    // Event specific stuff
+    // Event-show-page specific
     if ($('.message-list').length > 0)
     {
         // Poll for new messages
