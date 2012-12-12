@@ -21,6 +21,10 @@ class EventsController < ApplicationController
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)
     else
+      @event.members = @event.independent_members
+      @member_emails = members_from_users.collect { |member| member.email }
+      puts @member_emails
+      @group_ids = @event.groups.collect { |group| group.id }
       render "new"
     end
   end
