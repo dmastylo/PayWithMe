@@ -2,12 +2,12 @@
     <%= form_for @event_user, remote: true do |f| %>
         <span class="<%= event.title.split.join %><%= event.id %>">
             <% if event.members.include?(@user) %>
-                Y
+                <i class="icon-check icon-white"></i> 
             <% else %>
-                N
+                <i class="icon-plus icon-white"></i> 
             <% end %>
         </span>
-        | <a href="#" class="event-to-invite"><%= event.title %></a>
+        <a href="#" class="event-to-invite"><%= event.title %></a>
         <%= f.hidden_field :event_id, :value => event.id %>
         <%= f.hidden_field :user_id, :value => @user.id %>
     <% end %>
