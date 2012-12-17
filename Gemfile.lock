@@ -65,6 +65,11 @@ GEM
       addressable
       rdoc
     daemons (1.1.9)
+    delayed_job (3.0.4)
+      activesupport (~> 3.0)
+    delayed_job_active_record (0.3.3)
+      activerecord (>= 2.1.0, < 4)
+      delayed_job (~> 3.0)
     delorean (2.1.0)
       chronic
     devise (2.1.2)
@@ -264,6 +269,7 @@ DEPENDENCIES
   bootstrap-sass!
   capybara (= 1.1.2)
   date_validator!
+  delayed_job_active_record
   delorean
   devise
   factory_girl_rails

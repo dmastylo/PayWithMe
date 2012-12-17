@@ -19,6 +19,7 @@
 class Event < ActiveRecord::Base
 
   # Accessible attributes
+  # ========================================================
   attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
@@ -26,6 +27,7 @@ class Event < ActiveRecord::Base
   monetize :send_amount_cents, allow_nil: true
 
   # Validations
+  # ========================================================
   validates :organizer_id, presence: true
   validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3 }
   validates :fee_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }
@@ -38,6 +40,7 @@ class Event < ActiveRecord::Base
   validates :split_amount, presence: true, numericality: { greater_than: 0 }, if: :divide_per_person?
 
   # Relationships
+  # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
   has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
@@ -46,9 +49,11 @@ class Event < ActiveRecord::Base
   has_many :groups, through: :event_groups, source: :group
 
   # Callbacks
+  # ========================================================
   before_validation :clear_amounts
 
   # Money definitions
+  # ========================================================
   def receive_amount_cents
     if division_type == DivisionType::Fundraise || paying_members.size == 0 || send_amount_cents.nil?
       nil
@@ -90,6 +95,7 @@ class Event < ActiveRecord::Base
   end
 
   # Division types
+  # ========================================================
   def divide_total?
     division_type == DivisionType::Total
   end
@@ -103,6 +109,7 @@ class Event < ActiveRecord::Base
   end
 
   # Fee types
+  # ========================================================
   def organizer_pays?
     fee_type == FeeType::OrganizerPays
   end
@@ -112,6 +119,7 @@ class Event < ActiveRecord::Base
   end
 
   # Constants
+  # ========================================================
   class DivisionType
     Total = 1
     Split = 2
@@ -123,6 +131,7 @@ class Event < ActiveRecord::Base
   end
 
   # Member definitions
+  # ========================================================
   def paying_members
     self.members - [self.organizer]
   end
@@ -133,12 +142,12 @@ class Event < ActiveRecord::Base
 
   def add_members(members, exclude=nil)
     members.each do |member|
-      unless self.members.include?(member)
+      unless self.members.include?(member) || !member.valid?
         self.members << member 
-        UserMailer.event_notification(member, self).deliver if member != exclude
       end
     end
 
+    delay.send_invitation_emails
     set_event_user_attributes(exclude)
   end
 
@@ -148,6 +157,15 @@ class Event < ActiveRecord::Base
         event_user.due_date = self.due_at
         event_user.amount_cents = self.send_amount_cents
         event_user.save
+      end
+    end
+  end
+
+  def send_invitation_emails
+    self.event_users.each do |event_user|
+      if !event_user.invitation_sent? && event_user.member != self.organizer
+        UserMailer.event_notification(event_user.member, self).deliver
+        event_user.toggle(:invitation_sent).save
       end
     end
   end

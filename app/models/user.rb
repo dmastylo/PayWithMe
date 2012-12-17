@@ -24,6 +24,7 @@
 #  profile_image_updated_at   :datetime
 #  profile_image_url          :string(255)
 #  stub                       :boolean          default(FALSE)
+#  guest_token                :string(255)
 #
 
 class User < ActiveRecord::Base
