@@ -44,7 +44,14 @@
       <div class="btn-group input-block-level push-bottom" id="event_fee_type_btn_group" data-toggle="buttons-radio">
         <button type="button" class="btn half" data-name="organizer" data-value="1" title="You will pay the fees.">Absorb Fees</button>
         <button type="button" class="btn half" data-name="members" data-value="2" title="The members will pay the fees.">Members Pay Fees</button>
-        </div>
+      </div>
+
+      <%= f.label :privacy_type, "Event Privacy" %>
+      <%= f.hidden_field :privacy_type %>
+      <div class="btn-group input-block-level push-bottom" id="event_privacy_type_btn_group" data-toggle="buttons-radio">
+        <button type="button" class="btn half" data-name="private" data-value="1" title="Anyone can join.">Public Event</button>
+        <button type="button" class="btn half" data-name="public" data-value="2" title="Only those invited can join.">Private Event</button>
+      </div>
     </div>
   </div>
 </div>
@@ -100,6 +107,7 @@
 
       $("#event_division_type").buttonGroup();
       $("#event_fee_type").buttonGroup();
+      $("#event_privacy_type").buttonGroup();
 
       $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>

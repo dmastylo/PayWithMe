@@ -33,15 +33,15 @@
 
 		onCreate: function()
 		{
+			var that = this;
 			if(this.val)
 			{
 				this.$buttons.each(function()
 				{
-					if($(this).data("value") == val) $(this).trigger('click');
+					if($(this).data("value") == that.val) $(this).trigger('click');
 				})
 			}
 
-			var that = this;
 			this.$buttons.click(function()
 			{
 				var $this = $(this);
