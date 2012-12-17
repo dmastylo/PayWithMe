@@ -1,4 +1,7 @@
 <% unless @new_messages.empty? %>
+    // Remove "no messages"
+    $('.no-messages').remove();
+
     // Remove the highlighting on new messages
     $('.new-message').each(function()
     {

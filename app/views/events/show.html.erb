@@ -47,7 +47,7 @@
         <% if @event.messages.any? %>
             <%= render @event.messages %>
         <% else %>
-          There are no messages.
+          <span class="no-messages">There are no messages.</span>
         <% end %>
       </ul>
       <h4>Leave Message</h4>
