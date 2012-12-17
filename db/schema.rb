@@ -11,7 +11,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121208004848) do
+ActiveRecord::Schema.define(:version => 20121217200206) do
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "event_groups", :force => true do |t|
     t.integer  "event_id"
@@ -26,13 +42,8 @@ ActiveRecord::Schema.define(:version => 20121208004848) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "event_users", :force => true do |t|
-    t.integer "event_id"
-    t.integer "user_id"
-    t.integer "amount_cents", :default => 0
-    t.date    "due_date"
-    t.date    "paid_date"
-  end
+# Could not dump table "event_users" because of following StandardError
+#   Unknown type 'bool' for column 'invitation_sent'
 
   create_table "events", :force => true do |t|
     t.string   "title"
@@ -61,6 +72,16 @@ ActiveRecord::Schema.define(:version => 20121208004848) do
     t.text     "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+  end
+
+  create_table "linked_accounts", :force => true do |t|
+    t.string   "provider"
+    t.string   "token"
+    t.integer  "user_id"
+    t.string   "uid"
+    t.string   "token_secret"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   create_table "messages", :force => true do |t|
