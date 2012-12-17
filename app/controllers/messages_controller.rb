@@ -3,6 +3,7 @@ class MessagesController < ApplicationController
 
     def index
         @new_messages = Message.where("event_id = ? AND created_at > ?", params[:event_id], Time.at(params[:after].to_i + 1))
+        @new_messages.delete_if { |message| message.user == current_user }
     end
 
     def create
