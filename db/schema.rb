@@ -42,6 +42,9 @@ ActiveRecord::Schema.define(:version => 20121217200206) do
     t.datetime "updated_at", :null => false
   end
 
+# Could not dump table "event_users" because of following StandardError
+#   Unknown type 'bool' for column 'invitation_sent'
+
   create_table "events", :force => true do |t|
     t.string   "title"
     t.text     "description"
@@ -69,16 +72,6 @@ ActiveRecord::Schema.define(:version => 20121217200206) do
     t.text     "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
-  end
-
-  create_table "linked_accounts", :force => true do |t|
-    t.string   "provider"
-    t.string   "token"
-    t.integer  "user_id"
-    t.string   "uid"
-    t.string   "token_secret"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
   end
 
   create_table "messages", :force => true do |t|
