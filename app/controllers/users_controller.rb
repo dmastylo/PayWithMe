@@ -3,7 +3,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @events = current_user.organized_events
+    @events = current_user.organized_events.where(privacy_type: Event::PrivacyType::Public)
     @event_user = EventUser.new
   end
 
