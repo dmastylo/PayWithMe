@@ -39,6 +39,7 @@ gem 'thin'
 # Emails
 gem 'roadie'
 gem 'delayed_job_active_record'
+gem 'daemons'
 
 group :development, :test do
   gem 'sqlite3'
