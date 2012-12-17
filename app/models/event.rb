@@ -20,7 +20,7 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount
+  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
@@ -31,6 +31,7 @@ class Event < ActiveRecord::Base
   validates :organizer_id, presence: true
   validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3 }
   validates :fee_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }
+  validates :privacy_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }
   validates :title, presence: true, length: { minimum: 2, maximum: 120 }
   validates :due_at, presence: true
   validates :due_at, date: { after: Proc.new { Time.now } }, if: :due_at_changed?
@@ -77,7 +78,7 @@ class Event < ActiveRecord::Base
   def total_amount_cents
     if division_type == DivisionType::Total
       super
-    elsif paying_members.size == 0 || division_type == DivisionType::Fundraise || split_amount_cents.nil?
+    elsif paying_members.size == 0 || division_type == DivisionType::Fundraise || division_type.nil? || split_amount_cents.nil?
       nil
     else
       split_amount_cents * paying_members.size
@@ -87,7 +88,7 @@ class Event < ActiveRecord::Base
   def split_amount_cents
     if division_type == DivisionType::Split
       super
-    elsif paying_members.size == 0 || division_type == DivisionType::Fundraise
+    elsif paying_members.size == 0 || division_type.nil? || division_type == DivisionType::Fundraise
       nil
     else
       total_amount_cents / paying_members.size
@@ -118,6 +119,15 @@ class Event < ActiveRecord::Base
     fee_type == FeeType::MembersPay
   end
 
+  # Privacy types
+  def public?
+    privacy_type == PrivacyType::Public
+  end
+
+  def private?
+    privacy_type == PrivacyType::Private
+  end
+
   # Constants
   # ========================================================
   class DivisionType
@@ -128,6 +138,10 @@ class Event < ActiveRecord::Base
   class FeeType
     OrganizerPays = 1
     MembersPay = 2
+  end
+  class PrivacyType
+    Public = 1
+    Private = 2
   end
 
   # Member definitions

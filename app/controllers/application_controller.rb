@@ -32,9 +32,9 @@ protected
   end
 
   def user_in_event
-    @event = current_user.member_events.find_by_id(params[:event_id] || params[:id])
+    @event = Event.find_by_id(params[:event_id] || params[:id])
 
-    if @event.nil?
+    if !@event.members.include?(current_user) && !@event.public?
       flash[:error] = "You're not on the list."
       redirect_to root_path
     end

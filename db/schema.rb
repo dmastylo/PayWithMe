@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121217200206) do
+ActiveRecord::Schema.define(:version => 20121217210310) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -57,6 +57,7 @@ ActiveRecord::Schema.define(:version => 20121217200206) do
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
     t.integer  "organizer_id"
+    t.integer  "privacy_type"
   end
 
   create_table "group_users", :force => true do |t|
