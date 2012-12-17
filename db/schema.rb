@@ -42,9 +42,6 @@ ActiveRecord::Schema.define(:version => 20121217200206) do
     t.datetime "updated_at", :null => false
   end
 
-# Could not dump table "event_users" because of following StandardError
-#   Unknown type 'bool' for column 'invitation_sent'
-
   create_table "events", :force => true do |t|
     t.string   "title"
     t.text     "description"
