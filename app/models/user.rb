@@ -24,6 +24,7 @@
 #  profile_image_updated_at   :datetime
 #  profile_image_url          :string(255)
 #  stub                       :boolean          default(FALSE)
+#  guest_token                :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -52,7 +53,8 @@ class User < ActiveRecord::Base
   has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
-  has_many :messages
+  has_many :messages, dependent: :destroy
+  has_many :linked_accounts, dependent: :destroy
 
   def profile_image_type
     if profile_image.present?
@@ -85,17 +87,22 @@ class User < ActiveRecord::Base
     user = User.new(email: email)
     user.stub = true
     user.save
-    user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s} #{pepper}")
+    user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s}#{pepper}")
     user.save
     user
   end
 
   def self.from_omniauth(auth)
-    where(auth.slice(:provider, :uid)).first_or_create do |user|
-      user.provider = auth.provider
-      user.uid = auth.uid
-      user.name = auth.info.name if auth.info.name
-      user.email = auth.info.email if auth.info.email
+    linked_account = LinkedAccount.where(auth.slice(:provider, :uid)).first
+
+    if linked_account.present?
+      linked_account.user
+    else
+      User.new do |user|
+        user.name = auth.info.name if auth.info.name
+        user.email = auth.info.email if auth.info.email
+        user.using_oauth = true
+      end
     end
   end
 
@@ -115,7 +122,7 @@ class User < ActiveRecord::Base
   end
 
   def password_required?
-    super && provider.blank? && !stub?
+    super && !using_oauth? && !stub?
   end
 
   def update_with_password(params, *options)
@@ -129,9 +136,9 @@ class User < ActiveRecord::Base
 
   def can_post_message?
     unless self.messages.all.empty?
-        Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
+      Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
     else
-        true
+      true
     end
   end
 
@@ -148,7 +155,7 @@ private
   end
 
   def set_stub
-    if encrypted_password.present? || provider.present?
+    if encrypted_password.present? || using_oauth?
       stub = false
       guest_token = nil
     end
