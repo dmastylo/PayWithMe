@@ -18,4 +18,13 @@ module ApplicationHelper
       "Create"
     end
   end
+
+  # Returns params for ?guest_token=... if applicable
+  def guest_params(user)
+    if user.stub?
+      { token: user.guest_token }
+    else
+      {}
+    end
+  end
 end

@@ -24,6 +24,7 @@
 #  profile_image_updated_at   :datetime
 #  profile_image_url          :string(255)
 #  stub                       :boolean          default(FALSE)
+#  guest_token                :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -132,6 +133,14 @@ class User < ActiveRecord::Base
         Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
     else
         true
+    end
+  end
+
+  def first_name
+    if name.present?
+      name.split(" ").first
+    else
+      ""
     end
   end
 
