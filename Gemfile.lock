@@ -61,6 +61,9 @@ GEM
     chronic (0.8.0)
     cocaine (0.4.2)
     coderay (1.0.8)
+    css_parser (1.2.6)
+      addressable
+      rdoc
     daemons (1.1.9)
     delorean (2.1.0)
       chronic
@@ -195,6 +198,11 @@ GEM
       ffi (>= 0.5.0)
     rdoc (3.12)
       json (~> 1.4)
+    roadie (2.3.4)
+      actionmailer (> 3.0.0, < 3.3.0)
+      css_parser
+      nokogiri (>= 1.4.4)
+      sprockets
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -272,6 +280,7 @@ DEPENDENCIES
   rails (= 3.2.8)
   ransack
   rb-inotify (~> 0.8.8)
+  roadie
   rspec-rails
   sass-rails (~> 3.2.3)
   spork

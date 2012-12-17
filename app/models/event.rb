@@ -133,7 +133,10 @@ class Event < ActiveRecord::Base
 
   def add_members(members, exclude=nil)
     members.each do |member|
-      self.members << member unless self.members.include?(member)
+      unless self.members.include?(member)
+        self.members << member 
+        UserMailer.event_notification(member, self).deliver if member != exclude
+      end
     end
 
     set_event_user_attributes(exclude)

@@ -135,6 +135,14 @@ class User < ActiveRecord::Base
     end
   end
 
+  def first_name
+    if name.present?
+      name.split(" ").first
+    else
+      ""
+    end
+  end
+
 private
   def set_profile_image
     if self.profile_image_option != "url"

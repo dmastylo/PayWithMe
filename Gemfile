@@ -36,6 +36,9 @@ gem "ransack"
 # Web server
 gem 'thin'
 
+# Emails
+gem 'roadie'
+
 group :development, :test do
   gem 'sqlite3'
 end
