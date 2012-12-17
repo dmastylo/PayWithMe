@@ -211,6 +211,7 @@ textarea,input
     padding: 0;
     background-color: transparent;
     margin: 10px 0 0 0;
+    border: 0;
 }
 
 form
@@ -259,10 +260,11 @@ form
 	}
 }
 
-// Utility
+// Utilities
 .push-top { margin-top: $mediumMargin; }
 h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .push-bottom { margin-bottom: $mediumMargin; }
+.center { text-align: center; }
 
 // Alerts
 .alert

@@ -1,7 +1,7 @@
-<% provide(:title, "Edit Registration") %>
-    <div class="page-header">
-      <h2>Account Settings</h2>
-    </div>
+<% provide(:title, "Account Settings") %>
+<div class="page-header">
+  <h2>Account Settings</h2>
+</div>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= devise_error_messages! %>
@@ -100,10 +100,10 @@
         </div>
       </div>
     </div>
-    <div class="form-actions">
-      <div class="span12">
-        <%= f.submit "Update Info", class: 'btn btn-primary' %>
-      </div>
+  </div>
+  <div class="form-actions">
+    <div class="span12 center">
+      <%= f.submit "Update Info", class: 'btn btn-primary' %>
     </div>
   </div>
 <% end %>
