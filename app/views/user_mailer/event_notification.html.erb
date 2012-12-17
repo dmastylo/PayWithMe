@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>You're Invited: <%= @event.title %></title>
+    <style type="text/css">
+      #background
+      {
+        width: 100%;
+        background-color: #EEE;
+      }
+
+      #container
+      {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      #body
+      {
+        width: 650px;
+        border: 1px solid #CCC;
+        background-color: #FFF;
+      }
+
+      #body td
+      {
+        padding: 20px 20px 0 20px;
+      }
+
+      p
+      {
+        margin: 0 0 20px 0;
+      }
+
+      #footer
+      {
+        color: #555;
+        padding-bottom: 20px !important;
+        padding-top: 0 !important;
+      }
+    </style>
+  </head>
+  <body>
+    <table width="100%" id="background" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" valign="top" id="container">
+          <table width="650" id="body" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td id="logo">
+                <%= link_to image_tag(attachments['logo.png'].url, alt: "Pay With Me"), root_url %>
+              </td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <p>Hi <%= (@user.first_name.empty?)? "there" : @user.first_name %>,</p>
+
+                <p>You've been invited! <%= @event.organizer.first_name %> has requested that you attend <%= @event.title %>.</p>
+
+                <p><%= link_to image_tag(attachments['visit_event.png'].url, alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2" id="footer">
+                <strong>Hit us up!</strong><br />
+                1226A Pittsburgh Building<br />
+                Rensselaer Polytechnic Institute<br />
+                Troy, New York 12180<br />
+                (518) 276-2393
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
