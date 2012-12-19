@@ -14,6 +14,7 @@
 #  total_amount_cents :integer
 #  split_amount_cents :integer
 #  organizer_id       :integer
+#  privacy_type       :integer
 #
 
 class Event < ActiveRecord::Base
