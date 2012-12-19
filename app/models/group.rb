@@ -12,19 +12,22 @@
 class Group < ActiveRecord::Base
 
   # Accesible attributes
+  # ========================================================
   attr_accessible :description, :title
 
   # Validations
+  # ========================================================
   validates :title, presence: true, length: { minimum: 2, maximum: 120 }
-  # validates :organizer_id, presence: true
 
   # Relationships
-  # belongs_to :organizer, class_name: "User"
+  # ========================================================
   has_many :group_users, dependent: :destroy
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
   has_many :event_groups, dependent: :destroy
   has_many :events, through: :event_groups, source: :event
 
+  # Member definitions
+  # ========================================================
   def add_members(members)
     members.each do |member|
       self.members << member unless self.members.include?(member)
@@ -38,6 +41,8 @@ class Group < ActiveRecord::Base
     self.group_users.find_by_user_id(user.id).admin?
   end
 
+  # Static functions
+  # ========================================================
   def self.search_by_title(query, user = nil)
     if user.nil?
       Group.search(title_cont: query).result
@@ -46,6 +51,7 @@ class Group < ActiveRecord::Base
     end
   end
 
+  # Returns a list of groups and their members from group ids
   def self.groups_and_members_from_params(params, user = nil)
     return [], [] if params.nil? || params.empty?
     params = ActiveSupport::JSON.decode(params)
