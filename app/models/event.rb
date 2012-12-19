@@ -159,6 +159,7 @@ class Event < ActiveRecord::Base
     members.each do |member|
       unless self.members.include?(member) || !member.valid?
         self.members << member 
+        Notification.new_for_event(self, member) if member != exclude
       end
     end
 

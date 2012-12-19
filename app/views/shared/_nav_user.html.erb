@@ -7,7 +7,7 @@
     <% if current_user.has_notifications? %>
       <%= render current_user.current_notifications %>
     <% else %>
-      <li>You have no notifications.</li>
+      <li><%= link_to "You have no notifications.", "#" %></li>
     <% end %>
   </ul>
 </li>

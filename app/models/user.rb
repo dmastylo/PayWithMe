@@ -152,6 +152,10 @@ class User < ActiveRecord::Base
     self.notifications.count > 0
   end
 
+  def current_notifications
+    self.notifications.order('created_at DESC').paginate(per_page: 5, page: 1)
+  end
+
 private
   def set_profile_image
     if self.profile_image_option != "url"

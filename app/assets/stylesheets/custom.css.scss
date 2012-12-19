@@ -162,9 +162,15 @@ ul.dropdown-menu
     {
         li
         {
-            color: $offWhite;
-            line-height: 22px;
-            padding: 5px 10px 5px 10px;
+            max-width: 200px;
+            a
+            {
+                white-space: pre-wrap;
+                font-size: 14px;
+                color: $offWhite;
+                line-height: 22px;
+                padding: 5px 10px 5px 10px;
+            }
         }
     }
 }

@@ -32,6 +32,8 @@ gem 'american_date'
 
 # Searching
 gem "ransack"
+gem "will_paginate"
+gem "bootstrap-will_paginate"
 
 # Web server
 gem 'thin'
