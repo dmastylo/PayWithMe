@@ -109,7 +109,7 @@ p
 
                 &.dropdown.open
                 {
-                    a
+                    a, li
                     {
                         background-color: $mediumBlue;
                     }
@@ -155,6 +155,16 @@ ul.dropdown-menu
             background-color: $mediumBlue !important;
             background-image: none !important;
             color: $offWhite;
+        }
+    }
+
+    &#notifications-dropdown-menu
+    {
+        li
+        {
+            color: $offWhite;
+            line-height: 22px;
+            padding: 5px 10px 5px 10px;
         }
     }
 }

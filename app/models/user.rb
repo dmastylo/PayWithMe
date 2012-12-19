@@ -57,6 +57,7 @@ class User < ActiveRecord::Base
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages
+  has_many :notifications
 
   # Static functions
   # ========================================================
@@ -145,6 +146,10 @@ class User < ActiveRecord::Base
     else
       ""
     end
+  end
+
+  def has_notifications?
+    self.notifications.count > 0
   end
 
 private
