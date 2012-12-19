@@ -28,9 +28,12 @@ class Group < ActiveRecord::Base
 
   # Member definitions
   # ========================================================
-  def add_members(members)
+  def add_members(members, exclude_from_notifications = nil)
     members.each do |member|
-      self.members << member unless self.members.include?(member)
+      unless self.members.include?(member)
+        self.members << member
+        Notification.new_for_group(self, member) if member != exclude_from_notifications
+      end
     end
 
     # Later, add them to open events as of
@@ -39,6 +42,15 @@ class Group < ActiveRecord::Base
 
   def is_admin?(user)
     self.group_users.find_by_user_id(user.id).admin?
+  end
+
+  def organizer
+    group_user = self.group_users.where(admin: true).first
+    if group_user.present?
+      group_user.user
+    else
+      nil
+    end
   end
 
   # Static functions
