@@ -1,1 +1,5 @@
-<li><%= link_to notification.body, notification.path %></li>
+<% if @last_date != notification.created_at.to_date %>
+  <li class="date"><%= notification.created_at.to_date.strftime("%B %d, %Y") %></li>
+  <% @last_date = notification.created_at.to_date %>
+<% end %>
+<li <%= 'class="unread"'.html_safe unless notification.read? %>><%= link_to notification.body, notification.path %></li>
