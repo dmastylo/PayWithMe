@@ -42,6 +42,7 @@ gem 'thin'
 gem 'roadie'
 gem 'delayed_job_active_record'
 gem 'daemons'
+gem 'actionmailer-callbacks'
 
 group :development, :test do
   gem 'sqlite3'

@@ -36,6 +36,7 @@ class Group < ActiveRecord::Base
       end
     end
 
+    delay.send_invitation_emails
     # Later, add them to open events as of
     # right now if they are added to the group
   end
@@ -50,6 +51,15 @@ class Group < ActiveRecord::Base
       group_user.user
     else
       nil
+    end
+  end
+
+  def send_invitation_emails
+    self.group_users.each do |group_user|
+      if !group_user.invitation_sent? && !group_user.admin?
+        UserMailer.group_notification(group_user.user, self).deliver
+        group_user.toggle(:invitation_sent).save
+      end
     end
   end
 

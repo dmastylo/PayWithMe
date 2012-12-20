@@ -18,6 +18,9 @@ GEM
     actionmailer (3.2.8)
       actionpack (= 3.2.8)
       mail (~> 2.4.4)
+    actionmailer-callbacks (1.1.0)
+      actionmailer (~> 3.0)
+      activesupport
     actionpack (3.2.8)
       activemodel (= 3.2.8)
       activesupport (= 3.2.8)
@@ -267,6 +270,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actionmailer-callbacks
   american_date
   annotate
   bootstrap-sass!
