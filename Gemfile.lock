@@ -118,6 +118,8 @@ GEM
     jquery-rails (2.1.4)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    js-routes (0.8.4)
+      rails (>= 3.2)
     json (1.7.5)
     jwt (0.1.5)
       multi_json (>= 1.0)
@@ -287,6 +289,7 @@ DEPENDENCIES
   guard-rspec
   guard-spork
   jquery-rails
+  js-routes
   money-rails
   omniauth-facebook
   omniauth-twitter

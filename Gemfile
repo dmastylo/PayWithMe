@@ -31,9 +31,9 @@ gem 'date_validator', git: 'git://github.com/codegram/date_validator.git'
 gem 'american_date'
 
 # Searching
-gem "ransack"
-gem "will_paginate"
-gem "bootstrap-will_paginate"
+gem 'ransack'
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
 
 # Web server
 gem 'thin'
@@ -43,6 +43,9 @@ gem 'roadie'
 gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'actionmailer-callbacks'
+
+# Javascript
+gem 'js-routes'
 
 group :development, :test do
   gem 'sqlite3'

@@ -8,7 +8,7 @@
 #  admin           :boolean          default(FALSE)
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
-#  invitation_sent :bool             default("f")
+#  invitation_sent :boolean          default(FALSE)
 #
 
 class GroupUser < ActiveRecord::Base

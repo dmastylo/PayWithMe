@@ -1,11 +1,15 @@
 <li><%= link_to user_name(current_user), user_path(current_user) %></li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+  <a href="#" class="dropdown-toggle" id="notifications-dropdown-toggle" data-toggle="dropdown">
     <i class="icon-white icon-globe"></i>
+    <% if current_user.has_unread_notifications? %>
+      <div class="unread-notifications-count"><%= current_user.unread_notifications.count %></div>
+    <% end %>
   </a>
   <ul class="dropdown-menu" id="notifications-dropdown-menu">
     <% if current_user.has_notifications? %>
-      <%= render current_user.current_notifications %>
+      <%= render partial: "notifications/notification", collection: current_user.current_notifications %>
+      <li><%= link_to "View all notifications", notifications_path %>
     <% else %>
       <li><%= link_to "You have no notifications.", "#" %></li>
     <% end %>

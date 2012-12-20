@@ -156,6 +156,14 @@ class User < ActiveRecord::Base
     self.notifications.order('created_at DESC').paginate(per_page: 5, page: 1)
   end
 
+  def has_unread_notifications?
+    self.unread_notifications.count > 0
+  end
+
+  def unread_notifications
+    self.notifications.where("read = 'f'")
+  end
+
 private
   def set_profile_image
     if self.profile_image_option != "url"

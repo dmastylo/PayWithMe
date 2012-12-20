@@ -9,6 +9,7 @@
 #  path              :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
+#  read              :boolean          default(FALSE)
 #
 
 class Notification < ActiveRecord::Base
@@ -31,6 +32,11 @@ class Notification < ActiveRecord::Base
 
   def self.new_for_group(group, member)
     member.notifications.create(notification_type: NotificationType::Invite, body: "You have been added to #{group.title}.", path: Rails.application.routes.url_helpers.group_path(group))
+  end
+
+  def read!
+    self.read = true
+    self.save
   end
 
   # Constants

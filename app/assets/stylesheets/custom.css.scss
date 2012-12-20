@@ -175,6 +175,20 @@ ul.dropdown-menu
     }
 }
 
+.unread-notifications-count
+{
+    position: absolute;
+    z-index: 1050;
+    margin-top: -16px;
+    margin-left: 10px;
+    background-color: $offBlack;
+    border-radius: 3px;
+    padding: 0 3px 1px 3px;
+    line-height: 16px;
+    font-size: 12px;
+    color: $offWhite !important;
+}
+
 // Wells
 .well
 {
