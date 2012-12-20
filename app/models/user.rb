@@ -149,6 +149,8 @@ class User < ActiveRecord::Base
 
 private
   def set_profile_image
+    return unless self.profile_image_option.present?
+    
     if self.profile_image_option != "url"
       self.profile_image_url = nil
     end
