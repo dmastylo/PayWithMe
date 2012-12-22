@@ -20,6 +20,8 @@ PayWithMe::Application.routes.draw do
     end
   end
 
+  match '/team', to: "pages#team"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
