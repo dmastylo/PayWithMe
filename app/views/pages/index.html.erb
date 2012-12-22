@@ -5,9 +5,7 @@
     <div class="span4">
       <%= link_to "Create New Event", new_event_path, class: "btn btn-block btn-primary" %>
       <h3 class="push-top">Upcoming Events</h3>
-      <div class="well">
-
-      </div>
+      <%= render @upcoming_events %>
     </div>
   </div>
 <% else %>

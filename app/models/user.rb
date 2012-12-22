@@ -147,6 +147,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def upcoming_events
+    self.member_events.where('start_at > ?', Time.now)
+  end
+
 private
   def set_profile_image
     return unless self.profile_image_option.present?
