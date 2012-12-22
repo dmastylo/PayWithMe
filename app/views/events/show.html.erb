@@ -27,10 +27,14 @@
         <div class="three-quarters"><%= @event.description %></div>
         <div class="clearfix"></div>
       <% end %>
-      <div class="quarter"><strong>Money Due:</strong></div>
+      <% unless @event.fundraiser? %>
+        <div class="quarter"><strong>Money Goal:</strong></div>
+        <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+      <% end %>
+      <div class="quarter"><strong>Money Due in</strong></div>
       <div class="three-quarters"><%= distance_of_time_in_words_to_now @event.due_at %></div>
       <div class="clearfix"></div>
-      <div class="quarter"><strong>Event Starts:</strong></div>
+      <div class="quarter"><strong>Event Starts at</strong></div>
       <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
     </div>
