@@ -189,6 +189,42 @@ ul.dropdown-menu
     color: $offWhite !important;
 }
 
+#notifications-list
+{
+    list-style-type: none;
+    margin: 0;
+    border-top: 1px solid $darkBlue;
+
+    li
+    {
+        width: auto;
+        border: 1px solid $mediumGray;
+        border-top: 0;
+        background-color: $lightGray;
+        padding: 10px 15px;
+        color: $mediumGray;
+
+        &.date
+        {
+            background-color: $mediumBlue;
+            border-color: $darkBlue;
+            color: $offWhite;
+            font-weight: bold;
+        }
+
+        a
+        {
+            color: $offBlack;
+
+            &:hover
+            {
+                text-decoration: none;
+                color: $mediumBlue;
+            }
+        }
+    }
+}
+
 // Wells
 .well
 {

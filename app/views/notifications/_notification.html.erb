@@ -2,4 +2,4 @@
   <li class="date"><%= notification.created_at.to_date.strftime("%B %d, %Y") %></li>
   <% @last_date = notification.created_at.to_date %>
 <% end %>
-<li <%= 'class="unread"'.html_safe unless notification.read? %>><%= link_to notification.body, notification.path %></li>
+<li <%= 'class="unread"'.html_safe unless notification.read? %>><%= link_to notification.body, notification.path %> <%= distance_of_time_in_words_to_now notification.created_at %> ago</li>
