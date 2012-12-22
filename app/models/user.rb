@@ -148,7 +148,7 @@ class User < ActiveRecord::Base
   end
 
   def upcoming_events
-    self.member_events.where('start_at > ?', Time.now)
+    self.member_events.where('start_at > ?', Time.now).sort! { |x, y| x.start_at <=> y.start_at }.take(5)
   end
 
 private
