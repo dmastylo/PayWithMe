@@ -147,6 +147,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def invited_events
+    self.member_events.delete_if { |event| event.organizer == self }
+  end
+
 private
   def set_profile_image
     return unless self.profile_image_option.present?
