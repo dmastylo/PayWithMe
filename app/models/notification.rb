@@ -53,8 +53,7 @@ class Notification < ActiveRecord::Base
   end
 
   def read!
-    self.read = true
-    self.save
+    update_column(:read, true)
   end
 
   # Constants
