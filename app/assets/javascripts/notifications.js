@@ -7,7 +7,7 @@ $(document).ready(function()
 			$(".unread-notifications-count").hide();
 			$.ajax({
 				url: Routes.read_notifications_path({format: 'js'}),
-				method: 'GET'
+				type: 'POST'
 			});
 		}
 	});

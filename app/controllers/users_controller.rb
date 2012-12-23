@@ -3,7 +3,16 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @events = current_user.member_events.where(privacy_type: Event::PrivacyType::Public)
+    @your_organized_events = current_user.organized_events
+
+    if @user == current_user
+        @public_and_shared_events = current_user.member_events
+    else
+        public_events = @user.member_events.where(privacy_type: Event::PrivacyType::Public)
+        shared_events = @user.member_events.merge current_user.member_events.select { |k| @user.member_events.include? k }
+        @public_and_shared_events = public_events | shared_events
+    end
+
     @event_user = EventUser.new
   end
 

@@ -164,8 +164,14 @@ class User < ActiveRecord::Base
     self.notifications.where("read = 'f'")
   end
 
+  def invited_events
+    self.member_events.delete_if { |event| event.organizer == self }
+  end
+
 private
   def set_profile_image
+    return unless self.profile_image_option.present?
+    
     if self.profile_image_option != "url"
       self.profile_image_url = nil
     end

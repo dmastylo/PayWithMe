@@ -159,7 +159,7 @@ class Event < ActiveRecord::Base
     members.each do |member|
       unless self.members.include?(member) || !member.valid?
         self.members << member 
-        Notification.new_for_event(self, member) if member != exclude_from_notifications
+        Notification.create_for_event(self, member) if member != exclude_from_notifications
       end
     end
 
@@ -183,6 +183,12 @@ class Event < ActiveRecord::Base
         UserMailer.event_notification(event_user.member, self).deliver
         event_user.toggle(:invitation_sent).save
       end
+    end
+  end
+
+  def send_message_notifications
+    self.members.each do |member|
+      Notification.create_or_update_for_event_message(self, member)    
     end
   end
 

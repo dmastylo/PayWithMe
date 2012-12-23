@@ -32,7 +32,7 @@ class Group < ActiveRecord::Base
     members.each do |member|
       unless self.members.include?(member)
         self.members << member
-        Notification.new_for_group(self, member) if member != exclude_from_notifications
+        Notification.create_for_group(self, member) if member != exclude_from_notifications
       end
     end
 
