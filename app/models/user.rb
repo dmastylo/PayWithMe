@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
   has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
-  has_many :messages
+  has_many :messages, dependent: :destroy
   has_many :news_items, dependent: :destroy
 
   # Static functions
@@ -148,8 +148,13 @@ class User < ActiveRecord::Base
     end
   end
 
+<<<<<<< HEAD
   def upcoming_events
     self.member_events.where('start_at > ?', Time.now).sort! { |x, y| x.start_at <=> y.start_at }.take(5)
+=======
+  def invited_events
+    self.member_events.delete_if { |event| event.organizer == self }
+>>>>>>> master
   end
 
 private

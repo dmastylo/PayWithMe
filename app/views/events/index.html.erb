@@ -2,7 +2,7 @@
 <div class="row">
   <div class="span9">
     <div class="page-header">
-      <h2>Your Events</h2>
+      <h2>Your Organized Events</h2>
     </div>
   </div>
   <div class="span3">
@@ -11,7 +11,16 @@
     <% end %>
   </div>
 </div>
-
 <div class="row">
-  <%= render @events %>
+  <%= render @organized_events %>
+</div>
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h2>Events You're Invited To</h2>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <%= render @invited_events %>
 </div>

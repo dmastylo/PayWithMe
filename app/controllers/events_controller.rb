@@ -34,7 +34,8 @@ class EventsController < ApplicationController
   end
 
   def index
-    @events = current_user.member_events
+    @organized_events = current_user.organized_events
+    @invited_events = current_user.invited_events
   end
 
   def edit

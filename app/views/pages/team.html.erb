@@ -12,68 +12,47 @@
 		<!-- Row 1 -->
 		<div class="team-row span12 center">
 			<center>
-				<div class="span4 left">
-					<div class="well">
-						<center>
-							<%= image_tag "abe.jpg" %>
-							<h4 class="name">Eric Rozell</h4>
-							<p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.</p>
-						</center>
-					</div>
-				</div>
-				<div class="span4 middle">
-					<div class="well">
-						<center>
-							<%= image_tag "abe.jpg" %>
-							<h4 class="name">Eric Rozell</h4>
-							<p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.</p>
-						</center>
-					</div>
-				</div>
-				<div class="span4 right">
-					<div class="well">
-						<center>
-							<%= image_tag "abe.jpg" %>
-							<h4 class="name">Eric Rozell</h4>
-							<p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.</p>
-						</center>
-					</div>
-				</div>
+				<%= render :partial => "team_template", 
+						   :locals => { :name => "Jake Schonberger", 
+										:picture => "twister.png", 
+										:description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.",
+										:left => true } %>
+
+				<%= render :partial => "team_template", 
+						   :locals => { :name => "Austin Gulati", 
+										:picture => "bender.png", 
+										:description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.",
+										:left => false } %>
+
+				<%= render :partial => "team_template", 
+						   :locals => { :name => "Damian Mastylo", 
+										:picture => "larry.png", 
+										:description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.",
+										:left => false } %>
 			</center>
 		</div>
 
 		<!-- Row 2 -->
 		<div class="team-row span12 center">
 			<center>
-				<div class="span4 left">
-					<div class="well">
-						<center>
-							<%= image_tag "abe.jpg" %>
-							<h4 class="name">Eric Rozell</h4>
-							<p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.</p>
-						</center>
-					</div>
-				</div>
-				<div class="span4 middle">
-					<div class="well">
-						<center>
-							<%= image_tag "abe.jpg" %>
-							<h4 class="name">Eric Rozell</h4>
-							<p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.</p>
-						</center>
-					</div>
-				</div>
-				<div class="span4 right">
-					<div class="well">
-						<center>
-							<%= image_tag "abe.jpg" %>
-							<h4 class="name">Eric Rozell</h4>
-							<p class="desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.</p>
-						</center>
-					</div>
-				</div>
+				<%= render :partial => "team_template", 
+						   :locals => { :name => "Chris Celi", 
+										:picture => "spongebob.png", 
+										:description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.",
+										:left => true } %>
+
+				<%= render :partial => "team_template", 
+						   :locals => { :name => "Kyle Brody", 
+										:picture => "elmer.png", 
+										:description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.",
+										:left => false } %>
+
+				<%= render :partial => "team_template", 
+						   :locals => { :name => "Eric Rozell", 
+										:picture => "abe.jpg", 
+										:description => "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras eget felis purus. Praesent eu neque orci. Sed nisl felis, malesuada in egestas a, aliquet vitae dui. Etiam purus metus, consectetur.",
+										:left => false } %>
 			</center>
 		</div>
-
 	</div>
 </div>
