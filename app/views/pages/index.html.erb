@@ -2,14 +2,22 @@
   <div class="row">
     <div class="span8">
       <h1>News Feed</h1>
-      Content to be decided
+        <% if @news_items.empty? %>
+          You have no news... yet!
+        <% else %>
+          <ul class="news-feed">
+            <%= render @news_items %>
+          </ul>
+        <% end %>
     </div>
     <div class="span4">
       <%= link_to "Create New Event", new_event_path, class: "btn btn-block btn-primary" %>
       <h3 class="push-top">Upcoming Events</h3>
-      <%= render @upcoming_events %>
+      <% unless @upcoming_events.empty? %>
+        <%= render @upcoming_events %>
+      <% end %>
     </div>
   </div>
 <% else %>
-  nothing
+    nothing
 <% end %>
