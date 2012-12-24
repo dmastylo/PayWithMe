@@ -14,9 +14,12 @@
 #
 
 class NewsItem < ActiveRecord::Base
+  # Accessible Attributes
   attr_accessible :body, :path, :read, :title, :type
 
+  # Validations
   validates_presence_of :title, :body, :path, :read, :type, :user
 
+  # Relationships
   belongs_to :user
 end
