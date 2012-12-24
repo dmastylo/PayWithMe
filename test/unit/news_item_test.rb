@@ -7,7 +7,7 @@
 #  body       :string(255)
 #  path       :string(255)
 #  read       :boolean          default(FALSE)
-#  type       :integer
+#  news_type  :integer
 #  user_id    :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
