@@ -57,6 +57,7 @@ class User < ActiveRecord::Base
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages
+  has_many :news_items, dependent: :destroy
 
   # Static functions
   # ========================================================
