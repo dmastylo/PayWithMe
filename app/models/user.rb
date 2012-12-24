@@ -148,13 +148,12 @@ class User < ActiveRecord::Base
     end
   end
 
-<<<<<<< HEAD
   def upcoming_events
     self.member_events.where('start_at > ?', Time.now).sort! { |x, y| x.start_at <=> y.start_at }.take(5)
-=======
+  end
+  
   def invited_events
     self.member_events.delete_if { |event| event.organizer == self }
->>>>>>> master
   end
 
 private
