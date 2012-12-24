@@ -19,7 +19,7 @@ class NewsItem < ActiveRecord::Base
     attr_accessible :body, :path, :read, :title, :type, :foreign_id
 
     # Validations
-    validates_presence_of :title, :body, :path, :read, :type, :user, :foreign_id
+    validates_presence_of :title, :body, :path, :read, :type, :user_id, :foreign_id
 
     # Relationships
     belongs_to :user
@@ -34,7 +34,7 @@ class NewsItem < ActiveRecord::Base
             path: Rails.application.routes.url_helpers.event_path(event)
         }
         event.members.each do |member|
-            member.news_items.create(values)
+            member.news_items.create!(values)
         end
     end
 
@@ -48,7 +48,7 @@ class NewsItem < ActiveRecord::Base
     #         path: Rails.application.routes.url_helpers.event_path(event)
     #     }
     #     event.members.each do |member|
-    #         member.news_items.create(values)
+    #         member.news_items.create!(values)
     #     end
     # end
 
@@ -62,7 +62,7 @@ class NewsItem < ActiveRecord::Base
     #         path: Rails.application.routes.url_helpers.group_path(group)
     #     }
     #     group.members.each do |member|
-    #         member.news_items.create(values)
+    #         member.news_items.create!(values)
     #     end
     # end
 
