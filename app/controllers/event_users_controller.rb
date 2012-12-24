@@ -7,6 +7,7 @@ class EventUsersController < ApplicationController
             @event_user = EventUser.create(params[:event_user])
             if @event_user.save
                 @event.set_event_user_attributes(current_user)
+                NewsItem.create_for_new_event_user(@event, @event_user)
 
                 respond_to do |format|
                     format.html { redirect_to user_path(@user) }

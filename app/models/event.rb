@@ -158,7 +158,7 @@ class Event < ActiveRecord::Base
   def add_members(members, exclude=nil)
     members.each do |member|
       unless self.members.include?(member) || !member.valid?
-        self.members << member 
+        self.members << member
       end
     end
 
