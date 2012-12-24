@@ -91,11 +91,11 @@ ActiveRecord::Schema.define(:version => 20121224031257) do
     t.string   "title"
     t.string   "body"
     t.string   "path"
-    t.boolean  "read"
+    t.boolean  "read",       :default => false
     t.integer  "type"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   add_index "news_items", ["user_id"], :name => "index_news_items_on_user_id"

@@ -4,7 +4,7 @@ class CreateNewsItems < ActiveRecord::Migration
       t.string :title
       t.string :body
       t.string :path
-      t.boolean :read
+      t.boolean :read, default: false
       t.integer :type
       t.references :user
 
