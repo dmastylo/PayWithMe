@@ -40,7 +40,7 @@ class NewsItem < ActiveRecord::Base
         end
     end
 
-    def self.create_for_new_messages(event)
+    def self.create_for_new_messages(event, message_creator)
         values = {
             news_type: Type::NEW_MESSAGES,
             foreign_id: event.id,
@@ -49,12 +49,14 @@ class NewsItem < ActiveRecord::Base
             path: Rails.application.routes.url_helpers.event_path(event)
         }
         event.members.each do |member|
-            member_news_items = member.news_items # Prevent multiple database queries in conditional checking
-            # Don't create a new NewsItem if there is already an identical one for new messages
-            if (!member_news_items.empty? && member_news_items.first.news_type == Type::NEW_MESSAGES && member_news_items.first.foreign_id = event.id)
-                member.news_items.first.touch
-            else
-                member.news_items.create!(values)
+            unless member == message_creator
+                member_news_items = member.news_items # Prevent multiple database queries in conditional checking
+                # Don't create a new NewsItem if there is already an identical one for new messages
+                if (!member_news_items.empty? && member_news_items.first.news_type == Type::NEW_MESSAGES && member_news_items.first.foreign_id = event.id)
+                    member.news_items.first.touch
+                else
+                    member.news_items.create!(values)
+                end
             end
         end
     end
