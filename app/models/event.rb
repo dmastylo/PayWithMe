@@ -159,6 +159,7 @@ class Event < ActiveRecord::Base
     members.each do |member|
       unless self.members.include?(member) || !member.valid?
         self.members << member
+        NewsItem.create_for_new_event_member(self, member)
       end
     end
 

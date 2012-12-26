@@ -30,7 +30,10 @@ class Group < ActiveRecord::Base
   # ========================================================
   def add_members(members)
     members.each do |member|
-      self.members << member unless self.members.include?(member)
+      unless self.members.include?(member)
+        self.members << member
+        NewsItem.create_for_new_group_member(self, member)
+      end
     end
 
     # Later, add them to open events as of

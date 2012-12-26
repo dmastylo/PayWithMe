@@ -25,16 +25,18 @@ class NewsItem < ActiveRecord::Base
     belongs_to :user
 
     # Creation Methods
-    def self.create_for_new_event_user(event, event_user)
+    def self.create_for_new_event_member(event, new_member)
         values = {
             news_type: Type::NEW_EVENT_USER,
             foreign_id: event.id,
             title: event.title + " has a new attendee!",
-            body: event_user.member.name + " is now attending " + event.title + "!",
+            body: new_member.name + " is now attending " + event.title + "!",
             path: Rails.application.routes.url_helpers.event_path(event),
         }
         event.members.each do |member|
-            member.news_items.create!(values)
+            unless member == new_member
+                member.news_items.create!(values)
+            end
         end
     end
 
@@ -52,19 +54,20 @@ class NewsItem < ActiveRecord::Base
     #     end
     # end
 
-    # TODO
-    # def self.create_for_new_group_user(group)
-    #     values = {
-    #         news_type: Type::NEW_GROUP_USER,
-    #         foreign_id: group.id,
-    #         title: "", # TODO
-    #         body: "", # TODO
-    #         path: Rails.application.routes.url_helpers.group_path(group)
-    #     }
-    #     group.members.each do |member|
-    #         member.news_items.create!(values)
-    #     end
-    # end
+    def self.create_for_new_group_member(group, new_member)
+        values = {
+            news_type: Type::NEW_GROUP_USER,
+            foreign_id: group.id,
+            title: group.title + " has a new member!",
+            body: new_member.name + " is now a member of " + group.title + "!",
+            path: Rails.application.routes.url_helpers.group_path(group)
+        }
+        group.members.each do |member|
+            unless member == new_member
+                member.news_items.create!(values)
+            end
+        end
+    end
 
     # Constants
     class Type
