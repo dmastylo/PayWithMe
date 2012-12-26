@@ -34,7 +34,7 @@ class NewsItem < ActiveRecord::Base
             path: Rails.application.routes.url_helpers.event_path(event),
         }
         event.members.each do |member|
-            unless member == new_member
+            unless member == new_member || member == event.organizer
                 member.news_items.create!(values)
             end
         end
@@ -70,7 +70,7 @@ class NewsItem < ActiveRecord::Base
             path: Rails.application.routes.url_helpers.group_path(group)
         }
         group.members.each do |member|
-            unless member == new_member
+            unless member == new_member || group.is_admin?(member)
                 member.news_items.create!(values)
             end
         end
