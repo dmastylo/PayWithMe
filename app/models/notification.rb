@@ -52,6 +52,17 @@ class Notification < ActiveRecord::Base
     notification.save
   end
 
+  def self.create_or_update_for_event_update(event, member)
+    notification = member.notifications.where(foreign_id: event.id, notification_type: NotificationType::Update, created_at: (Time.now.midnight)..Time.now.midnight + 1.day).first
+    if notification.nil?
+      notification = member.notifications.new(notification_type: NotificationType::Update, path: Rails.application.routes.url_helpers.event_path(event), foreign_id: event.id)
+    end
+
+    notification.body = "The details of #{event.title} have been updated."
+    notification.read = false
+    notification.save
+  end
+
   def read!
     update_column(:read, true)
   end
@@ -60,6 +71,7 @@ class Notification < ActiveRecord::Base
   class NotificationType
     Invite = 1
     Message = 2
+    Update = 3
   end
 
 end

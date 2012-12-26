@@ -157,9 +157,13 @@ class Event < ActiveRecord::Base
 
   def add_members(members, exclude_from_notifications = nil)
     members.each do |member|
-      unless self.members.include?(member) || !member.valid?
-        self.members << member 
-        Notification.create_for_event(self, member) if member != exclude_from_notifications
+      if member.valid?
+        if self.members.include?(member)
+          Notification.create_or_update_for_event_update(self, member) if member != exclude_from_notifications
+        else
+          self.members << member 
+          Notification.create_for_event(self, member) if member != exclude_from_notifications
+        end
       end
     end
 
