@@ -29,10 +29,13 @@ class Group < ActiveRecord::Base
   # Member definitions
   # ========================================================
   def add_members(members)
+    editing_event = true if self.members.length != 0
     members.each do |member|
       unless self.members.include?(member)
         self.members << member
-        NewsItem.create_for_new_group_member(self, member)
+        if editing_event
+            NewsItem.create_for_new_group_member(self, member)
+        end
       end
     end
 
