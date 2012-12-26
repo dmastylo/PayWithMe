@@ -51,7 +51,6 @@ class NewsItem < ActiveRecord::Base
         event.members.each do |member|
             unless member == message_creator
                 member_news_items = member.news_items # Prevent multiple database queries in conditional checking
-                # Don't create a new NewsItem if there is already an identical one for new messages
                 if (!member_news_items.empty? && member_news_items.first.news_type == Type::NEW_MESSAGES && member_news_items.first.foreign_id = event.id)
                     member.news_items.first.touch
                 else
