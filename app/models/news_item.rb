@@ -29,8 +29,8 @@ class NewsItem < ActiveRecord::Base
         values = {
             news_type: Type::NEW_EVENT_USER,
             foreign_id: event.id,
-            title: event.title + " has a new attendee!",
-            body: new_member.name + " is now attending " + event.title + "!",
+            title: '"' + event.title + '" has a new attendee!',
+            body: new_member.name + ' is now attending "' + event.title + '"!',
             path: Rails.application.routes.url_helpers.event_path(event),
         }
         event.members.each do |member|
@@ -44,8 +44,8 @@ class NewsItem < ActiveRecord::Base
         values = {
             news_type: Type::NEW_MESSAGES,
             foreign_id: event.id,
-            title: event.title + " has new messages!",
-            body: "Check out " + event.title + " to see the ongoing discussion!",
+            title: '"' + event.title + '" has new messages!',
+            body: 'Check out "' + event.title + '" to see the ongoing discussion!',
             path: Rails.application.routes.url_helpers.event_path(event)
         }
         event.members.each do |member|
@@ -65,8 +65,8 @@ class NewsItem < ActiveRecord::Base
         values = {
             news_type: Type::NEW_GROUP_USER,
             foreign_id: group.id,
-            title: group.title + " has a new member!",
-            body: new_member.name + " is now a member of " + group.title + "!",
+            title: '"' + group.title + '" has a new member!',
+            body: new_member.name + ' is now a member of "' + group.title + '"!',
             path: Rails.application.routes.url_helpers.group_path(group)
         }
         group.members.each do |member|
