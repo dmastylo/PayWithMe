@@ -40,19 +40,24 @@ class NewsItem < ActiveRecord::Base
         end
     end
 
-    # TODO
-    # def self.create_for_new_messages(event)
-    #     values = {
-    #         news_type: Type::NEW_MESSAGES,
-    #         foreign_id: event.id,
-    #         title: "", # TODO
-    #         body: "", # TODO
-    #         path: Rails.application.routes.url_helpers.event_path(event)
-    #     }
-    #     event.members.each do |member|
-    #         member.news_items.create!(values)
-    #     end
-    # end
+    def self.create_for_new_messages(event)
+        values = {
+            news_type: Type::NEW_MESSAGES,
+            foreign_id: event.id,
+            title: event.title + " has new messages!",
+            body: "Check out " + event.title + " to see the ongoing discussion!",
+            path: Rails.application.routes.url_helpers.event_path(event)
+        }
+        event.members.each do |member|
+            member_news_items = member.news_items # Prevent multiple database queries in conditional checking
+            # Don't create a new NewsItem if there is already an identical one for new messages
+            if (!member_news_items.empty? && member_news_items.first.news_type == Type::NEW_MESSAGES && member_news_items.first.foreign_id = event.id)
+                member.news_items.first.touch
+            else
+                member.news_items.create!(values)
+            end
+        end
+    end
 
     def self.create_for_new_group_member(group, new_member)
         values = {
@@ -68,6 +73,9 @@ class NewsItem < ActiveRecord::Base
             end
         end
     end
+
+    # Scope
+    default_scope order('updated_at DESC')
 
     # Constants
     class Type
