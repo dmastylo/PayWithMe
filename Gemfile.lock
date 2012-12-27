@@ -142,6 +142,7 @@ GEM
       railties (~> 3.0)
     multi_json (1.4.0)
     multipart-post (1.1.5)
+    mysql (2.9.0)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -178,7 +179,6 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.4.0)
       mime-types
-    pg (0.14.1)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
@@ -297,10 +297,10 @@ DEPENDENCIES
   guard-spork
   jquery-rails
   money-rails
+  mysql
   omniauth-facebook
   omniauth-twitter
   paperclip
-  pg
   rails (= 3.2.8)
   ransack
   rb-inotify (~> 0.8.8)
