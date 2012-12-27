@@ -1,4 +1,5 @@
 set :rvm_ruby_string, 'ree@paywithme'
+set :rvm_type, :system
 
 require "bundler/capistrano"
 require "rvm/capistrano"
