@@ -7,6 +7,7 @@ gem 'rails', '3.2.8'
 
 group :production do
   gem 'mysql2'
+  gem 'passenger'
   # gem 'activerecord-mysql2-adapter'
 end
 
