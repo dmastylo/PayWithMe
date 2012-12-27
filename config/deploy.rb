@@ -4,7 +4,7 @@ set :rvm_type, :system
 require "bundler/capistrano"
 require "rvm/capistrano"
 
-# server "198.61.183.12", :web, :app, :db, primary: true
+server "198.61.183.12", :web, :app, :db, primary: true
 
 set :application, "PayWithMe"
 set :user, "deployer"
@@ -24,8 +24,8 @@ after "deploy", "deploy:cleanup" # keep only the last 5 releases
 # set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
 
-role :web, "198.61.183.12"
-role :app, "198.61.183.12"
+# role :web, "198.61.183.12"
+# role :app, "198.61.183.12"
 # role :db,  "1b12fd70c830cdcd93e85c87a895656a140c9d5d.rackspaceclouddb.com", :primary => true
 
 # if you want to clean up old releases on each deploy uncomment this:
