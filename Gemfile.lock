@@ -70,6 +70,7 @@ GEM
     css_parser (1.2.6)
       addressable
       rdoc
+    daemon_controller (1.1.0)
     daemons (1.1.9)
     delayed_job (3.0.4)
       activesupport (~> 3.0)
@@ -95,6 +96,7 @@ GEM
       railties (>= 3.0.0)
     faraday (0.8.4)
       multipart-post (~> 1.1)
+    fastthread (1.0.7)
     ffi (1.2.0)
     figaro (0.5.0)
       rails (~> 3.0)
@@ -179,6 +181,11 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.4.0)
       mime-types
+    passenger (3.0.18)
+      daemon_controller (>= 1.0.0)
+      fastthread (>= 1.0.1)
+      rack
+      rake (>= 0.8.1)
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
@@ -301,6 +308,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-twitter
   paperclip
+  passenger
   rails (= 3.2.8)
   ransack
   rb-inotify (~> 0.8.8)
