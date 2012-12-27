@@ -1,13 +1,7 @@
 require "bundler/capistrano"
-
-# Add RVM's lib directory to the load path.
-$:.unshift(File.expand_path('./lib', ENV['rvm_path']))
-
-# Load RVM's capistrano plugin.    
-require "rvm/capistrano"
+# require "rvm/capistrano"
 
 set :rvm_ruby_string, 'ree@paywithme'
-set :rvm_type, :user  # Don't use system-wide RVM
 
 # server "198.61.183.12", :web, :app, :db, primary: true
 
