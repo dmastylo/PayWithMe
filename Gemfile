@@ -6,8 +6,8 @@ gem 'rails', '3.2.9'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :production do
-  gem 'mysql'
-  gem 'activerecord-mysql-adapter'
+  gem 'mysql2'
+  gem 'activerecord-mysql2-adapter'
 end
 
 # User authentication

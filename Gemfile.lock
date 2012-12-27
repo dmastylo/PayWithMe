@@ -36,10 +36,8 @@ GEM
       activesupport (= 3.2.9)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activerecord-mysql-adapter (0.0.1)
-      activerecord (>= 3.2.9)
-      activesupport (>= 3.2.9)
-      mysql (>= 2.9.0)
+    activerecord-mysql2-adapter (0.0.3)
+      mysql2
     activeresource (3.2.9)
       activemodel (= 3.2.9)
       activesupport (= 3.2.9)
@@ -146,7 +144,7 @@ GEM
       railties (~> 3.0)
     multi_json (1.5.0)
     multipart-post (1.1.5)
-    mysql (2.9.0)
+    mysql2 (0.3.11)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -285,7 +283,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  activerecord-mysql-adapter
+  activerecord-mysql2-adapter
   american_date
   annotate
   bootstrap-sass!
@@ -303,7 +301,7 @@ DEPENDENCIES
   guard-spork
   jquery-rails
   money-rails
-  mysql
+  mysql2
   omniauth-facebook
   omniauth-twitter
   paperclip
