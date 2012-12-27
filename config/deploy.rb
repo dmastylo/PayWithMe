@@ -1,7 +1,7 @@
-require "bundler/capistrano"
-# require "rvm/capistrano"
-
 set :rvm_ruby_string, 'ree@paywithme'
+
+require "bundler/capistrano"
+require "rvm/capistrano"
 
 # server "198.61.183.12", :web, :app, :db, primary: true
 
