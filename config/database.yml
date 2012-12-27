@@ -19,7 +19,11 @@ test:
   timeout: 5000
 
 production:
-  adapter: sqlite3
+  adapter: mysql
+  encoding: utf8
+  host: 1b12fd70c830cdcd93e85c87a895656a140c9d5d.rackspaceclouddb.com
   database: db/production.sqlite3
+  username: archiver
+  password: bl4ck=d0g[]^^
   pool: 5
   timeout: 5000
