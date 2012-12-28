@@ -6,7 +6,6 @@
 #  title      :string(255)
 #  body       :string(255)
 #  path       :string(255)
-#  read       :boolean          default(FALSE)
 #  news_type  :integer
 #  user_id    :integer
 #  created_at :datetime         not null
