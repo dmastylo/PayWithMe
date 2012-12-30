@@ -15,7 +15,7 @@ class GroupsController < ApplicationController
     if @group.save
       flash[:success] = "Group created!"
 
-      @group.add_members(members + [current_user])
+      @group.add_members(members + [current_user], current_user)
       
       group_owner = current_user.group_users.where(group_id: @group.id).first
       group_owner.admin = true

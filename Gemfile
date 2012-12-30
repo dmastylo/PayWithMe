@@ -33,7 +33,9 @@ gem 'date_validator', git: 'git://github.com/codegram/date_validator.git'
 gem 'american_date'
 
 # Searching
-gem "ransack"
+gem 'ransack'
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
 
 # Web server
 gem 'thin'
@@ -42,6 +44,10 @@ gem 'thin'
 gem 'roadie'
 gem 'delayed_job_active_record'
 gem 'daemons'
+gem 'actionmailer-callbacks'
+
+# Javascript
+gem 'js-routes'
 
 # Payments
 gem 'active_paypal_adaptive_payment'

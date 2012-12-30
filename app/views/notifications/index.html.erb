@@ -1,0 +1,17 @@
+<% provide(:title, "Your Notifications") %>
+<div class="row">
+  <div class="span9">
+    <div class="page-header">
+      <h2>Your Notifications</h2>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+  	<ul id="notifications-list">
+	    <%= render @notifications %>
+	    <%= will_paginate %>
+	</ul>
+  </div>
+</div>
