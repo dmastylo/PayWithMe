@@ -28,17 +28,39 @@ class Group < ActiveRecord::Base
 
   # Member definitions
   # ========================================================
-  def add_members(members)
+  def add_members(members, exclude_from_notifications = nil)
     members.each do |member|
-      self.members << member unless self.members.include?(member)
+      unless self.members.include?(member)
+        self.members << member
+        Notification.create_for_group(self, member) if member != exclude_from_notifications
+      end
     end
 
+    delay.send_invitation_emails
     # Later, add them to open events as of
     # right now if they are added to the group
   end
 
   def is_admin?(user)
     self.group_users.find_by_user_id(user.id).admin?
+  end
+
+  def organizer
+    group_user = self.group_users.where(admin: true).first
+    if group_user.present?
+      group_user.user
+    else
+      nil
+    end
+  end
+
+  def send_invitation_emails
+    self.group_users.each do |group_user|
+      if !group_user.invitation_sent? && !group_user.admin?
+        UserMailer.group_notification(group_user.user, self).deliver
+        group_user.toggle(:invitation_sent).save
+      end
+    end
   end
 
   # Static functions

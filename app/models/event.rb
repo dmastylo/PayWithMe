@@ -155,20 +155,25 @@ class Event < ActiveRecord::Base
     add_members([member])
   end
 
-  def add_members(members, exclude=nil)
+  def add_members(members, exclude_from_notifications = nil)
     members.each do |member|
-      unless self.members.include?(member) || !member.valid?
-        self.members << member 
+      if member.valid?
+        if self.members.include?(member)
+          Notification.create_or_update_for_event_update(self, member) if member != exclude_from_notifications
+        else
+          self.members << member 
+          Notification.create_for_event(self, member) if member != exclude_from_notifications
+        end
       end
     end
 
     delay.send_invitation_emails
-    set_event_user_attributes(exclude)
+    set_event_user_attributes(exclude_from_notifications)
   end
 
-  def set_event_user_attributes(exclude)
+  def set_event_user_attributes(exclude_from_notifications)
     self.event_users.each do |event_user|
-      if event_user.member != exclude
+      if event_user.member != exclude_from_notifications
         event_user.due_date = self.due_at
         event_user.amount_cents = self.send_amount_cents
         event_user.save
@@ -182,6 +187,12 @@ class Event < ActiveRecord::Base
         UserMailer.event_notification(event_user.member, self).deliver
         event_user.toggle(:invitation_sent).save
       end
+    end
+  end
+
+  def send_message_notifications
+    self.members.each do |member|
+      Notification.create_or_update_for_event_message(self, member)    
     end
   end
 
