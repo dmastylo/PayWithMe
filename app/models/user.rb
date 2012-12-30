@@ -184,6 +184,18 @@ class User < ActiveRecord::Base
     self.member_events.delete_if { |event| event.organizer == self }
   end
 
+  def facebook_account
+    self.linked_accounts.where(provider: :facebook).first
+  end
+
+  def twitter_account
+    self.linked_accounts.where(provider: :twitter).first
+  end
+
+  def paypal_account
+    self.linked_accounts.where(provider: :paypal).first
+  end
+
 private
   def set_profile_image
     return unless self.profile_image_option.present?

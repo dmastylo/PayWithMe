@@ -1,6 +1,6 @@
 class MyDevise::RegistrationsController < Devise::RegistrationsController
   skip_before_filter :require_no_authentication, only: [:new, :create]
-  before_filter :require_no_authentication_but_allow_stubs, only: [:new, :create]
+  # before_filter :require_no_authentication_but_allow_stubs, only: [:new, :create]
 
   helper DeviseHelper
 
@@ -34,6 +34,7 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
     else
       if resource.save
         resource.linked_accounts.create(session["devise.account_attributes"])
+        resource.save
 
         if resource.active_for_authentication?
           set_flash_message :notice, :signed_up if is_navigational_format?
@@ -49,6 +50,10 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
         respond_with resource
       end
     end
+  end
+
+  def sign_up(resource_name, resource)
+    sign_in(resource_name, resource)
   end
 
 private

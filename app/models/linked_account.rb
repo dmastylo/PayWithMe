@@ -19,7 +19,7 @@ class LinkedAccount < ActiveRecord::Base
 
   # Validations
   validates :provider, presence: true
-  validates :token, presence: true
+  # validates :token, presence: true
   validates :user_id, presence: true
   validates :uid, presence: true
 
