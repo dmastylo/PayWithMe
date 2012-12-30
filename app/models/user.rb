@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
   end
 
   def unread_notifications
-    self.notifications.where("read = 'f'")
+    self.notifications.where(read: false)
   end
 
   def invited_events
