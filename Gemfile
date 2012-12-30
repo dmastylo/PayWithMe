@@ -43,6 +43,9 @@ gem 'roadie'
 gem 'delayed_job_active_record'
 gem 'daemons'
 
+# Payments
+gem 'active_paypal_adaptive_payment'
+
 group :development, :test do
   gem 'sqlite3'
 end
