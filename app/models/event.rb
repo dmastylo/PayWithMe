@@ -60,7 +60,7 @@ class Event < ActiveRecord::Base
     if division_type == DivisionType::Fundraise || paying_members.size == 0 || send_amount_cents.nil?
       nil
     elsif fee_type == FeeType::OrganizerPays
-      paying_members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)
+      (paying_members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)).floor
     else
       total_amount_cents
     end

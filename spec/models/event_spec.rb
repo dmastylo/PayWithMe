@@ -191,17 +191,10 @@ describe Event do
           end
 
           it "should have correct receive_amount" do
-            total = @event.total_amount_cents * (1 - Figaro.env.fee_rate.to_f) - @event.paying_members.count * Figaro.env.fee_static.to_f
+            total = @event.total_amount_cents * (1 - Figaro.env.fee_rate.to_f) - @event.paying_members.count * (Figaro.env.fee_static.to_f * 100.0)
 
-            @event.receive_amount_cents.should == total
+            @event.receive_amount_cents.should == total.floor
           end
-
-          # it "should have equal total calculated from send_amount and total_amount" do
-          #   split = @event.members.count * @event.send_amount_cents
-          #   total = @event.total_amount_cents
-            
-          #   split.should == total
-          # end
         end
 
         describe "with members paying fees" do
@@ -215,9 +208,9 @@ describe Event do
           end
 
           it "should have correct send_amount" do
-            send = (@event.total_amount_cents / @event.members.count + Figaro.env.fee_static.to_f) / (1 - Figaro.env.fee_rate.to_f)
+            send = (@event.total_amount_cents / @event.members.count + Figaro.env.fee_static.to_f * 100.0) / (1 - Figaro.env.fee_rate.to_f)
 
-            @event.send_amount_cents.should == send
+            @event.send_amount_cents.should == send.ceil
           end
 
           it "should have equal total_amount and receive_amount" do
