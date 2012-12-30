@@ -23,11 +23,11 @@ describe "Account Settings" do
 
 	describe "when profile picture" do
 
-	#is changed to gravatar
+		#is changed to gravatar
 
-	#is changed to url
+		#is changed to url
 
-	#is changed to file
+		#is changed to file
 	end
 
 	describe "when name" do
@@ -38,7 +38,7 @@ describe "Account Settings" do
 			end
 
 			it "should successfully save changes" do
-				@user.name == "New Name"
+				@user.name.should == "New Name"
 			end
 		end
 
@@ -49,7 +49,7 @@ describe "Account Settings" do
 			end
 
 			it "should reject changes" do
-				@user.name != ""
+				@user.name.should_not == ""
 			end
 		end
 
@@ -60,7 +60,7 @@ describe "Account Settings" do
 			end
 
 			it "should reject changes" do
-				@user.name != 'x'*60
+				@user.name.should_not == 'x'*60
 			end
 		end
 	end
@@ -73,7 +73,7 @@ describe "Account Settings" do
 			end
 
 			it "should successfully save changes" do
-				@user.email == "new_email@example.com"
+				@user.email.should == "new_email@example.com"
 			end
 		end
 
@@ -84,7 +84,7 @@ describe "Account Settings" do
 			end
 
 			it "should not save changes" do
-				@user.email != ""
+				@user.email.should_not == ""
 			end
 		end
 
@@ -95,7 +95,7 @@ describe "Account Settings" do
 				end
 
 				it "should not save changes" do
-					@user.email != "test_at_example.com"
+					@user.email.should == "test_at_example.com"
 				end
 			end
 
@@ -105,7 +105,7 @@ describe "Account Settings" do
 				end
 
 				it "should not save changes" do
-					@user.email != "test@example_dot_com"
+					@user.email.should == "test@example_dot_com"
 				end
 			end
 
@@ -116,7 +116,7 @@ describe "Account Settings" do
 				end
 
 				it "should not save changes" do
-					@user.email != "person@example.com"
+					@user.email.should == "person@example.com"
 				end
 			end
 		end

@@ -6,7 +6,9 @@ gem 'rails', '3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :production do
-  gem 'pg'
+  gem 'mysql2'
+  gem 'passenger'
+  # gem 'activerecord-mysql2-adapter'
 end
 
 # User authentication
@@ -31,10 +33,21 @@ gem 'date_validator', git: 'git://github.com/codegram/date_validator.git'
 gem 'american_date'
 
 # Searching
-gem "ransack"
+gem 'ransack'
+gem 'will_paginate'
+gem 'bootstrap-will_paginate'
 
 # Web server
 gem 'thin'
+
+# Emails
+gem 'roadie'
+gem 'delayed_job_active_record'
+gem 'daemons'
+gem 'actionmailer-callbacks'
+
+# Javascript
+gem 'js-routes'
 
 group :development, :test do
   gem 'sqlite3'
@@ -80,7 +93,8 @@ gem 'jquery-rails'
 # gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
+gem 'rvm-capistrano'
 
 # To use debugger
 # gem 'debugger'

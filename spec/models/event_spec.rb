@@ -14,13 +14,14 @@
 #  total_amount_cents :integer
 #  split_amount_cents :integer
 #  organizer_id       :integer
+#  privacy_type       :integer
 #
 
 require 'spec_helper'
 
 describe Event do
   let(:user) { FactoryGirl.create(:user) }
-  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_at: Time.now + 86400, start_at: Time.now + (86400 * 7), division_type: Event::DivisionType::Fundraise, fee_type: Event::FeeType::OrganizerPays) }
+  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_at: Time.now + 86400, start_at: Time.now + (86400 * 7), division_type: Event::DivisionType::Fundraise, fee_type: Event::FeeType::OrganizerPays, privacy_type: Event::PrivacyType::Public) }
   subject { @event }
   it { should be_valid }
 

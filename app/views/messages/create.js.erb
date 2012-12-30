@@ -1,3 +1,4 @@
+$('.no-messages').remove();
 $('.message-list').prepend('<%= j render(@message) %>');
 $('.message-text-field').val('');
 temporarySpamBlock();

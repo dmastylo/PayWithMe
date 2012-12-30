@@ -1,4 +1,4 @@
-// Global 
+// Global =====================================================================
 body
 {
     color: $offBlack;
@@ -11,7 +11,7 @@ body
     visibility: visible;
 }
 
-// Typography 
+// Typography =================================================================
 h1,h2,h3,h4
 {
     font-family: 'Crete Round';
@@ -55,7 +55,7 @@ p
     line-height: 1.7em;
 }
 
-// Headers 
+// Headers ====================================================================
 .page-header {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -63,7 +63,7 @@ p
     padding: 0;
 }
 
-// Nav Bar 
+// Nav Bar ====================================================================
 .navbar
 {
     .navbar-inner
@@ -109,7 +109,7 @@ p
 
                 &.dropdown.open
                 {
-                    a
+                    a, li
                     {
                         background-color: $mediumBlue;
                     }
@@ -157,9 +157,75 @@ ul.dropdown-menu
             color: $offWhite;
         }
     }
+
+    &#notifications-dropdown-menu
+    {
+        li
+        {
+            max-width: 200px;
+            a
+            {
+                white-space: pre-wrap;
+                font-size: 14px;
+                color: $offWhite;
+                line-height: 22px;
+                padding: 5px 10px 5px 10px;
+            }
+        }
+    }
 }
 
-// Wells
+.unread-notifications-count
+{
+    position: absolute;
+    z-index: 1050;
+    margin-top: -16px;
+    margin-left: 10px;
+    background-color: $offBlack;
+    border-radius: 3px;
+    padding: 0 3px 1px 3px;
+    line-height: 16px;
+    font-size: 12px;
+    color: $offWhite !important;
+}
+
+#notifications-list
+{
+    list-style-type: none;
+    margin: 0;
+    border-top: 1px solid $darkBlue;
+
+    li
+    {
+        width: auto;
+        border: 1px solid $mediumGray;
+        border-top: 0;
+        background-color: $lightGray;
+        padding: 10px 15px;
+        color: $mediumGray;
+
+        &.date
+        {
+            background-color: $mediumBlue;
+            border-color: $darkBlue;
+            color: $offWhite;
+            font-weight: bold;
+        }
+
+        a
+        {
+            color: $offBlack;
+
+            &:hover
+            {
+                text-decoration: none;
+                color: $mediumBlue;
+            }
+        }
+    }
+}
+
+// Wells ======================================================================
 .well
 {
     border-radius: 0;
@@ -168,7 +234,7 @@ ul.dropdown-menu
     border: 1px solid $mediumGray;
 }
 
-// Forms
+// Forms ======================================================================
 textarea,input
 {
     border-radius: 0 !important;
@@ -232,7 +298,7 @@ form
     border-radius: 0 !important;
 }
 
-// Button groups
+// Button groups ==============================================================
 .btn-group
 {
 	button.third, button.half
@@ -260,13 +326,13 @@ form
 	}
 }
 
-// Utilities
+// Utilities ==================================================================
 .push-top { margin-top: $mediumMargin; }
 h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .push-bottom { margin-bottom: $mediumMargin; }
 .center { text-align: center; }
 
-// Alerts
+// Alerts =====================================================================
 .alert
 {
     border-radius: 0;
@@ -295,7 +361,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 }
 
 
-// Errors
+// Errors =====================================================================
 #error-explanation
 {
     ul
@@ -305,7 +371,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-// User-Show
+// User-Show ==================================================================
 .user-header
 {
     margin-top: 20px;
@@ -360,7 +426,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     margin-left: 0;
 }
 
-// Event Display 
+// Event Display ==============================================================
 .event-description
 {
     .quarter
@@ -434,7 +500,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-// Chat Messages Display
+// Chat Messages Display ======================================================
 .message-list
 {
     list-style-type: none;
@@ -451,56 +517,46 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
         .profile-image
         {
             float: left;
-
-            img
-            {
-                border: 1px solid $mediumGray;
-            }
         }
 
         .current-user-profile-image
         {
             float: right;
             padding-right: 15px;
+        }
 
-            img
-            {
-                border: 1px solid $mediumGray;
-            }
+        img
+        {
+            border: 1px solid $mediumGray;
         }
 
         .body
         {
             padding-left: 10px;
             float: left;
-
-            .user a
-            {
-                color: $offBlack;
-                font-weight: bold;
-            }
-
-            .timestamp
-            {
-                color: $mediumGray;
-            }
         }
 
         .current-user-body
         {
             padding-right: 10px;
             text-align: right;
+        }
 
-            .user a
-            {
-                color: $offBlack;
-                font-weight: bold;
-            }
+        .message-content
+        {
+            word-break: break-all;
+            word-wrap: break-word;
+        }
 
-            .timestamp
-            {
-                color: $mediumGray;
-            }
+        .user a
+        {
+            color: $offBlack;
+            font-weight: bold;
+        }
+
+        .timestamp
+        {
+            color: $mediumGray;
         }
 
         .name
@@ -524,7 +580,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-// Adding users to events
+// Adding users to events =====================================================
 #invited_members, #invited_groups
 {
     .member
@@ -566,7 +622,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-// Footer
+// Footer =====================================================================
 footer
 {
     margin-top: 10px;
@@ -581,7 +637,7 @@ footer
     margin-top: 25px;
 }
 
-// Modals
+// Modals =====================================================================
 .modal#stub-login-modal
 {
     width: 800px;
@@ -596,5 +652,35 @@ footer
         {
             margin-bottom: 0px;
         }
+    }
+}
+
+// Team Page ==================================================================
+.team-page{
+
+    .page-header{
+        padding-bottom: $mediumMargin;
+    }
+
+    .left{
+        padding-left: $largeMargin;
+    }
+
+    .span4, .span12{
+        margin-left: 0px;
+    }
+
+    .name, .desc{
+        max-width: 225px;
+        text-align: left;
+        line-height: 1.2;
+    }
+
+    .well{
+        max-width: 235px;
+    }
+
+    .team-row{
+        padding-bottom: 20px;
     }
 }

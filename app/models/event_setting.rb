@@ -9,5 +9,8 @@
 #
 
 class EventSetting < ActiveRecord::Base
+
+  # Accessible attributes
   attr_accessible :event_id
+
 end

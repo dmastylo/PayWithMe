@@ -2,7 +2,14 @@
 <div class="row">
   <div class="span9">
     <div class="page-header">
-      <h2><%= @event.title %></h2>
+      <h2>
+        <%= @event.title %>
+        <% if @event.public? %>
+          <i class="icon-globe"></i>
+        <% else %>
+          <i class="icon-lock"></i>
+        <% end %>
+      </h2>
     </div>
   </div>
   <% if current_user == @event.organizer %>
@@ -20,10 +27,14 @@
         <div class="three-quarters"><%= @event.description %></div>
         <div class="clearfix"></div>
       <% end %>
-      <div class="quarter"><strong>Money Due:</strong></div>
+      <% unless @event.fundraiser? %>
+        <div class="quarter"><strong>Money Goal:</strong></div>
+        <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+      <% end %>
+      <div class="quarter"><strong>Money Due in</strong></div>
       <div class="three-quarters"><%= distance_of_time_in_words_to_now @event.due_at %></div>
       <div class="clearfix"></div>
-      <div class="quarter"><strong>Event Starts:</strong></div>
+      <div class="quarter"><strong>Event Starts at</strong></div>
       <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
     </div>
@@ -41,13 +52,13 @@
     </div>
   </div>
   <div class="span7">
-    <h3>Message Board</h3>
+    <h3>Chat Board</h3>
     <div class="well">
       <ul class="message-list" data-id="<%= @event.id %>">
         <% if @event.messages.any? %>
             <%= render @event.messages %>
         <% else %>
-          There are no messages.
+          <span class="no-messages">There are no messages.</span>
         <% end %>
       </ul>
       <h4>Leave Message</h4>

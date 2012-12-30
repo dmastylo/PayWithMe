@@ -32,9 +32,9 @@ protected
   end
 
   def user_in_event
-    @event = current_user.member_events.find_by_id(params[:event_id] || params[:id])
+    @event = Event.find_by_id(params[:event_id] || params[:id])
 
-    if @event.nil?
+    if !@event.members.include?(current_user) && !@event.public?
       flash[:error] = "You're not on the list."
       redirect_to root_path
     end
@@ -65,7 +65,10 @@ private
         session[:user_return_to] = url_for(port: false)
         if user.stub?
           sign_in user
-          @display_stub_login = true
+          if session[:modal_last_shown].nil? || (Time.now - session[:modal_last_shown]) > 3600
+            @display_stub_login = true
+            session[:modal_last_shown] = Time.now
+          end
           @stub_user = User.new(email: user.email)
         else
           redirect_to new_user_session_path

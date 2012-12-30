@@ -10,8 +10,8 @@
         <div class="invite-to-event-button span3">
             <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
             <ul class="events-to-invite">
-                <% unless @events.empty? %>
-                    <%= render partial: 'events/invite_events', collection: @events, as: :event %>
+                <% unless @your_organized_events.empty? %>
+                    <%= render partial: 'events/invite_events', collection: @your_organized_events, as: :event %>
                 <% else %>
                     <li>You don't have any events!</li>
                 <% end %>
@@ -21,12 +21,15 @@
 </div>
 <div class="row">
     <div class="span12">
-        <h3>Public and Shared Events</h3>
+        <% if @user == current_user %>
+            <h3>Your Events</h3>
+        <% else %>
+            <h3>Public and Shared Events</h3>
+        <% end %>
     </div>
 </div>
 <div class="row">
     <div class="event-list span12">
-        <!-- TODO: make this only display public/shared once privacy is implemented -->
-        <%= render @user.member_events %>
+        <%= render @public_and_shared_events %>
     </div>
 </div>

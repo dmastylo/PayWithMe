@@ -1,13 +1,20 @@
 <% unless @new_messages.empty? %>
+    // Remove "no messages"
+    $('.no-messages').remove();
+
     // Remove the highlighting on new messages
     $('.new-message').each(function()
     {
         $(this).removeClass('new-message');
+        $(this).removeClass('latest-message');
     });
 
     // Render the new messages
     <% @new_message = true %>
     $('.message-list').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
+
+    // add the last-message class
+    $(".message:first-child").addClass("latest-message");
     
     // Fade the messages in for a cool effect (events.js)
     fadeInNewMessages();

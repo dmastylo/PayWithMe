@@ -1,3 +1,20 @@
+$(function()
+{
+    if ($('.message-list').length > 0)
+    {
+        $("textarea").keypress(function(e)
+        {
+            if (e.keyCode == 13 && !e.shiftKey)
+            {
+                e.preventDefault();
+                // now call the code to submit your form
+                $(this).parent('form').submit();
+                return;
+            }
+        });
+    }
+});
+
 function fadeInNewMessages()
 {
     // fade in new messages

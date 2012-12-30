@@ -30,30 +30,34 @@
 class User < ActiveRecord::Base
   
   # Devise modules
+  # ========================================================
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   # Accessible attributes
+  # ========================================================
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_option, :profile_image_url
   attr_accessor :profile_image_option
   has_attached_file :profile_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>" }
 
   # Validations
+  # ========================================================
   validates :name, presence: true, length: { maximum: 50 }, unless: :stub?
-  # VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
-  # validates :email, presence: true, format: { with: VALID_EMAIL_REGEX }, uniqueness: { case_sensitive: false }
   validates :password, length: { minimum: 8 }, if: :password_required?, unless: :stub?
   
   # Callbacks
+  # ========================================================
   before_save :set_profile_image
   before_save :set_stub
 
   # Relationships
+  # ========================================================
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
   has_many :event_users, dependent: :destroy
   has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages, dependent: :destroy
+  has_many :notifications, dependent: :destroy
   has_many :linked_accounts, dependent: :destroy
 
   def profile_image_type
@@ -66,6 +70,9 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Static functions
+  # ========================================================
+  # Returns a list of users from email addresses, creating stub units as necessary
   def self.from_params(params)
     return [] if params.nil? || params.empty?
     params = ActiveSupport::JSON.decode(params)
@@ -121,12 +128,23 @@ class User < ActiveRecord::Base
     User.search(name_or_email_cont: query).result
   end
 
+  def profile_image_type
+    if profile_image.present?
+      :upload
+    elsif profile_image_url.present?
+      :url
+    else
+      :gravatar
+    end
+  end
+
+  # Instance methods
+  # ========================================================
   def password_required?
     super && !using_oauth? && !stub?
   end
 
   def update_with_password(params, *options)
-    # set_profile_image
     if encrypted_password.blank?
       update_attributes(params, *options)
     else
@@ -135,15 +153,41 @@ class User < ActiveRecord::Base
   end
 
   def can_post_message?
-    unless self.messages.all.empty?
-      Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
+    self.messages.all.empty? || Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
+  end
+
+  def first_name
+    if name.present?
+      name.split(" ").first
     else
-      true
+      ""
     end
+  end
+
+  def has_notifications?
+    self.notifications.count > 0
+  end
+
+  def current_notifications
+    self.notifications.order('created_at DESC').paginate(per_page: 5, page: 1)
+  end
+
+  def has_unread_notifications?
+    self.unread_notifications.count > 0
+  end
+
+  def unread_notifications
+    self.notifications.where(read: false)
+  end
+
+  def invited_events
+    self.member_events.delete_if { |event| event.organizer == self }
   end
 
 private
   def set_profile_image
+    return unless self.profile_image_option.present?
+    
     if self.profile_image_option != "url"
       self.profile_image_url = nil
     end

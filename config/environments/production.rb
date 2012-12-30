@@ -21,7 +21,7 @@ PayWithMe::Application.configure do
   config.assets.digest = true
 
   # Don't load enviroment when precompiling
-  config.assets.initialize_on_precompile = false
+  config.assets.initialize_on_precompile = true
 
   # Defaults to nil and saved in location specified by config.assets.prefix
   # config.assets.manifest = YOUR_PATH
@@ -52,7 +52,17 @@ PayWithMe::Application.configure do
   # config.assets.precompile += %w( application.css.sass  bootstrap )
 
   # Disable delivery errors, bad email addresses will be ignored
-  # config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: Figaro.env.gmail_domain,
+    authentication: "plain",
+    enable_starttls_auto: true,
+    user_name: Figaro.env.gmail_username,
+    password: Figaro.env.gmail_password
+  }
 
   # Enable threaded mode
   # config.threadsafe!
@@ -67,4 +77,7 @@ PayWithMe::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+
+  # Default URL
+  routes.default_url_options[:host] = "paywme.herokuapp.com"
 end

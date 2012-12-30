@@ -18,6 +18,6 @@ module UsersHelper
   end
 
   def user_name(user)
-    user.name || user.email
+    user.name || user.email.truncate(20)
   end
 end
