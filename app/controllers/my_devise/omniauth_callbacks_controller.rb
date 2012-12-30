@@ -16,9 +16,9 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
         current_user.toggle(:stub)
         current_user.guest_token = nil
         current_user.save
-        flash.success = "Account registration successfully completed!"
+        flash[:success] = "Account registration successfully completed!"
       else
-        flash.notice = "Signed in successfully."
+        flash[:notice] = "Signed in successfully."
       end
       sign_in_and_redirect user
     else

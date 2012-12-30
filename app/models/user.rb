@@ -57,6 +57,7 @@ class User < ActiveRecord::Base
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 
   # Static functions
   # ========================================================
@@ -145,6 +146,22 @@ class User < ActiveRecord::Base
     else
       ""
     end
+  end
+
+  def has_notifications?
+    self.notifications.count > 0
+  end
+
+  def current_notifications
+    self.notifications.order('created_at DESC').paginate(per_page: 5, page: 1)
+  end
+
+  def has_unread_notifications?
+    self.unread_notifications.count > 0
+  end
+
+  def unread_notifications
+    self.notifications.where("read = 'f'")
   end
 
   def invited_events

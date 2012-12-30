@@ -1,21 +1,12 @@
 class UserMailer < ActionMailer::Base
   default from: "PayWithMe <#{Figaro.env.gmail_username}>"
   helper :application
+  layout 'mail'
 
-  # Subject can be set in your I18n file at config/locales/en.yml
-  # with the following lookup:
-  #
-  #   en.user_mailer.signup_confirmation.subject
-  #
   def signup_confirmation(user)
     mail to: format_address_to(user)
   end
 
-  # Subject can be set in your I18n file at config/locales/en.yml
-  # with the following lookup:
-  #
-  #   en.user_mailer.event_notification.subject
-  #
   def event_notification(user, event)
     @user = user
     @event = event
@@ -24,6 +15,16 @@ class UserMailer < ActionMailer::Base
     attachments.inline['visit_event.png'] = File.read('app/assets/images/visit_event.png')
 
     mail to: format_address_to(user), subject: "You're invited: #{@event.title}"
+  end
+
+  def group_notification(user, group)
+    @user = user
+    @group = group
+
+    attachments.inline['logo.png'] = File.read('app/assets/images/logo.png')
+    attachments.inline['visit_group.png'] = File.read('app/assets/images/visit_group.png')
+
+    mail to: format_address_to(user), subject: "You've been added: #{@group.title}"
   end
 
 private

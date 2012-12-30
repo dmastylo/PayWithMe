@@ -1,6 +1,8 @@
 PayWithMe::Application.routes.draw do
+
   devise_for :users, controllers: { registrations: "my_devise/registrations", omniauth_callbacks: "my_devise/omniauth_callbacks", sessions: "my_devise/sessions", registrations: "my_devise/registrations" }
   root to: "pages#index"
+  match '/team', to: "pages#team"
 
   resources :events do
     resources :messages, only: :create
@@ -20,7 +22,11 @@ PayWithMe::Application.routes.draw do
     end
   end
 
-  match '/team', to: "pages#team"
+  resources :notifications do
+    collection do
+      post 'read'
+    end
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

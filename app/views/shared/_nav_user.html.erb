@@ -1,9 +1,26 @@
 <li><%= link_to user_name(current_user), user_path(current_user) %></li>
 <li class="dropdown">
+  <a href="#" class="dropdown-toggle" id="notifications-dropdown-toggle" data-toggle="dropdown">
+    <i class="icon-white icon-globe"></i>
+    <% if current_user.has_unread_notifications? %>
+      <div class="unread-notifications-count"><%= current_user.unread_notifications.count %></div>
+    <% end %>
+  </a>
+  <ul class="dropdown-menu" id="notifications-dropdown-menu">
+    <% if current_user.has_notifications? %>
+      <%= render partial: "notifications/notification_nav", collection: current_user.current_notifications, as: :notification %>
+      <li><%= link_to "View all notifications", notifications_path %>
+    <% else %>
+      <li><%= link_to "You have no notifications.", "#" %></li>
+    <% end %>
+  </ul>
+</li>
+<li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-    <i class=" icon-chevron-down icon-white"></i>
+    <i class="icon-white icon-chevron-down"></i>
   </a>
   <ul class="dropdown-menu">
+    <li><%= link_to "New Event", new_event_path %></li>
     <li><%= link_to "My Events", events_path %></li>
     <li><%= link_to "My Groups", groups_path %></li>
     <li><%= link_to "Account Settings", edit_user_registration_path %></li>
