@@ -6,7 +6,9 @@ gem 'rails', '3.2.8'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :production do
-  gem 'pg'
+  gem 'mysql2'
+  gem 'passenger'
+  # gem 'activerecord-mysql2-adapter'
 end
 
 # User authentication
@@ -91,7 +93,8 @@ gem 'jquery-rails'
 # gem 'unicorn'
 
 # Deploy with Capistrano
-# gem 'capistrano'
+gem 'capistrano'
+gem 'rvm-capistrano'
 
 # To use debugger
 # gem 'debugger'

@@ -15,14 +15,13 @@
 class Notification < ActiveRecord::Base
 
   # Accessible attributes
-  attr_accessible :body, :path, :notification_type, :foreign_id
+  attr_accessible :body, :path, :notification_type, :foreign_id, :foreign_type
 
   # Validations
   validates :body, presence: true
   validates :notification_type, presence: true
   validates :user_id, presence: true
   validates :foreign_id, presence: true
-  validates :path, presence: true
 
   # Relationships
   belongs_to :user
@@ -30,18 +29,18 @@ class Notification < ActiveRecord::Base
   # Creation methods
   def self.create_for_event(event, member)
     member.notifications.create(
-      notification_type: NotificationType::Invite,
+      notification_type: NotificationType::INVITE,
+      foreign_type: ForeignType::EVENT,
       body: "#{event.organizer.first_name} has invited you to #{event.title}.",
-      path: Rails.application.routes.url_helpers.event_path(event),
       foreign_id: event.id
     )
   end
 
   def self.create_for_group(group, member)
     member.notifications.create(
-      notification_type: NotificationType::Invite,
+      notification_type: NotificationType::INVITE,
+      foreign_type: NotificationType::GROUP,
       body: "You have been added to #{group.title}.",
-      path: Rails.application.routes.url_helpers.group_path(group),
       foreign_id: group.id
     )
   end
@@ -54,13 +53,14 @@ class Notification < ActiveRecord::Base
 
     notification = member.notifications.where(
       foreign_id: event.id,
-      notification_type: NotificationType::Message,
+      notification_type: NotificationType::MESSAGE,
+      foreign_type: ForeignType::EVENT,
       created_at: (Time.now.midnight)..Time.now.midnight + 1.day
     ).first
     if notification.nil?
       notification = member.notifications.new(
-        notification_type: NotificationType::Message,
-        path: Rails.application.routes.url_helpers.event_path(event),
+        notification_type: NotificationType::MESSAGE,
+        foreign_type: ForeignType::EVENT,
         foreign_id: event.id
       )
     end
@@ -73,13 +73,14 @@ class Notification < ActiveRecord::Base
   def self.create_or_update_for_event_update(event, member)
     notification = member.notifications.where(
       foreign_id: event.id,
-      notification_type: NotificationType::Update,
+      notification_type: NotificationType::UPDATE,
+      foreign_type: ForeignType::EVENT,
       created_at: (Time.now.midnight)..Time.now.midnight + 1.day
     ).first
     if notification.nil?
       notification = member.notifications.new(
-        notification_type: NotificationType::Update,
-        path: Rails.application.routes.url_helpers.event_path(event),
+        notification_type: NotificationType::UPDATE,
+        foreign_type: ForeignType::EVENT,
         foreign_id: event.id
       )
     end
@@ -90,14 +91,28 @@ class Notification < ActiveRecord::Base
   end
 
   def read!
-    update_column(:read, true)
+    if !read?
+      update_column(:read, true)
+    end
+  end
+
+  def path
+    if foreign_type == ForeignType::EVENT
+      Rails.application.routes.url_helpers.event_path(foreign_id)
+    elsif foreign_type == ForeignType::GROUP
+      Rails.application.routes.url_helpers.group_path(foreign_id)
+    end
   end
 
   # Constants
   class NotificationType
-    Invite = 1
-    Message = 2
-    Update = 3
+    INVITE = 1
+    MESSAGE = 2
+    UPDATE = 3
+  end
+  class ForeignType
+    EVENT = 1
+    GROUP = 2
   end
 
 end
