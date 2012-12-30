@@ -11,11 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(:version => 20121217210310) do
-=======
 ActiveRecord::Schema.define(:version => 20121230180638) do
->>>>>>> master
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -52,11 +48,7 @@ ActiveRecord::Schema.define(:version => 20121230180638) do
     t.integer "amount_cents",    :default => 0
     t.date    "due_date"
     t.date    "paid_date"
-<<<<<<< HEAD
     t.boolean "invitation_sent"
-=======
-    t.boolean "invitation_sent", :default => false
->>>>>>> master
   end
 
   create_table "events", :force => true do |t|
@@ -101,20 +93,17 @@ ActiveRecord::Schema.define(:version => 20121230180638) do
   add_index "messages", ["event_id"], :name => "index_messages_on_event_id"
   add_index "messages", ["user_id"], :name => "index_messages_on_user_id"
 
-<<<<<<< HEAD
-=======
   create_table "notifications", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "notification_type"
+    t.integer  "notification_type", :limit => 255
     t.string   "body"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-    t.boolean  "read",              :default => false
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
+    t.boolean  "read",                             :default => false
     t.integer  "foreign_id"
     t.integer  "foreign_type"
   end
 
->>>>>>> master
   create_table "users", :force => true do |t|
     t.string   "email",                      :default => "",    :null => false
     t.string   "encrypted_password",         :default => "",    :null => false
