@@ -29,11 +29,21 @@ class Notification < ActiveRecord::Base
 
   # Creation methods
   def self.create_for_event(event, member)
-    member.notifications.create(notification_type: NotificationType::Invite, body: "#{event.organizer.first_name} has invited you to #{event.title}.", path: Rails.application.routes.url_helpers.event_path(event), foreign_id: event.id)
+    member.notifications.create(
+      notification_type: NotificationType::Invite,
+      body: "#{event.organizer.first_name} has invited you to #{event.title}.",
+      path: Rails.application.routes.url_helpers.event_path(event),
+      foreign_id: event.id
+    )
   end
 
   def self.create_for_group(group, member)
-    member.notifications.create(notification_type: NotificationType::Invite, body: "You have been added to #{group.title}.", path: Rails.application.routes.url_helpers.group_path(group), foreign_id: group.id)
+    member.notifications.create(
+      notification_type: NotificationType::Invite,
+      body: "You have been added to #{group.title}.",
+      path: Rails.application.routes.url_helpers.group_path(group),
+      foreign_id: group.id
+    )
   end
 
   def self.create_or_update_for_event_message(event, member)
@@ -42,9 +52,17 @@ class Notification < ActiveRecord::Base
     message_count = event.messages.where("created_at > ?", message_after).count
     return unless message_count > 0
 
-    notification = member.notifications.where(foreign_id: event.id, notification_type: NotificationType::Message, created_at: (Time.now.midnight)..Time.now.midnight + 1.day).first
+    notification = member.notifications.where(
+      foreign_id: event.id,
+      notification_type: NotificationType::Message,
+      created_at: (Time.now.midnight)..Time.now.midnight + 1.day
+    ).first
     if notification.nil?
-      notification = member.notifications.new(notification_type: NotificationType::Message, path: Rails.application.routes.url_helpers.event_path(event), foreign_id: event.id)
+      notification = member.notifications.new(
+        notification_type: NotificationType::Message,
+        path: Rails.application.routes.url_helpers.event_path(event),
+        foreign_id: event.id
+      )
     end
 
     notification.body = "#{TextHelper.pluralize(message_count, 'new message has', 'new messages have')} been posted in #{event.title}."
@@ -53,9 +71,17 @@ class Notification < ActiveRecord::Base
   end
 
   def self.create_or_update_for_event_update(event, member)
-    notification = member.notifications.where(foreign_id: event.id, notification_type: NotificationType::Update, created_at: (Time.now.midnight)..Time.now.midnight + 1.day).first
+    notification = member.notifications.where(
+      foreign_id: event.id,
+      notification_type: NotificationType::Update,
+      created_at: (Time.now.midnight)..Time.now.midnight + 1.day
+    ).first
     if notification.nil?
-      notification = member.notifications.new(notification_type: NotificationType::Update, path: Rails.application.routes.url_helpers.event_path(event), foreign_id: event.id)
+      notification = member.notifications.new(
+        notification_type: NotificationType::Update,
+        path: Rails.application.routes.url_helpers.event_path(event),
+        foreign_id: event.id
+      )
     end
 
     notification.body = "The details of #{event.title} have been updated."
