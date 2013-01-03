@@ -155,7 +155,7 @@ class Event < ActiveRecord::Base
     add_members([member])
   end
 
-  def add_members(members, exclude=nil)
+  def add_members(members, exclude_from_notifications=nil)
     editing_event = true if self.members.length != 0
     members.each do |member|
       if member.valid?
