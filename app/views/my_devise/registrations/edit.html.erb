@@ -41,7 +41,8 @@
       </div>
       <h3>Synced Accounts</h3>
       <div class="well">
-
+        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "facebook" } %>
+        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "twitter" } %>
       </div>
     </div>
     <div class="span6">
