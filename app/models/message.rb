@@ -11,18 +11,24 @@
 #
 
 class Message < ActiveRecord::Base
+    # Callbacks
+    after_save :notify_news_feed
 
-  # Accessible attributes
-  attr_accessible :message
+    # Accessible attributes
+    attr_accessible :message
 
-  # Validations
-  validates_presence_of :message, :event, :user
+    # Validations
+    validates_presence_of :message, :event, :user
 
-  # Relationships
-  belongs_to :event
-  belongs_to :user
+    # Relationships
+    belongs_to :event
+    belongs_to :user
 
-  # Scope
-  default_scope order('created_at DESC')
+    # Scope
+    default_scope order('created_at DESC')
 
+private
+    def notify_news_feed
+        NewsItem.create_for_new_messages(self.event, self.user)
+    end
 end

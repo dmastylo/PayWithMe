@@ -58,6 +58,7 @@ class User < ActiveRecord::Base
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages, dependent: :destroy
   has_many :notifications, dependent: :destroy
+  has_many :news_items, dependent: :destroy
 
   # Static functions
   # ========================================================
@@ -164,6 +165,10 @@ class User < ActiveRecord::Base
     self.notifications.where(read: false)
   end
 
+  def upcoming_events
+    self.member_events.where('start_at > ?', Time.now).sort! { |x, y| x.start_at <=> y.start_at }.take(5)
+  end
+  
   def invited_events
     self.member_events.delete_if { |event| event.organizer == self }
   end
