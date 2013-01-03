@@ -42,30 +42,8 @@
 
       <h3>Synced Accounts</h3>
       <div class="well">
-        <div class="control-group">
-          <%= label :facebook_account, "Facebook" %>
-          <% if current_user.facebook_account.present? %>
-            <%= link_to "Account connected", "#", class: "btn btn-primary disabled" %>
-          <% else %>
-            <%= link_to "Sync account", user_omniauth_authorize_path(:facebook), class: "btn btn-primary" %>
-          <% end %>
-        </div>
-        <div class="control-group">
-          <%= label :twitter_account, "Twitter" %>
-          <% if current_user.twitter_account.present? %>
-            <%= link_to "Account connected", "#", class: "btn btn-primary disabled" %>
-          <% else %>
-            <%= link_to "Sync account", user_omniauth_authorize_path(:twitter), class: "btn btn-primary" %>
-          <% end %>
-        </div>
-        <div class="control-group">
-          <%= label :paypal_account, "PayPal" %>
-          <% if current_user.paypal_account.present? %>
-            <%= link_to "Account connected", "#", class: "btn btn-primary disabled" %>
-          <% else %>
-            <%= link_to "Sync account", user_omniauth_authorize_path(:facebook), class: "btn btn-primary" %>
-          <% end %>
-        </div>
+        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "facebook" } %>
+        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "twitter" } %>
       </div>
     </div>
     <div class="span6">
