@@ -26,6 +26,7 @@ class Event < ActiveRecord::Base
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
   monetize :send_amount_cents, allow_nil: true
+  monetize :our_fee_amount_cents, allow_nil: true
 
   # Validations
   # ========================================================
@@ -62,7 +63,7 @@ class Event < ActiveRecord::Base
     elsif fee_type == FeeType::OrganizerPays
       (paying_members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)).floor
     else
-      total_amount_cents
+      split_amount_cents
     end
   end
 
@@ -94,6 +95,10 @@ class Event < ActiveRecord::Base
     else
       total_amount_cents / paying_members.size
     end
+  end
+
+  def our_fee_amount_cents
+    (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
   end
 
   # Division types

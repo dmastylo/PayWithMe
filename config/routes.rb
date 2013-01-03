@@ -30,6 +30,12 @@ PayWithMe::Application.routes.draw do
     end
   end
 
+  resources :event_users, only: [] do
+    member do
+      get 'pay'
+    end
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

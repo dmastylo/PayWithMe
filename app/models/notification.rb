@@ -6,10 +6,11 @@
 #  user_id           :integer
 #  notification_type :integer
 #  body              :string(255)
-#  path              :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  read              :boolean          default(FALSE)
+#  foreign_id        :integer
+#  foreign_type      :integer
 #
 
 class Notification < ActiveRecord::Base

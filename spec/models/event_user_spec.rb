@@ -8,7 +8,7 @@
 #  amount_cents    :integer          default(0)
 #  due_date        :date
 #  paid_date       :date
-#  invitation_sent :boolean          default(FALSE)
+#  invitation_sent :boolean
 #
 
 require 'spec_helper'
