@@ -49,9 +49,9 @@ class NewsItem < ActiveRecord::Base
         }
         event.members.each do |member|
             unless member == message_creator
-                member_news_items = member.news_items # Prevent multiple database queries in conditional checking
+                member_news_items = member.news_items # Prevent multiple database queries below
                 if (!member_news_items.empty? && member_news_items.first.news_type == Type::NEW_MESSAGES && member_news_items.first.foreign_id = event.id)
-                    member.news_items.first.touch
+                    member.news_items.first.touch # This just changes updated_at to Time.now
                 else
                     member.news_items.create!(values)
                 end
