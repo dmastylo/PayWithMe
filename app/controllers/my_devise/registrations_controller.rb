@@ -33,7 +33,9 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
       end
     else
       if resource.save
-        resource.linked_accounts.create(session["devise.account_attributes"])
+        if session["devise.account_attributes"].present?
+          resource.linked_accounts.create(session["devise.account_attributes"])
+        end
         resource.save
 
         if resource.active_for_authentication?
