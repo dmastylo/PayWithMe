@@ -4,7 +4,11 @@
         <%= profile_image_tag @user, :medium %> 
     </div>
     <div class="user-header span6">
-        <h2><%= @user.name %></h2>
+        <% if @user.name %>
+            <h2><%= @user.name %></h2>
+        <% else %> 
+            <h2><%= @user.email %></h2>
+        <% end %>
     </div>
     <% unless @user == current_user %>
         <div class="invite-to-event-button span3">
