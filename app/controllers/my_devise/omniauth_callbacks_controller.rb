@@ -14,7 +14,14 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
     end
 
     if user.persisted?
-      user.linked_accounts.create(provider: request.env["omniauth.auth"].provider, uid: request.env["omniauth.auth"].uid)
+      linked_account = user.linked_accounts.find_by_provider(request.env["omniauth.auth"].provider)
+      if linked_account.present?
+        linked_account.uid = request.env["omniauth.auth"].uid
+        update = true
+      else
+        user.linked_accounts.create(provider: request.env["omniauth.auth"].provider, uid: request.env["omniauth.auth"].uid)
+        update = false
+      end
       user.save
 
       if signed_in?
@@ -24,7 +31,11 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
           current_user.save
           flash[:success] = "Account registration successfully completed!"
         else
-          flash[:success] = "New account successfully synced!"
+          if update
+            flash[:success] = "Synced account successfully updated!"
+          else
+            flash[:success] = "New account successfully synced!"
+          end
           session["user_return_to"] = edit_user_registration_path
         end
       else
