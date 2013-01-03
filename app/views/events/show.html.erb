@@ -50,6 +50,11 @@
         <% end %>
       </div>
     </div>
+    <% if @event_user.paid? %>
+      <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
+    <% else %>
+      <%= link_to "Pay #{humanized_money_with_symbol @event_user.amount} Now", "#", class: "btn btn-primary btn-block" %>
+    <% end %>
   </div>
   <div class="span7">
     <h3>Chat Board</h3>

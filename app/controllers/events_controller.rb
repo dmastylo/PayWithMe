@@ -31,6 +31,7 @@ class EventsController < ApplicationController
   end
 
   def show
+    @event_user = @event.event_users.find_by_user_id(current_user.id)
   end
 
   def index

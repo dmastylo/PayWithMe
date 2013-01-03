@@ -19,5 +19,11 @@ class EventUser < ActiveRecord::Base
   # Relationships
   belongs_to :member, class_name: "User", foreign_key: "user_id"
   belongs_to :event
+
+  monetize :amount_cents
+
+  def paid?
+  	paid_date.present?
+  end
   
 end
