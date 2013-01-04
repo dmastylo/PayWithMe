@@ -2,7 +2,7 @@
 <div class="row">
   <div class="span9">
     <div class="page-header">
-      <h2>Your Organized Events</h2>
+      <h2>Upcoming Organized Events</h2>
     </div>
   </div>
   <div class="span3">
@@ -12,15 +12,59 @@
   </div>
 </div>
 <div class="row">
-  <%= render @organized_events %>
+  <% if @upcoming_organized_events.empty? %>
+    <div class="span12">
+        You are not currently organizing any events!
+    </div>
+  <% else %>
+    <%= render @upcoming_organized_events %>
+  <% end %>
 </div>
 <div class="row">
   <div class="span12">
     <div class="page-header">
-      <h2>Events You're Invited To</h2>
+      <h2>Upcoming Events</h2>
     </div>
   </div>
 </div>
 <div class="row">
-  <%= render @invited_events %>
+  <% if @upcoming_invited_events.empty? %>
+    <div class="span12">
+        You are not currently invited to any events!
+    </div>
+  <% else %>
+    <%= render @upcoming_invited_events %>
+  <% end %>
+</div>
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h2>Past Organized Events</h2>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <% if @past_organized_events.empty? %>
+    <div class="span12">
+        You have not organized any finished events!
+    </div>
+  <% else %>
+    <%= render @past_organized_events, locals: { past_event: true } %>
+  <% end %>
+</div>
+<div class="row">
+  <div class="span12">
+    <div class="page-header">
+      <h2>Past Events</h2>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <% if @past_invited_events.empty? %>
+    <div class="span12">
+      You were not invited to any finished events!
+    </div>
+  <% else %>
+    <%= render @past_invited_events, locals: { past_event: true } %>
+  <% end %>
 </div>

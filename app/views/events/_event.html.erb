@@ -9,6 +9,10 @@
         <% end %>
     </h4>
     <%= event.members.count %> members<br />
-    Starts in <%= distance_of_time_in_words_to_now event.start_at %>
+    <% if defined? locals[:past_event] %>
+        Started at <%= event.start_at %>
+    <% else %>
+        Starts at <%= event.start_at %>
+    <% end %>
   </div>
 </div>

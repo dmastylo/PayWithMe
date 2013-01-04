@@ -3,14 +3,21 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @your_organized_events = current_user.organized_events
+    @your_organized_events = current_user.upcoming_organized_events
 
     if @user == current_user
-        @public_and_shared_events = current_user.member_events
+        @upcoming_public_and_shared_events = current_user.upcoming_events
+        @past_public_and_shared_events = current_user.past_events
     else
-        public_events = @user.member_events.where(privacy_type: Event::PrivacyType::Public)
-        shared_events = @user.member_events.merge current_user.member_events.select { |your_member_event| @user.member_events.include? your_member_event }
-        @public_and_shared_events = public_events | shared_events
+        # Upcoming Events
+        upcoming_public_events = @user.upcoming_events.where(privacy_type: Event::PrivacyType::Public)
+        upcoming_shared_events = @user.upcoming_events.merge current_user.upcoming_events.select { |your_member_event| @user.upcoming_events.include? your_member_event }
+        @upcoming_public_and_shared_events = upcoming_public_events | upcoming_shared_events
+
+        # Past Events
+        past_public_events = @user.past_events.where(privacy_type: Event::PrivacyType::Public)
+        past_shared_events = @user.past_events.merge current_user.past_events.select { |your_member_event| @user.past_events.include? your_member_event }
+        @past_public_and_shared_events = past_public_events | past_shared_events
     end
 
     @event_user = EventUser.new
