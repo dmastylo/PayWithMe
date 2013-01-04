@@ -9,7 +9,7 @@ class UsersController < ApplicationController
         @public_and_shared_events = current_user.member_events
     else
         public_events = @user.member_events.where(privacy_type: Event::PrivacyType::Public)
-        shared_events = @user.member_events.merge current_user.member_events.select { |k| @user.member_events.include? k }
+        shared_events = @user.member_events.merge current_user.member_events.select { |your_member_event| @user.member_events.include? your_member_event }
         @public_and_shared_events = public_events | shared_events
     end
 
