@@ -54,6 +54,11 @@
   <div class="span7">
     <h3>Chat Board</h3>
     <div class="well">
+      <h4>Leave Message</h4>
+      <%= form_for [@event, @message], remote: true do |f| %>
+        <%= f.text_area :message, class: "input-block-level message-text-field", rows: "3", placeholder: "Compose a message..." %>
+        <%= f.submit "Post Message", class: "post-message btn btn-block" %>
+      <% end %>
       <ul class="message-list" data-id="<%= @event.id %>">
         <% if @event.messages.any? %>
           <%= render @event.messages %>
@@ -61,11 +66,6 @@
           <span class="no-messages">There are no messages.</span>
         <% end %>
       </ul>
-      <h4>Leave Message</h4>
-      <%= form_for [@event, @event.messages.build], remote: true do |f| %>
-        <%= f.text_area :message, class: "input-block-level message-text-field", rows: "3", placeholder: "Compose a message..." %>
-        <%= f.submit "Post Message", class: "post-message btn btn-block" %>
-      <% end %>
     </div>
   </div>
 </div>

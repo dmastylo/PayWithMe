@@ -31,6 +31,7 @@ class EventsController < ApplicationController
   end
 
   def show
+    @message = Message.new
   end
 
   def index
