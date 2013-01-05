@@ -12,6 +12,13 @@ GIT
     date_validator (0.6.3)
       activemodel (~> 3.0)
 
+GIT
+  remote: git://github.com/surferdwa/omniauth-paypal.git
+  revision: 367de327edbf792f0b8898ab864eb3e9ce65c808
+  specs:
+    omniauth-paypal (0.1.1)
+      omniauth-oauth2 (~> 1.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -286,7 +293,6 @@ GEM
       multi_json (~> 1.0, >= 1.0.2)
     warden (1.2.1)
       rack (>= 1.0)
-    websocket (1.0.4)
     websocket (1.0.6)
     will_paginate (3.0.3)
     xpath (0.1.4)
@@ -318,6 +324,7 @@ DEPENDENCIES
   money-rails
   mysql2
   omniauth-facebook
+  omniauth-paypal!
   omniauth-twitter
   paperclip
   passenger

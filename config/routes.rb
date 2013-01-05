@@ -9,6 +9,8 @@ PayWithMe::Application.routes.draw do
   end
   resources :messages, only: :index
 
+  resources :linked_accounts, only: [:destroy]
+
   resources :users, only: [:show] do
     collection do
       get 'search'
