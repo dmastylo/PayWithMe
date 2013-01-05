@@ -65,7 +65,7 @@
         <% if @messages.any? %>
           <%= render @messages %>
           <% if @messages_count > 10 %>
-            <a href="javascript:void(0)" class="see-more">See more</a>
+            <a class="see-more">See more</a>
           <% end %>
         <% else %>
           <span class="no-messages">There are no messages.</span>
