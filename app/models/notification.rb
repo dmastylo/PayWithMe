@@ -18,7 +18,6 @@ class Notification < ActiveRecord::Base
   attr_accessible :body, :path, :notification_type, :foreign_id, :foreign_type
 
   # Validations
-  validates :body, presence: true
   validates :notification_type, presence: true
   validates :user_id, presence: true
   validates :foreign_id, presence: true
@@ -31,8 +30,9 @@ class Notification < ActiveRecord::Base
     member.notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::EVENT,
-      body: "#{event.organizer.first_name} has invited you to #{event.title}.",
+      subject_id: event.organizer.id,
       foreign_id: event.id
+      # body: "#{event.organizer.first_name} has invited you to #{event.title}.",
     )
   end
 
@@ -40,8 +40,8 @@ class Notification < ActiveRecord::Base
     member.notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::GROUP,
-      body: "You have been added to #{group.title}.",
       foreign_id: group.id
+      # body: "You have been added to #{group.title}.",
     )
   end
 
@@ -65,7 +65,8 @@ class Notification < ActiveRecord::Base
       )
     end
 
-    notification.body = "#{TextHelper.pluralize(message_count, 'new message has', 'new messages have')} been posted in #{event.title}."
+    # notification.body = "#{TextHelper.pluralize(message_count, 'new message has', 'new messages have')} been posted in #{event.title}."
+    notification.subject_id = message_count
     notification.read = false
     notification.save
   end
@@ -102,6 +103,10 @@ class Notification < ActiveRecord::Base
     elsif foreign_type == ForeignType::GROUP
       Rails.application.routes.url_helpers.group_path(foreign_id)
     end
+  end
+
+  def body
+    "adsf"
   end
 
   # Constants
