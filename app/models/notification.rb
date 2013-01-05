@@ -40,7 +40,7 @@ class Notification < ActiveRecord::Base
   def self.create_for_group(group, member)
     member.notifications.create(
       notification_type: NotificationType::INVITE,
-      foreign_type: NotificationType::GROUP,
+      foreign_type: ForeignType::GROUP,
       body: "You have been added to #{group.title}.",
       foreign_id: group.id
     )

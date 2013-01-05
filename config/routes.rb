@@ -1,7 +1,6 @@
 PayWithMe::Application.routes.draw do
-
-  devise_for :users, controllers: { registrations: "my_devise/registrations", omniauth_callbacks: "my_devise/omniauth_callbacks", sessions: "my_devise/sessions", registrations: "my_devise/registrations" }
   root to: "pages#index"
+  devise_for :users, controllers: { registrations: "my_devise/registrations", omniauth_callbacks: "my_devise/omniauth_callbacks", sessions: "my_devise/sessions", registrations: "my_devise/registrations" }
   match '/team', to: "pages#team"
 
   resources :events do

@@ -103,6 +103,19 @@ ActiveRecord::Schema.define(:version => 20130103195902) do
   add_index "messages", ["event_id"], :name => "index_messages_on_event_id"
   add_index "messages", ["user_id"], :name => "index_messages_on_user_id"
 
+  create_table "news_items", :force => true do |t|
+    t.string   "title"
+    t.string   "body"
+    t.string   "path"
+    t.integer  "news_type"
+    t.integer  "user_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.integer  "foreign_id"
+  end
+
+  add_index "news_items", ["user_id"], :name => "index_news_items_on_user_id"
+
   create_table "notifications", :force => true do |t|
     t.integer  "user_id"
     t.integer  "notification_type", :limit => 255

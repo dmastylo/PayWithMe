@@ -29,10 +29,14 @@ class Group < ActiveRecord::Base
   # Member definitions
   # ========================================================
   def add_members(members, exclude_from_notifications = nil)
+    editing_group = true if self.members.length != 0
     members.each do |member|
       unless self.members.include?(member)
         self.members << member
         Notification.create_for_group(self, member) if member != exclude_from_notifications
+        if editing_group
+            NewsItem.create_for_new_group_member(self, member)
+        end
       end
     end
 

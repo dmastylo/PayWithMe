@@ -58,6 +58,7 @@ class User < ActiveRecord::Base
   has_many :messages, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :linked_accounts, dependent: :destroy
+  has_many :news_items, dependent: :destroy
 
   def profile_image_type
     if profile_image.present?
@@ -179,6 +180,28 @@ class User < ActiveRecord::Base
     self.notifications.where(read: false)
   end
 
+  # Event Definitions
+  # ========================================================
+  def upcoming_organized_events
+    self.organized_events.where('start_at > ?', Time.now).order("start_at ASC")
+  end
+
+  def past_organized_events
+    self.organized_events.where('start_at < ?', Time.now).order("start_at DESC")
+  end
+
+  def upcoming_events
+    self.member_events.where('start_at > ?', Time.now).order("start_at ASC")
+  end
+
+  def limited_upcoming_events
+    self.member_events.where('start_at > ?', Time.now).order("start_at ASC").limit(5)
+  end
+
+  def past_events
+    self.member_events.where('start_at < ?', Time.now).order("start_at DESC")
+  end
+  
   def invited_events
     self.member_events.delete_if { |event| event.organizer == self }
   end
@@ -193,6 +216,14 @@ class User < ActiveRecord::Base
 
   def paypal_account
     self.linked_accounts.where(provider: :paypal).first
+  end
+
+  def upcoming_invited_events
+    self.member_events.where('start_at > ?', Time.now).order("start_at ASC").delete_if { |event| event.organizer == self }
+  end
+
+  def past_invited_events
+    self.member_events.where('start_at < ?', Time.now).order("start_at DESC").delete_if { |event| event.organizer == self }
   end
 
 private

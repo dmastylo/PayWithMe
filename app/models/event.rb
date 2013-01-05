@@ -160,7 +160,8 @@ class Event < ActiveRecord::Base
     add_members([member])
   end
 
-  def add_members(members, exclude_from_notifications = nil)
+  def add_members(members, exclude_from_notifications=nil)
+    editing_event = true if self.members.length != 0
     members.each do |member|
       if member.valid?
         if self.members.include?(member)
@@ -168,6 +169,9 @@ class Event < ActiveRecord::Base
         else
           self.members << member 
           Notification.create_for_event(self, member) if member != exclude_from_notifications
+          if editing_event
+            NewsItem.create_for_new_event_member(self, member)
+          end
         end
       end
     end

@@ -1,0 +1,9 @@
+<li>
+    <% if news_item.news_type == NewsItem::Type::NEW_EVENT_USER || news_item.news_type == NewsItem::Type::NEW_MESSAGES %>
+        <strong><%= link_to news_item.title, Event.find(news_item.foreign_id) %></strong>
+    <% elsif news_item.news_type == NewsItem::Type::NEW_GROUP_USER %>
+        <strong><%= link_to news_item.title, Group.find(news_item.foreign_id) %></strong>
+    <% end %>
+    <div class="news-timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago.</small></div>
+    <%= news_item.body %>
+</li>
