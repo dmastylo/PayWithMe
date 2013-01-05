@@ -2,24 +2,23 @@
 #
 # Table name: news_items
 #
-#  id         :integer          not null, primary key
-#  title      :string(255)
-#  body       :string(255)
-#  path       :string(255)
-#  news_type  :integer
-#  user_id    :integer
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  foreign_id :integer
+#  id           :integer          not null, primary key
+#  news_type    :integer
+#  user_id      :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  foreign_id   :integer
+#  foreign_type :integer
+#  subject_id   :integer
 #
 
 class NewsItem < ActiveRecord::Base
 
   # Accessible Attributes
-  attr_accessible :body, :path, :read, :title, :news_type, :foreign_id
+  attr_accessible :news_type, :foreign_id, :foreign_type, :subject_id
 
   # Validations
-  validates_presence_of :title, :body, :path, :news_type, :user_id, :foreign_id
+  validates_presence_of :title, :news_type, :foreign_type, :user_id, :foreign_id
 
   # Relationships
   belongs_to :user
@@ -27,11 +26,10 @@ class NewsItem < ActiveRecord::Base
   # Creation Methods
   def self.create_for_new_event_member(event, new_member)
     values = {
-      news_type: Type::NEW_EVENT_USER,
+      news_type: NewsType::INVITE,
+      foreign_type: ForeignType::EVENT,
       foreign_id: event.id,
-      title: "#{event.title} has a new attendee!",
-      body: "#{new_member.name} is now attending #{event.title}.",
-      path: Rails.application.routes.url_helpers.event_path(event),
+      subject_id: new_member.id
     }
     event.members.each do |member|
       unless member == new_member || member == event.organizer
@@ -42,16 +40,14 @@ class NewsItem < ActiveRecord::Base
 
   def self.create_for_new_messages(event, message_creator)
     values = {
-      news_type: Type::NEW_MESSAGES,
-      foreign_id: event.id,
-      title: "#{event.title} has new messages!",
-      body: "Check out #{event.title} to see the ongoing discussion!",
-      path: Rails.application.routes.url_helpers.event_path(event)
+      news_type: NewsType::MESSAGE,
+      foreign_type: ForeignType::EVENT,
+      foreign_id: event.id
     }
     event.members.each do |member|
       unless member == message_creator
         member_news_items = member.news_items # Prevent multiple database queries below
-        if (!member_news_items.empty? && member_news_items.first.news_type == Type::NEW_MESSAGES && member_news_items.first.foreign_id = event.id)
+        if (!member_news_items.empty? && member_news_items.first.message? && member_news_items.first.foreign_id == event.id)
           member.news_items.first.touch # This just changes updated_at to Time.now
         else
           member.news_items.create!(values)
@@ -62,11 +58,10 @@ class NewsItem < ActiveRecord::Base
 
   def self.create_for_new_group_member(group, new_member)
     values = {
-      news_type: Type::NEW_GROUP_USER,
+      news_type: NewsType::INVITE,
+      foreign_type: ForeignType::GROUP,
       foreign_id: group.id,
-      title: "#{group.title} has a new member!",
-      body: "#{new_member.name} is now a member of #{group.title}!",
-      path: Rails.application.routes.url_helpers.group_path(group)
+      subject_id: new_member.id
     }
     group.members.each do |member|
       unless member == new_member || group.is_admin?(member)
@@ -78,10 +73,83 @@ class NewsItem < ActiveRecord::Base
   # Scope
   default_scope order('updated_at DESC')
 
-  # Constants
-  class Type
-    NEW_EVENT_USER = 1
-    NEW_GROUP_USER = 2
-    NEW_MESSAGES = 3
+  def body
+    if event?
+      if invite?
+        "#{subject.first_name} is now attending #{event.title}."
+      elsif message?
+        "Check out #{event.title} to see the ongoing discussion."
+      end
+    elsif group?
+      if invite?
+        "#{subject.first_name} is now a member of #{group.title}."
+      end
+    end
   end
+
+  def path
+    if event?
+      Rails.application.routes.url_helpers.event_path(foreign_id)
+    elsif group?
+      Rails.application.routes.url_helpers.group_path(foreign_id)
+    end
+  end
+
+  def title
+    if event?
+      if invite?
+        "#{event.title} has a new attendee!"
+      elsif message?
+        "#{event.title} has new messages!"
+      end
+    elsif group?
+      if invite?
+        "#{group.title} has a new member!"
+      end
+    end
+  end
+
+  def event?
+    foreign_type == ForeignType::EVENT
+  end
+
+  def group?
+    foreign_type == ForeignType::GROUP
+  end
+
+  def message?
+    news_type == NewsType::MESSAGE
+  end
+
+  def invite?
+    news_type == NewsType::INVITE
+  end
+
+  def event
+    if event?
+      Event.find_by_id(foreign_id)
+    end
+  end
+
+  def group
+    if group?
+      Group.find_by_id(foreign_id)
+    end
+  end
+
+  def subject
+    # For now, subject is always a user
+    User.find_by_id(subject_id)
+  end
+
+  # Constants
+  class NewsType
+    INVITE = 1
+    MESSAGE = 2
+  end
+  class ForeignType
+    EVENT = 1
+    GROUP = 2
+  end
+
 end
