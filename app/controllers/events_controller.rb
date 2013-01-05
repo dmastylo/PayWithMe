@@ -31,7 +31,9 @@ class EventsController < ApplicationController
   end
 
   def show
-    @messages = @event.messages.paginate(page: params[:page], :per_page => 10)
+    # @messages = @event.messages.paginate(page: params[:page], :per_page => 10)
+    @messages = @event.messages.limit(10)
+    @messages_count = @event.messages.size
     @message = Message.new
   end
 

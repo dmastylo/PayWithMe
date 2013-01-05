@@ -1,4 +1,24 @@
-<% unless @new_messages.empty? %>
+<% if !defined?(@next_messages).nil? && !@next_messages.empty? %>
+    /////////////////////////////////////////
+    // Infinite scrolling for old messages //
+    /////////////////////////////////////////
+    
+    // Remove old "see more" link
+    $('.see-more').remove();
+    
+    // Render new messages
+    $('.message-list').append('<%= j render(@next_messages) %>');
+
+    // If there are more messages still available, insert the see more link
+    if (<%= @messages_count.to_i %> > $('.message').length())
+    {
+        $('.message-list').append('<a href="javascript:void(0)" class="see-more">See more</a>');
+    }
+<% elsif !defined?(@new_messages).nil? && !@new_messages.empty? %>
+    //////////////////////////////
+    // Polling for new messages //
+    //////////////////////////////
+
     // Remove "no messages"
     $('.no-messages').remove();
 
@@ -12,6 +32,9 @@
     // Render the new messages
     <% @new_message = true %>
     $('.message-list').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
+
+    // Increment the messages count
+    <% @messages_count = @messages_count.to_i + @new_messages.length %>
 
     // add the last-message class
     $(".message:first-child").addClass("latest-message");
