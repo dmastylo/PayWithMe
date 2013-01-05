@@ -3,16 +3,16 @@
     // Infinite scrolling for old messages //
     /////////////////////////////////////////
     
-    // Remove old "see more" link
-    $('.see-more').remove();
-    
     // Render new messages
     $('.message-list').append('<%= j render(@next_messages) %>');
 
-    // If there are more messages still available, insert the see more link
-    if (<%= @messages_count.to_i %> > $('.message').size())
+    // Move the link to the bottom of the messages
+    $('.see-more').appendTo('.message-list');
+
+    // If there are no more messages available, remove the see more link
+    if (<%= @messages_count.to_i %> <= $('.message').size())
     {
-        $('.message-list').append('<a class="see-more">See more</a>');
+        $('.see-more').remove();
     }
 <% elsif !defined?(@new_messages).nil? && !@new_messages.empty? %>
     //////////////////////////////
