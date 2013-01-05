@@ -1,14 +1,3 @@
 <div class="event span3">
-  <div class="well">
-    <h4 style="margin-top: 0;">
-        <%= link_to event.title, event %>
-        <% if event.public? %>
-            <i class="icon-globe"></i>
-        <% else %>
-            <i class="icon-lock"></i>
-        <% end %>
-    </h4>
-    <%= event.members.count %> members<br />
-    Starts in <%= distance_of_time_in_words_to_now event.start_at %>
-  </div>
+  <%= render partial: "events/sidebar_event", locals: { event: event } %>
 </div>

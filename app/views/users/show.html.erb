@@ -4,7 +4,11 @@
         <%= profile_image_tag @user, :medium %> 
     </div>
     <div class="user-header span6">
-        <h2><%= @user.name %></h2>
+        <% if @user.name %>
+            <h2><%= @user.name %></h2>
+        <% else %> 
+            <h2><%= @user.email %></h2>
+        <% end %>
     </div>
     <% unless @user == current_user %>
         <div class="invite-to-event-button span3">
@@ -22,14 +26,40 @@
 <div class="row">
     <div class="span12">
         <% if @user == current_user %>
-            <h3>Your Events</h3>
+            <h3>Your Upcoming Events</h3>
         <% else %>
-            <h3>Public and Shared Events</h3>
+            <h3>Upcoming Public and Shared Events</h3>
         <% end %>
     </div>
 </div>
 <div class="row">
-    <div class="event-list span12">
-        <%= render @public_and_shared_events %>
+    <% if @upcoming_public_and_shared_events.empty? %>
+        <div class="span12">
+            No upcoming events!
+        </div>
+    <% else %>
+        <div class="event-list span12">
+            <%= render @upcoming_public_and_shared_events %>
+        </div>
+    <% end %>
+</div>
+<div class="row">
+    <div class="span12">
+        <% if @user == current_user %>
+            <h3>Your Past Events</h3>
+        <% else %>
+            <h3>Past Public and Shared Events</h3>
+        <% end %>
     </div>
+</div>
+<div class="row">
+    <% if @past_public_and_shared_events.empty? %>
+        <div class="span12">
+            No past events!
+        </div>
+    <% else %>
+        <div class="event-list span12">
+            <%= render @past_public_and_shared_events, locals: { past_event: true }  %>
+        </div>
+    <% end %>
 </div>

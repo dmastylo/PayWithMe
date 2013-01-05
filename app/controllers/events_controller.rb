@@ -34,8 +34,10 @@ class EventsController < ApplicationController
   end
 
   def index
-    @organized_events = current_user.organized_events
-    @invited_events = current_user.invited_events
+    @upcoming_organized_events = current_user.upcoming_organized_events
+    @upcoming_invited_events = current_user.upcoming_invited_events
+    @past_organized_events = current_user.past_organized_events
+    @past_invited_events = current_user.past_invited_events
   end
 
   def edit

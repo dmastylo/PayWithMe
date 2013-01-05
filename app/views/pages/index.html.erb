@@ -1,15 +1,25 @@
 <% if user_signed_in? %>
   <div class="row">
     <div class="span8">
+      <div class="page-header">
+        <h2>News Feed</h2>
+      </div>
+      <% if @news_items.empty? %>
+        You have no news... yet!
+      <% else %>
+        <ul class="news-feed">
+          <%= render @news_items %>
+        </ul>
+      <% end %>
     </div>
     <div class="span4">
       <%= link_to "Create New Event", new_event_path, class: "btn btn-block btn-primary" %>
       <h3 class="push-top">Upcoming Events</h3>
-      <div class="well">
-
-      </div>
+      <% unless @upcoming_events.empty? %>
+        <%= render collection: @upcoming_events, partial: "events/sidebar_event", as: :event %>
+      <% end %>
     </div>
   </div>
 <% else %>
-  nothing
+    nothing
 <% end %>

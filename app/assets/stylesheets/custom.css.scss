@@ -371,6 +371,28 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
+// Dashboard ==================================================================
+.news-feed
+{
+    list-style: none;
+    margin: 0;
+
+    li {
+        border-top: 1px solid $lightGray;
+        margin-top: 10px;
+        padding-top: 10px;
+
+        a {
+            color: $offBlack;
+        }
+
+        .news-timestamp {
+            color: $mediumGray;
+            
+        }
+    }
+}
+
 // User-Show ==================================================================
 .user-header
 {
