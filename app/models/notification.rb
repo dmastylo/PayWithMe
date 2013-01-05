@@ -5,20 +5,20 @@
 #  id                :integer          not null, primary key
 #  user_id           :integer
 #  notification_type :integer
-#  body              :string(255)
-#  path              :string(255)
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #  read              :boolean          default(FALSE)
+#  foreign_id        :integer
+#  foreign_type      :integer
+#  subject_id        :integer
 #
 
 class Notification < ActiveRecord::Base
 
   # Accessible attributes
-  attr_accessible :body, :path, :notification_type, :foreign_id, :foreign_type
+  attr_accessible :notification_type, :foreign_id, :foreign_type, :subject_id
 
   # Validations
-  validates :body, presence: true
   validates :notification_type, presence: true
   validates :user_id, presence: true
   validates :foreign_id, presence: true
@@ -31,8 +31,8 @@ class Notification < ActiveRecord::Base
     member.notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::EVENT,
-      body: "#{event.organizer.first_name} has invited you to #{event.title}.",
       foreign_id: event.id
+      # body: "#{event.organizer.first_name} has invited you to #{event.title}.",
     )
   end
 
@@ -40,8 +40,8 @@ class Notification < ActiveRecord::Base
     member.notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::GROUP,
-      body: "You have been added to #{group.title}.",
       foreign_id: group.id
+      # body: "You have been added to #{group.title}.",
     )
   end
 
@@ -65,7 +65,8 @@ class Notification < ActiveRecord::Base
       )
     end
 
-    notification.body = "#{TextHelper.pluralize(message_count, 'new message has', 'new messages have')} been posted in #{event.title}."
+    # notification.body = "#{TextHelper.pluralize(message_count, 'new message has', 'new messages have')} been posted in #{event.title}."
+    notification.subject_id = message_count
     notification.read = false
     notification.save
   end
@@ -85,7 +86,7 @@ class Notification < ActiveRecord::Base
       )
     end
 
-    notification.body = "The details of #{event.title} have been updated."
+    # notification.body = "The details of #{event.title} have been updated."
     notification.read = false
     notification.save
   end
@@ -97,11 +98,64 @@ class Notification < ActiveRecord::Base
   end
 
   def path
-    if foreign_type == ForeignType::EVENT
+    if event?
       Rails.application.routes.url_helpers.event_path(foreign_id)
-    elsif foreign_type == ForeignType::GROUP
+    elsif group?
       Rails.application.routes.url_helpers.group_path(foreign_id)
     end
+  end
+
+  def body
+    if event?
+      if invite?
+        "#{event.organizer.first_name} has invited you to #{event.title}"
+      elsif message?
+        "#{TextHelper.pluralize(subject_id, 'new message has', 'new messages have')} been posted in #{event.title}."
+      elsif update?
+        "The details of #{event.title} have been updated."
+      end
+    elsif group?
+      if invite?
+        "You have been added to #{group.title}."
+      end
+    end
+  end
+
+  def event?
+    foreign_type == ForeignType::EVENT
+  end
+
+  def group?
+    foreign_type == ForeignType::GROUP
+  end
+
+  def message?
+    notification_type == NotificationType::MESSAGE
+  end
+
+  def invite?
+    notification_type == NotificationType::INVITE
+  end
+
+   def update?
+    notification_type == NotificationType::UPDATE
+  end
+
+  def event
+    if event?
+      Event.find_by_id(foreign_id)
+    end
+  end
+
+  def group
+    if group?
+      Group.find_by_id(foreign_id)
+    end
+  end
+
+  def subject
+    # For now, subject is always a user
+    User.find_by_id(subject_id)
   end
 
   # Constants

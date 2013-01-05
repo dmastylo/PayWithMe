@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121230180638) do
+ActiveRecord::Schema.define(:version => 20130105213410) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -42,8 +42,14 @@ ActiveRecord::Schema.define(:version => 20121230180638) do
     t.datetime "updated_at", :null => false
   end
 
-# Could not dump table "event_users" because of following StandardError
-#   Unknown type 'bool' for column 'invitation_sent'
+  create_table "event_users", :force => true do |t|
+    t.integer "event_id"
+    t.integer "user_id"
+    t.integer "amount_cents",    :default => 0
+    t.date    "due_date"
+    t.date    "paid_date"
+    t.boolean "invitation_sent", :default => false
+  end
 
   create_table "events", :force => true do |t|
     t.string   "title"
@@ -76,6 +82,16 @@ ActiveRecord::Schema.define(:version => 20121230180638) do
     t.datetime "updated_at",  :null => false
   end
 
+  create_table "linked_accounts", :force => true do |t|
+    t.string   "provider"
+    t.string   "token"
+    t.integer  "user_id"
+    t.string   "uid"
+    t.string   "token_secret"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "messages", :force => true do |t|
     t.string   "message"
     t.integer  "event_id"
@@ -88,27 +104,26 @@ ActiveRecord::Schema.define(:version => 20121230180638) do
   add_index "messages", ["user_id"], :name => "index_messages_on_user_id"
 
   create_table "news_items", :force => true do |t|
-    t.string   "title"
-    t.string   "body"
-    t.string   "path"
     t.integer  "news_type"
     t.integer  "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "foreign_id"
+    t.integer  "foreign_type"
+    t.integer  "subject_id"
   end
 
   add_index "news_items", ["user_id"], :name => "index_news_items_on_user_id"
 
   create_table "notifications", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "notification_type"
-    t.string   "body"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-    t.boolean  "read",              :default => false
+    t.integer  "notification_type", :limit => 255
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
+    t.boolean  "read",                             :default => false
     t.integer  "foreign_id"
     t.integer  "foreign_type"
+    t.integer  "subject_id"
   end
 
   create_table "users", :force => true do |t|
@@ -125,8 +140,6 @@ ActiveRecord::Schema.define(:version => 20121230180638) do
     t.datetime "created_at",                                    :null => false
     t.datetime "updated_at",                                    :null => false
     t.string   "name"
-    t.string   "provider"
-    t.string   "uid"
     t.string   "profile_image_file_name"
     t.string   "profile_image_content_type"
     t.integer  "profile_image_file_size"
@@ -134,6 +147,7 @@ ActiveRecord::Schema.define(:version => 20121230180638) do
     t.string   "profile_image_url"
     t.boolean  "stub",                       :default => false
     t.string   "guest_token"
+    t.boolean  "using_oauth"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

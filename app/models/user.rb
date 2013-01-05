@@ -16,8 +16,6 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  name                       :string(255)
-#  provider                   :string(255)
-#  uid                        :string(255)
 #  profile_image_file_name    :string(255)
 #  profile_image_content_type :string(255)
 #  profile_image_file_size    :integer
@@ -25,6 +23,7 @@
 #  profile_image_url          :string(255)
 #  stub                       :boolean          default(FALSE)
 #  guest_token                :string(255)
+#  using_oauth                :boolean
 #
 
 class User < ActiveRecord::Base
@@ -58,7 +57,18 @@ class User < ActiveRecord::Base
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages, dependent: :destroy
   has_many :notifications, dependent: :destroy
+  has_many :linked_accounts, dependent: :destroy
   has_many :news_items, dependent: :destroy
+
+  def profile_image_type
+    if profile_image.present?
+      :upload
+    elsif profile_image_url.present?
+      :url
+    else
+      :gravatar
+    end
+  end
 
   # Static functions
   # ========================================================
@@ -84,17 +94,22 @@ class User < ActiveRecord::Base
     user = User.new(email: email)
     user.stub = true
     user.save
-    user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s} #{pepper}")
+    user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s}#{pepper}")
     user.save
     user
   end
 
   def self.from_omniauth(auth)
-    where(auth.slice(:provider, :uid)).first_or_create do |user|
-      user.provider = auth.provider
-      user.uid = auth.uid
-      user.name = auth.info.name if auth.info.name
-      user.email = auth.info.email if auth.info.email
+    linked_account = LinkedAccount.where(auth.slice(:provider, :uid)).first
+
+    if linked_account.present?
+      linked_account.user
+    else
+      User.new do |user|
+        user.name = auth.info.name if auth.info.name
+        user.email = auth.info.email if auth.info.email
+        user.using_oauth = true
+      end
     end
   end
 
@@ -126,7 +141,7 @@ class User < ActiveRecord::Base
   # Instance methods
   # ========================================================
   def password_required?
-    super && provider.blank? && !stub?
+    super && !using_oauth? && !stub?
   end
 
   def update_with_password(params, *options)
@@ -191,6 +206,18 @@ class User < ActiveRecord::Base
     self.member_events.delete_if { |event| event.organizer == self }
   end
 
+  def facebook_account
+    self.linked_accounts.where(provider: :facebook).first
+  end
+
+  def twitter_account
+    self.linked_accounts.where(provider: :twitter).first
+  end
+
+  def paypal_account
+    self.linked_accounts.where(provider: :paypal).first
+  end
+
   def upcoming_invited_events
     self.member_events.where('start_at > ?', Time.now).order("start_at ASC").delete_if { |event| event.organizer == self }
   end
@@ -214,7 +241,7 @@ private
   end
 
   def set_stub
-    if encrypted_password.present? || provider.present?
+    if encrypted_password.present? || using_oauth?
       stub = false
       guest_token = nil
     end
