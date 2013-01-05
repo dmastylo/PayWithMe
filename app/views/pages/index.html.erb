@@ -1,14 +1,16 @@
 <% if user_signed_in? %>
   <div class="row">
     <div class="span8">
-      <h1>News Feed</h1>
-        <% if @news_items.empty? %>
-          You have no news... yet!
-        <% else %>
-          <ul class="news-feed">
-            <%= render @news_items %>
-          </ul>
-        <% end %>
+      <div class="page-header">
+        <h2>News Feed</h2>
+      </div>
+      <% if @news_items.empty? %>
+        You have no news... yet!
+      <% else %>
+        <ul class="news-feed">
+          <%= render @news_items %>
+        </ul>
+      <% end %>
     </div>
     <div class="span4">
       <%= link_to "Create New Event", new_event_path, class: "btn btn-block btn-primary" %>
@@ -16,7 +18,7 @@
       <% if @upcoming_events.empty? %>
         No upcoming events!
       <% else %>
-        <%= render @upcoming_events %>
+        <%= render collection: @upcoming_events, partial: "events/sidebar_event", as: :event %>
       <% end %>
     </div>
   </div>
