@@ -16,8 +16,6 @@
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  name                       :string(255)
-#  provider                   :string(255)
-#  uid                        :string(255)
 #  profile_image_file_name    :string(255)
 #  profile_image_content_type :string(255)
 #  profile_image_file_size    :integer
@@ -25,6 +23,7 @@
 #  profile_image_url          :string(255)
 #  stub                       :boolean          default(FALSE)
 #  guest_token                :string(255)
+#  using_oauth                :boolean
 #
 
 class User < ActiveRecord::Base
