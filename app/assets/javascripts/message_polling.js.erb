@@ -7,7 +7,7 @@ $(function()
         $(".message:first-child").addClass("latest-message");
 
         // Poll for new messages
-        setTimeout(updateMessages, 5000);
+        setTimeout(updateMessages, <%= Figaro.env.chat_polling.to_i * 1000 %>);
     }
 });
 
@@ -20,5 +20,5 @@ function updateMessages()
               : "0";
     $.getScript("/messages.js?event_id=" + event_id + "&after=" + after);
 
-    setTimeout(updateMessages, 5000);
+    setTimeout(updateMessages, <%= Figaro.env.chat_polling.to_i * 1000 %>);
 }
