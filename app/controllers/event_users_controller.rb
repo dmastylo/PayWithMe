@@ -2,6 +2,7 @@ class EventUsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :user_organizes_event, only: [:create]
   before_filter :user_owns_event_user, only: [:pay]
+  before_filter :user_organizes_event
 
   def create
     # for some reason member_ids.include? does not work
@@ -10,6 +11,7 @@ class EventUsersController < ApplicationController
       NewsItem.create_for_new_event_member(@event, @event_user.member)
       if @event_user.save
         @event.set_event_user_attributes(current_user)
+
         respond_to do |format|
           format.html { redirect_to user_path(@user) }
           format.js
