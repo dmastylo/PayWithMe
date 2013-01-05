@@ -34,6 +34,6 @@ function temporarySpamBlock()
     else
     {
         $('.post-message').attr("disabled", "disabled");
-        setTimeout(temporarySpamBlock, <%= Figaro.env.chat_limit.to_i * 1000 %>);
+        setTimeout(temporarySpamBlock, <%= Figaro.env.chat_limit.to_i %>);
     }
 }
