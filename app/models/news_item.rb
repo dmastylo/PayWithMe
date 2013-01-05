@@ -30,7 +30,7 @@ class NewsItem < ActiveRecord::Base
       news_type: Type::NEW_EVENT_USER,
       foreign_id: event.id,
       title: "#{event.title} has a new attendee!",
-      body: "#{new_member.name} is now attending #{event.title}.",
+      body: "#{new_member.name} is now attending #{event.title}",
       path: Rails.application.routes.url_helpers.event_path(event),
     }
     event.members.each do |member|

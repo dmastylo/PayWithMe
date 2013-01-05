@@ -4,6 +4,6 @@
     <% elsif news_item.news_type == NewsItem::Type::NEW_GROUP_USER %>
         <strong><%= link_to news_item.title, Group.find(news_item.foreign_id) %></strong>
     <% end %>
-    <span class="news-timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago</small></span><br />
+    <div class="news-timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago.</small></div>
     <%= news_item.body %>
 </li>
