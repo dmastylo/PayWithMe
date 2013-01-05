@@ -15,7 +15,7 @@
 class Notification < ActiveRecord::Base
 
   # Accessible attributes
-  attr_accessible :body, :path, :notification_type, :foreign_id, :foreign_type
+  attr_accessible :notification_type, :foreign_id, :foreign_type, :subject_id
 
   # Validations
   validates :notification_type, presence: true
@@ -30,7 +30,6 @@ class Notification < ActiveRecord::Base
     member.notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::EVENT,
-      subject_id: event.organizer.id,
       foreign_id: event.id
       # body: "#{event.organizer.first_name} has invited you to #{event.title}.",
     )
@@ -86,7 +85,7 @@ class Notification < ActiveRecord::Base
       )
     end
 
-    notification.body = "The details of #{event.title} have been updated."
+    # notification.body = "The details of #{event.title} have been updated."
     notification.read = false
     notification.save
   end
@@ -106,7 +105,21 @@ class Notification < ActiveRecord::Base
   end
 
   def body
-    "adsf"
+    if foreign_type == ForeignType::EVENT
+      event = Event.find_by_id(foreign_id)
+      if notification_type == NotificationType::INVITE
+        "#{event.organizer.first_name} has invited you to #{event.title}"
+      elsif notification_type == NotificationType::MESSAGE
+        "#{TextHelper.pluralize(subject_id, 'new message has', 'new messages have')} been posted in #{event.title}."
+      elsif notification_type == NotificationType::UPDATE
+        "The details of #{event.title} have been updated."
+      end
+    elsif foreign_type == ForeignType::GROUP
+      group = Group.find_by_id(foreign_id)
+      if notification_type == NotificationType::INVITE
+        "You have been added to #{group.title}."
+      end
+    end
   end
 
   # Constants
