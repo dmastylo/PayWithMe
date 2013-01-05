@@ -98,29 +98,64 @@ class Notification < ActiveRecord::Base
   end
 
   def path
-    if foreign_type == ForeignType::EVENT
+    if event?
       Rails.application.routes.url_helpers.event_path(foreign_id)
-    elsif foreign_type == ForeignType::GROUP
+    elsif group?
       Rails.application.routes.url_helpers.group_path(foreign_id)
     end
   end
 
   def body
-    if foreign_type == ForeignType::EVENT
-      event = Event.find_by_id(foreign_id)
-      if notification_type == NotificationType::INVITE
+    if event?
+      if invite?
         "#{event.organizer.first_name} has invited you to #{event.title}"
-      elsif notification_type == NotificationType::MESSAGE
+      elsif message?
         "#{TextHelper.pluralize(subject_id, 'new message has', 'new messages have')} been posted in #{event.title}."
-      elsif notification_type == NotificationType::UPDATE
+      elsif update?
         "The details of #{event.title} have been updated."
       end
-    elsif foreign_type == ForeignType::GROUP
-      group = Group.find_by_id(foreign_id)
-      if notification_type == NotificationType::INVITE
+    elsif group?
+      if invite?
         "You have been added to #{group.title}."
       end
     end
+  end
+
+  def event?
+    foreign_type == ForeignType::EVENT
+  end
+
+  def group?
+    foreign_type == ForeignType::GROUP
+  end
+
+  def message?
+    notification_type == NotificationType::MESSAGE
+  end
+
+  def invite?
+    notification_type == NotificationType::INVITE
+  end
+
+   def update?
+    notification_type == NotificationType::UPDATE
+  end
+
+  def event
+    if event?
+      Event.find_by_id(foreign_id)
+    end
+  end
+
+  def group
+    if group?
+      Group.find_by_id(foreign_id)
+    end
+  end
+
+  def subject
+    # For now, subject is always a user
+    User.find_by_id(subject_id)
   end
 
   # Constants
