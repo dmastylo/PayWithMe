@@ -1,7 +1,9 @@
 $(function()
 {
-    $(".see-more").click(function()
+    // This only works once???
+    $(".see-more").click(function(e)
     {
+        e.preventDefault();
         var event_id = $(".message-list").attr("data-id");
         var last_message_time = $(".message").length > 0
                   ? $(".message:last").attr("data-time")

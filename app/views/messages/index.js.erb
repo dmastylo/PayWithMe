@@ -10,7 +10,7 @@
     $('.message-list').append('<%= j render(@next_messages) %>');
 
     // If there are more messages still available, insert the see more link
-    if (<%= @messages_count.to_i %> > $('.message').length())
+    if (<%= @messages_count.to_i %> > $('.message').size())
     {
         $('.message-list').append('<a class="see-more">See more</a>');
     }

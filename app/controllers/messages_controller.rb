@@ -8,7 +8,7 @@ class MessagesController < ApplicationController
         @new_messages.delete_if { |message| message.user == current_user }
     elsif params[:event_id] && params[:last_message_time]
         # Infinite scrolling
-        @next_messages = Message.where("event_id = ? AND created_at < ?", params[:event_id], Time.at(params[:last_message_time].to_i)).limit(10)
+        @next_messages = Message.where("event_id = ? AND created_at < ?", params[:event_id], Time.at(params[:last_message_time].to_i)).limit(5)
         @messages_count = Event.find(params[:event_id]).messages.size unless @next_messages.empty?
     end
   end
