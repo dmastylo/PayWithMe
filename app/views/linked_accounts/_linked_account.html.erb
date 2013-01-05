@@ -1,0 +1,9 @@
+<div class="control-group">
+  <% label_text = current_user.send("#{account_type}_account").present?? " (account connected)" : "" %>
+  <%= label "#{account_type}_account", "#{account_type.humanize}#{label_text}" %>
+  <% if current_user.send("#{account_type}_account").present? %>
+    <%= link_to "Disconnect account", linked_account_path(current_user.send("#{account_type}_account")), class: "btn btn-danger", method: :delete %>
+  <% else %>
+    <%= link_to "Sync account", user_omniauth_authorize_path(account_type), class: "btn btn-primary" %>
+  <% end %>
+</div>
