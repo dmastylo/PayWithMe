@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
+  after_filter :user_activity
 
   def default_url_options
     if Rails.env.production?
@@ -77,6 +78,12 @@ private
         flash[:error] = "Invalid login token."
         redirect_to root_path
       end
+    end
+  end
+
+  def user_activity
+    if user_signed_in?
+        current_user.update_attribute(:last_seen, Time.now) if user_signed_in?
     end
   end
 end

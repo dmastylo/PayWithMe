@@ -24,6 +24,7 @@
 #  stub                       :boolean          default(FALSE)
 #  guest_token                :string(255)
 #  using_oauth                :boolean
+#  last_seen                  :datetime
 #
 
 class User < ActiveRecord::Base
@@ -47,6 +48,7 @@ class User < ActiveRecord::Base
   # ========================================================
   before_save :set_profile_image
   before_save :set_stub
+  after_create :set_last_seen
 
   # Relationships
   # ========================================================
@@ -156,6 +158,10 @@ class User < ActiveRecord::Base
     self.messages.all.empty? || Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
   end
 
+  def online?
+    self.last_seen > 3.minutes.ago
+  end
+
   def first_name
     if name.present?
       name.split(" ").first
@@ -245,5 +251,9 @@ private
       stub = false
       guest_token = nil
     end
+  end
+
+  def set_last_seen
+    self.last_seen = Time.now
   end
 end
