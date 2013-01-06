@@ -28,7 +28,7 @@
 #
 
 class User < ActiveRecord::Base
-  
+
   # Devise modules
   # ========================================================
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
@@ -62,6 +62,12 @@ class User < ActiveRecord::Base
   has_many :linked_accounts, dependent: :destroy
   has_many :news_items, dependent: :destroy
 
+  # Scopes
+  # ========================================================
+  scope :online, lambda{ where("last_seen > ?", 3.minutes.ago) }
+
+  # Profile Image
+  # ========================================================
   def profile_image_type
     if profile_image.present?
       :upload
@@ -256,4 +262,5 @@ private
   def set_last_seen
     self.last_seen = Time.now
   end
+  
 end
