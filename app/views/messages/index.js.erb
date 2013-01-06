@@ -12,11 +12,11 @@
     // If there are no more messages available, set the bool to false
     if (<%= @messages_count.to_i %> <= $('.message').size())
     {
-        moreContent = false;
+        moreMessageContent = false;
     }
 
     // Done loading, can scroll again
-    loading = false;
+    loadingOldMessages = false;
     
 <% elsif !defined?(@new_messages).nil? && !@new_messages.empty? %>
     //////////////////////////////
