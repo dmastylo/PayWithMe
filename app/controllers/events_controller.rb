@@ -31,6 +31,9 @@ class EventsController < ApplicationController
   end
 
   def show
+    @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
+    @messages_count = @event.messages.size
+    @message = Message.new
   end
 
   def index
