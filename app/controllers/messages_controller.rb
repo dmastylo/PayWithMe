@@ -1,5 +1,6 @@
 class MessagesController < ApplicationController
   before_filter :user_in_event
+  after_filter :user_activity
 
   def index
     if params[:event_id] && params[:after]
@@ -28,5 +29,10 @@ class MessagesController < ApplicationController
         redirect_to event_path(@event)
       end
     end
+  end
+
+private
+  def user_activity
+    current_user.update_attribute(:last_seen, Time.now) if user_signed_in?
   end
 end
