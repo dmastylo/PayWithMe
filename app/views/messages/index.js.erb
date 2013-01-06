@@ -1,4 +1,28 @@
-<% unless @new_messages.empty? %>
+<% if !defined?(@next_messages).nil? && !@next_messages.empty? %>
+    /////////////////////////////////////////
+    // Infinite scrolling for old messages //
+    /////////////////////////////////////////
+    
+    // Render new messages
+    $('.message-list').append('<%= j render(@next_messages) %>');
+
+    // Remove the "loading messages" message
+    $('.load-new-msgs').remove();
+
+    // If there are no more messages available, set the bool to false
+    if (<%= @messages_count.to_i %> <= $('.message').size())
+    {
+        moreMessageContent = false;
+    }
+
+    // Done loading, can scroll again
+    loadingOldMessages = false;
+    
+<% elsif !defined?(@new_messages).nil? && !@new_messages.empty? %>
+    //////////////////////////////
+    // Polling for new messages //
+    //////////////////////////////
+
     // Remove "no messages"
     $('.no-messages').remove();
 
