@@ -5,7 +5,7 @@
   <div class="body">
     <div class="user">
         <%= link_to user_name(user), user %>
-        <% if user.online? && @event.present? %>
+        <% if user.online? %>
             <div class="user-online"></div>
         <% end %>
     </div>
