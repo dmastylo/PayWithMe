@@ -82,8 +82,6 @@ private
   end
 
   def user_activity
-    if user_signed_in?
-        current_user.update_attribute(:last_seen, Time.now) if user_signed_in?
-    end
+    current_user.update_attribute(:last_seen, Time.now) if user_signed_in?
   end
 end
