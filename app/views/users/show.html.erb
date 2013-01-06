@@ -10,6 +10,10 @@
             <% else %> 
                 <%= @user.email %>
             <% end %>
+
+            <% if @user.online? %>
+                <div class="user-online push-up"></div>
+            <% end %>
         </h2>
     </div>
     <% unless @user == current_user %>
