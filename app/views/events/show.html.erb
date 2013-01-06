@@ -65,7 +65,6 @@
         <% if @messages.any? %>
           <%= render @messages %>
           <% if @messages_count > Figaro.env.chat_msg_per_page.to_i %>
-            <!-- <a class="see-more">See more</a> -->
           <% end %>
         <% else %>
           <span class="no-messages">There are no messages.</span>
