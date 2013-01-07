@@ -29,6 +29,11 @@ PayWithMe::Application.routes.draw do
     end
   end
 
+  # Error Handling
+  # ===========================================================================
+  match "/404", :to => "errors#not_found"
+  match "/500", :to => "errors#does_not_exist"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
