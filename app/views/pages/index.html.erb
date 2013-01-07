@@ -7,7 +7,7 @@
       <% if @news_items.empty? %>
         You have no news... yet!
       <% else %>
-        <ul class="news-feed">
+        <ul class="vertical-list">
           <%= render @news_items %>
         </ul>
       <% end %>
@@ -18,7 +18,7 @@
       <% if @upcoming_events.empty? %>
         No upcoming events!
       <% else %>
-        <%= render collection: @upcoming_events, partial: "events/sidebar_event", as: :event %>
+        <%= render collection: @upcoming_events, partial: "events/event_body", as: :event %>
       <% end %>
     </div>
   </div>

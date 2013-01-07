@@ -1,71 +1,62 @@
 <% provide(:title, @user.name) %>
 <div class="row">
-    <div class="span3">
-        <%= profile_image_tag @user, :medium %> 
+  <div class="span3">
+    <%= profile_image_tag @user, :large %>
+    <h2><%= user_name(@user) %></h2>
+    <% if @user.online? %>
+      <div class="user-online-block">ONLINE</div>
+    <% else %>
+      <div class="user-offline-block">OFFLINE</div>
+    <% end %>
+    <div class="spacer"></div>
+    <div class="large-statistic">
+      <span class="count"><%= @user.organized_events.count %></span> organized event<% if @user.organized_events.count != 1 %>s<% end %>
     </div>
-    <div class="user-header span6">
-        <h2>
-            <% if @user.name %>
-                <%= @user.name %>
-            <% else %> 
-                <%= @user.email %>
-            <% end %>
+    <div class="large-statistic">
+      <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member event<% if @user.member_events.count != 1 %>s<% end %>
+    </div>
 
-            <% if @user.online? %>
-                <div class="user-online push-up"></div>
-            <% end %>
-        </h2>
-    </div>
     <% unless @user == current_user %>
-        <div class="invite-to-event-button span3">
-            <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
-            <ul class="events-to-invite">
-                <% unless @your_organized_events.empty? %>
-                    <%= render partial: 'events/invite_events', collection: @your_organized_events, as: :event %>
-                <% else %>
-                    <li>You don't have any events!</li>
-                <% end %>
-            </ul>
-        </div>
+      <div class="spacer"></div>
+      <div class="invite-to-event-button">
+        <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
+        <ul class="events-to-invite">
+          <% unless @your_organized_events.empty? %>
+            <%= render partial: 'events/invite_events', collection: @your_organized_events, as: :event %>
+          <% else %>
+            <li>You don't have any events!</li>
+          <% end %>
+        </ul>
+      </div>
     <% end %>
-</div>
-<div class="row">
-    <div class="span12">
-        <% if @user == current_user %>
-            <h3>Your Upcoming Events</h3>
-        <% else %>
-            <h3>Upcoming Public and Shared Events</h3>
-        <% end %>
-    </div>
-</div>
-<div class="row">
-    <% if @upcoming_public_and_shared_events.empty? %>
-        <div class="span12">
-            No upcoming events!
-        </div>
+  </div>
+
+  <div class="span9">
+    <% if @user == current_user %>
+      <h3>Your Upcoming Events</h3>
     <% else %>
-        <div class="event-list span12">
-            <%= render @upcoming_public_and_shared_events %>
-        </div>
+      <h3>Upcoming Public and Shared Events</h3>
     <% end %>
-</div>
-<div class="row">
-    <div class="span12">
-        <% if @user == current_user %>
-            <h3>Your Past Events</h3>
-        <% else %>
-            <h3>Past Public and Shared Events</h3>
-        <% end %>
+    <div id="upcoming-events"<% if @upcoming_public_and_shared_events.empty? %> class="empty"<% end %>>
+      <% if @upcoming_public_and_shared_events.empty? %>
+        No upcoming events!
+      <% else %>
+        <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
+      <% end %>
     </div>
-</div>
-<div class="row">
+    <div class="clearfix"></div>
+
+    <% if @user == current_user %>
+      <h3>Your Past Events</h3>
+    <% else %>
+      <h3>Past Public and Shared Events</h3>
+    <% end %>
+
     <% if @past_public_and_shared_events.empty? %>
-        <div class="span12">
-            No past events!
-        </div>
+      No past events!
     <% else %>
-        <div class="event-list span12">
-            <%= render @past_public_and_shared_events, locals: { past_event: true }  %>
-        </div>
+      <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
     <% end %>
+    <div class="clearfix"></div>
+  </div>
 </div>

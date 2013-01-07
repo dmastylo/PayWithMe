@@ -19,10 +19,10 @@
       <div class="content">
         <div class="row">
            <div class="span12">
-              <%= content_tag(:div, flash[:error], :class => 'alert alert-error', :id => "flash_error") if flash[:error] %>
-              <%= content_tag(:div, flash[:notice], :class => 'alert alert-warning', :id => "flash_notice") if flash[:notice] %>
-              <%= content_tag(:div, flash[:alert], :class => 'alert alert-info', :id => "flash_alert") if flash[:alert] %>
-              <%= content_tag(:div, flash[:success], :class => 'alert alert-success', :id => "flash_alert") if flash[:success] %>
+              <%= content_tag(:div, flash[:error], :class => 'alert alert-error',) if flash[:error] %>
+              <%= content_tag(:div, flash[:notice], :class => 'alert alert-warning') if flash[:notice] %>
+              <%= content_tag(:div, flash[:alert], :class => 'alert alert-info') if flash[:alert] %>
+              <%= content_tag(:div, flash[:success], :class => 'alert alert-success') if flash[:success] %>
             </div>
         </div><!--/row-->
         <%= yield %>
