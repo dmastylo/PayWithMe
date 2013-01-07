@@ -24,10 +24,11 @@
 #  stub                       :boolean          default(FALSE)
 #  guest_token                :string(255)
 #  using_oauth                :boolean
+#  last_seen                  :datetime
 #
 
 class User < ActiveRecord::Base
-  
+
   # Devise modules
   # ========================================================
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
@@ -47,6 +48,7 @@ class User < ActiveRecord::Base
   # ========================================================
   before_save :set_profile_image
   before_save :set_stub
+  after_create :set_last_seen
 
   # Relationships
   # ========================================================
@@ -60,6 +62,12 @@ class User < ActiveRecord::Base
   has_many :linked_accounts, dependent: :destroy
   has_many :news_items, dependent: :destroy
 
+  # Scopes
+  # ========================================================
+  scope :online, lambda{ where("last_seen > ?", 3.minutes.ago) }
+
+  # Profile Image
+  # ========================================================
   def profile_image_type
     if profile_image.present?
       :upload
@@ -156,6 +164,10 @@ class User < ActiveRecord::Base
     self.messages.all.empty? || Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
   end
 
+  def online?
+    self.last_seen > 3.minutes.ago
+  end
+
   def first_name
     if name.present?
       name.split(" ").first
@@ -246,4 +258,9 @@ private
       guest_token = nil
     end
   end
+
+  def set_last_seen
+    self.last_seen = Time.now
+  end
+  
 end

@@ -2,6 +2,7 @@
     <% if message.user == current_user %>
         <div class="current-user-body span5">
             <div class="user">
+                <div class="user-online"></div>
                 <%= link_to "You", current_user %>
             </div>
             <div class="timestamp">
@@ -22,6 +23,9 @@
         <div class="body span5">
             <div class="user">
                 <%= link_to user_name(message.user), message.user %>
+                <% if message.user.online? %>
+                    <div class="user-online"></div>
+                <% end %>
             </div>
             <div class="timestamp">
                 Posted <%= time_ago_in_words(message.created_at) %> ago.

@@ -55,6 +55,21 @@ p
     line-height: 1.7em;
 }
 
+// Misc =======================================================================
+// User Online display
+.user-online {
+    display: inline-block;
+    border-radius: 4px;
+    margin-bottom: 1px;
+    width: 8px;
+    height: 8px;
+    background: green;
+}
+
+.push-up {
+    margin-bottom: 5px;
+}
+
 // Headers ====================================================================
 .page-header {
     margin-top: 10px;
