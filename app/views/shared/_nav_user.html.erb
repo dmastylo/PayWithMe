@@ -6,7 +6,7 @@
       <div class="unread-notifications-count"><%= current_user.unread_notifications.count %></div>
     <% end %>
   </a>
-  <ul class="dropdown-menu" id="notifications-dropdown-menu">
+  <ul class="dropdown-menu notifications" id="notifications-dropdown-menu">
     <% if current_user.has_notifications? %>
       <%= render partial: "notifications/notification_nav", collection: current_user.current_notifications, as: :notification %>
       <li><%= link_to "View all notifications", notifications_path %>

@@ -12,9 +12,9 @@ body
 }
 
 // Typography =================================================================
-h1,h2,h3,h4
+h1, h2, h3, h4
 {
-    font-family: 'Crete Round';
+    font-family: $headerFont;
     font-weight: normal;
     color: $offBlack;
 }
@@ -55,189 +55,11 @@ p
     line-height: 1.7em;
 }
 
-// Misc =======================================================================
-// User Online display
-.user-online {
-    display: inline-block;
-    border-radius: 4px;
-    margin-bottom: 1px;
-    width: 8px;
-    height: 8px;
-    background: green;
-}
-
-.push-up {
-    margin-bottom: 5px;
-}
-
-// Headers ====================================================================
 .page-header {
     margin-top: 10px;
     margin-bottom: 10px;
     border: 0;
     padding: 0;
-}
-
-// Nav Bar ====================================================================
-.navbar
-{
-    .navbar-inner
-    {
-        background-color: $darkBlue;
-        background-image: none;
-        border-size: 0px;
-        border-radius: 0px;
-        border-color: $darkBlue;
-        height: 50px;
-        line-height: 50px;
-    	
-        #logo
-        {
-            margin-top: -4px;
-        }
-
-        ul.nav
-        {
-            z-index: 1001;
-
-            li
-            {
-                line-height: 30px;
-
-                a
-                {
-                    text-shadow: none;
-                    font-family: 'Crete Round';
-                    color: $offWhite;
-                    font-size: 18px;
-
-                    &:hover
-                    {
-                        background-color: $mediumBlue;
-                    }
-                }
-
-                i
-                {
-                    margin-top: 5px;
-                }
-
-                &.dropdown.open
-                {
-                    a, li
-                    {
-                        background-color: $mediumBlue;
-                    }
-                }
-            }
-        }
-    }
-}
-
-ul.dropdown-menu
-{
-    border-radius: 0;
-    border: 0;
-    padding: 0;
-    margin: 0;
-
-    li
-    {
-        a
-        {
-            padding: 10px 20px 10px 12px;
-            font-size: 16px;
-
-            &:hover
-            {
-                background-color: $lightBlue !important;
-                background-image: none !important;
-            }
-        }
-    }
-
-    &:before, &:after
-    {
-        display: none !important;
-    }
-
-    &.typeahead
-    {
-        width: auto;
-
-        li.active a
-        {
-            background-color: $mediumBlue !important;
-            background-image: none !important;
-            color: $offWhite;
-        }
-    }
-
-    &#notifications-dropdown-menu
-    {
-        li
-        {
-            max-width: 200px;
-            a
-            {
-                white-space: pre-wrap;
-                font-size: 14px;
-                color: $offWhite;
-                line-height: 22px;
-                padding: 5px 10px 5px 10px;
-            }
-        }
-    }
-}
-
-.unread-notifications-count
-{
-    position: absolute;
-    z-index: 1050;
-    margin-top: -16px;
-    margin-left: 10px;
-    background-color: $offBlack;
-    border-radius: 3px;
-    padding: 0 3px 1px 3px;
-    line-height: 16px;
-    font-size: 12px;
-    color: $offWhite !important;
-}
-
-#notifications-list
-{
-    list-style-type: none;
-    margin: 0;
-    border-top: 1px solid $darkBlue;
-
-    li
-    {
-        width: auto;
-        border: 1px solid $mediumGray;
-        border-top: 0;
-        background-color: $lightGray;
-        padding: 10px 15px;
-        color: $mediumGray;
-
-        &.date
-        {
-            background-color: $mediumBlue;
-            border-color: $darkBlue;
-            color: $offWhite;
-            font-weight: bold;
-        }
-
-        a
-        {
-            color: $offBlack;
-
-            &:hover
-            {
-                text-decoration: none;
-                color: $mediumBlue;
-            }
-        }
-    }
 }
 
 // Wells ======================================================================
@@ -323,6 +145,7 @@ form
 		-webkit-box-sizing: border-box;
 		width: 33.3%;
         padding: 4px 10px;
+        float: none;
 
         &.last
         {
@@ -343,14 +166,18 @@ form
 
 // Utilities ==================================================================
 .push-top { margin-top: $mediumMargin; }
-h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .push-bottom { margin-bottom: $mediumMargin; }
+.push-right { margin-right: $mediumMargin; }
+.push-left { margin-left: $mediumMargin; }
+h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .center { text-align: center; }
+.spacer { height: 0; border-top: 1px solid $lightGray; margin: $largeMargin 0; }
 
 // Alerts =====================================================================
 .alert
 {
     border-radius: 0;
+    margin-bottom: $mediumMargin;
 
     &.alert-error
     {
@@ -360,21 +187,16 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
             margin: 0;
         }
     }
-
-    // &.alert-info
-    // {
-    //     background-color: $lightBlue;
-    //     border-color: $mediumBlue;
-    //     color: $offWhite;
-    //     text-shadow: none;
-    // }
-
-    &#flash_alert
-    {
-        margin-bottom: 10px;
-    }
 }
 
+.third
+{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    width: 33%;
+    float: left;
+}
 
 // Errors =====================================================================
 #error-explanation
@@ -386,281 +208,18 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     }
 }
 
-// Dashboard ==================================================================
-.news-feed
+.large-statistic
 {
-    list-style: none;
-    margin: 0;
+    color: $mediumGray;
+    font-size: 18px;
+    margin-bottom: $mediumMargin;
 
-    li {
-        border-top: 1px solid $lightGray;
-        margin-top: 10px;
-        padding-top: 10px;
-
-        a {
-            color: $offBlack;
-        }
-
-        .news-timestamp {
-            color: $mediumGray;
-            
-        }
-    }
-}
-
-// User-Show ==================================================================
-.user-header
-{
-    margin-top: 20px;
-    text-align: center;
-}
-
-.invite-to-event-button
-{
-    position: relative;
-    margin-top: 35px;
-    text-align: center;
-
-    .btn
+    .count
     {
-        padding: 4px 30px;
-    }
-}
-
-.events-to-invite
-{
-    position: absolute;
-    width: 100%; // make it responsive
-    margin: 0; // so that it fits in the span perfectly
-    list-style: none;
-
-    // matching the same style as the dropdown in the navbar
-    li
-    {
-        padding: 2px 0 2px 10px;
-        line-height: 30px;
-        background-color: $mediumBlue;
-        color: $offWhite;
-        text-align: left;
-        font-size: 18px;
-
-        a
-        {
-            color: $offWhite;
-            text-shadow: none;
-            font-family: 'Crete Round';
-        }
-
-        &:hover
-        {
-            background-color: $lightBlue;
-        }
-    }
-}
-
-.event-list
-{
-    margin-left: 0;
-}
-
-// Event Display ==============================================================
-.event-description
-{
-    .quarter
-    {
-        width: 25%;
-        float: left;
-    }
-
-    .three-quarters
-    {
-        width: 72%;
-        padding-left: 3%;
-        float: left;
-    }
-}
-
-.event-members
-{
-    max-height: 350px;
-    overflow: auto;
-
-    /* Event members display */
-    .member-list
-    {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-
-        .member
-        {
-            margin-bottom: 5px;
-            width: 50%;
-            float: left;
-
-            &:last-child
-            {
-                margin-bottom: 0;
-            }
-
-            .profile_image
-            {
-                // margin-bottom: 5px;
-                margin-top: 3px;
-                // display: block;
-                float: left;
-
-                img
-                {
-                    border: 1px solid $mediumGray;
-                }
-            }
-        }
-
-        .body
-        {
-            padding-left: 10px;
-            // padding-top: 5px;
-            float: left;
-
-            .user a
-            {
-                color: $offBlack;
-                font-weight: bold;
-            }
-
-            .status
-            {
-                color: $mediumGray;
-            }
-        }
-    }
-}
-
-// Chat Messages Display ======================================================
-.message-list
-{
-    list-style-type: none;
-    margin: 20px 0 0 0;
-    padding: 0;
-    height: 380px;
-    overflow: auto;
-
-    .message
-    {
-        border-bottom: 1px solid #e8e8e8;
-        margin-bottom: 10px;
-
-        .profile-image
-        {
-            float: left;
-        }
-
-        .current-user-profile-image
-        {
-            float: right;
-            padding-right: 15px;
-        }
-
-        img
-        {
-            border: 1px solid $mediumGray;
-        }
-
-        .body
-        {
-            padding-left: 10px;
-            float: left;
-        }
-
-        .current-user-body
-        {
-            padding-right: 10px;
-            text-align: right;
-        }
-
-        .message-content
-        {
-            word-break: break-all;
-            word-wrap: break-word;
-        }
-
-        .user a
-        {
-            color: $offBlack;
-            font-weight: bold;
-        }
-
-        .timestamp
-        {
-            color: $mediumGray;
-        }
-
-        .name
-        {
-            font-size: 1.3em;
-            color: #848484;
-            font-weight: bold;
-            line-height: 1;
-
-            &:hover
-            {
-                color: #000000;
-                text-decoration: none;
-            }
-        }
-    }
-
-    .new-message
-    {
-        display: none;
-    }
-}
-
-.new-message-form
-{
-    margin-top: -10px;
-}
-
-// Adding users to events =====================================================
-#invited_members, #invited_groups
-{
-    .member
-    {
-        margin-top: 10px;
-
-        .profile_image
-        {
-            float: left;
-        }
-
-        .info
-        {
-            float: left;
-            margin-left: 5px;
-            line-height: 17px;
-        }
-
-        .name
-        {
-            font-weight: bold;
-        }
-
-        .email
-        {
-            color: $mediumGray;
-        }
-
-        &.member_with_email
-        {
-            height: 34px;
-            line-height: 34px;
-            .email
-            {
-                font-weight: bold;
-                color: $offBlack;
-            }
-        }
+        font-size: 25px;
+        color: $offBlack;
+        font-weight: bold;
+        padding-right: 3px;
     }
 }
 
@@ -694,42 +253,5 @@ footer
         {
             margin-bottom: 0px;
         }
-    }
-}
-
-// Team Page ==================================================================
-.team-page
-{
-
-    .page-header
-    {
-        padding-bottom: $mediumMargin;
-    }
-
-    .left
-    {
-        padding-left: $largeMargin;
-    }
-
-    .span4, .span12
-    {
-        margin-left: 0px;
-    }
-
-    .name, .desc
-    {
-        max-width: 225px;
-        text-align: left;
-        line-height: 1.2;
-    }
-
-    .well
-    {
-        max-width: 235px;
-    }
-
-    .team-row
-    {
-        padding-bottom: 20px;
     }
 }
