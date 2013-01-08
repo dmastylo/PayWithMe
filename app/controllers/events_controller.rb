@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event, only: [:show]
-  before_filter :user_organizes_event, only: [:edit, :delete, :update]
+  before_filter :user_organizes_event, only: [:edit, :delete, :update, :admin]
   
   def new
     @event = current_user.organized_events.new
@@ -69,5 +69,8 @@ class EventsController < ApplicationController
       @group_ids = @event.groups.collect { |group| group.id }
       render "edit"
     end
+  end
+
+  def admin
   end
 end

@@ -216,13 +216,26 @@ class Event < ActiveRecord::Base
   end
 
   def independent_members
-    nfgdi_members = self.members
+    nfgdi_members = self.paying_members
 
     self.groups.each do |group|
       nfgdi_members -= group.members
     end
 
     nfgdi_members
+  end
+
+  def event_user(user)
+    event_users.find_by_user_id(user)
+  end
+
+  def paid?(user)
+    event_user = event_user(user)
+    event_user.present? && event_user.paid?
+  end
+
+  def paid_at(user)
+    event_user(user).paid_at
   end
 
 private

@@ -1,0 +1,17 @@
+<tr>
+  <td><%= user.name || user.email %></td>
+  <td>
+    <% if @event.paid?(user) %>
+      <%= distance_of_time_in_words_to_now @event.paid_at(user) %> ago
+    <% else %>
+      <span class="unpaid">Unpaid</span>
+    <% end %>
+  </td>
+  <td>
+    <% if user.last_sign_in_at   %>
+      <%= distance_of_time_in_words_to_now user.last_sign_in_at %> ago
+    <% else %>
+      never
+    <% end %>
+  <td></td>
+</tr>
