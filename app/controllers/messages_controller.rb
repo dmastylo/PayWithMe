@@ -27,6 +27,8 @@ class MessagesController < ApplicationController
         flash[:error] = "Message failed!"
         redirect_to event_path(@event)
       end
+    else
+      render nothing: true
     end
   end
 end

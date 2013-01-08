@@ -1,6 +1,6 @@
-<li class="message<% unless @new_message.nil? %> new-message<% end %>" data-time="<%= message.created_at.to_i %>">
+<li class="message<% unless @new_message.nil? %> new-message<% end %>" data-time="<%= message.created_at.to_i %>" id="message-<%= message.id %>">
     <% if message.user == current_user %>
-        <div class="current-user-body span5">
+        <div class="current-user body">
             <div class="user">
                 <div class="user-online"></div>
                 <%= link_to "You", current_user %>
@@ -12,7 +12,7 @@
                 <%= message.message %>
             </div>
         </div>
-        <div class="current-user-profile-image">
+        <div class="current-user profile-image">
             <%= profile_image_tag message.user, :small %> 
         </div>
         <div class="clearfix"></div>
@@ -20,7 +20,7 @@
         <div class="profile-image">
             <%= profile_image_tag message.user, :small %> 
         </div>
-        <div class="body span5">
+        <div class="body">
             <div class="user">
                 <%= link_to user_name(message.user), message.user %>
                 <% if message.user.online? %>
