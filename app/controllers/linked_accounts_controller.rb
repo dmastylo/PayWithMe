@@ -3,8 +3,12 @@ class LinkedAccountsController < ApplicationController
   before_filter :user_owns_linked_account
 
   def destroy
-    @linked_account.destroy
-    flash[:success] = "#{@linked_account.provider.humanize} account successfully unlinked!"
+    if current_user.linked_accounts.count > 1 || current_user.encrypted_password.present?
+      @linked_account.destroy
+      flash[:success] = "#{@linked_account.provider.humanize} account successfully unlinked!"
+    else
+      flash[:error] = "You need to keep at least one linked account in order to sign in."
+    end
     redirect_to edit_user_registration_path
   end
 

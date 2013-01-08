@@ -24,6 +24,7 @@
 #  stub                       :boolean          default(FALSE)
 #  guest_token                :string(255)
 #  using_oauth                :boolean
+#  last_seen                  :datetime
 #
 
 require 'spec_helper'

@@ -58,5 +58,8 @@ module PayWithMe
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # Error routing to routes.rb
+    config.exceptions_app = self.routes
   end
 end

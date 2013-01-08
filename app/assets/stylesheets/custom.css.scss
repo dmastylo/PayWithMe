@@ -55,6 +55,21 @@ p
     line-height: 1.7em;
 }
 
+// Misc =======================================================================
+// User Online display
+.user-online {
+    display: inline-block;
+    border-radius: 4px;
+    margin-bottom: 1px;
+    width: 8px;
+    height: 8px;
+    background: green;
+}
+
+.push-up {
+    margin-bottom: 5px;
+}
+
 // Headers ====================================================================
 .page-header {
     margin-top: 10px;
@@ -379,8 +394,8 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 
     li {
         border-top: 1px solid $lightGray;
-        margin-top: 15px;
-        padding-top: 5px;
+        margin-top: 10px;
+        padding-top: 10px;
 
         a {
             color: $offBlack;
@@ -526,7 +541,7 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .message-list
 {
     list-style-type: none;
-    margin: 0;
+    margin: 20px 0 0 0;
     padding: 0;
     height: 380px;
     overflow: auto;
@@ -600,6 +615,11 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     {
         display: none;
     }
+}
+
+.new-message-form
+{
+    margin-top: -10px;
 }
 
 // Adding users to events =====================================================
@@ -678,31 +698,38 @@ footer
 }
 
 // Team Page ==================================================================
-.team-page{
+.team-page
+{
 
-    .page-header{
+    .page-header
+    {
         padding-bottom: $mediumMargin;
     }
 
-    .left{
+    .left
+    {
         padding-left: $largeMargin;
     }
 
-    .span4, .span12{
+    .span4, .span12
+    {
         margin-left: 0px;
     }
 
-    .name, .desc{
+    .name, .desc
+    {
         max-width: 225px;
         text-align: left;
         line-height: 1.2;
     }
 
-    .well{
+    .well
+    {
         max-width: 235px;
     }
 
-    .team-row{
+    .team-row
+    {
         padding-bottom: 20px;
     }
 }
