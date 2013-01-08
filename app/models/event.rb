@@ -46,7 +46,7 @@ class Event < ActiveRecord::Base
   # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
+  has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_at, event_users.paid_at"
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
@@ -187,7 +187,7 @@ class Event < ActiveRecord::Base
   def set_event_user_attributes(exclude_from_notifications)
     self.event_users.each do |event_user|
       if event_user.member != exclude_from_notifications
-        event_user.due_date = self.due_at
+        event_user.due_at = self.due_at
         event_user.amount_cents = self.send_amount_cents
         event_user.save
       end

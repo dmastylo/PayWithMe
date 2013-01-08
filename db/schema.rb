@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130106073552) do
+ActiveRecord::Schema.define(:version => 20130108221918) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -43,12 +43,13 @@ ActiveRecord::Schema.define(:version => 20130106073552) do
   end
 
   create_table "event_users", :force => true do |t|
-    t.integer "event_id"
-    t.integer "user_id"
-    t.integer "amount_cents",    :default => 0
-    t.date    "due_date"
-    t.date    "paid_date"
-    t.boolean "invitation_sent", :default => false
+    t.integer  "event_id"
+    t.integer  "user_id"
+    t.integer  "amount_cents",    :default => 0
+    t.datetime "due_at"
+    t.datetime "paid_at"
+    t.boolean  "invitation_sent", :default => false
+    t.integer  "payment_id"
   end
 
   create_table "events", :force => true do |t|
@@ -127,8 +128,8 @@ ActiveRecord::Schema.define(:version => 20130106073552) do
   end
 
   create_table "payments", :force => true do |t|
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.datetime "requested_at"
     t.datetime "paid_at"
     t.datetime "due_at"
@@ -136,6 +137,7 @@ ActiveRecord::Schema.define(:version => 20130106073552) do
     t.integer  "payee_id"
     t.integer  "event_id"
     t.integer  "amount_cents"
+    t.integer  "event_user_id"
   end
 
   create_table "users", :force => true do |t|

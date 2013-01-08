@@ -6,9 +6,10 @@
 #  event_id        :integer
 #  user_id         :integer
 #  amount_cents    :integer          default(0)
-#  due_date        :date
-#  paid_date       :date
-#  invitation_sent :boolean
+#  due_at          :datetime
+#  paid_at         :datetime
+#  invitation_sent :boolean          default(FALSE)
+#  payment_id      :integer
 #
 
 require 'spec_helper'
