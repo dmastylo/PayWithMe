@@ -14,7 +14,7 @@
 </div>
 <div class="row">
   <div class="span8">
-    <h3>Event Details</h3>
+    <h3>Event Members</h3>
     <table class="table table-striped table-bordered">
       <tr>
         <th>Name</th>
@@ -24,5 +24,11 @@
       </tr>
       <%= render collection: @event.paying_members, partial: "users/event_user", as: :user %>
     </table>
+  </div>
+  <div class="span4">
+    <h3>Collection Progress</h3>
+    <div class="progress">
+      <div class="bar" style="width: <%= @event.paid_percentage %>%;"></div>
+    </div>
   </div>
 </div>

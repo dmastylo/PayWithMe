@@ -159,6 +159,15 @@ class Event < ActiveRecord::Base
   def paying_members
     self.members - [self.organizer]
   end
+
+  def paid_members
+    paid_event_users = event_users.where("paid_at NOT NULL")
+    users = paid_event_users.collect { |event_user| event_user.member }
+  end
+
+  def paid_percentage
+    (paid_members.count * 100.0) / paying_members.count 
+  end
   
   def add_member(member)
     add_members([member])
