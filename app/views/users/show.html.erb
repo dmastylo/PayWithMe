@@ -1,6 +1,6 @@
 <% provide(:title, @user.name) %>
-<div class="row">
-  <div class="span3">
+<div class="row" id="user-wrapper">
+  <div class="span3" id="user-left">
     <%= profile_image_tag @user, :large %>
     <h2><%= user_name(@user) %></h2>
     <% if @user.online? %>
@@ -31,7 +31,7 @@
     <% end %>
   </div>
 
-  <div class="span9">
+  <div class="span9" id="user-right">
     <% if @user == current_user %>
       <h3>Your Upcoming Events</h3>
     <% else %>
@@ -60,3 +60,15 @@
     <div class="clearfix"></div>
   </div>
 </div>
+
+<% content_for(:before_body_end) do %>
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $('#user-wrapper').autoSize({
+        fixed: '#user-left',
+        fluid: '#user-right'
+      });
+    });
+  </script>
+<% end %>

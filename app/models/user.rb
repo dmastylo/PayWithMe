@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
   end
 
   def can_post_message?
-    self.messages.all.empty? || Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i
+    self.messages.all.empty? || Time.now.to_i - self.messages.all.first.created_at.to_i > Figaro.env.chat_limit.to_i / 1000.0
   end
 
   def online?

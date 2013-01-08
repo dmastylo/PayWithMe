@@ -99,7 +99,6 @@
 
     .message
     {
-        border-bottom: 1px solid #e8e8e8;
         margin-bottom: 10px;
 
         .profile-image
@@ -107,10 +106,19 @@
             float: left;
         }
 
-        .current-user-profile-image
+        .current-user
         {
-            float: right;
-            padding-right: 15px;
+            &.profile-image
+            {
+                float: right;
+                padding-right: 15px;
+            }
+
+            &.body
+            {
+                padding-right: 10px;
+                text-align: right;
+            }
         }
 
         img
@@ -122,13 +130,11 @@
         {
             padding-left: 10px;
             float: left;
+            @include box-sizing(border-box);
+            margin-top: 3px;
         }
 
-        .current-user-body
-        {
-            padding-right: 10px;
-            text-align: right;
-        }
+        .current-user-
 
         .message-content
         {
