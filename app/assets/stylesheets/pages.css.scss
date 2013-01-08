@@ -1,0 +1,36 @@
+// Team Page ==================================================================
+.team-page
+{
+
+    .page-header
+    {
+        padding-bottom: $mediumMargin;
+    }
+
+    .left
+    {
+        padding-left: $largeMargin;
+    }
+
+    .span4, .span12
+    {
+        margin-left: 0px;
+    }
+
+    .name, .desc
+    {
+        max-width: 225px;
+        text-align: left;
+        line-height: 1.2;
+    }
+
+    .well
+    {
+        max-width: 235px;
+    }
+
+    .team-row
+    {
+        padding-bottom: 20px;
+    }
+}

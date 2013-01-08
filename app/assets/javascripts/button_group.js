@@ -34,14 +34,6 @@
 		onCreate: function()
 		{
 			var that = this;
-			if(this.val)
-			{
-				this.$buttons.each(function()
-				{
-					if($(this).data("value") == that.val) $(this).trigger('click');
-				})
-			}
-
 			this.$buttons.click(function()
 			{
 				var $this = $(this);
@@ -56,6 +48,16 @@
 					that.showChild(name);
 				}
 			});
+
+			if(this.val)
+			{
+				this.$buttons.each(function()
+				{
+					console.log($(this).data("value"));
+					console.log(that.val);
+					if($(this).data("value") == that.val) $(this).trigger('click');
+				})
+			}
 		},
 
 		showChild: function(name)
