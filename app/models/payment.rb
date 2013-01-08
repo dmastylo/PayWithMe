@@ -62,6 +62,8 @@ class Payment < ActiveRecord::Base
       fees_payer: "PRIMARYRECEIVER"
     )
 
+    raise response.to_yaml
+
     gateway.redirect_url_for(response["payKey"])
   end
 

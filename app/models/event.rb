@@ -98,7 +98,11 @@ class Event < ActiveRecord::Base
   end
 
   def our_fee_amount_cents
-    (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
+    if send_amount_cents.present?
+      (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
+    else
+      nil
+    end
   end
 
   # Division types
