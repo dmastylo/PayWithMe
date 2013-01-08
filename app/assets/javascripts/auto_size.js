@@ -14,7 +14,7 @@
 
 		constructor: AutoSize,
 
-		resize: function(that)
+		resize: function()
 		{
 			if(this.$parent.is(":visible"))
 			{
@@ -30,9 +30,6 @@
 				fixedWidth = this.$fixed.outerWidth(true);
 				this.$parent.parent().hide();
 			}
-
-			console.log(parentWidth);
-			console.log(fixedWidth);
 
 			var offset = this.$fluid.outerWidth(true) - this.$fluid.outerWidth();
 			this.$fluid.css('width', (parentWidth - fixedWidth - offset));
