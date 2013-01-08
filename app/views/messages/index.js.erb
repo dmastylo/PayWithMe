@@ -6,6 +6,12 @@
     // Render new messages
     $('.message-list').append('<%= j render(@next_messages) %>');
 
+    // Set autosize
+    $("<% @next_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
+        fixed: '.profile-image',
+        fluid: '.body'
+    });
+
     // Remove the "loading messages" message
     $('.load-new-msgs').remove();
 
@@ -49,5 +55,11 @@
         stopOnFocus: true,
         stopOnMouseMove: true,
         interval: 500
+    });
+
+    // Set autosize
+    $("<% @new_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
+        fixed: '.profile-image',
+        fluid: '.body'
     });
 <% end %>
