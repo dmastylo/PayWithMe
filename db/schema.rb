@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130108234231) do
+ActiveRecord::Schema.define(:version => 20130106073552) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -149,11 +149,9 @@ ActiveRecord::Schema.define(:version => 20130108234231) do
     t.string   "guest_token"
     t.boolean  "using_oauth"
     t.datetime "last_seen"
-    t.string   "slug"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
-  add_index "users", ["slug"], :name => "index_users_on_slug"
 
 end
