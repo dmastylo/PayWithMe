@@ -12,8 +12,8 @@
 <div class="container">
 	<h3 class="center">Sign up via</h3>
 	<div class="center span12 home-page-span">
-		<button class="btn btn-primary btn-large">Facebook</button>
-		<button class="btn btn-primary btn-large">Twitter</button>
-		<button class="btn btn-primary btn-large">Email</button>
+		<%= link_to "Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-large" %>
+		<%= link_to "Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-large" %>
+		<%= link_to "Email", new_user_registration_path, class: "btn btn-primary btn-large" %>
 	</div>
 </div>
