@@ -26,7 +26,6 @@ class EventUsersController < ApplicationController
     end
   end
 
-<<<<<<< HEAD
   def pay
     payment = Payment.create_or_find_from_event_user(@event_user)
     redirect_to payment.pay!
@@ -52,9 +51,7 @@ private
     @event_user = current_user.event_users.find_by_id(params[:id])
     redirect_to root_path unless @event_user.present?
   end
-end
-=======
-private
+
   def event_public_or_user_organizes_event
     @event_organizer = current_user.organized_events.find_by_id(params[:event_id] || params[:id])
     @event = Event.find(params[:event_id] || params[:id])
@@ -75,4 +72,3 @@ private
     end
   end
 end
->>>>>>> master
