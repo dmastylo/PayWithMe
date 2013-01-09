@@ -15,7 +15,7 @@ protected
   def user_in_group
     @group = Group.find(params[:group_id] || params[:id])
 
-    if @group.members.include?(current_user)
+    if @group.members.include?(current_user) || current_user.is_admin?
       true
     else
       flash[:error] = "You're not on the list."
@@ -35,7 +35,7 @@ protected
   def user_in_event
     @event = Event.find_by_id(params[:event_id] || params[:id])
 
-    if !@event.members.include?(current_user) && !@event.public?
+    if !@event.members.include?(current_user) && !@event.public? && !current_user.is_admin?
       flash[:error] = "You're not on the list."
       redirect_to root_path
     end

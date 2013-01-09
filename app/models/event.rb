@@ -224,6 +224,7 @@ class Event < ActiveRecord::Base
     end
   end
 
+  # This method is awesome
   def independent_members
     nfgdi_members = self.paying_members
 
@@ -245,6 +246,10 @@ class Event < ActiveRecord::Base
 
   def paid_at(user)
     event_user(user).paid_at
+  end
+
+  def to_param
+    "#{id}-#{title}".parameterize
   end
 
 private
