@@ -89,9 +89,9 @@ class NewsItem < ActiveRecord::Base
 
   def path
     if event?
-      Rails.application.routes.url_helpers.event_path(foreign_id)
+      Rails.application.routes.url_helpers.event_path(event)
     elsif group?
-      Rails.application.routes.url_helpers.group_path(foreign_id)
+      Rails.application.routes.url_helpers.group_path(group)
     end
   end
 
