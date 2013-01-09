@@ -45,36 +45,10 @@
     margin: 0 auto;
 }
 
-#home-page-desc
-{
-    padding-bottom: 10px;
-}
-
-.home-page
-{
-    h3, .btn
-    {
-        font-family: Helvetica;
-    }
-
-    #span
-    {
-        margin-left: 0;
-        padding-top: 10px;
-        margin-bottom: 20px;
-    }
-}
-
-.home-page-desc
-{
-    text-align: center;
-    padding-bottom: 10px;
-}
-
 .home-page-sign-up
 {
     text-align: center;
-    margin: 0 auto;
+    padding-bottom: 10px;
 
     .span1
     {
@@ -86,21 +60,19 @@
     {
         text-align: center;
     }
+
+    h3
+    {
+        font-family: Helvetica;
+    }
 }
 
 #home-page-logo
 {
     width: 600px;
     margin-bottom: 20px;
-
     float: none;
     text-align: center;
     margin: 0 auto;
     padding-bottom: 20px;
-
-    .span1
-    {
-        float: none;
-        text-align: center;
-    }
 }
