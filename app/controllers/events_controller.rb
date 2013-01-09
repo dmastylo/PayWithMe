@@ -34,6 +34,7 @@ class EventsController < ApplicationController
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.size
     @message = Message.new
+    @event_user = EventUser.new unless @event.members.include?(current_user)
   end
 
   def index
