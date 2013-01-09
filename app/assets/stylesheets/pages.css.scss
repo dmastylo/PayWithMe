@@ -41,8 +41,11 @@
     background-color: $lightGray;
     width: 500px;
     height: 300px;
+    text-align: center;
+    margin: 0 auto;
 }
 
+<<<<<<< HEAD
 #home-page-desc
 {
     padding-bottom: 10px;
@@ -60,11 +63,46 @@
         margin-left: 0;
         padding-top: 10px;
         margin-bottom: 20px;
+=======
+.home-page-desc
+{
+    text-align: center;
+    padding-bottom: 10px;
+}
+
+.home-page-sign-up
+{
+    text-align: center;
+    margin: 0 auto;
+
+    .span1
+    {
+        float: none;
+        margin: 0 auto;
+    }
+
+    .btn
+    {
+        text-align: center;
+>>>>>>> 5464f1b67dcbcdca50325d8dc97f578b3981d03d
     }
 }
 
 #home-page-logo
 {
+<<<<<<< HEAD
     width: 600px;
     margin-bottom: 20px;
+=======
+    float: none;
+    text-align: center;
+    margin: 0 auto;
+    padding-bottom: 20px;
+
+    .span1
+    {
+        float: none;
+        text-align: center;
+    }
+>>>>>>> 5464f1b67dcbcdca50325d8dc97f578b3981d03d
 }
