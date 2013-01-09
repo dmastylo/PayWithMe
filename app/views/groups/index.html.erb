@@ -11,6 +11,10 @@
     <% end %>
   </div>
 </div>
-<div class="row">
-  <%= render @groups %>
-</div>
+<% if @groups.empty? %>
+  You are not in any groups!
+<% else %>
+  <div class="row">
+    <%= render @groups %>
+  </div>
+<% end %>
