@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
-  after_filter :user_activity
+  before_filter :user_activity
 
   def default_url_options
     if Rails.env.production?
