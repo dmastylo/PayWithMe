@@ -41,21 +41,43 @@
     background-color: $lightGray;
     width: 500px;
     height: 300px;
+    text-align: center;
+    margin: 0 auto;
 }
 
-#home-page-title
+.home-page-desc
 {
-    margin-bottom: 10px;
-}
-
-#home-page-desc
-{
+    text-align: center;
     padding-bottom: 10px;
+}
+
+.home-page-sign-up
+{
+    text-align: center;
+    margin: 0 auto;
+
+    .span1
+    {
+        float: none;
+        margin: 0 auto;
+    }
+
+    .btn
+    {
+        text-align: center;
+    }
 }
 
 .home-page-span
 {
-    margin-left: 0;
-    padding-top: 10px;
-    margin-bottom: 20px;
+    float: none;
+    text-align: center;
+    margin: 0 auto;
+    padding-bottom: 20px;
+
+    .span1
+    {
+        float: none;
+        text-align: center;
+    }
 }

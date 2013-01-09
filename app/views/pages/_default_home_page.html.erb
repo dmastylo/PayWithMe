@@ -1,19 +1,25 @@
-<center>
-	<h1 id="home-page-title">Welcome to PayWithMe</h1>
-	<h3 id="home-page-desc">Facilitating group payments for all your events!</h3>
-</center>
+<div class="row">
+    <div class="span12">
+    	<h1>Welcome to PayWithMe</h1>
+    	<div class="home-page-desc"><h3>Facilitating group payments for all your events!</h3></div>
+    </div>
+</div>
 
-<center>
-	<div class="temp-box">
-		<center>500x300</center>
-	</div>
-</center>
+<div class="row">
+    <div class="span12">
+    	<div class="temp-box">
+    		500x300
+    	</div>
+    </div>
+</div>
 
-<div class="container">
-	<h3 class="center">Sign up via</h3>
-	<div class="center span12 home-page-span">
-		<%= link_to "Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-large" %>
-		<%= link_to "Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-large" %>
-		<%= link_to "Email", new_user_registration_path, class: "btn btn-primary btn-large" %>
-	</div>
+<div class="row">
+    <div class="span12">
+        <div class="home-page-sign-up">
+            <h3>Sign up via</h3>
+        	<%= link_to "Facebook", user_omniauth_authorize_path(:facebook), class: "span1 btn btn-primary btn-large" %>
+        	<%= link_to "Twitter", user_omniauth_authorize_path(:twitter), class: "span1 btn btn-primary btn-large" %>
+        	<%= link_to "Email", new_user_registration_path, class: "span1 btn btn-primary btn-large" %>
+        </div>
+    </div>
 </div>
