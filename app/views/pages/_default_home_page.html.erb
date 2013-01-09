@@ -1,17 +1,16 @@
 <center>
-	<h1 id="home-page-title">Welcome to PayWithMe</h1>
-	<h3 id="home-page-desc">Facilitating group payments for all your events!</h3>
+	<%= image_tag "poster_logo.png", id: "home-page-logo"%>
 </center>
 
 <center>
-	<div class="temp-box">
+	<div id="temp-box">
 		<center>500x300</center>
 	</div>
 </center>
 
-<div class="container">
+<div class="container home-page">
 	<h3 class="center">Sign up via</h3>
-	<div class="center span12 home-page-span">
+	<div class="center span12" id="span">
 		<%= link_to "Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-large" %>
 		<%= link_to "Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-large" %>
 		<%= link_to "Email", new_user_registration_path, class: "btn btn-primary btn-large" %>

@@ -36,16 +36,11 @@
 }
 
 // Home Page ==================================================================
-.temp-box
+#temp-box
 {
     background-color: $lightGray;
     width: 500px;
     height: 300px;
-}
-
-#home-page-title
-{
-    margin-bottom: 10px;
 }
 
 #home-page-desc
@@ -53,9 +48,23 @@
     padding-bottom: 10px;
 }
 
-.home-page-span
+.home-page
 {
-    margin-left: 0;
-    padding-top: 10px;
+    h3, .btn
+    {
+        font-family: Helvetica;
+    }
+
+    #span
+    {
+        margin-left: 0;
+        padding-top: 10px;
+        margin-bottom: 20px;
+    }
+}
+
+#home-page-logo
+{
+    width: 600px;
     margin-bottom: 20px;
 }
