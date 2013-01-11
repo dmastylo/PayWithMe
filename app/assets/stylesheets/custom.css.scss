@@ -252,8 +252,14 @@ footer
     margin-top: 25px;
 }
 
-#footer-link{
+.footer-link
+{
     color: $mediumGray;
+
+    &:hover
+    {
+        color: $mediumGray;
+    }
 }
 
 // Modals =====================================================================
