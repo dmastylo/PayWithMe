@@ -10,6 +10,7 @@
 #  foreign_id   :integer
 #  foreign_type :integer
 #  subject_id   :integer
+#  read         :boolean          default(FALSE)
 #
 
 class NewsItem < ActiveRecord::Base
@@ -49,6 +50,7 @@ class NewsItem < ActiveRecord::Base
         member_news_items = member.news_items # Prevent multiple database queries below
         if (!member_news_items.empty? && member_news_items.first.message? && member_news_items.first.foreign_id == event.id)
           member.news_items.first.touch # This just changes updated_at to Time.now
+          member.news_items.first.update_column(:read, false)
         else
           member.news_items.create!(values)
          end
@@ -72,6 +74,12 @@ class NewsItem < ActiveRecord::Base
 
   # Scope
   default_scope order('updated_at DESC')
+
+  def read!
+    if !read?
+      update_column(:read, true)
+    end
+  end
 
   def body
     if event?
