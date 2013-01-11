@@ -65,10 +65,23 @@ p
 // Wells ======================================================================
 .well
 {
+    position: relative;
     border-radius: 0;
     box-shadow: none;
     background-color: $lightGray;
     border: 1px solid $mediumGray;
+
+    .organized
+    {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+
+.organized-event
+{
+    background-color: $mediumGray;
 }
 
 // Forms ======================================================================
