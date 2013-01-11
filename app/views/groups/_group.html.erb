@@ -1,7 +1,9 @@
 <div class="group span3">
   <div class="well <% if current_user == group.organizer %>organized-event<% end %>">
     <% if current_user == group.organizer %>
-      <div class="organized"><i class="icon-wrench"></i></div>
+      <div class="organized">
+        <a href="#" rel="tooltip" title="You organize this event!" data-placement="right"><i class="icon-wrench"></i></a>
+      </div>
     <% end %>
     <h4 style="margin-top: 0;"><%= link_to group.title, group %></h4>
     <%= group.members.count %> members
