@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-    after_filter :read_news_items
+    after_filter :read_news_items, only: [:index]
 
     def index
         @upcoming_events = current_user.limited_upcoming_events if user_signed_in?
@@ -8,6 +8,6 @@ class PagesController < ApplicationController
 
 private
     def read_news_items
-        @news_items.each do |news_item| news_item.read! end
+        @news_items.each do |news_item| news_item.read! end if user_signed_in?
     end
 end
