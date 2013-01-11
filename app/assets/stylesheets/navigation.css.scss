@@ -37,6 +37,11 @@
                     }
                 }
 
+                .current-page
+                {
+                    background-color: $mediumBlue;
+                }
+
                 i
                 {
                     margin-top: 5px;
@@ -71,6 +76,12 @@ ul.dropdown-menu
             background-color: $lightBlue !important;
             background-image: none !important;
         }
+    }
+
+    .current-page
+    {
+        background-color: $lightBlue !important;
+        background-image: none !important;
     }
 
     &:before, &:after
