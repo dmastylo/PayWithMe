@@ -58,6 +58,12 @@
         <% end %>
       </div>
     </div>
+    <% if current_user == @event.organizer %>
+    <% elsif @event_user.paid? %>
+      <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
+    <% else %>
+      <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} Now", pay_event_user_path(@event_user), class: "btn btn-primary btn-block" %>
+    <% end %>
   </div>
   <div class="span7">
     <h3>Chat Board</h3>
