@@ -41,8 +41,9 @@ ul.vertical-list
 
     li {
         border-top: 1px solid $lightGray;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding: 10px 10px;
+        // padding-top: 10px;
+        // padding-bottom: 10px;
 
         a {
             color: $offBlack;

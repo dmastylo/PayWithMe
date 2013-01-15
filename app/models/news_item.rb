@@ -16,7 +16,7 @@
 class NewsItem < ActiveRecord::Base
 
   # Accessible Attributes
-  attr_accessible :news_type, :foreign_id, :foreign_type, :subject_id
+  attr_accessible :news_type, :foreign_id, :foreign_type, :subject_id, :read
 
   # Validations
   validates_presence_of :title, :news_type, :foreign_type, :user_id, :foreign_id
