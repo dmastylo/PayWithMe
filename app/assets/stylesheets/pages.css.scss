@@ -34,3 +34,58 @@
         padding-bottom: 20px;
     }
 }
+
+// Home Page ==================================================================
+#temp-box
+{
+    width: 500px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.home-page-sign-up
+{
+    text-align: center;
+    padding-bottom: 10px;
+
+    .sign-up-links
+    {
+        list-style: none;
+        margin: 0 auto;
+
+        li
+        {
+            display: inline-block;
+        }
+    }
+
+    .span1
+    {
+        float: none;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .btn
+    {
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    h3
+    {
+        font-family: Helvetica;
+    }
+}
+
+#home-page-logo
+{
+    width: 600px;
+    margin-bottom: 20px;
+    float: none;
+    text-align: center;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
+
+// Contact Page ==================================================================

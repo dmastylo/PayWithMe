@@ -13,6 +13,7 @@
 #
 
 class EventUser < ActiveRecord::Base
+  
   # Accessible attributes
   attr_accessible :amount, :due_at, :event_id, :paid_at, :user_id
 

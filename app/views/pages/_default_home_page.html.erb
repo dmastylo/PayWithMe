@@ -1,0 +1,24 @@
+<center>
+	<%= image_tag "poster_logo.png", id: "home-page-logo"%>
+</center>
+
+<div class="row">
+    <div class="span12">
+    	<div id="temp-box">
+    		<%= image_tag "home_page_graphic.png" %>
+    	</div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="span12">
+        <div class="home-page-sign-up">
+            <h3>Sign up via</h3>
+            <ul class="sign-up-links">
+            	<li><%= link_to "Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-large" %></li>
+            	<li><%= link_to "Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-large" %></li>
+            	<li><%= link_to "Email", new_user_registration_path, class: "btn btn-primary btn-large" %></li>
+            </ul>
+        </div>
+    </div>
+</div>

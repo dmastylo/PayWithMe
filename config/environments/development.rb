@@ -48,7 +48,7 @@ PayWithMe::Application.configure do
   config.assets.debug = true
 
   # Default URL
-  routes.default_url_options[:host] = "71.10.227.139"
+  routes.default_url_options[:host] = "localhost:3000"
 
   # Active merchant and PayPal
   ActiveMerchant::Billing::Base.mode = :test

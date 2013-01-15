@@ -1,9 +1,8 @@
 class EventUsersController < ApplicationController
   before_filter :authenticate_user!, except: [:ipn]
-  before_filter :user_organizes_event, only: [:create]
+  before_filter :event_public_or_user_organizes_event, only: [:create]
   before_filter :user_owns_event_user, only: [:pay]
   skip_before_filter :verify_authenticity_token, only: [:ipn]
-  before_filter :event_public_or_user_organizes_event
 
   def create
     # for some reason member_ids.include? does not work
@@ -54,16 +53,14 @@ private
 
   def event_public_or_user_organizes_event
     @event_organizer = current_user.organized_events.find_by_id(params[:event_id] || params[:id])
-    @event = Event.find(params[:event_id] || params[:id])
+    @event = @event_organizer || Event.find(params[:event_id] || params[:id])
   
     if @event_organizer.nil?
       # If user doesn't organize event, it must be public and the user_id must be equal to current_user
-      @public_event = Event.find(params[:event_id] || params[:id]).public?
-  
-      if @public_event
-        if User.find(params[:event_user][:user_id]) != current_user
-            flash[:error] = "Trying to hack...?"
-            redirect_to root_path
+      if @event.public?
+        if params[:event_user][:user_id] != current_user.id
+          flash[:error] = "Trying to hack...?"
+          redirect_to root_path
         end
       else
         flash[:error] = "Not a public event."

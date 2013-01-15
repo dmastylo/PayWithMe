@@ -11,7 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130108234231) do
+ActiveRecord::Schema.define(:version => 20130114024821) do
+
+  create_table "contact_forms", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -107,11 +112,12 @@ ActiveRecord::Schema.define(:version => 20130108234231) do
   create_table "news_items", :force => true do |t|
     t.integer  "news_type"
     t.integer  "user_id"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.integer  "foreign_id"
     t.integer  "foreign_type"
     t.integer  "subject_id"
+    t.boolean  "read",         :default => false
   end
 
   add_index "news_items", ["user_id"], :name => "index_news_items_on_user_id"
@@ -163,11 +169,9 @@ ActiveRecord::Schema.define(:version => 20130108234231) do
     t.string   "guest_token"
     t.boolean  "using_oauth"
     t.datetime "last_seen"
-    t.string   "slug"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
-  add_index "users", ["slug"], :name => "index_users_on_slug"
 
 end

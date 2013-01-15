@@ -10,12 +10,13 @@
 #  foreign_id   :integer
 #  foreign_type :integer
 #  subject_id   :integer
+#  read         :boolean          default(FALSE)
 #
 
 class NewsItem < ActiveRecord::Base
 
   # Accessible Attributes
-  attr_accessible :news_type, :foreign_id, :foreign_type, :subject_id
+  attr_accessible :news_type, :foreign_id, :foreign_type, :subject_id, :read
 
   # Validations
   validates_presence_of :title, :news_type, :foreign_type, :user_id, :foreign_id
@@ -48,7 +49,7 @@ class NewsItem < ActiveRecord::Base
       unless member == message_creator
         member_news_items = member.news_items # Prevent multiple database queries below
         if (!member_news_items.empty? && member_news_items.first.message? && member_news_items.first.foreign_id == event.id)
-          member.news_items.first.touch # This just changes updated_at to Time.now
+          member.news_items.first.update_attributes(read: false)
         else
           member.news_items.create!(values)
          end
@@ -73,6 +74,12 @@ class NewsItem < ActiveRecord::Base
   # Scope
   default_scope order('updated_at DESC')
 
+  def read!
+    if !read?
+      update_column(:read, true)
+    end
+  end
+
   def body
     if event?
       if invite?
@@ -89,9 +96,9 @@ class NewsItem < ActiveRecord::Base
 
   def path
     if event?
-      Rails.application.routes.url_helpers.event_path(foreign_id)
+      Rails.application.routes.url_helpers.event_path(event)
     elsif group?
-      Rails.application.routes.url_helpers.group_path(foreign_id)
+      Rails.application.routes.url_helpers.group_path(group)
     end
   end
 
