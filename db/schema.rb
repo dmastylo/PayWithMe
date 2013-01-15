@@ -11,7 +11,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130111061757) do
+ActiveRecord::Schema.define(:version => 20130114024821) do
+
+  create_table "contact_forms", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -43,12 +48,13 @@ ActiveRecord::Schema.define(:version => 20130111061757) do
   end
 
   create_table "event_users", :force => true do |t|
-    t.integer "event_id"
-    t.integer "user_id"
-    t.integer "amount_cents",    :default => 0
-    t.date    "due_date"
-    t.date    "paid_date"
-    t.boolean "invitation_sent", :default => false
+    t.integer  "event_id"
+    t.integer  "user_id"
+    t.integer  "amount_cents",    :default => 0
+    t.datetime "due_date"
+    t.datetime "paid_date"
+    t.boolean  "invitation_sent", :default => false
+    t.integer  "payment_id"
   end
 
   create_table "events", :force => true do |t|

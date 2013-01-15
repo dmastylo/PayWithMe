@@ -46,6 +46,7 @@ gem 'roadie'
 gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'actionmailer-callbacks'
+gem 'mail_form'
 
 # Javascript
 gem 'js-routes'
