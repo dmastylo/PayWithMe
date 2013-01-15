@@ -8,7 +8,10 @@
       <%= f.label :description %>
       <%= f.text_area :description, class: "input-block-level", rows: 5 %>
       <%= f.label :start_at %>
-      <%= f.text_field :start_at, class: "input-block-level", placeholder: "mm/dd/yyyy hh:mm", value: (@event.start_at.to_s if @event.start_at) %>
+      <div class="start_at">
+        <%= f.text_field :start_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
+        <%= f.text_field :start_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
+      </div>
     </div>
   </div>
   <div class="span6">
@@ -108,10 +111,14 @@
       $('.btn-group .btn').tooltip({
         container: 'body'
       });
-      $('.due_at').autoSize({
-        fixed: '#event_due_at_time',
-        fluid: '#event_due_at_date',
-        offset: 4
+
+      $.each(['due_at', 'start_at'], function(index, name)
+      {
+        $('.' + name).autoSize({
+          fixed: '#event_' + name + '_time',
+          fluid: '#event_' + name + '_date',
+          offset: 4
+        });
       });
 
       $("#event_division_type").buttonGroup();
