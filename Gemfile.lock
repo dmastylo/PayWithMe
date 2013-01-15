@@ -151,6 +151,8 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mail_form (1.4.1)
+      actionmailer (~> 3.0)
     method_source (0.8.1)
     mime-types (1.19)
     money (5.1.0)
@@ -325,6 +327,7 @@ DEPENDENCIES
   guard-spork
   jquery-rails
   js-routes
+  mail_form
   money-rails
   mysql2
   omniauth-facebook

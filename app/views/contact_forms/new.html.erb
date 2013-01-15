@@ -1,0 +1,58 @@
+<% provide(:title, "Contact Us") %>
+<div class="page-header">
+	<h2>Contact Us</h2>
+</div>
+<div class="row">	
+	<div class="span4">
+		<h3>Have a Question?</h3>
+		<div class="well">
+			<p>
+				Like what you see? Find something that doesn't work? Need someone 
+				to listen to your rant about how your roommate never cleans up after 
+				themself? We would be happy to hear it!
+			</p>
+			<p>
+				For security and legal reasons we will need a little information from
+				you. We will not sell or do anything sketchy with your email; it is only
+				there if we need to contact you back about a pressing matter.
+			</p>
+		</div>
+	</div>
+	<div class="span8">
+		<h3>Drop Us a Line</h3>
+		<div class="well">
+			<%= form_for @contact_form do |f| %>
+
+				<div class="control-group">
+					<%= f.label :name, class: 'control-label' %>
+					<div class="controls">
+						<%= f.text_field :name, class: 'input-block-level', placeholder: 'First Last' %>
+					</div>
+				</div>
+
+				<div class="control-group">					
+					<%= f.label :email, class: 'control-label' %>
+					<div class="controls">
+						<%= f.email_field :email, class: 'input-block-level', placeholder: 'email@example.com' %>
+					</div>
+				</div>
+
+				<div class="control-group">					
+					<%= f.label :message, class: 'control-label' %>
+					<div class="controls">
+						<%= f.text_area :message, class: 'input-block-level', placeholder: 'Enter your message here.', rows: 6 %>
+					</div>
+				</div>
+
+				<%= f.hidden_field :nickname %>
+
+				<div class="form-actions">
+					<%= f.submit "Send message", class: 'btn btn-primary' %>
+				</div>
+
+			<% end %>
+		</div>
+	</div>
+</div>
+<div class="row">
+</div>

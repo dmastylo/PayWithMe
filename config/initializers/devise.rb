@@ -4,7 +4,7 @@ Devise.setup do |config|
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class with default "from" parameter.
-  config.mailer_sender = "noreply@paywithme.co"
+  config.mailer_sender = "noreply@paywith.me"
 
   # Configure the class responsible to send e-mails.
   # config.mailer = "Devise::Mailer"
@@ -206,7 +206,7 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
-  config.omniauth :twitter, "sPoEsKdwXGoQojMlooJfBg", "7JK4A5t9AmVgLvekorTnW3uvhN0fSjOwjzFPs8Sbb4"
+  config.omniauth :twitter, "cL8nIQpvNApkT1nATe0A", "ktYwHKA5L1kNfRzIkwwMzs7XxXANHmp1xHPW55kIcOU"
   config.omniauth :facebook, "141836152608292", "b34af2003a66f9e3a6b4c6a3ab6ad701"
 
   # ==> Warden configuration
