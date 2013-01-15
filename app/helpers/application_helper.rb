@@ -27,4 +27,9 @@ module ApplicationHelper
       {}
     end
   end
+
+  # If the link points to the current page, give it a different style
+  def current_page_link(path)
+    "current-page" if current_page?(path)
+  end
 end
