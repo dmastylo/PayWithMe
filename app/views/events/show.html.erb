@@ -5,9 +5,9 @@
       <h2>
         <%= @event.title %>
         <% if @event.public? %>
-          <i class="icon-globe"></i>
+          <a href="#" rel="tooltip" title="Public event" data-placement="top"><i class="icon-globe"></i></a>
         <% else %>
-          <i class="icon-lock"></i>
+          <a href="#" rel="tooltip" title="Private event" data-placement="top"><i class="icon-lock"></i></a>
         <% end %>
       </h2>
     </div>
