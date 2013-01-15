@@ -1,4 +1,8 @@
-<li>
+<% if !news_item.read? %>
+    <li class="unread-news-item">
+<% else %>
+    <li>
+<% end %>
     <strong><%= link_to news_item.title, news_item.path %></strong>
     <span class="news-timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago</small></span><br />
     <%= news_item.body %>

@@ -41,8 +41,9 @@ ul.vertical-list
 
     li {
         border-top: 1px solid $lightGray;
-        margin-top: 10px;
-        padding-top: 10px;
+        padding: 10px 10px;
+        // padding-top: 10px;
+        // padding-bottom: 10px;
 
         a {
             color: $offBlack;
@@ -51,5 +52,10 @@ ul.vertical-list
         .news-timestamp {
             color: $mediumGray;
         }
+    }
+
+    .unread-news-item
+    {
+        background: $lightGray;
     }
 }
