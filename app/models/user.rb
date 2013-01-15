@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
   end
 
   def online?
-    self.last_seen > 3.minutes.ago
+    self.last_seen.present? && self.last_seen > 3.minutes.ago
   end
 
   def first_name
@@ -193,7 +193,7 @@ class User < ActiveRecord::Base
   end
 
   def is_admin?
-    ["dmastylo@gmail.com", "cceli@codequarry.net", "agulati@codequarry.net", "kyle.brody12@gmail.com", "jaschonberger@gmail.com", "rozele@rpi.edu"].include? self.email
+    %w{ dmastylo@gmail.com cceli@codequarry.net agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
   end
 
   def to_param
