@@ -60,6 +60,11 @@ p
     margin-bottom: 10px;
     border: 0;
     padding: 0;
+
+    i 
+    {
+        margin-top: 15px;
+    }
 }
 
 // Wells ======================================================================
@@ -75,12 +80,17 @@ p
     {
         position: absolute;
         right: 2px;
-        top: 0;
+        top: -5px;
 
         .tooltip
         {
             width: 135px;
         }
+    }
+
+    i
+    {
+        margin-top: 5px;
     }
 }
 
