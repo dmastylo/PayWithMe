@@ -7,7 +7,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-.datepicker {
+.datepicker,.timepicker {
   top: 0;
   left: 0;
   padding: 4px;
@@ -20,7 +20,7 @@
 	}*/
 
 }
-.datepicker:before {
+.datepicker:before,.timepicker:before {
   content: '';
   display: inline-block;
   border-left: 7px solid transparent;
@@ -31,7 +31,7 @@
   top: -7px;
   left: 6px;
 }
-.datepicker:after {
+.datepicker:after,.timepicker:after {
   content: '';
   display: inline-block;
   border-left: 6px solid transparent;
