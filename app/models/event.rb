@@ -26,6 +26,7 @@ class Event < ActiveRecord::Base
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
   monetize :send_amount_cents, allow_nil: true
+  monetize :our_fee_amount_cents, allow_nil: true
 
   # Validations
   # ========================================================
@@ -45,7 +46,7 @@ class Event < ActiveRecord::Base
   # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
+  has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_at, event_users.paid_at"
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
@@ -60,9 +61,9 @@ class Event < ActiveRecord::Base
     if division_type == DivisionType::Fundraise || paying_members.size == 0 || send_amount_cents.nil?
       nil
     elsif fee_type == FeeType::OrganizerPays
-      paying_members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)
+      (paying_members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)).floor
     else
-      total_amount_cents
+      split_amount_cents
     end
   end
 
@@ -93,6 +94,14 @@ class Event < ActiveRecord::Base
       nil
     else
       total_amount_cents / paying_members.size
+    end
+  end
+
+  def our_fee_amount_cents
+    if send_amount_cents.present?
+      (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
+    else
+      nil
     end
   end
 
@@ -178,7 +187,7 @@ class Event < ActiveRecord::Base
   def set_event_user_attributes(exclude_from_notifications)
     self.event_users.each do |event_user|
       if event_user.member != exclude_from_notifications
-        event_user.due_date = self.due_at
+        event_user.due_at = self.due_at
         event_user.amount_cents = self.send_amount_cents
         event_user.save
       end

@@ -13,7 +13,7 @@
       <% if @event.present? %>
         <% if user == @event.organizer %>
         Event Organizer
-        <% elsif user.paid_date.present? %>
+        <% elsif user.paid_at.present? %>
           Paid
         <% else %>
           Unpaid

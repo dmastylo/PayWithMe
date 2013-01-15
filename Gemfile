@@ -51,6 +51,9 @@ gem 'mail_form'
 # Javascript
 gem 'js-routes'
 
+# Payments
+gem 'active_paypal_adaptive_payment'
+
 group :development, :test do
   gem 'sqlite3'
 end
