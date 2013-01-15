@@ -54,13 +54,14 @@ class User < ActiveRecord::Base
   # ========================================================
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
   has_many :event_users, dependent: :destroy
-  has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_date, event_users.paid_date"
+  has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_at, event_users.paid_at"
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :linked_accounts, dependent: :destroy
   has_many :news_items, dependent: :destroy
+  has_many :payments, dependent: :destroy
 
   # Scopes
   # ========================================================

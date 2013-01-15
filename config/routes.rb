@@ -31,6 +31,13 @@ PayWithMe::Application.routes.draw do
     end
   end
 
+  resources :event_users, only: [] do
+    member do
+      get 'pay'
+      post 'ipn'
+    end
+  end
+
   # Error Handling
   # ===========================================================================
   match "/404", :to => "errors#not_found"

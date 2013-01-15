@@ -1,5 +1,8 @@
 class EventUsersController < ApplicationController
-  before_filter :event_public_or_user_organizes_event
+  before_filter :authenticate_user!, except: [:ipn]
+  before_filter :event_public_or_user_organizes_event, only: [:create]
+  before_filter :user_owns_event_user, only: [:pay]
+  skip_before_filter :verify_authenticity_token, only: [:ipn]
 
   def create
     # for some reason member_ids.include? does not work
@@ -22,7 +25,32 @@ class EventUsersController < ApplicationController
     end
   end
 
+  def pay
+    payment = Payment.create_or_find_from_event_user(@event_user)
+    redirect_to payment.pay!
+  end
+
+  def ipn
+    notify = ActiveMerchant::Billing::Integrations::PaypalAdaptivePayment::Notification.new(request.raw_post)
+    event_user = EventUser.find_by_id(params[:id])
+    if notify.acknowledge && event_user.present?
+      if notify.complete?
+        event_user.paid_at = Time.now
+        event_user.payment.paid_at = Time.now
+        event_user.payment.save
+        event_user.save
+      else
+        # Nothing for now
+      end
+    end
+  end
+
 private
+  def user_owns_event_user
+    @event_user = current_user.event_users.find_by_id(params[:id])
+    redirect_to root_path unless @event_user.present?
+  end
+
   def event_public_or_user_organizes_event
     @event_organizer = current_user.organized_events.find_by_id(params[:event_id] || params[:id])
     @event = @event_organizer || Event.find(params[:event_id] || params[:id])
