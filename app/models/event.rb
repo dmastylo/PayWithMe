@@ -215,6 +215,7 @@ class Event < ActiveRecord::Base
     end
   end
 
+  # This method is awesome
   def independent_members
     nfgdi_members = self.members
 
@@ -223,6 +224,10 @@ class Event < ActiveRecord::Base
     end
 
     nfgdi_members
+  end
+
+  def to_param
+    "#{id}-#{title}".parameterize
   end
 
 private

@@ -40,3 +40,13 @@
     </div>
   </div>
 </div>
+<div class="row">
+  <div class="span12">
+    <h3>Group Events</h3>
+    <% if @group.events.empty? %>
+      No group events!
+    <% else %>
+      <%= render partial: "events/profile_event", collection: @group.events, as: :event %>
+    <% end %>
+  </div>
+</div>

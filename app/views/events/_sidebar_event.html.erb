@@ -1,6 +1,6 @@
 <div class="well">
   <h4 style="margin-top: 0;">
-    <%= link_to event.title, event %>
+    <%= link_to truncate(event.title, :length => 29, :separator => ' '), event %>
     <% if event.public? %>
       <i class="icon-globe"></i>
     <% else %>

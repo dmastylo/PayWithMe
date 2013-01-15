@@ -238,6 +238,16 @@ footer
     margin-top: 25px;
 }
 
+.footer-link
+{
+    color: $mediumGray;
+
+    &:hover
+    {
+        color: $mediumGray;
+    }
+}
+
 // Modals =====================================================================
 .modal#stub-login-modal
 {
