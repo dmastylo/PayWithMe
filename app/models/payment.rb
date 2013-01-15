@@ -37,7 +37,19 @@ class Payment < ActiveRecord::Base
   # monetize :amount_cents
 
   def self.create_or_find_from_event_user(event_user)
-    Payment.where(payer_id: event_user.member.id, payee_id: event_user.event.organizer.id, event_id: event_user.event.id).first || create(payer_id: event_user.member.id, payee_id: event_user.event.organizer.id, event_id: event_user.event.id, due_at: event_user.due_at, requested_at: event_user.event.created_at, event_user_id: event_user.id)
+    payment_attributes = {
+      payer_id: event_user.member.id,
+      payee_id: event_user.event.organizer.id,
+      event_id: event_user.event.id
+    }
+    
+    Payment.where(
+      payment_attributes
+    ).first || create(payment_attributes.merge(
+      due_at: event_user.due_at,
+      requested_at: event_user.event.created_at,
+      event_user_id: event_user.id
+    ))
   end
 
   def pay!
