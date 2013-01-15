@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
   end
 
   def online?
-    self.last_seen > 3.minutes.ago
+    self.last_seen.present? && self.last_seen > 3.minutes.ago
   end
 
   def first_name
