@@ -82,6 +82,12 @@ textarea,input
     }
 }
 
+input.input-border-box
+{
+    box-sizing: border-box;
+    height: 28px;
+}
+
 .input-append,.input-prepend
 {
     input

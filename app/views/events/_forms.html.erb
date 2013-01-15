@@ -15,7 +15,10 @@
     <h3>Payment Information</h3>
     <div class="well">
       <%= f.label :due_at %>
-      <%= f.text_field :due_at, class: "input-block-level", placeholder: "mm/dd/yyyy hh:mm", value: (@event.due_at.to_s if @event.due_at) %>
+      <div class="due_at">
+        <%= f.text_field :due_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
+        <%= f.text_field :due_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
+      </div>
       <%= f.hidden_field :division_type %>
       <div class="btn-group input-block-level push-bottom" id="event_division_type_btn_group" data-toggle="buttons-radio">
         <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount.">Divide among group</button>
@@ -103,6 +106,11 @@
       $('.datepicker').datepicker();
       $('.btn-group .btn').tooltip({
         container: 'body'
+      });
+      $('.due_at').autoSize({
+        fixed: '#event_due_at_time',
+        fluid: '#event_due_at_date',
+        offset: 4
       });
 
       $("#event_division_type").buttonGroup();

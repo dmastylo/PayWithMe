@@ -53,8 +53,6 @@
 			{
 				this.$buttons.each(function()
 				{
-					console.log($(this).data("value"));
-					console.log(that.val);
 					if($(this).data("value") == that.val) $(this).trigger('click');
 				})
 			}

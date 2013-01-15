@@ -154,6 +154,21 @@ class Event < ActiveRecord::Base
     Private = 2
   end
 
+  # Dates
+  # ========================================================
+
+  def due_at_date
+    if due_at.present?
+      due_at.to_date.to_s
+    end
+  end
+
+  def due_at_time
+    if due_at.present?
+      due_at.strftime('%I:%M%p')
+    end
+  end
+
   # Member definitions
   # ========================================================
   def paying_members
