@@ -74,9 +74,14 @@ p
     .organized
     {
         position: absolute;
-        width: 200px;
-        left: 2px;
+        // width: 200px;
+        right: 2px;
         top: 0;
+
+        .tooltip
+        {
+            width: 150px;
+        }
     }
 }
 
