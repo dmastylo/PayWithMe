@@ -75,11 +75,9 @@
           <%= f.submit "Post Message", class: "post-message btn btn-block" %>
         <% end %>
       </div>
-      <ul class="message-list" data-id="<%= @event.id %>">
+      <ul class="message-list" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
         <% if @messages.any? %>
           <%= render @messages %>
-          <% if @messages_count > Figaro.env.chat_msg_per_page.to_i %>
-          <% end %>
         <% else %>
           <span class="no-messages">There are no messages.</span>
         <% end %>
