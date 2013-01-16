@@ -21,7 +21,8 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type
+  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time
+  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
@@ -54,6 +55,8 @@ class Event < ActiveRecord::Base
   # Callbacks
   # ========================================================
   before_validation :clear_amounts
+  before_validation :concatenate_dates
+  before_save :clear_dates
 
   # Inheritance
   # ========================================================
@@ -159,6 +162,41 @@ class Event < ActiveRecord::Base
     Private = 2
   end
 
+  # Dates
+  # ========================================================
+
+  def due_at_date
+    if @due_at_date.present?
+      @due_at_date
+    elsif due_at.present?
+      due_at.to_date.to_s
+    end
+  end
+
+  def due_at_time
+    if @due_at_time.present?
+      @due_at_time
+    elsif due_at.present?
+      due_at.strftime('%I:%M%p')
+    end
+  end
+
+  def start_at_date
+    if @start_at_date.present?
+      @start_at_date
+    elsif start_at.present?
+      start_at.to_date.to_s
+    end
+  end
+
+  def start_at_time
+    if @start_at_time.present?
+      @start_at_time
+    elsif start_at.present?
+      start_at.strftime('%I:%M%p')
+    end
+  end
+
   # Member definitions
   # ========================================================
   def paying_members
@@ -242,6 +280,15 @@ private
       total_amount_cents = nil
       total_amount = nil
     end
+  end
+
+  def concatenate_dates
+    self.due_at = "#{self.due_at_date} #{self.due_at_time}"
+    self.start_at = "#{start_at_date} #{start_at_time}"
+  end
+
+  def clear_dates
+    due_at_date = due_at_time = start_at_date = start_at_time = nil
   end
 
 end
