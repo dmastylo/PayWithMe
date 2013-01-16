@@ -27,25 +27,6 @@ class Reminder < ActiveRecord::Base
   has_many :reminder_users, dependent: :destroy
   has_many :users, through: :reminder_users
 
-  # Constants
-  class RecipientType
-    ALL = 1
-    UNPAID = 2
-    PAID = 3
-  end
-
-  def all?
-    recipient_type == RecipientType::ALL
-  end
-
-  def unpaid?
-    recipient_type == RecipientType::UNPAID
-  end
-
-  def paid?
-    recipient_type == RecipientType::PAID
-  end
-
   def add_users(users, exclude_from_reminders=nil)
     users.each do |user|
       if user != exclude_from_reminders && !self.users.include?(users)
@@ -64,6 +45,25 @@ class Reminder < ActiveRecord::Base
         end
       end
     end
+  end
+
+  # Constants
+  class RecipientType
+    ALL = 1
+    UNPAID = 2
+    PAID = 3
+  end
+
+  def all?
+    recipient_type == RecipientType::ALL
+  end
+
+  def unpaid?
+    recipient_type == RecipientType::UNPAID
+  end
+
+  def paid?
+    recipient_type == RecipientType::PAID
   end
 
 end
