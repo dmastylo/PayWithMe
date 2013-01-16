@@ -207,7 +207,7 @@ class Event < ActiveRecord::Base
   end
 
   def paid_members
-    paid_event_users = event_users.where("paid_at NOT NULL")
+    paid_event_users = event_users.where("paid_at IS NOT NULL")
     users = paid_event_users.collect { |event_user| event_user.member }
   end
 
