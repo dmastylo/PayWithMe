@@ -79,5 +79,8 @@ PayWithMe::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # Default URL
-  routes.default_url_options[:host] = "paywme.herokuapp.com"
+  routes.default_url_options[:host] = "paywith.me"
+
+  # Active merchant and PayPal
+  ActiveMerchant::Billing::Base.mode = :test
 end
