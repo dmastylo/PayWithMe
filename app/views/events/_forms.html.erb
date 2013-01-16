@@ -8,14 +8,20 @@
       <%= f.label :description %>
       <%= f.text_area :description, class: "input-block-level", rows: 5 %>
       <%= f.label :start_at %>
-      <%= f.text_field :start_at, class: "input-block-level", placeholder: "mm/dd/yyyy hh:mm", value: (@event.start_at.to_s if @event.start_at) %>
+      <div class="start_at">
+        <%= f.text_field :start_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
+        <%= f.text_field :start_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
+      </div>
     </div>
   </div>
   <div class="span6">
     <h3>Payment Information</h3>
     <div class="well">
       <%= f.label :due_at %>
-      <%= f.text_field :due_at, class: "input-block-level", placeholder: "mm/dd/yyyy hh:mm", value: (@event.due_at.to_s if @event.due_at) %>
+      <div class="due_at">
+        <%= f.text_field :due_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
+        <%= f.text_field :due_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
+      </div>
       <%= f.hidden_field :division_type %>
       <div class="btn-group input-block-level push-bottom" id="event_division_type_btn_group" data-toggle="buttons-radio">
         <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount split evenly.">Divide among group</button>
@@ -101,8 +107,18 @@
     $(document).ready(function()
     {
       $('.datepicker').datepicker();
+      $('.timepicker').timepicker();
       $('.btn-group .btn').tooltip({
         container: 'body'
+      });
+
+      $.each(['due_at', 'start_at'], function(index, name)
+      {
+        $('.' + name).autoSize({
+          fixed: '#event_' + name + '_time',
+          fluid: '#event_' + name + '_date',
+          offset: 4
+        });
       });
 
       $("#event_division_type").buttonGroup();
