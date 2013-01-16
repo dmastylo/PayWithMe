@@ -304,3 +304,27 @@ footer
         }
     }
 }
+
+.progress-addon
+{   
+    position: relative;
+
+    .progress-percentage
+    {
+        position: absolute;
+        margin-left: -50%;
+    }
+}
+
+.quarter
+{
+    width: 25%;
+    float: left;
+}
+
+.three-quarters
+{
+    width: 72%;
+    padding-left: 3%;
+    float: left;
+}
