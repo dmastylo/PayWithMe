@@ -29,6 +29,6 @@ class Message < ActiveRecord::Base
 
 private
     def notify_news_feed
-        NewsItem.create_for_new_messages(self.event, self.user)
+        NewsItem.delay.create_for_new_messages(self.event, self.user)
     end
 end

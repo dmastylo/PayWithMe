@@ -234,7 +234,7 @@ class Event < ActiveRecord::Base
           self.members << member 
           Notification.create_for_event(self, member) if member != exclude_from_notifications
           if editing_event
-            NewsItem.create_for_new_event_member(self, member)
+            NewsItem.delay.create_for_new_event_member(self, member)
           end
         end
       end
