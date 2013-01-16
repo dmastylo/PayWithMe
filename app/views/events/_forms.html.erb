@@ -18,7 +18,7 @@
       <%= f.text_field :due_at, class: "input-block-level", placeholder: "mm/dd/yyyy hh:mm", value: (@event.due_at.to_s if @event.due_at) %>
       <%= f.hidden_field :division_type %>
       <div class="btn-group input-block-level push-bottom" id="event_division_type_btn_group" data-toggle="buttons-radio">
-        <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount.">Divide among group</button>
+        <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount split evenly.">Divide among group</button>
         <button type="button" class="btn third" data-name="split" data-value="2" title="Each person must pay a certain amount.">Amount Per Person</button>
         <button type="button" class="btn third last" data-name="fundraise" data-value="3" title="Any amount can be paid.">Fundraise/Donations</button>
       </div>
@@ -91,7 +91,7 @@
 </div>
 <div class="row">
   <div class="span12">
-    <%= f.submit "#{submit_text(@event)} event", class: "btn btn-primary" %>
+    <%= f.submit "#{submit_text(@event)} event", class: "btn btn-primary btn-block" %>
   </div>
 </div>
 

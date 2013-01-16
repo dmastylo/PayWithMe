@@ -2,54 +2,22 @@
 <div class="row">
   <div class="span9">
     <div class="page-header">
-      <h2>Upcoming Organized Events</h2>
+      <h2>Upcoming Events</h2>
     </div>
   </div>
   <div class="span3">
-    <% if !current_user.stub? %>
-      <%= link_to "New event", new_event_path, class: "btn btn-primary push-top pull-right" %>
+    <% unless current_user.stub? %>
+      <%= link_to "Create event", new_event_path, class: "btn btn-primary push-top pull-right" %>
     <% end %>
   </div>
 </div>
 <div class="row">
-  <% if @upcoming_organized_events.empty? %>
+  <% if @upcoming_events.empty? %>
     <div class="span12">
-        You are not currently organizing any events!
+        You currently don't have any upcoming events!
     </div>
   <% else %>
-    <%= render @upcoming_organized_events %>
-  <% end %>
-</div>
-<div class="row">
-  <div class="span12">
-    <div class="page-header">
-      <h2>Upcoming Events</h2>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <% if @upcoming_invited_events.empty? %>
-    <div class="span12">
-        You are not currently invited to any events!
-    </div>
-  <% else %>
-    <%= render @upcoming_invited_events %>
-  <% end %>
-</div>
-<div class="row">
-  <div class="span12">
-    <div class="page-header">
-      <h2>Past Organized Events</h2>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <% if @past_organized_events.empty? %>
-    <div class="span12">
-        You have not organized any finished events!
-    </div>
-  <% else %>
-    <%= render @past_organized_events, locals: { past_event: true } %>
+    <%= render @upcoming_events %>
   <% end %>
 </div>
 <div class="row">
@@ -60,11 +28,11 @@
   </div>
 </div>
 <div class="row">
-  <% if @past_invited_events.empty? %>
+  <% if @past_events.empty? %>
     <div class="span12">
-      You were not invited to any finished events!
+        You have not attended any events!
     </div>
   <% else %>
-    <%= render @past_invited_events, locals: { past_event: true } %>
+    <%= render @past_events, locals: { past_event: true } %>
   <% end %>
 </div>
