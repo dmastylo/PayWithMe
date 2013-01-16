@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
   before_filter :user_activity
+  around_filter :user_time_zone, if: :current_user
 
   def default_url_options
     if Rails.env.production?
@@ -83,5 +84,9 @@ private
 
   def user_activity
     current_user.update_attribute(:last_seen, Time.now) if user_signed_in?
+  end
+
+  def user_time_zone(&block)
+    Time.use_zone(current_user.time_zone, &block)
   end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130114024821) do
+ActiveRecord::Schema.define(:version => 20130116231524) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -70,7 +70,19 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
     t.integer  "split_amount_cents"
     t.integer  "organizer_id"
     t.integer  "privacy_type"
+    t.string   "slug"
   end
+
+  create_table "friendly_id_slugs", :force => true do |t|
+    t.string   "slug",                         :null => false
+    t.integer  "sluggable_id",                 :null => false
+    t.string   "sluggable_type", :limit => 40
+    t.datetime "created_at"
+  end
+
+  add_index "friendly_id_slugs", ["slug", "sluggable_type"], :name => "index_friendly_id_slugs_on_slug_and_sluggable_type", :unique => true
+  add_index "friendly_id_slugs", ["sluggable_id"], :name => "index_friendly_id_slugs_on_sluggable_id"
+  add_index "friendly_id_slugs", ["sluggable_type"], :name => "index_friendly_id_slugs_on_sluggable_type"
 
   create_table "group_users", :force => true do |t|
     t.integer  "user_id"
@@ -147,8 +159,8 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                      :default => "",    :null => false
-    t.string   "encrypted_password",         :default => "",    :null => false
+    t.string   "email",                      :default => "",                           :null => false
+    t.string   "encrypted_password",         :default => "",                           :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -157,8 +169,8 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.string   "name"
     t.string   "profile_image_file_name"
     t.string   "profile_image_content_type"
@@ -169,6 +181,7 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
     t.string   "guest_token"
     t.boolean  "using_oauth"
     t.datetime "last_seen"
+    t.string   "time_zone",                  :default => "Eastern Time (US & Canada)"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
