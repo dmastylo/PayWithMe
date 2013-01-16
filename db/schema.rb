@@ -112,8 +112,8 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
   create_table "news_items", :force => true do |t|
     t.integer  "news_type"
     t.integer  "user_id"
-    t.datetime "created_at",                      :null => false
-    t.datetime "updated_at",                      :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.integer  "foreign_id"
     t.integer  "foreign_type"
     t.integer  "subject_id"

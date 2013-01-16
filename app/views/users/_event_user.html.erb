@@ -8,10 +8,14 @@
     <% end %>
   </td>
   <td>
-    <% if user.last_sign_in_at   %>
+    <% if user.last_sign_in_at %>
       <%= distance_of_time_in_words_to_now user.last_sign_in_at %> ago
     <% else %>
       never
     <% end %>
-  <td></td>
+  <td>
+    <% unless @event.paid?(user) %>
+      <%= link_to "Mark As Paid", paid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-success", method: :put %>
+    <% end %>
+  </td>
 </tr>

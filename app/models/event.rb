@@ -28,6 +28,7 @@ class Event < ActiveRecord::Base
   monetize :receive_amount_cents, allow_nil: true
   monetize :send_amount_cents, allow_nil: true
   monetize :our_fee_amount_cents, allow_nil: true
+  monetize :money_collected_cents, allow_nil: true
 
   # Validations
   # ========================================================
@@ -105,6 +106,12 @@ class Event < ActiveRecord::Base
       (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
     else
       nil
+    end
+  end
+  
+  def money_collected_cents
+    if split_amount_cents.present?
+      split_amount_cents * paid_members.count
     end
   end
 
