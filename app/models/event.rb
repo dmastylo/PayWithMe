@@ -55,6 +55,11 @@ class Event < ActiveRecord::Base
   # ========================================================
   before_validation :clear_amounts
 
+  # Inheritance
+  # ========================================================
+  extend FriendlyId
+  friendly_id :id, use: :history
+
   # Money definitions
   # ========================================================
   def receive_amount_cents
@@ -224,10 +229,6 @@ class Event < ActiveRecord::Base
     end
 
     nfgdi_members
-  end
-
-  def to_param
-    "#{id}-#{title}".parameterize
   end
 
 private

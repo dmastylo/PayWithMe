@@ -54,6 +54,9 @@ gem 'js-routes'
 # Payments
 gem 'active_paypal_adaptive_payment'
 
+# URL Helper
+gem 'friendly_id'
+
 group :development, :test do
   gem 'sqlite3'
 end
