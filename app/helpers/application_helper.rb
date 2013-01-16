@@ -32,5 +32,4 @@ module ApplicationHelper
   def current_page_link(path)
     "current-page" if current_page?(path)
   end
-
 end
