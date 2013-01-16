@@ -28,6 +28,7 @@ class Event < ActiveRecord::Base
   monetize :receive_amount_cents, allow_nil: true
   monetize :send_amount_cents, allow_nil: true
   monetize :our_fee_amount_cents, allow_nil: true
+  monetize :money_collected_cents, allow_nil: true
 
   # Validations
   # ========================================================
@@ -51,6 +52,7 @@ class Event < ActiveRecord::Base
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
+  has_many :reminders, dependent: :destroy
 
   # Callbacks
   # ========================================================
@@ -105,6 +107,12 @@ class Event < ActiveRecord::Base
       (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
     else
       nil
+    end
+  end
+  
+  def money_collected_cents
+    if split_amount_cents.present?
+      split_amount_cents * paid_members.count
     end
   end
 
@@ -197,6 +205,20 @@ class Event < ActiveRecord::Base
   def paying_members
     self.members - [self.organizer]
   end
+
+  def paid_members
+    paid_event_users = event_users.where("paid_at NOT NULL")
+    users = paid_event_users.collect { |event_user| event_user.member }
+  end
+
+  def unpaid_members
+    unpaid_event_users = event_users.where("paid_at IS NULL")
+    users = unpaid_event_users.collect { |event_user| event_user.member }
+  end
+
+  def paid_percentage
+    (paid_members.count * 100.0) / paying_members.count 
+  end
   
   def add_member(member)
     add_members([member])
@@ -255,13 +277,26 @@ class Event < ActiveRecord::Base
 
   # This method is awesome
   def independent_members
-    nfgdi_members = self.members
+    nfgdi_members = self.paying_members
 
     self.groups.each do |group|
       nfgdi_members -= group.members
     end
 
     nfgdi_members
+  end
+
+  def event_user(user)
+    event_users.find_by_user_id(user)
+  end
+
+  def paid?(user)
+    event_user = event_user(user)
+    event_user.present? && event_user.paid?
+  end
+
+  def paid_at(user)
+    event_user(user).paid_at
   end
 
   def to_param

@@ -27,6 +27,16 @@ class UserMailer < ActionMailer::Base
     mail to: format_address_to(user), subject: "You've been added: #{@group.title}"
   end
 
+  def reminder_notification(user, reminder)
+    @user = user
+    @reminder = reminder
+
+    attachments.inline['logo.png'] = File.read('app/assets/images/logo.png')
+    attachments.inline['visit_event.png'] = File.read('app/assets/images/visit_event.png')
+
+    mail to: format_address_to(user), subject: "#{@reminder.event.title} Reminder: #{@reminder.title}"
+  end
+
 private
   def format_address_to(user)
     require 'mail'
