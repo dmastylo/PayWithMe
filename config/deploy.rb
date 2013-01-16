@@ -3,6 +3,7 @@ set :rvm_type, :system
 
 require "bundler/capistrano"
 require "rvm/capistrano"
+require "delayed/recipes"
 
 server "198.61.183.12", :web, :app, :db, primary: true
 
@@ -11,6 +12,7 @@ set :user, "deployer"
 set :deploy_to, "/home/#{user}/apps/#{application}"
 set :deploy_via, :remote_cache
 set :use_sudo, :false
+set :rails_env, "production" # Added for delayed job  
 
 set :scm, :git
 set :repository,  "git@github.com:austingulati/PayWithMe.git"
@@ -64,4 +66,9 @@ namespace :deploy do
     end
   end
   before "deploy", "deploy:check_revision"
+
+  # Delayed job
+  after "deploy:stop",    "delayed_job:stop"
+  after "deploy:start",   "delayed_job:start"
+  after "deploy:restart", "delayed_job:restart"
 end
