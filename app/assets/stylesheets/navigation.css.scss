@@ -114,6 +114,11 @@ ul.dropdown-menu
                 line-height: 22px;
                 padding: 5px 10px 5px 10px;
             }
+
+            &.unread a
+            {
+                background-color: $lightBlue !important;
+            }
         }
     }
 }

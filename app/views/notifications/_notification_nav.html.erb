@@ -1,1 +1,1 @@
-<li><%= link_to notification.body, notification.path %></li>
+<li <%= 'class="unread"'.html_safe if !notification.read? %>><%= link_to notification.body, notification.path %></li>

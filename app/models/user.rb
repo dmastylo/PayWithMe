@@ -182,7 +182,7 @@ class User < ActiveRecord::Base
   end
 
   def current_notifications
-    self.notifications.order('created_at DESC').paginate(per_page: 5, page: 1)
+    self.notifications.order('updated_at DESC').paginate(per_page: 5, page: 1)
   end
 
   def has_unread_notifications?
