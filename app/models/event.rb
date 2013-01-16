@@ -52,6 +52,7 @@ class Event < ActiveRecord::Base
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
+  has_many :reminders, dependent: :destroy
 
   # Callbacks
   # ========================================================
@@ -208,6 +209,11 @@ class Event < ActiveRecord::Base
   def paid_members
     paid_event_users = event_users.where("paid_at NOT NULL")
     users = paid_event_users.collect { |event_user| event_user.member }
+  end
+
+  def unpaid_members
+    unpaid_event_users = event_users.where("paid_at IS NULL")
+    users = unpaid_event_users.collect { |event_user| event_user.member }
   end
 
   def paid_percentage

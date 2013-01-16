@@ -7,6 +7,7 @@ PayWithMe::Application.routes.draw do
 
   resources :events do
     resources :messages, only: :create
+    resources :reminders, only: [:new, :create]
     resources :event_users, only: [:create] do
       member do
         put 'paid'
