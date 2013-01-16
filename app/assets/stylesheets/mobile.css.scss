@@ -67,3 +67,22 @@
         }
     }
 }
+
+@media (max-width: 1200px)
+{
+    .btn-group
+    {
+        button.third,button.half
+        {
+            width: 100%;
+            float: none;
+            display: block;
+            margin-bottom: 2px;
+
+            &.last
+            {
+                width: 100%;
+            }
+        }
+    }
+}
