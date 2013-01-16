@@ -13,7 +13,11 @@
 
         #logo
         {
-            margin-top: -4px;
+            margin-top: 8px;
+            width: 141px;
+            height: 32px;
+            background-image: url(asset_path("logo_white.png", image));
+            display: inline-block;
         }
 
         ul.nav
