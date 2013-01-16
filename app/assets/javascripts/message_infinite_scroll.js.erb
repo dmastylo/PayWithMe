@@ -1,5 +1,8 @@
 // Bool that will determine whether or not more content can be loaded
-var moreMessageContent = true;
+var moreMessageContent = $('.message-list').data('count') > $('.message-list').data('limit')
+                       ? true : false;
+
+// var moreMessageContent = true;
 
 // Bool that will prevent the scrolling from constantly be fired
 var loadingOldMessages = false;

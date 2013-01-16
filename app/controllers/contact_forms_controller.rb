@@ -10,7 +10,8 @@ class ContactFormsController < ApplicationController
         	@contact_form.request = request
         	
         	if @contact_form.deliver
-          		flash.now[:notice] = 'Thank you for your message!'
+              redirect_to root_path
+          		flash[:notice] = 'Thank you for your message!'
         	else
           		render :new
         	end

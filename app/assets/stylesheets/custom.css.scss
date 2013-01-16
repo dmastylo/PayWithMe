@@ -60,15 +60,48 @@ p
     margin-bottom: 10px;
     border: 0;
     padding: 0;
+
+    i
+    {
+        margin-top: 15px;
+    }
+
+    .tooltip
+    {
+        line-height: 1.7em;
+    }
 }
 
 // Wells ======================================================================
 .well
 {
+    position: relative;
     border-radius: 0;
     box-shadow: none;
     background-color: $lightGray;
     border: 1px solid $mediumGray;
+
+    .organized
+    {
+        position: absolute;
+        right: 2px;
+        top: -5px;
+
+        .tooltip
+        {
+            width: 135px;
+        }
+    }
+
+    i
+    {
+        margin-top: 5px;
+    }
+}
+
+.organized-event
+{
+    background-color: $mediumGray;
 }
 
 // Forms ======================================================================
@@ -80,6 +113,12 @@ textarea,input
     {
         border-color: $lightBlue !important;
     }
+}
+
+input.input-border-box
+{
+    box-sizing: border-box;
+    height: 28px;
 }
 
 .input-append,.input-prepend

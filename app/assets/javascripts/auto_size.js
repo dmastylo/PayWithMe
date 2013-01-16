@@ -31,8 +31,8 @@
 				this.$parent.parent().hide();
 			}
 
-			var offset = this.$fluid.outerWidth(true) - this.$fluid.outerWidth();
-			this.$fluid.css('width', (parentWidth - fixedWidth - offset));
+			var calculatedOffset = this.$fluid.outerWidth(true) - this.$fluid.outerWidth();
+			this.$fluid.css('width', (parentWidth - fixedWidth - calculatedOffset - this.options.offset));
 		},
 
 		listen: function()
@@ -54,6 +54,7 @@
 
 	$.fn.autoSize.defaults = {
 		fixed: 'span.add-on,.btn',
-		fluid: 'input'
+		fluid: 'input',
+		offset: 0
 	}
 }(window.jQuery);

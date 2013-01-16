@@ -1,10 +1,15 @@
-<div class="well">
+<div class="well <% if current_user == event.organizer %>organized-event<% end %>">
+  <% if current_user == event.organizer %>
+    <div class="organized">
+      <a href="#" rel="tooltip" title="You organize this event!" data-placement="left"><i class="icon-wrench"></i></a>
+    </div>
+  <% end %>
   <h4 style="margin-top: 0;">
-    <%= link_to truncate(event.title, :length => 29, :separator => ' '), event %>
+    <%= link_to truncate(event.title, :length => 27, :separator => ' '), event %>
     <% if event.public? %>
-      <i class="icon-globe"></i>
+      <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
     <% else %>
-      <i class="icon-lock"></i>
+      <a href="#" rel="tooltip" title="Private event" data-placement="right"><i class="icon-lock"></i></a>
     <% end %>
   </h4>
   <%= event.members.count %> members<br />

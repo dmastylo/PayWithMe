@@ -95,7 +95,7 @@
     margin: 20px 0 0 0;
     padding: 0;
     height: 380px;
-    overflow: auto;
+    overflow-y: scroll;
 
     .message
     {
@@ -134,11 +134,9 @@
             margin-top: 3px;
         }
 
-        .current-user-
-
         .message-content
         {
-            word-break: break-all;
+            word-break: normal;
             word-wrap: break-word;
         }
 

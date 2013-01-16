@@ -5,9 +5,9 @@
       <h2>
         <%= @event.title %>
         <% if @event.public? %>
-          <i class="icon-globe"></i>
+          <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
         <% else %>
-          <i class="icon-lock"></i>
+          <a href="#" rel="tooltip" title="Private event" data-placement="right"><i class="icon-lock"></i></a>
         <% end %>
       </h2>
     </div>
@@ -76,11 +76,9 @@
           <%= f.submit "Post Message", class: "post-message btn btn-block" %>
         <% end %>
       </div>
-      <ul class="message-list" data-id="<%= @event.id %>">
+      <ul class="message-list" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
         <% if @messages.any? %>
           <%= render @messages %>
-          <% if @messages_count > Figaro.env.chat_msg_per_page.to_i %>
-          <% end %>
         <% else %>
           <span class="no-messages">There are no messages.</span>
         <% end %>
