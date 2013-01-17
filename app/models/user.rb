@@ -25,6 +25,7 @@
 #  guest_token                :string(255)
 #  using_oauth                :boolean
 #  last_seen                  :datetime
+#  time_zone                  :string(255)      default("Eastern Time (US & Canada)")
 #
 
 class User < ActiveRecord::Base
@@ -35,7 +36,7 @@ class User < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_option, :profile_image_url
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_option, :profile_image_url, :time_zone
   attr_accessor :profile_image_option
   has_attached_file :profile_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>" }
 
@@ -43,6 +44,7 @@ class User < ActiveRecord::Base
   # ========================================================
   validates :name, presence: true, length: { maximum: 50 }, unless: :stub?
   validates :password, length: { minimum: 8 }, if: :password_required?, unless: :stub?
+  validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
   
   # Callbacks
   # ========================================================
@@ -271,5 +273,5 @@ private
   def set_last_seen
     self.last_seen = Time.now
   end
-  
+
 end

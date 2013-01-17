@@ -103,6 +103,12 @@
             </div>
           </div>
         </div>
+        <div class="control-group">
+          <%= f.label :time_zone, "Preferred Time Zone", class: 'control-label' %>
+          <div class="controls">
+            <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
