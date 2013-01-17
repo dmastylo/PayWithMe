@@ -54,6 +54,7 @@ gem 'js-routes'
 
 # Payments
 gem 'active_paypal_adaptive_payment'
+gem 'dwolla', git: 'git://github.com/austingulati/dwolla-ruby.git'
 
 group :development, :test do
   gem 'sqlite3'

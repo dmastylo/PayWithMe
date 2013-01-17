@@ -73,7 +73,7 @@ class Payment < ActiveRecord::Base
         }
       ]
 
-      gateway = Payment.gateway
+      gateway = Payment.paypal_gateway
       response = gateway.setup_purchase(
         return_url: Rails.application.routes.url_helpers.event_url(event_id),
         cancel_url: Rails.application.routes.url_helpers.event_url(event_id),
@@ -86,8 +86,16 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  # Public because needed in another spot
+  def self.dwolla_gateway
+    Dwolla::Client.new(
+      Figaro.env.dwolla_key,
+      Figaro.env.dwolla_secret_key
+    )
+  end
+
 private
-  def self.gateway
+  def self.paypal_gateway
     ActiveMerchant::Billing::PaypalAdaptivePayment.new(
       login: Figaro.env.paypal_username,
       password: Figaro.env.paypal_password,
