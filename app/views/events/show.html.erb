@@ -46,10 +46,10 @@
         <% end %>
       <% end %>
       <div class="quarter"><strong>Money Due at</strong></div>
-      <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
+      <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
       <div class="quarter"><strong>Event Starts at</strong></div>
-      <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
+      <div class="three-quarters"><%= @event.start_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
     </div>
     <h3>Guest List</h3>
