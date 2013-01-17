@@ -1,7 +1,7 @@
 class EventUsersController < ApplicationController
   before_filter :authenticate_user!, except: [:ipn]
   before_filter :event_public_or_user_organizes_event, only: [:create]
-  before_filter :user_owns_event_user, only: [:pay]
+  before_filter :user_owns_event_user, only: [:pay, :pin]
   before_filter :valid_payment_method, only: [:pay]
   before_filter :user_organizes_event, only: [:paid]
   before_filter :event_owns_event_user, only: [:paid]
@@ -30,7 +30,20 @@ class EventUsersController < ApplicationController
 
   def pay
     payment = Payment.create_or_find_from_event_user(@event_user, params[:method])
-    redirect_to payment.pay!
+    result = payment.pay!(params[:pin])
+
+    if result == :back_to_pin
+      flash[:error] = payment.error_message
+      redirect_to pin_event_user_path(@event_user, method: PaymentMethod::MethodType::DWOLLA)
+    elsif result == :back_to_event
+
+    elsif result.present?
+      redirect_to result
+    end
+  end
+
+  def pin
+
   end
 
   def ipn

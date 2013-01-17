@@ -19,7 +19,8 @@
 class Payment < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :payer_id, :payee_id, :event_id, :due_at, :requested_at, :paid_at, :event_user_id, :payment_method
+  attr_accessible :payer_id, :payee_id, :event_id, :due_at, :requested_at, :paid_at, :event_user_id, :payment_method, :error_message
+  attr_accessor :error_message
 
   # Relationships
   belongs_to :payer, class_name: "User"
@@ -55,9 +56,23 @@ class Payment < ActiveRecord::Base
     ))
   end
 
-  def pay!
+  def pay!(pin=nil)
     if payment_method == PaymentMethod::MethodType::DWOLLA
-
+      if pin.empty?
+        self.error_message = "Please enter your pin."
+        :back_to_pin
+      else
+        dwolla_user = Dwolla::User.me(event_user.member.dwolla_account.token)
+        begin
+          trans_id = dwolla_user.send_money_to(event_user.event.organizer.dwolla_account.uid, event.send_amount.to_f, pin)
+        rescue Exception => e
+          self.error_message = e.message
+          return :back_to_pin
+        end
+          
+        raise trans_id.to_s
+        :back_to_event
+      end
     else
       # Defaults to PayPal
       recipients = [
