@@ -37,8 +37,13 @@
         <div class="clearfix"></div>
       <% end %>
       <% unless @event.fundraiser? %>
-        <div class="quarter"><strong>Money Goal:</strong></div>
-        <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+        <% if @event.divide_total? %>
+          <div class="quarter"><strong>Total Goal</strong></div>
+          <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+        <% elsif @event.divide_per_person? %>
+          <div class="quarter"><strong>Per User Goal</strong></div>
+          <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
+        <% end %>
       <% end %>
       <div class="quarter"><strong>Money Due at</strong></div>
       <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>

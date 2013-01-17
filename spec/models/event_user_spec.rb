@@ -10,6 +10,7 @@
 #  paid_at         :datetime
 #  invitation_sent :boolean          default(FALSE)
 #  payment_id      :integer
+#  visited_event   :boolean          default(FALSE)
 #
 
 require 'spec_helper'

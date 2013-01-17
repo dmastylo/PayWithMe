@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(:version => 20130117190945) do
     t.datetime "paid_at"
     t.boolean  "invitation_sent", :default => false
     t.integer  "payment_id"
+    t.boolean  "visited_event",   :default => false
   end
 
   create_table "events", :force => true do |t|

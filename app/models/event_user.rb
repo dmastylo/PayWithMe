@@ -10,6 +10,7 @@
 #  paid_at         :datetime
 #  invitation_sent :boolean          default(FALSE)
 #  payment_id      :integer
+#  visited_event   :boolean          default(FALSE)
 #
 
 class EventUser < ActiveRecord::Base
@@ -26,6 +27,12 @@ class EventUser < ActiveRecord::Base
 
   def paid?
   	paid_at.present?
+  end
+
+  def visit_event!
+    if !visited_event?
+      toggle(:visited_event).save
+    end
   end
   
 end

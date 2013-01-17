@@ -8,10 +8,10 @@
     <% end %>
   </td>
   <td>
-    <% if user.last_sign_in_at %>
-      <%= distance_of_time_in_words_to_now user.last_sign_in_at %> ago
+    <% if @event.event_user(user).visited_event? %>
+      Yes
     <% else %>
-      never
+      No
     <% end %>
   <td>
     <% unless @event.paid?(user) %>
