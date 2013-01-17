@@ -28,7 +28,16 @@
 
     , onValidate: function(something)
     {
-      return;
+      var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+      if (emailRegex.test(something[this.options.idAttribute]))
+      {
+        return;
+      }
+      else
+      {
+        return "Invalid email address!";
+      }
     }
 
     , onCreate: function(something)
