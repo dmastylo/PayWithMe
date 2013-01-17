@@ -156,15 +156,15 @@ class Event < ActiveRecord::Base
   # ========================================================
 
   def cash?
-
+    self.payment_methods.where(payment_method: PaymentMethod::MethodType::CASH).count > 0
   end
 
   def paypal?
-
+    self.payment_methods.where(payment_method: PaymentMethod::MethodType::PAYPAL).count > 0
   end
 
   def dwolla?
-
+    self.payment_methods.where(payment_method: PaymentMethod::MethodType::DWOLLA).count > 0
   end
 
   # Constants

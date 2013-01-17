@@ -22,7 +22,7 @@ class PaymentMethod < ActiveRecord::Base
   belongs_to :event
 
   # Constants
-  class PaymentMethod
+  class MethodType
     CASH = 1
     PAYPAL = 2
     DWOLLA = 3
