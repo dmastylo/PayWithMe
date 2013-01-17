@@ -69,10 +69,10 @@
       <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
     <% else %>
       <% if @event.paypal? %>
-        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With PayPal", pay_event_user_path(@event_user, method: :paypal), class: "btn btn-primary btn-block push-bottom" %>
+        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With PayPal", pay_event_user_path(@event_user, method: PaymentMethod::MethodType::PAYPAL), class: "btn btn-primary btn-block push-bottom" %>
       <% end %>
-      <% if @event.paypal? %>
-        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With Dwolla", pay_event_user_path(@event_user, method: :dwolla), class: "btn btn-primary btn-block" %>
+      <% if @event.dwolla? %>
+        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With Dwolla", pay_event_user_path(@event_user, method: PaymentMethod::MethodType::DWOLLA), class: "btn btn-primary btn-block" %>
       <% end %>
     <% end %>
   </div>

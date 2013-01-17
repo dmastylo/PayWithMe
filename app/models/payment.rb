@@ -2,23 +2,24 @@
 #
 # Table name: payments
 #
-#  id            :integer          not null, primary key
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  requested_at  :datetime
-#  paid_at       :datetime
-#  due_at        :datetime
-#  payer_id      :integer
-#  payee_id      :integer
-#  event_id      :integer
-#  amount_cents  :integer
-#  event_user_id :integer
+#  id             :integer          not null, primary key
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  requested_at   :datetime
+#  paid_at        :datetime
+#  due_at         :datetime
+#  payer_id       :integer
+#  payee_id       :integer
+#  event_id       :integer
+#  amount_cents   :integer
+#  event_user_id  :integer
+#  payment_method :integer
 #
 
 class Payment < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :payer_id, :payee_id, :event_id, :due_at, :requested_at, :paid_at, :event_user_id
+  attr_accessible :payer_id, :payee_id, :event_id, :due_at, :requested_at, :paid_at, :event_user_id, :payment_method
 
   # Relationships
   belongs_to :payer, class_name: "User"
@@ -33,14 +34,16 @@ class Payment < ActiveRecord::Base
   validates :requested_at, presence: true
   validates :due_at, presence: true
   validates :event_user_id, presence: true
+  validates :payment_method, presence: true
 
   # monetize :amount_cents
 
-  def self.create_or_find_from_event_user(event_user)
+  def self.create_or_find_from_event_user(event_user, payment_method)
     payment_attributes = {
       payer_id: event_user.member.id,
       payee_id: event_user.event.organizer.id,
-      event_id: event_user.event.id
+      event_id: event_user.event.id,
+      payment_method: payment_method
     }
     
     Payment.where(
@@ -53,29 +56,34 @@ class Payment < ActiveRecord::Base
   end
 
   def pay!
-    recipients = [
-      {
-        email: Figaro.env.paypal_email,
-        amount: event.our_fee_amount.to_f,
-        primary: false
-      },
-      {
-        email: payee.email,
-        amount: event.send_amount.to_f,
-        primary: true
-      }
-    ]
+    if payment_method == PaymentMethod::MethodType::DWOLLA
 
-    gateway = Payment.gateway
-    response = gateway.setup_purchase(
-      return_url: Rails.application.routes.url_helpers.event_url(event_id),
-      cancel_url: Rails.application.routes.url_helpers.event_url(event_id),
-      ipn_notification_url: Rails.application.routes.url_helpers.ipn_event_user_url(event_user_id),
-      receiver_list: recipients,
-      fees_payer: "PRIMARYRECEIVER"
-    )
+    else
+      # Defaults to PayPal
+      recipients = [
+        {
+          email: Figaro.env.paypal_email,
+          amount: event.our_fee_amount.to_f,
+          primary: false
+        },
+        {
+          email: payee.email,
+          amount: event.send_amount.to_f,
+          primary: true
+        }
+      ]
 
-    gateway.redirect_url_for(response["payKey"])
+      gateway = Payment.gateway
+      response = gateway.setup_purchase(
+        return_url: Rails.application.routes.url_helpers.event_url(event_id),
+        cancel_url: Rails.application.routes.url_helpers.event_url(event_id),
+        ipn_notification_url: Rails.application.routes.url_helpers.ipn_event_user_url(event_user_id),
+        receiver_list: recipients,
+        fees_payer: "PRIMARYRECEIVER"
+      )
+
+      gateway.redirect_url_for(response["payKey"])
+    end
   end
 
 private

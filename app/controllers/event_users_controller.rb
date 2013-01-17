@@ -2,6 +2,7 @@ class EventUsersController < ApplicationController
   before_filter :authenticate_user!, except: [:ipn]
   before_filter :event_public_or_user_organizes_event, only: [:create]
   before_filter :user_owns_event_user, only: [:pay]
+  before_filter :valid_payment_method, only: [:pay]
   before_filter :user_organizes_event, only: [:paid]
   before_filter :event_owns_event_user, only: [:paid]
   skip_before_filter :verify_authenticity_token, only: [:ipn]
@@ -28,7 +29,7 @@ class EventUsersController < ApplicationController
   end
 
   def pay
-    payment = Payment.create_or_find_from_event_user(@event_user)
+    payment = Payment.create_or_find_from_event_user(@event_user, params[:method])
     redirect_to payment.pay!
   end
 
@@ -83,5 +84,11 @@ private
   def event_owns_event_user
     @event_user = @event.event_users.find_by_id(params[:id])
     redirect_to root_path unless @event_user.present?
+  end
+
+  def valid_payment_method
+    if !(["2", "3"].include? params[:method]) || !@event_user.event.accepts_payment_method?(params[:method])
+      redirect_to root_path
+    end
   end
 end

@@ -3,8 +3,8 @@
 # Table name: payment_methods
 #
 #  id             :integer          not null, primary key
-#  event_id       :string(255)
-#  payment_method :string(255)
+#  event_id       :integer
+#  payment_method :integer
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #
