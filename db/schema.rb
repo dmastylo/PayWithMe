@@ -158,6 +158,23 @@ ActiveRecord::Schema.define(:version => 20130116231524) do
     t.integer  "event_user_id"
   end
 
+  create_table "reminder_users", :force => true do |t|
+    t.integer  "reminder_id"
+    t.integer  "user_id"
+    t.boolean  "sent",        :default => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  create_table "reminders", :force => true do |t|
+    t.integer  "event_id"
+    t.string   "title"
+    t.text     "body"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "recipient_type"
+  end
+
   create_table "users", :force => true do |t|
     t.string   "email",                      :default => "",                           :null => false
     t.string   "encrypted_password",         :default => "",                           :null => false

@@ -1,0 +1,42 @@
+<%= render 'shared/error_messages', object: f.object %>
+<div class="row push-top">
+  <div class="span6">
+    <h3>Reminder Message</h3>
+    <div class="well">
+      <%= f.label :title %>
+      <%= f.text_field :title, class: "input-block-level" %>
+      <%= f.label :body %>
+      <%= f.text_area :body, class: "input-block-level", rows: 5 %>
+    </div>
+  </div>
+  <div class="span6">
+    <h3>Reminder Recipients</h3>
+    <div class="well">
+      <%= f.label :recipient_type, "Reminder Receivers" %>
+      <%= f.hidden_field :recipient_type %>
+      <div class="btn-group input-block-level" id="reminder_recipient_type_btn_group" data-toggle="buttons-radio">
+        <button type="button" class="btn third" data-name="all" data-value="1" title="All members will receive the reminder.">All Members</button>
+        <button type="button" class="btn third" data-name="unpaid" data-value="2" title="Only unpaid members will receive the reminder.">Unpaid</button>
+        <button type="button" class="btn third last" data-name="paid" data-value="3" title="Only paid members will receive the reminder.">Paid</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <%= f.submit "#{submit_text(@reminder)} reminder", class: "btn btn-primary btn-block" %>
+  </div>
+</div>
+
+<% content_for(:before_body_end) do %>
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $('.btn-group .btn').tooltip({
+        container: 'body'
+      });
+      
+      $("#reminder_recipient_type").buttonGroup();
+    });
+  </script>
+<% end %>
