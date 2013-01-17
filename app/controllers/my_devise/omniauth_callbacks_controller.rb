@@ -82,4 +82,5 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
   alias_method :twitter, :all
   alias_method :facebook, :all
   alias_method :paypal, :all
+  alias_method :dwolla, :all
 end
