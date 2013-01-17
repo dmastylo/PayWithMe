@@ -25,6 +25,7 @@
 #  guest_token                :string(255)
 #  using_oauth                :boolean
 #  last_seen                  :datetime
+#  time_zone                  :string(255)      default("Eastern Time (US & Canada)")
 #
 
 class User < ActiveRecord::Base
