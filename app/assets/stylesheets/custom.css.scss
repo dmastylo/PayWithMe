@@ -216,6 +216,7 @@ form
 h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .center { text-align: center; }
 .spacer { height: 0; border-top: 1px solid $lightGray; margin: $largeMargin 0; }
+.index-partials { margin-top: 10px; }
 
 // Alerts =====================================================================
 .alert
