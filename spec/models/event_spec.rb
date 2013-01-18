@@ -2,19 +2,23 @@
 #
 # Table name: events
 #
-#  id                 :integer          not null, primary key
-#  title              :string(255)
-#  description        :text
-#  due_at             :datetime
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  start_at           :datetime
-#  division_type      :integer
-#  fee_type           :integer
-#  total_amount_cents :integer
-#  split_amount_cents :integer
-#  organizer_id       :integer
-#  privacy_type       :integer
+#  id                       :integer          not null, primary key
+#  title                    :string(255)
+#  description              :text
+#  due_at                   :datetime
+#  created_at               :datetime         not null
+#  updated_at               :datetime         not null
+#  start_at                 :datetime
+#  division_type            :integer
+#  fee_type                 :integer
+#  total_amount_cents       :integer
+#  split_amount_cents       :integer
+#  organizer_id             :integer
+#  privacy_type             :integer
+#  event_image_file_name    :string(255)
+#  event_image_content_type :string(255)
+#  event_image_file_size    :integer
+#  event_image_url          :string(255)
 #
 
 require 'spec_helper'

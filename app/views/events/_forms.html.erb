@@ -96,6 +96,63 @@
   </div>
 </div>
 <div class="row">
+  <div class="span6">
+    <h3>Set Event Image</h3>
+    <div class="well">
+      <div class="control-group">
+          <%= f.label :event_image, class: 'control-label' %>
+          <div class="controls">
+            
+            <%= f.hidden_field :event_image_option, id: "event_image" %>
+            <div class="btn-group input-block-level" id="event_image_btn_group" data-toggle="buttons-radio">
+              <button type="button" class="btn third <%= "active" if :event_image_type == :url %>" data-value="url">URL</button>
+              <button type="button" class="btn third <%= "active" if :event_image_type == :upload %>" data-value="upload">Image Upload</button>
+              <button type="button" class="btn third last <%= "active" if :event_image_type == :default_image %>" data-value="default_image">None</button>
+            </div>
+
+            <div class="event_image_option push-top" id="event_image_default">
+              The default:<br />
+              <%= event_image_tag(@event, :small) %>
+            </div>
+            <div class="event_image_option push-top" id="event_image_url">
+              <% if @event.event_image_url.present? %>
+                <div class="push-bottom">
+                  Current URL:
+                </div>
+                <div class="push-bottom">
+                  <%= event_image_tag(@event, :small) %>
+                </div>
+              <% end %>
+              <div class="control-group">
+                <%= f.label :event_image_url, "Event Image URL", class: 'control-label' %>
+                <div class="controls">
+                  <%= f.text_field :event_image_url, placeholder: "http://example.com/image.png", class: 'input-block-level'  %>
+                </div>
+              </div>
+            </div>
+            <div class="event_image_option push-top" id="event_image_upload">
+              <% if @event.event_image.present? %>
+                <div class="push-bottom">
+                  Current uploaded image:
+                </div>
+                <div class="push-bottom">
+                  <%= event_image_tag(@event, :small) %>
+                </div>
+              <% end %>
+              <div class="control-group">
+                <%= f.label :event_image, "Event Image File", class: 'control-label' %>
+                <div class="controls">
+                  <%= f.file_field :event_image, accept: 'image' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
   <div class="span12">
     <%= f.submit "#{submit_text(@event)} event", class: "btn btn-primary btn-block" %>
   </div>

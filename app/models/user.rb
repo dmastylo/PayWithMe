@@ -25,6 +25,7 @@
 #  guest_token                :string(255)
 #  using_oauth                :boolean
 #  last_seen                  :datetime
+#  time_zone                  :string(255)      default("Eastern Time (US & Canada)")
 #
 
 class User < ActiveRecord::Base
@@ -137,6 +138,7 @@ class User < ActiveRecord::Base
     User.search(name_or_email_cont: query).result
   end
 
+  # Is this a duplicate?
   def profile_image_type
     if profile_image.present?
       :upload

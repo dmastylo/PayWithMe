@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130114024821) do
+ActiveRecord::Schema.define(:version => 20130118163535) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -55,14 +55,15 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
     t.datetime "paid_at"
     t.boolean  "invitation_sent", :default => false
     t.integer  "payment_id"
+    t.boolean  "visited_event",   :default => false
   end
 
   create_table "events", :force => true do |t|
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
     t.datetime "start_at"
     t.integer  "division_type"
     t.integer  "fee_type"
@@ -70,6 +71,10 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
     t.integer  "split_amount_cents"
     t.integer  "organizer_id"
     t.integer  "privacy_type"
+    t.string   "event_image_file_name"
+    t.string   "event_image_content_type"
+    t.integer  "event_image_file_size"
+    t.string   "event_image_url"
   end
 
   create_table "group_users", :force => true do |t|
@@ -146,9 +151,26 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
     t.integer  "event_user_id"
   end
 
+  create_table "reminder_users", :force => true do |t|
+    t.integer  "reminder_id"
+    t.integer  "user_id"
+    t.boolean  "sent",        :default => false
+    t.datetime "created_at",                     :null => false
+    t.datetime "updated_at",                     :null => false
+  end
+
+  create_table "reminders", :force => true do |t|
+    t.integer  "event_id"
+    t.string   "title"
+    t.text     "body"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "recipient_type"
+  end
+
   create_table "users", :force => true do |t|
-    t.string   "email",                      :default => "",    :null => false
-    t.string   "encrypted_password",         :default => "",    :null => false
+    t.string   "email",                      :default => "",                           :null => false
+    t.string   "encrypted_password",         :default => "",                           :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -157,8 +179,8 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.string   "name"
     t.string   "profile_image_file_name"
     t.string   "profile_image_content_type"
@@ -169,6 +191,7 @@ ActiveRecord::Schema.define(:version => 20130114024821) do
     t.string   "guest_token"
     t.boolean  "using_oauth"
     t.datetime "last_seen"
+    t.string   "time_zone",                  :default => "Eastern Time (US & Canada)"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
