@@ -1,9 +1,7 @@
 <% provide(:title, "Your Events") %>
 <div class="row">
   <div class="span9">
-    <div class="page-header">
-      <h2>Upcoming Events</h2>
-    </div>
+    <h2>Upcoming Events</h2>
   </div>
   <div class="span3">
     <% unless current_user.stub? %>
@@ -11,10 +9,10 @@
     <% end %>
   </div>
 </div>
-<div class="row">
+<div class="index-partials row">
   <% if @upcoming_events.empty? %>
     <div class="span12">
-        You currently don't have any upcoming events!
+      You currently don't have any upcoming events!
     </div>
   <% else %>
     <%= render @upcoming_events %>
@@ -22,15 +20,13 @@
 </div>
 <div class="row">
   <div class="span12">
-    <div class="page-header">
-      <h2>Past Events</h2>
-    </div>
+    <h2>Past Events</h2>
   </div>
 </div>
 <div class="row">
   <% if @past_events.empty? %>
     <div class="span12">
-        You have not attended any events!
+      You have not attended any events!
     </div>
   <% else %>
     <%= render @past_events, locals: { past_event: true } %>
