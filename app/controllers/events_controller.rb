@@ -75,6 +75,9 @@ class EventsController < ApplicationController
 
 private
   def event_user_vist_true
-    @event.event_users.find_by_user_id(current_user.id).visit_event! if @event.members.include?(current_user)
+    if @event.members.include?(current_user)
+      @event_user = @event.event_users.find_by_user_id(current_user.id)
+      @event_user.visit_event!
+    end
   end
 end
