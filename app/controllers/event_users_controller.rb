@@ -53,6 +53,7 @@ class EventUsersController < ApplicationController
       if notify.complete?
         event_user.paid_at = Time.now
         event_user.payment.paid_at = Time.now
+        event_user.payment.transaction_id = params["transaction"]["1"][".id"]
         event_user.payment.save
         event_user.save
       else

@@ -160,6 +160,7 @@ class Event < ActiveRecord::Base
   end
 
   def send_with_payment_method?(payment_method)
+    return true
     return false unless accepts_payment_method?(payment_method)
 
     if payment_method == PaymentMethod::MethodType::CASH
