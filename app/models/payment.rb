@@ -100,8 +100,8 @@ class Payment < ActiveRecord::Base
 
       gateway = Payment.paypal_gateway
       response = gateway.setup_purchase(
-        return_url: Rails.application.routes.url_helpers.event_url(event_id),
-        cancel_url: Rails.application.routes.url_helpers.event_url(event_id),
+        return_url: Rails.application.routes.url_helpers.event_url(event_id, success: 1),
+        cancel_url: Rails.application.routes.url_helpers.event_url(event_id, cancel: 1),
         ipn_notification_url: Rails.application.routes.url_helpers.ipn_event_user_url(event_user_id),
         receiver_list: recipients,
         fees_payer: "PRIMARYRECEIVER"

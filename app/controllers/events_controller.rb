@@ -5,7 +5,7 @@ class EventsController < ApplicationController
   before_filter :user_organizes_event, only: [:edit, :delete, :update, :admin]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_organizer_accounts, only: [:show, :admin]
-  
+
   def new
     @event = current_user.organized_events.new
   end
@@ -33,6 +33,14 @@ class EventsController < ApplicationController
   end
 
   def show
+    if params[:success]
+      flash[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
+      redirect_to event_path(@event)
+    elsif params[:cancel]
+      flash[:error] = "Payment cancelled!"
+      redirect_to event_path(@event)
+    end
+
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.size
     @message = Message.new
