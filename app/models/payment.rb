@@ -46,7 +46,7 @@ class Payment < ActiveRecord::Base
       payee_id: event_user.event.organizer.id,
       event_id: event_user.event.id,
       payment_method: payment_method,
-      amount_cents: event_user.event.send_amount_cents
+      amount_cents: event_user.event.split_amount_cents
     }
     
     Payment.where(
@@ -71,7 +71,7 @@ class Payment < ActiveRecord::Base
       else
         dwolla_user = Dwolla::User.me(event_user.member.dwolla_account.token)
         begin
-          trans_id = dwolla_user.send_money_to(event_user.event.organizer.dwolla_account.uid, event.send_amount.to_f, pin)
+          trans_id = dwolla_user.send_money_to(event_user.event.organizer.dwolla_account.uid, event.send_amount.to_f, pin, "Payment for #{event_user.event.title}", nil, event_user.event.members_pay?)
         rescue Exception => e
           self.error_message = e.message
           return :back_to_pin

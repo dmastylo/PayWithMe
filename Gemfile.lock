@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git://github.com/austingulati/dwolla-ruby.git
-  revision: c0c047880aa5f4424197aa9d0203d23a3262f9da
+  revision: b0ec446db3425ad9ef7f4f01d1dd9c9f64a1dc82
   specs:
     dwolla (1.0.0)
       faraday (~> 0.8)
@@ -240,7 +240,7 @@ GEM
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
-    pry (0.9.11.2)
+    pry (0.9.11.3)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)

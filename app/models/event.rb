@@ -159,6 +159,18 @@ class Event < ActiveRecord::Base
     self.payment_methods.where(payment_method: payment_method).count > 0
   end
 
+  def send_with_payment_method?(payment_method)
+    return false unless accepts_payment_method?(payment_method)
+
+    if payment_method == PaymentMethod::MethodType::CASH
+      true
+    elsif payment_method == PaymentMethod::MethodType::PAYPAL
+      self.organizer.paypal_account.present?
+    elsif payment_method == PaymentMethod::MethodType::DWOLLA
+      self.organizer.dwolla_account.present?
+    end
+  end
+
   def accepts_cash?
     accepts_payment_method?(PaymentMethod::MethodType::CASH)
   end
@@ -168,16 +180,16 @@ class Event < ActiveRecord::Base
     accepts_payment_method?(PaymentMethod::MethodType::PAYPAL)
   end
 
-  def send_paypal?
-    accepts_paypal? && organizer.paypal_account.present?
+  def send_with_paypal?
+    send_with_payment_method?(PaymentMethod::MethodType::PAYPAL)
   end
 
   def accepts_dwolla?
     accepts_payment_method?(PaymentMethod::MethodType::DWOLLA)
   end
 
-  def send_dwolla?
-    accept_paypal? && organizer.dwolla_account.present?
+  def send_with_dwolla?
+    send_with_payment_method?(PaymentMethod::MethodType::DWOLLA)
   end
 
   # Constants

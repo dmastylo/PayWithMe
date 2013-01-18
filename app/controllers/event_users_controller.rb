@@ -100,7 +100,9 @@ private
   end
 
   def valid_payment_method
-    if !(["2", "3"].include? params[:method]) || !@event_user.event.accepts_payment_method?(params[:method])
+    puts @event_user.event.send_with_payment_method?(params[:method]) || "FAIL"
+    if !(["2", "3"].include? params[:method]) || !@event_user.event.send_with_payment_method?(params[:method].to_i)
+      flash[:error] = "That payment method is no longer accepted."
       redirect_to root_path
     end
   end
