@@ -4,13 +4,13 @@
       <div class="page-header">
         <h2>News Feed</h2>
       </div>
-      <% if @news_items.empty? %>
-        You have no news... yet!
-      <% else %>
-        <ul class="vertical-list">
-          <%= render @news_items %>
-        </ul>
-      <% end %>
+      <ul class="vertical-list">
+        <% if @news_items.empty? %>
+          <li>You have no news... yet!</li>
+        <% else %>
+            <%= render @news_items %>
+        <% end %>
+      </ul>
     </div>
     <div class="span4">
       <%= link_to "Create New Event", new_event_path, class: "btn btn-block btn-primary" %>
