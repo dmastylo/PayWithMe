@@ -64,7 +64,7 @@
         <% end %>
       </div>
     </div>
-    <% if current_user == @event.organizer %>
+    <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
     <% elsif @event_user.paid? %>
       <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
     <% else %>
