@@ -32,7 +32,7 @@ class Event < ActiveRecord::Base
   monetize :receive_amount_cents, allow_nil: true
   monetize :send_amount_cents, allow_nil: true
   monetize :our_fee_amount_cents, allow_nil: true
-  has_attached_file :event_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>" }
+  has_attached_file :event_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>", large: "#{Figaro.env.large_size}x#{Figaro.env.large_size}" }
 
 
   # Validations
