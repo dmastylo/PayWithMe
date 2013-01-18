@@ -36,14 +36,14 @@ class EventUsersController < ApplicationController
       flash[:error] = payment.error_message
       redirect_to pin_event_user_path(@event_user, method: PaymentMethod::MethodType::DWOLLA)
     elsif result == :back_to_event
-
+      flash[:success] = "Payment received!"
+      redirect_to event_path(@event_user.event)
     elsif result.present?
       redirect_to result
     end
   end
 
   def pin
-
   end
 
   def ipn

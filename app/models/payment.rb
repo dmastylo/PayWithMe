@@ -14,12 +14,13 @@
 #  amount_cents   :integer
 #  event_user_id  :integer
 #  payment_method :integer
+#  transaction_id :string(255)
 #
 
 class Payment < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :payer_id, :payee_id, :event_id, :due_at, :requested_at, :paid_at, :event_user_id, :payment_method, :error_message
+  attr_accessible :payer_id, :payee_id, :event_id, :due_at, :requested_at, :paid_at, :event_user_id, :payment_method, :error_message, :amount_cents
   attr_accessor :error_message
 
   # Relationships
@@ -44,7 +45,8 @@ class Payment < ActiveRecord::Base
       payer_id: event_user.member.id,
       payee_id: event_user.event.organizer.id,
       event_id: event_user.event.id,
-      payment_method: payment_method
+      payment_method: payment_method,
+      amount_cents: event_user.event.send_amount_cents
     }
     
     Payment.where(
@@ -57,6 +59,11 @@ class Payment < ActiveRecord::Base
   end
 
   def pay!(pin=nil)
+    if self.paid_at.present?
+      self.error_message = "You have already paid!"
+      return :back_to_event
+    end
+
     if payment_method == PaymentMethod::MethodType::DWOLLA
       if pin.empty?
         self.error_message = "Please enter your pin."
@@ -69,8 +76,11 @@ class Payment < ActiveRecord::Base
           self.error_message = e.message
           return :back_to_pin
         end
-          
-        raise trans_id.to_s
+        
+        self.transaction_id = trans_id
+        self.event_user.paid_at = self.paid_at = Time.now
+        self.event_user.save
+        self.save
         :back_to_event
       end
     else
