@@ -3,8 +3,9 @@ class EventsController < ApplicationController
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete, :update, :admin]
-  before_filter :event_user_vist_true, only: [:show]
-  
+  before_filter :event_user_visit_true, only: [:show]
+  before_filter :check_organizer_accounts, only: [:show, :admin]
+
   def new
     @event = current_user.organized_events.new
   end
@@ -32,6 +33,14 @@ class EventsController < ApplicationController
   end
 
   def show
+    if params[:success]
+      flash[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
+      redirect_to event_path(@event)
+    elsif params[:cancel]
+      flash[:error] = "Payment cancelled!"
+      redirect_to event_path(@event)
+    end
+
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.size
     @message = Message.new
@@ -74,10 +83,21 @@ class EventsController < ApplicationController
   end
 
 private
-  def event_user_vist_true
+  def event_user_visit_true
     if @event.members.include?(current_user)
       @event_user = @event.event_users.find_by_user_id(current_user.id)
       @event_user.visit_event!
+    end
+  end
+
+  def check_organizer_accounts
+    return unless current_user == @event.organizer
+    if @event.accepts_paypal? && @event.organizer.paypal_account.nil?
+      flash[:error] = "Hey! You have to add a PayPal account before users can pay with it. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+    end
+
+    if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
+      flash[:error] = "Hey! You have to add a Dwolla account before users can pay with it. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
     end
   end
 end

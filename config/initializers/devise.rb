@@ -208,6 +208,7 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   config.omniauth :twitter, "cL8nIQpvNApkT1nATe0A", "ktYwHKA5L1kNfRzIkwwMzs7XxXANHmp1xHPW55kIcOU"
   config.omniauth :facebook, "141836152608292", "b34af2003a66f9e3a6b4c6a3ab6ad701"
+  config.omniauth :dwolla, "XV7LXC7tu3NlVe8qFcwKVJCIp9AmEzIXHUC2P6QOwu06H3i3Om", "U34SfFeKCYWvJ/xJzOJDW1iDlAgeZ/FXqkUepevRFdDvAaT7XO", scope: "accountinfofull|transactions|send", provider_ignores_state: true
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

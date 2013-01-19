@@ -68,7 +68,12 @@
     <% elsif @event_user.paid? %>
       <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
     <% else %>
-      <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} Now", pay_event_user_path(@event_user), class: "btn btn-primary btn-block" %>
+      <% if @event.send_with_paypal? %>
+        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With PayPal", pay_event_user_path(@event_user, method: PaymentMethod::MethodType::PAYPAL), class: "btn btn-primary btn-block push-bottom", method: :post %>
+      <% end %>
+      <% if @event.send_with_dwolla? %>
+        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With Dwolla", pin_event_user_path(@event_user), class: "btn btn-primary btn-block" %>
+      <% end %>
     <% end %>
   </div>
   <div class="span7">
