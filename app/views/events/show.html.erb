@@ -84,6 +84,9 @@
       <ul class="message-list" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
         <% if @messages.any? %>
           <%= render @messages %>
+          <% if @messages_count > Figaro.env.chat_msg_per_page.to_i %>
+            <span class="load-new-msgs">Loading new messages...</span>
+          <% end %>
         <% else %>
           <span class="no-messages">There are no messages.</span>
         <% end %>

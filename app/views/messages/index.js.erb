@@ -20,6 +20,11 @@
     {
         moreMessageContent = false;
     }
+    else
+    {
+        // Let the user know that the messages are being loaded
+        $('.message-list').append('<span class="load-new-msgs">Loading new messages...</span>');
+    }
 
     // Done loading, can scroll again
     loadingOldMessages = false;
