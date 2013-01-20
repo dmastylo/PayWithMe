@@ -3,6 +3,7 @@
   <div class="span9">
     <div class="page-header">
       <h2>
+      <%= event_image_tag @event, :medium %>
         <%= @event.title %>
         <% if @event.public? %>
           <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
@@ -14,7 +15,7 @@
   </div>
   <% if current_user == @event.organizer %>
     <div class="span3">
-      <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary pull-right push-top" %>
+      <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary pull-right push-top", id: "edit-button" %>
     </div>
   <% elsif @event.public? && !@event.members.include?(current_user) %>
     <div class="span3">

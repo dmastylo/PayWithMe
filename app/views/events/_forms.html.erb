@@ -110,8 +110,7 @@
               <button type="button" class="btn third <%= "active" if :event_image_type == :upload %>" data-value="upload">
                 Image Upload
               </button>
-              <button type="button" class="btn third last <%= "active" if :event_image_type == :default_image %>" data-value="default_image">
-                None
+              <button type="button" class="btn third last <%= "active" if :event_image_type == :default_image %>" data-value="default_image">None
               </button>
             </div>
 
@@ -188,7 +187,7 @@
         $("#event_image_"+value).show();
       });
 
-      $("#user_profile_image_<%= current_user.profile_image_type %>").show();
+      $("#event_image_<%= :event_image_type %>").show();
       $("")
 
 
