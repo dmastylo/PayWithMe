@@ -4,6 +4,8 @@
       <a href="#" rel="tooltip" title="You organize this event!" data-placement="left"><i class="icon-wrench"></i></a>
     </div>
   <% end %>
+  <%= event_image_tag event, :small %>
+
   <h4 style="margin-top: 0;">
     <%= link_to truncate(event.title, :length => 27, :separator => ' '), event %>
     <% if event.public? %>
