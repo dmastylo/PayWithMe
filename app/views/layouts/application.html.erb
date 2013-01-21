@@ -46,5 +46,7 @@
     <% if @display_stub_login %>
       <%= render 'shared/stub_login' %>
     <% end %>
+
+    <%= render 'shared/analytics' if Rails.env.production? %>
   </body>
 </html>
