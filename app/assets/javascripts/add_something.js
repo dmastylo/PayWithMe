@@ -10,7 +10,9 @@
     // Needed elements
     this.$input = $(input);
     this.$addButton = $(this.options.addButtonSelector);
+    this.$addBulkButton = $(this.options.addBulkButtonSelector);
     this.$somethingsInput = $(this.options.somethingsInputSelector);
+    this.$somethingsMultipleTextarea = $(this.options.somethingsMultipleTextareaSelector);
     this.$somethings = $(this.options.somethingsSelector);
     this.$error = $(this.options.errorSelector);
 
@@ -122,6 +124,20 @@
       }
     }
 
+    , handleBulkSelect: function()
+    {
+      var emails = this.$somethingsMultipleTextarea.val();
+      var that = this;
+      emails = emails.replace(/,\s*/gm, ",").split(",");
+      $.each(emails, function(index, email)
+      {
+        var something = {};
+        something[that.options.idAttribute] = email;
+        that.select(something);
+      });
+      this.$somethingsMultipleTextarea.val('');
+    }
+
     , handleSelects: function()
     {
       var that = this;
@@ -130,6 +146,12 @@
       {
         e.preventDefault();
         that.handleSelect();
+      });
+
+      if(this.options.bulkEnabled) this.$addBulkButton.click(function(e)
+      {
+        e.preventDefault();
+        that.handleBulkSelect();
       });
 
       this.$input.keydown(function(e)
@@ -188,12 +210,15 @@
 
   $.fn.addSomething.defaults = {
     addButtonSelector: '#add_member',
+    addBulkButtonSelector: '#add_members',
+    somethingsMultipleTextareaSelector: '#member_names',
     somethingsInputSelector: '#event_members',
     somethingsSelector: '#invited_members',
     errorSelector: '#add_member_error',
     source: '/users/search.json',
     idAttribute: 'email',
     displayAttribute: 'name',
-    allowNameless: true
+    allowNameless: true,
+    bulkEnabled: false
   }
 }(window.jQuery);
