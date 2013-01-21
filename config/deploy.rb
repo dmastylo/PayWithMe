@@ -4,6 +4,7 @@ set :rvm_type, :system
 require "bundler/capistrano"
 require "rvm/capistrano"
 require "delayed/recipes"
+require 'new_relic/recipes'
 
 server "198.61.183.12", :web, :app, :db, primary: true
 
@@ -71,4 +72,7 @@ namespace :deploy do
   after "deploy:stop",    "delayed_job:stop"
   after "deploy:start",   "delayed_job:start"
   after "deploy:restart", "delayed_job:restart"
+
+  # New Relic RPM
+  after "deploy:update", "newrelic:notice_deployment"
 end
