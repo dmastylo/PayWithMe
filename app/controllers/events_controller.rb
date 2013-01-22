@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: [:show]
   before_filter :user_not_stub, only: [:new, :create]
-  before_filter :user_in_event, only: [:show]
+  before_filter :user_in_event_or_public, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete, :update, :admin]
   before_filter :event_user_vist_true, only: [:show]
   

@@ -73,11 +73,16 @@
 }
 
 // Chat Messages Display ======================================================
+.new-message-form
+{
+    margin-bottom: 20px;
+}
+
 .message-list
 {
     list-style-type: none;
-    margin: 20px 0 0 0;
     padding: 0;
+    margin: 0;
     height: 380px;
     overflow-y: scroll;
 
