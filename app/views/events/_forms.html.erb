@@ -103,9 +103,10 @@
           <%= f.label :event_image, class: 'control-label' %>
           <div class="controls">
             
-            <%= f.hidden_field :event_image_option, id: "event_image" %>
-            <div class="btn-group input-block-level" id="event_image_btn_group" data-toggle="buttons-radio">
-              <button type="button" class="btn third <%= "active" if :event_image_type == :url %>" data-value="url">  URL
+            <%= f.hidden_field :event_image_option, id: "event_image_type" %>
+            <div class="btn-group input-block-level" id="event_image_type_btn_group" data-toggle="buttons-radio">
+              <button type="button" class="btn third <%= "active" if :event_image_type == :url %>" data-value="url">
+                URL
               </button>
               <button type="button" class="btn third <%= "active" if :event_image_type == :upload %>" data-value="upload">
                 Image Upload
@@ -114,7 +115,7 @@
               </button>
             </div>
 
-            <div class="event_image_option push-top" id="event_image_default_image">
+            <div class="event_image_type_option push-top" id="event_image_type_default_image">
               <div class="push-bottom">
                 The default:
               </div>
@@ -122,7 +123,7 @@
                 <%= event_image_tag(@event, :large) %>
               </div>
             </div>
-            <div class="event_image_option push-top" id="event_image_url">
+            <div class="event_image_type_option push-top" id="event_image_type_url">
               <% if @event.event_image_url.present? %>
                 <div class="push-bottom">
                   Current URL:
@@ -138,7 +139,7 @@
                 </div>
               </div>
             </div>
-            <div class="event_image_option push-top" id="event_image_upload">
+            <div class="event_image_type_option push-top" id="event_image_type_upload">
               <% if @event.event_image.present? %>
                 <div class="push-bottom">
                   Current uploaded image:
@@ -171,25 +172,27 @@
   <script type="text/javascript">
     $(document).ready(function()
     {
-
+      
       //JS for image selection
-      $("#event_image_btn_group button").click(function()
+      $("#event_image_type_btn_group button").click(function()
       {
         var $this = $(this);
-        var $input = $("#event_image");
+        var $input = $("#event_image_type_");
         var value = $this.data("value");
 
         // Set the hidden field
         $input.val(value);
 
         // Show the hidden box
-        $(".event_image_option").hide();
-        $("#event_image_"+value).show();
+        $(".event_image_type_option").hide();
+        $("#event_image_type_"+value).show();
       });
 
-      $("#event_image_<%= :event_image_type %>").show();
-      $("")
+      $("#event_image_type_<%= :event_image_type %>").show();
+      
+      $("#event_image_type_btn_group").buttonGroup();
 
+      //End JS for image selection
 
       $('.datepicker').datepicker();
       $('.timepicker').timepicker();
