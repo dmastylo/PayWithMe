@@ -3,6 +3,7 @@ class EventsController < ApplicationController
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete, :update, :admin]
+  before_filter :event_user_vist_true, only: [:show]
   
   def new
     @event = current_user.organized_events.new
@@ -31,8 +32,6 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event_user = @event.event_users.find_by_user_id(current_user.id)
-    @event_user.visit_event!
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.size
     @message = Message.new
@@ -72,5 +71,13 @@ class EventsController < ApplicationController
   end
 
   def admin
+  end
+
+private
+  def event_user_vist_true
+    if @event.members.include?(current_user)
+      @event_user = @event.event_users.find_by_user_id(current_user.id)
+      @event_user.visit_event!
+    end
   end
 end

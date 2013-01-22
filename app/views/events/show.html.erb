@@ -18,11 +18,11 @@
       <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary pull-right push-top push-right" %>
     </div>
   <% elsif @event.public? && !@event.members.include?(current_user) %>
-    <div class="span3">
+    <div class="span4">
       <%= form_for [@event, @event_user] do |f| %>
           <%= f.hidden_field :event_id, :value => @event.id %>
           <%= f.hidden_field :user_id, :value => current_user.id %>
-          <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary pull-right push-top" %>
+          <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block pull-right push-top" %>
       <% end %>
     </div>
   <% end %>
@@ -64,7 +64,7 @@
         <% end %>
       </div>
     </div>
-    <% if current_user == @event.organizer %>
+    <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
     <% elsif @event_user.paid? %>
       <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
     <% else %>
@@ -84,6 +84,9 @@
       <ul class="message-list" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
         <% if @messages.any? %>
           <%= render @messages %>
+          <% if @messages_count > Figaro.env.chat_msg_per_page.to_i %>
+            <span class="load-new-msgs">Loading new messages...</span>
+          <% end %>
         <% else %>
           <span class="no-messages">There are no messages.</span>
         <% end %>

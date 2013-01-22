@@ -8,7 +8,8 @@
         <% if @news_items.empty? %>
           <li>You have no news... yet!</li>
         <% else %>
-            <%= render @news_items %>
+          <%= render @news_items %>
+          <%= will_paginate @news_items %>
         <% end %>
       </ul>
     </div>

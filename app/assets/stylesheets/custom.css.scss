@@ -11,6 +11,8 @@ body
     visibility: visible;
 }
 
+// Test change
+
 // Typography =================================================================
 h1, h2, h3, h4
 {
@@ -172,6 +174,10 @@ form
 .add-on
 {
     border-radius: 0 !important;
+}
+
+.timepicker {
+    margin-top: 1px;
 }
 
 // Button groups ==============================================================

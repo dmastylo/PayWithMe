@@ -2,18 +2,13 @@
 var moreMessageContent = $('.message-list').data('count') > $('.message-list').data('limit')
                        ? true : false;
 
-// var moreMessageContent = true;
-
 // Bool that will prevent the scrolling from constantly be fired
 var loadingOldMessages = false;
 
-$(function()
-{
+$(function() {
     $('.message-list').scroll(function() {
         if (($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
             !loadingOldMessages && moreMessageContent) {
-            // Let the user know that the messages are being loaded
-            $('.message-list').append('<span class="load-new-msgs">Loading new messages...</span>');
 
             var event_id = $(".message-list").attr("data-id");
             var last_message_time = $(".message").length > 0
