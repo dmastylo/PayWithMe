@@ -18,7 +18,7 @@
       <% if @upcoming_events.empty? %>
         No upcoming events!
       <% else %>
-        <%= render collection: @upcoming_events, partial: "events/event_body", as: :event %>
+        <%= render collection: @upcoming_events, partial: "events/sidebar_event", as: :event %>
       <% end %>
     </div>
   </div>

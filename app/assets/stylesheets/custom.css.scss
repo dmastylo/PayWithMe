@@ -242,6 +242,15 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     float: left;
 }
 
+.half
+{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    width: 50%;
+    float: left;
+}
+
 // Errors =====================================================================
 #error-explanation
 {
