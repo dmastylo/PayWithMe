@@ -260,11 +260,15 @@ class Event < ActiveRecord::Base
     end
     self.members -= members_to_delete
 
-    # raise [members_to_set, "======", self.members, "======", keep, "======", delete].to_yaml
-
-    # raise self.members.to_yaml
-
     add_members(members_to_set, exclude_from_notifications)
+  end
+
+  def remove_members(members_to_remove)
+    set_members(self.members - members_to_remove)
+  end
+
+  def remove_member(member_to_remove)
+    remove_members([member_to_remove])
   end
 
   def set_event_user_attributes(exclude_from_notifications)
@@ -306,6 +310,14 @@ class Event < ActiveRecord::Base
     end
 
     add_groups(groups_to_set)
+  end
+
+  def remove_groups(groups_to_remove)
+    self.set_groups(self.groups_to_remove - groups_to_remove)
+  end
+
+  def remove_group(group_to_remove)
+    self.remove_groups([group_to_remove])
   end
 
   # This method is awesome
