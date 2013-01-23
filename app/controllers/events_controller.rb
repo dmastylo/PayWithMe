@@ -48,20 +48,21 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @member_emails = @event.members.collect { |member| member.email }
+    @member_emails = @event.independent_members.collect { |member| member.email }
     @group_ids = @event.groups.collect { |group| group.id }
   end
 
   def update
     members_from_users = User.from_params(params[:event].delete(:members))
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
+    # raise [members_from_users, '=====', members_from_groups].to_yaml
     # @event = current_user.organized_events.new(params[:event])
 
     if @event.update_attributes(params[:event])
       flash[:success] = "Event updated!"
 
       @event.set_members(members_from_users + members_from_groups + [current_user], current_user)
-      @event.add_groups(groups)
+      @event.set_groups(groups)
 
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)

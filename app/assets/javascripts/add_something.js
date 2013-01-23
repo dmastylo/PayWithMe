@@ -83,11 +83,12 @@
 
     , delete: function($something)
     {
-      var email = $something.find('.email').html();
-      this.somethings = $.grep(this.somethings, function(sEmail)
+      var id = $something.data('id');
+      this.somethings = $.grep(this.somethings, function(removeId)
       {
-        return sEmail != email;
+        return removeId != id;
       });
+      console.log(this.somethings);
       this.$somethingsInput.val(JSON.stringify(this.somethings));
 
       $something.remove();

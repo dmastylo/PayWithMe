@@ -252,11 +252,17 @@ class Event < ActiveRecord::Base
 
   # Adds members and deletes any not in the set
   def set_members(members_to_set, exclude_from_notifications=nil)
+    members_to_delete = []
     self.members.each do |member|
       if !members_to_set.include?(member)
-        self.members.delete(member)
+        members_to_delete.push member
       end
     end
+    self.members -= members_to_delete
+
+    # raise [members_to_set, "======", self.members, "======", keep, "======", delete].to_yaml
+
+    # raise self.members.to_yaml
 
     add_members(members_to_set, exclude_from_notifications)
   end
@@ -286,10 +292,20 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def add_groups(groups)
-    groups.each do |group|
+  def add_groups(groups_to_add)
+    groups_to_add.each do |group|
       self.groups << group unless self.groups.include?(group)
     end
+  end
+
+  def set_groups(groups_to_set)
+    self.groups.each do |group|
+      if !groups_to_set.include?(group)
+        self.groups.delete(group)
+      end
+    end
+
+    add_groups(groups_to_set)
   end
 
   # This method is awesome

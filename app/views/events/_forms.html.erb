@@ -97,7 +97,9 @@
       </div>
       <%= f.hidden_field :groups, value: (@group_ids.to_json if @group_ids) %>
       <div id="invited_groups">
-        <%= render partial: "groups/invited_group", collection: @event.groups %>
+        <% @event.groups.each do |group| %>
+          <%= render 'groups/invited_group', mustache: group_for_mustache(group) %>
+        <% end %>
         <div class="clearfix"></div>
       </div>
     </div>
@@ -111,6 +113,10 @@
 
 <script type="text/html" id="invited_user_template">
   <%= render 'users/invited_user' %>
+</script>
+
+<script type="text/html" id="invited_group_template">
+  <%= render 'groups/invited_group' %>
 </script>
 
 <% content_for(:before_body_end) do %>
@@ -150,6 +156,7 @@
         addButtonSelector: "#add_group",
         somethingsInputSelector: "#event_groups",
         somethingsSelector: "#invited_groups",
+        somethingsTemplateSelector: "#invited_group_template",
         errorSelector: "#add_group_error",
         source: "<%= search_groups_path(format: :json) %>",
         idAttribute: "id",
@@ -160,17 +167,6 @@
         {
           return;
         },
-        onCreate: function(something)
-        {
-          var $something;
-          $something = $("<div></div>").addClass("member member_with_email")
-            .append($("<div></div>")
-              .addClass("email")
-            .html(something.title)
-            )
-          ;
-          return $something;
-        }
       });
     });
   </script>
