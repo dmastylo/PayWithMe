@@ -3,8 +3,8 @@
   <div class="span<% current_user == @event.organizer ? 6 : 12 %>">
     <div class="page-header">
       <h2>
-        <%= event_image_tag @event, :large %>
-        <%= @event.title %>
+        <%= event_image_tag @event, :medium %>
+        <%= truncate(@event.title, :length => 48, :separator => ' ') %>
         <% if @event.public? %>
           <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
         <% else %>
@@ -76,7 +76,7 @@
     <h3>Chat Board</h3>
     <div class="well">
       <div class="new-message-form">
-        <h4>Leave Message</h4>
+        <h4>Leave a Message</h4>
         <%= form_for [@event, @message], remote: true do |f| %>
           <%= f.text_area :message, class: "input-block-level message-text-field", rows: "3", placeholder: "Compose a message..." %>
           <%= f.submit "Post Message", class: "post-message btn btn-block" %>

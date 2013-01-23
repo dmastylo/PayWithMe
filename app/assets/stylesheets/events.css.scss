@@ -14,7 +14,7 @@
 	display: none;
 }
 
-.event_image_option
+.event_image_type_option
 {
     display: none;
 }
@@ -79,7 +79,8 @@
 
 .event-button
 {
-    margin-top: 65px;
+    margin-top: 13px; // For medium image size
+    //margin-top: 65px; // For large image size
 }
 
 // Chat Messages Display ======================================================

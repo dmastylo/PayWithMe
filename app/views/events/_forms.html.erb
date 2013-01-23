@@ -126,7 +126,7 @@
                 The default:
               </div>
               <div class="push-bottom">
-                <%= image_tag "default_event_image.png", width: Figaro.env.send(:large.to_s+"_size") %>
+                <%= image_tag "default_event_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
               </div>
             </div>
             <div class="event_image_type_option push-top" id="event_image_type_url">
@@ -135,7 +135,7 @@
                   Current URL:
                 </div>
                 <div class="push-bottom">
-                  <%= event_image_tag(@event, :large) %>
+                  <%= event_image_tag(@event, :medium) %>
                 </div>
               <% end %>
               <div class="control-group">
@@ -151,7 +151,7 @@
                   Current uploaded image:
                 </div>
                 <div class="push-bottom">
-                  <%= event_image_tag(@event, :large) %>
+                  <%= event_image_tag(@event, :medium) %>
                 </div>
               <% end %>
               <div class="control-group">

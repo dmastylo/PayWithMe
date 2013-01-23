@@ -14,7 +14,7 @@
   </div>
   <div class="event-info">
     <h4 style="margin-top: 0;">
-      <%= link_to truncate(event.title, :length => 27, :separator => ' '), event %>
+      <%= link_to truncate(event.title, :length => 25, :separator => ' '), event %>
     </h4>
     <%= event.members.count %> member<% event.members.count > 1 ? "s" : "" %><br />
     <% if event.start_at < Time.now %>
