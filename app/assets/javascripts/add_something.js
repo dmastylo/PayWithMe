@@ -14,11 +14,11 @@
     this.$somethingsInput = $(this.options.somethingsInputSelector);
     this.$somethingsMultipleTextarea = $(this.options.somethingsMultipleTextareaSelector);
     this.$somethings = $(this.options.somethingsSelector);
+    this.$somethingsTemplate = $(this.options.somethingsTemplateSelector);
     this.$error = $(this.options.errorSelector);
 
     // Overiddable methods
     this.onValidate = this.options.onValidate || this.onValidate;
-    this.onCreate = this.options.onCreate || this.onCreate;
     
     // Launch it
     this.listen();
@@ -44,37 +44,7 @@
 
     , onCreate: function(something)
     {
-      var $something;
-      if(something[this.options.displayAttribute] && something[this.options.displayAttribute] != something[this.options.idAttribute])
-      {
-        $something = $("<div></div>").addClass("member")
-          .append($("<div></div>")
-            .addClass("profile_image").append($(something.profile_image))
-          )
-          .append($("<div></div>")
-            .addClass("info")
-            .append($("<div></div>")
-              .addClass("name").html(something.name)
-            )
-            .append($("<div></div>")
-              .addClass("email").html(something.email)
-            )
-          )
-          .append($("<div></div>")
-            .addClass("clearfix")
-          )
-        ;
-      }
-      else
-      {
-        $something = $("<div></div>").addClass("member member_with_email")
-          .append($("<div></div>")
-            .addClass("email").html(something.email)
-          )
-        ;
-      }
-
-      return $something;
+      return Mustache.to_html(this.$somethingsTemplate.html(), something);
     }
   
     , select: function(something)
@@ -106,7 +76,20 @@
 
         this.somethings.push(something[this.options.idAttribute]);
         this.$somethingsInput.val(JSON.stringify(this.somethings));
+
+        this.handleDeletes();
       }
+    }
+
+    , delete: function($something)
+    {
+      var email = $something.find('.email').html();
+      this.somethings = $.grep(this.somethings, function(sEmail)
+      {
+        return sEmail != email;
+      });
+
+      $something.remove();
     }
 
     , handleSelect: function()
@@ -120,6 +103,7 @@
       {
         var something = {};
         something[this.options.idAttribute] = this.$input.val();
+        something["stub"] = true;
         this.select(something);
       }
     }
@@ -164,6 +148,18 @@
       });
     }
 
+    , handleDeletes: function()
+    {
+      var that = this;
+      var $deletes = this.$somethings.find(".delete");
+
+      $deletes.unbind("click");
+      $deletes.click(function()
+      {
+        that.delete($(this).parent());
+      });
+    }
+
     , initializeTypeahead: function()
     {
       var that = this;
@@ -197,6 +193,7 @@
     {
       this.initializeTypeahead();
       this.handleSelects();
+      this.handleDeletes();
     }
   }
 
@@ -214,6 +211,7 @@
     somethingsMultipleTextareaSelector: '#member_names',
     somethingsInputSelector: '#event_members',
     somethingsSelector: '#invited_members',
+    somethingsTemplateSelector: '#invited_user_template',
     errorSelector: '#add_member_error',
     source: '/users/search.json',
     idAttribute: 'email',

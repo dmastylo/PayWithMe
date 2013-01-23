@@ -17,15 +17,16 @@ module UsersHelper
     link_to image, user
   end
 
-  def user_name(user)
-    user.name || user.email.truncate(20)
+  def user_name(user, length=20)
+    user.name || ( length > 0 ? user.email.truncate(20) : user.email )
   end
 
   def user_for_mustache(user)
     {
+      id: user.id,
       stub: user.stub?,
       email: user.email,
-      name: user.name,
+      name: user_name(user, 0),
       profile_image_tag: profile_image_tag(user)
     }
   end
