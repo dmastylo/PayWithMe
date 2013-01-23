@@ -151,16 +151,9 @@ ActiveRecord::Schema.define(:version => 20130123024552) do
     t.integer  "subject_id"
   end
 
-  create_table "payment_methods", :force => true do |t|
-    t.integer  "event_id",       :limit => 255
-    t.integer  "payment_method", :limit => 255
-    t.datetime "created_at",                    :null => false
-    t.datetime "updated_at",                    :null => false
-  end
-
   create_table "payments", :force => true do |t|
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.datetime "requested_at"
     t.datetime "paid_at"
     t.datetime "due_at"
@@ -169,8 +162,6 @@ ActiveRecord::Schema.define(:version => 20130123024552) do
     t.integer  "event_id"
     t.integer  "amount_cents"
     t.integer  "event_user_id"
-    t.integer  "payment_method"
-    t.string   "transaction_id"
   end
 
   create_table "reminder_users", :force => true do |t|
