@@ -120,7 +120,7 @@
                 The default:
               </div>
               <div class="push-bottom">
-                <%= event_image_tag(@event, :large) %>
+                <%= image_tag "default_event_image.png", width: Figaro.env.send(:large.to_s+"_size") %>
               </div>
             </div>
             <div class="event_image_type_option push-top" id="event_image_type_url">
