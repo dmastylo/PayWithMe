@@ -42,8 +42,8 @@ class User < ActiveRecord::Base
 
   # Validations
   # ========================================================
-  validates :name, presence: true, length: { maximum: 50 }, unless: :stub?
-  validates :password, length: { minimum: 8 }, if: :password_required?, unless: :stub?
+  validates :name, presence: true, length: { maximum: 50, message: "has to be less than 50 characters long"}, unless: :stub?
+  validates :password, length: { minimum: 8, message: "has to be at least 8 characters long (for your safety!)"}, if: :password_required?, unless: :stub?
   validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
   
   # Callbacks

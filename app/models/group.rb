@@ -17,7 +17,7 @@ class Group < ActiveRecord::Base
 
   # Validations
   # ========================================================
-  validates :title, presence: true, length: { minimum: 2, maximum: 120 }
+  validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long"  }
 
   # Relationships
   # ========================================================
