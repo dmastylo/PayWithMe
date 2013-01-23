@@ -52,6 +52,9 @@ class GroupsController < ApplicationController
   end
 
   def show
+    if request.path != group_path(@group)
+      redirect_to group_path(@group), status: :moved_permanently
+    end
   end
 
   def search
