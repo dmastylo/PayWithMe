@@ -15,7 +15,7 @@ end
 gem 'devise'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
-gem 'omniauth-paypal', git: 'git://github.com/surferdwa/omniauth-paypal.git'
+gem 'omniauth-paypal', git: 'git://github.com/datariot/omniauth-paypal.git'
 
 # User profiles
 gem 'gravatar_image_tag'

@@ -13,7 +13,7 @@ GIT
       activemodel (~> 3.0)
 
 GIT
-  remote: git://github.com/surferdwa/omniauth-paypal.git
+  remote: git://github.com/datariot/omniauth-paypal.git
   revision: 367de327edbf792f0b8898ab864eb3e9ce65c808
   specs:
     omniauth-paypal (0.1.1)
