@@ -17,7 +17,7 @@
       <%= link_to "Create New Event", new_event_path, class: "btn btn-block btn-primary" %>
       <h3 class="push-top">Upcoming Events</h3>
       <% if @upcoming_events.empty? %>
-        No upcoming events!
+        No upcoming events! <%= render "shared/maybe_create_event" %>
       <% else %>
         <%= render collection: @upcoming_events, partial: "events/event_body", as: :event %>
       <% end %>
