@@ -1,4 +1,4 @@
-<div class="well <% if current_user == event.organizer %>organized-event<% end %>">
+<div class="well sidebar <% if current_user == event.organizer %>organized-event<% end %>">
   <% if current_user == event.organizer %>
     <div class="organized">
       <% if event.public? %>
@@ -12,7 +12,7 @@
   <div class="event-sidebar">
     <%= event_image_tag event, :medium %>
   </div>
-  <div>
+  <div class="event-info">
     <h4 style="margin-top: 0;">
       <%= link_to truncate(event.title, :length => 27, :separator => ' '), event %>
     </h4>

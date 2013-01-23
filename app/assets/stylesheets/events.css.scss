@@ -230,10 +230,21 @@
 }
 
 // Sidebar content ============================================================
+.sidebar
+{
+    padding: 0px;
+}
+
 .event-sidebar
 {
     float: left;
     padding-right: 15px;
+    padding-left: 10px;
+    padding-top: 5px;
+}
+
+.event-info{
+    padding: 19px;
 }
 
 .event-profile-page
