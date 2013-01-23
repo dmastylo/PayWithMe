@@ -2,12 +2,13 @@
 #
 # Table name: groups
 #
-#  id          :integer          not null, primary key
-#  title       :string(255)
-#  description :text
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  slug        :string(255)
+#  id           :integer          not null, primary key
+#  title        :string(255)
+#  description  :text
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  slug         :string(255)
+#  organizer_id :integer
 #
 
 class Group < ActiveRecord::Base
@@ -18,10 +19,12 @@ class Group < ActiveRecord::Base
 
   # Validations
   # ========================================================
+  validates :organizer_id, presence: true
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long"  }
 
   # Relationships
   # ========================================================
+  belongs_to :organizer, class_name: "User"
   has_many :group_users, dependent: :destroy
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
   has_many :event_groups, dependent: :destroy

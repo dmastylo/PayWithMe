@@ -92,6 +92,10 @@ describe Event do
     end
   end
 
+  describe "adding users and groups" do
+    
+  end
+
   # describe "validations" do
 
   #   describe "due_at the past" do

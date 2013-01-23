@@ -50,7 +50,8 @@ describe User do
      :time_zone,
      :last_seen,
      :using_oauth,
-     :guest_token].each do |attribute|
+     :guest_token,
+     :slug].each do |attribute|
       it { should respond_to(attribute) }
     end
   end
@@ -74,8 +75,9 @@ describe User do
     it { should have_many(:organized_events).class_name("Event") }
     it { should have_many(:event_users).dependent(:destroy) }
     it { should have_many(:member_events).class_name("Event").through(:event_users).dependent(:destroy) }
+    it { should have_many(:organized_groups).class_name("Group").dependent(:destroy) }
     it { should have_many(:group_users).dependent(:destroy) }
-    it { should have_many(:groups).through(:group_users) }
+    it { should have_many(:member_groups).class_name("Group").through(:group_users) }
     it { should have_many(:messages).dependent(:destroy) }
     it { should have_many(:notifications).dependent(:destroy) }
     it { should have_many(:linked_accounts).dependent(:destroy) }
