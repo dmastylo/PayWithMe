@@ -111,13 +111,13 @@
             
             <%= f.hidden_field :event_image_option, id: "event_image_type" %>
             <div class="btn-group input-block-level" id="event_image_type_btn_group" data-toggle="buttons-radio">
-              <button type="button" class="btn third <%= "active" if :event_image_type == :url %>" data-value="url">
+              <button type="button" class="btn third <%= :event_image_option == :url ? "active" : "" %>" data-value="url">
                 URL
               </button>
-              <button type="button" class="btn third <%= "active" if :event_image_type == :upload %>" data-value="upload">
+              <button type="button" class="btn third <%= :event_image_option == :upload ? "active" : "" %>" data-value="upload">
                 Image Upload
               </button>
-              <button type="button" class="btn third last <%= "active" if :event_image_type == :default_image %>" data-value="default_image">None
+              <button type="button" class="btn third last <%= :event_image_option == :default_image ? "active" : "" %>" data-value="default_image">None
               </button>
             </div>
 
