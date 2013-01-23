@@ -230,9 +230,9 @@ class Event < ActiveRecord::Base
     add_members([member])
   end
 
-  def add_members(members, exclude_from_notifications=nil)
+  def add_members(members_to_add, exclude_from_notifications=nil)
     editing_event = true if self.members.length != 0
-    members.each do |member|
+    members_to_add.each do |member|
       if member.valid?
         if self.members.include?(member)
           Notification.create_or_update_for_event_update(self, member) if member != exclude_from_notifications
@@ -248,6 +248,17 @@ class Event < ActiveRecord::Base
 
     delay.send_invitation_emails
     set_event_user_attributes(exclude_from_notifications)
+  end
+
+  # Adds members and deletes any not in the set
+  def set_members(members_to_set, exclude_from_notifications=nil)
+    self.members.each do |member|
+      if !members_to_set.include?(member)
+        self.members.delete(member)
+      end
+    end
+
+    add_members(members_to_set, exclude_from_notifications)
   end
 
   def set_event_user_attributes(exclude_from_notifications)

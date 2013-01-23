@@ -88,6 +88,7 @@
       {
         return sEmail != email;
       });
+      this.$somethingsInput.val(JSON.stringify(this.somethings));
 
       $something.remove();
     }
