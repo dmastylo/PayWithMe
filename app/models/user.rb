@@ -26,6 +26,7 @@
 #  using_oauth                :boolean
 #  last_seen                  :datetime
 #  time_zone                  :string(255)      default("Eastern Time (US & Canada)")
+#  slug                       :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -68,6 +69,11 @@ class User < ActiveRecord::Base
   # Scopes
   # ========================================================
   scope :online, lambda{ where("last_seen > ?", 3.minutes.ago) }
+
+  # Pretty URLs
+  # ========================================================
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :history]
 
   # Profile Image
   # ========================================================
@@ -197,10 +203,6 @@ class User < ActiveRecord::Base
 
   def is_admin?
     %w{ dmastylo@gmail.com cceli@codequarry.net agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
-  end
-
-  def to_param
-    "#{id}-#{name}".parameterize
   end
 
   # Event Definitions
