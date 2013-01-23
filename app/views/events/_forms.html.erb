@@ -58,14 +58,6 @@
         <button type="button" class="btn half" data-name="private" data-value="1" title="Anyone can join.">Public Event</button>
         <button type="button" class="btn half" data-name="public" data-value="2" title="Only those invited can join.">Private Event</button>
       </div>
-
-      <%= f.label :payment_methods_raw, "Accepted Payment Methods (Select One Or More)" %>
-      <%= f.hidden_field :payment_methods_raw %>
-      <div class="btn-group input-block-level push-bottom" id="event_payment_methods_raw_btn_group"  data-toggle="buttons-checkbox">
-        <button type="button" class="btn third" data-name="cash" data-value="1" title="Manually mark cash payers as paid.">Cash</button>
-        <button type="button" class="btn third" data-name="paypal" data-value="2" title="You need a linked PayPal account.">PayPal</button>
-        <button type="button" class="btn third last" data-name="dwolla" data-value="3" title="You need a linked Dwolla account.">Dwolla</button>
-      </div>
     </div>
   </div>
 </div>
@@ -129,7 +121,9 @@
         });
       });
 
-      $("#event_division_type,#event_fee_type,#event_privacy_type,#event_payment_methods_raw").buttonGroup();
+      $("#event_division_type").buttonGroup();
+      $("#event_fee_type").buttonGroup();
+      $("#event_privacy_type").buttonGroup();
 
       $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>

@@ -42,8 +42,7 @@ PayWithMe::Application.routes.draw do
 
   resources :event_users, only: [] do
     member do
-      post 'pay'
-      get 'pin'
+      get 'pay'
       post 'ipn'
     end
   end
