@@ -79,7 +79,9 @@
       </div>
       <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
       <div id="invited_members">
-        <%= render partial: "users/invited_user", collection: @event.independent_members %>
+        <% @event.independent_members.each do |user| %>
+          <%= render 'users/invited_user', mustache: user_for_mustache(user) %>
+        <% end %>
         <div class="clearfix"></div>
       </div>
     </div>
@@ -106,6 +108,10 @@
     <%= f.submit "#{submit_text(@event)} event", class: "btn btn-primary btn-block" %>
   </div>
 </div>
+
+<script type="text/html" id="invited_user_template">
+  <%= render 'users/invited_user' %>
+</script>
 
 <% content_for(:before_body_end) do %>
   <!-- TODO: Move this elsewhere -->

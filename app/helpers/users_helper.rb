@@ -20,4 +20,13 @@ module UsersHelper
   def user_name(user)
     user.name || user.email.truncate(20)
   end
+
+  def user_for_mustache(user)
+    {
+      stub: user.stub?,
+      email: user.email,
+      name: user.name,
+      profile_image_tag: profile_image_tag(user)
+    }
+  end
 end

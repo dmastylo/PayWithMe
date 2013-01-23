@@ -1,0 +1,13 @@
+<div class="member {{#stub}}member_with_email{{/stub}}">
+  {{#stub}}
+    <div class="email">{{email}}</div>
+  {{/stub}}
+  {{^stub}}
+    <div class="profile_image">{{&profile_image_tag}}</div>
+    <div class="info">
+      <div class="name">{{name}}</div>
+      <div class="email">{{email}}</div>
+    </div>
+  {{/stub}}
+  <div class="clearfix"></div>
+</div>
