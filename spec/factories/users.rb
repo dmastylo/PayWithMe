@@ -17,7 +17,8 @@ FactoryGirl.define do
     factory :oauth_user do
       password ""
       password_confirmation ""
-      linked_accounts
+      using_oauth true
+      after(:create) { |user| user.linked_accounts << FactoryGirl.create(:linked_account, user: user) }
     end
   end
 end

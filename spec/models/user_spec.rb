@@ -32,11 +32,10 @@ require 'spec_helper'
 
 describe User do
   
-  before do
-    @user = FactoryGirl.create(:user)
-  end
-
+  before { @user = FactoryGirl.create(:user) }
   subject { @user }
+  it { should be_valid }
+  it { should_not be_stub }
 
   describe "attributes" do
     [:name,
@@ -102,13 +101,10 @@ describe User do
      :profile_image_updated_at,
      :stub,
      :guest_token,
-     :last_seen].each do |method|
-      it { should_not allow_mass_assignment_of(method) }
+     :last_seen].each do |attribute|
+      it { should_not allow_mass_assignment_of(attribute) }
     end
   end
-
-  it { should be_valid }
-  it { should_not be_stub }
 
   describe "when stub" do
     before { @user = User.create_stub("test@test.com") }
@@ -125,6 +121,10 @@ describe User do
 
   describe "when using oauth" do
     before { @user = FactoryGirl.create(:oauth_user) }
+
+    describe "validations" do
+      it { should_not validate_presence_of(:password) }
+    end
 
     it { @user.password_required?.should == false }
   end
