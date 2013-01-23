@@ -28,5 +28,11 @@ class EventUser < ActiveRecord::Base
   def paid?
   	paid_at.present?
   end
+
+  def visit_event!
+    if !visited_event?
+      toggle(:visited_event).save
+    end
+  end
   
 end

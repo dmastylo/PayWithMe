@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
   before_filter :user_activity
+  around_filter :user_time_zone, if: :current_user
 
   def default_url_options
     if Rails.env.production?
@@ -24,7 +25,7 @@ protected
   end
 
   def user_organizes_group
-    @group = current_user.groups.find_by_id(params[:group_id] || params[:id])
+    @group = current_user.groups.find(params[:group_id] || params[:id])
 
     if @group.nil? || !@group.is_admin?(current_user)
       flash[:error] = "You're not on the list."
@@ -33,7 +34,7 @@ protected
   end
 
   def user_in_event
-    @event = Event.find_by_id(params[:event_id] || params[:id])
+    @event = Event.find(params[:event_id] || params[:id])
 
     if !@event.members.include?(current_user) && !@event.public? && !current_user.is_admin?
       flash[:error] = "You're not on the list."
@@ -42,7 +43,7 @@ protected
   end
 
   def user_organizes_event
-    @event = current_user.organized_events.find_by_id(params[:event_id] || params[:id])
+    @event = current_user.organized_events.find(params[:event_id] || params[:id])
 
     if @event.nil?
       flash[:error] = "You're not on the list."
@@ -83,5 +84,9 @@ private
 
   def user_activity
     current_user.update_attribute(:last_seen, Time.now) if user_signed_in?
+  end
+
+  def user_time_zone(&block)
+    Time.use_zone(current_user.time_zone, &block)
   end
 end

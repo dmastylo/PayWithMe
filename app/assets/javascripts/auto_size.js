@@ -16,6 +16,15 @@
 
 		resize: function()
 		{
+			if(this.options.minSize != -1)
+			{
+				if($(document).width() < this.options.minSize)
+				{
+					this.$fluid.css('width', 'inherit');
+					return;
+				}
+			}
+
 			if(this.$parent.is(":visible"))
 			{
 				parentWidth = this.$parent.width();
@@ -23,12 +32,20 @@
 			}
 			else
 			{
-				// Assumes that the parent node is what actually has display: none;
-				// Or whatever CSS is used to hide things
-				this.$parent.parent().show();
+				var $unhide;
+				if(this.$parent.parent().is(":visible"))
+				{
+					$unhide = this.$parent;
+				}
+				else
+				{
+					$unhide = this.$parent.parent();
+				}
+
+				$unhide.show();
 				parentWidth = this.$parent.width();
 				fixedWidth = this.$fixed.outerWidth(true);
-				this.$parent.parent().hide();
+				$unhide.hide();
 			}
 
 			var calculatedOffset = this.$fluid.outerWidth(true) - this.$fluid.outerWidth();
@@ -55,6 +72,7 @@
 	$.fn.autoSize.defaults = {
 		fixed: 'span.add-on,.btn',
 		fluid: 'input',
-		offset: 0
+		offset: 0,
+		minSize: -1
 	}
 }(window.jQuery);

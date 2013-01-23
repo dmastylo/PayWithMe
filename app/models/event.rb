@@ -19,6 +19,7 @@
 #  event_image_content_type :string(255)
 #  event_image_file_size    :integer
 #  event_image_url          :string(255)
+#  slug                     :string(255)
 #
 
 class Event < ActiveRecord::Base
@@ -33,21 +34,21 @@ class Event < ActiveRecord::Base
   monetize :send_amount_cents, allow_nil: true
   monetize :our_fee_amount_cents, allow_nil: true
   has_attached_file :event_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>", large: "#{Figaro.env.large_size}x#{Figaro.env.large_size}" }
-
+  monetize :money_collected_cents, allow_nil: true
 
   # Validations
   # ========================================================
   validates :organizer_id, presence: true
-  validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3 }
-  validates :fee_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }
-  validates :privacy_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }
-  validates :title, presence: true, length: { minimum: 2, maximum: 120 }
+  validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3, message: "is an invalid division type" }
+  validates :fee_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2, message: "is an invalid fee type" }
+  validates :privacy_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2, message: "is an invalid privacy type" }
+  validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long" }
   validates :due_at, presence: true
-  validates :due_at, date: { after: Proc.new { Time.now } }, if: :due_at_changed?
+  validates :due_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :due_at_changed?
   validates :start_at, presence: true
-  validates :start_at, date: { after: Proc.new { Time.now } }, if: :start_at_changed?
-  validates :total_amount, presence: true, numericality: { greater_than: 0 }, if: :divide_total?
-  validates :split_amount, presence: true, numericality: { greater_than: 0 }, if: :divide_per_person?
+  validates :start_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :start_at_changed?
+  validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
+  validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
 
   # Relationships
   # ========================================================
@@ -57,6 +58,7 @@ class Event < ActiveRecord::Base
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
+  has_many :reminders, dependent: :destroy
 
   # Callbacks
   # ========================================================
@@ -64,6 +66,11 @@ class Event < ActiveRecord::Base
   before_validation :concatenate_dates
   before_save :clear_dates
   before_save :set_event_image
+
+  # Pretty URLs
+  # ========================================================
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :history]
 
   # Money definitions
   # ========================================================
@@ -112,6 +119,12 @@ class Event < ActiveRecord::Base
       (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
     else
       nil
+    end
+  end
+  
+  def money_collected_cents
+    if split_amount_cents.present?
+      split_amount_cents * paid_members.count
     end
   end
 
@@ -216,6 +229,20 @@ class Event < ActiveRecord::Base
   def paying_members
     self.members - [self.organizer]
   end
+
+  def paid_members
+    paid_event_users = event_users.where("paid_at IS NOT NULL")
+    users = paid_event_users.collect { |event_user| event_user.member }
+  end
+
+  def unpaid_members
+    unpaid_event_users = event_users.where("paid_at IS NULL")
+    users = unpaid_event_users.collect { |event_user| event_user.member }
+  end
+
+  def paid_percentage
+    (paid_members.count * 100.0) / paying_members.count 
+  end
   
   def add_member(member)
     add_members([member])
@@ -231,7 +258,7 @@ class Event < ActiveRecord::Base
           self.members << member 
           Notification.create_for_event(self, member) if member != exclude_from_notifications
           if editing_event
-            NewsItem.create_for_new_event_member(self, member)
+            NewsItem.delay.create_for_new_event_member(self, member)
           end
         end
       end
@@ -274,7 +301,7 @@ class Event < ActiveRecord::Base
 
   # This method is awesome
   def independent_members
-    nfgdi_members = self.members
+    nfgdi_members = self.paying_members
 
     self.groups.each do |group|
       nfgdi_members -= group.members
@@ -283,8 +310,17 @@ class Event < ActiveRecord::Base
     nfgdi_members
   end
 
-  def to_param
-    "#{id}-#{title}".parameterize
+  def event_user(user)
+    event_users.find_by_user_id(user)
+  end
+
+  def paid?(user)
+    event_user = event_user(user)
+    event_user.present? && event_user.paid?
+  end
+
+  def paid_at(user)
+    event_user(user).paid_at
   end
 
 private

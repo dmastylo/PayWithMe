@@ -7,14 +7,14 @@
   </div>
   <div class="span3">
     <% if !current_user.stub? %>
-      <%= link_to "Create group", new_group_path, class: "btn btn-primary push-top pull-right" %>
+      <%= link_to "Create group", new_group_path, class: "btn btn-primary btn-block push-top-title" %>
     <% end %>
   </div>
 </div>
-<% if @groups.empty? %>
-  You are not in any groups!
-<% else %>
-  <div class="row">
+<div class="index-partials row">
+  <% if @groups.empty? %>
+    You are not in any groups! Maybe you should <%= link_to "create a group?", new_group_path %>
+  <% else %>
     <%= render @groups %>
-  </div>
-<% end %>
+  <% end %>
+</div>

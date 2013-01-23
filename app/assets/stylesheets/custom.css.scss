@@ -16,6 +16,8 @@ body
     display: inline;
 }
 
+// Test change
+
 // Typography =================================================================
 h1, h2, h3, h4
 {
@@ -179,6 +181,10 @@ form
     border-radius: 0 !important;
 }
 
+.timepicker {
+    margin-top: 1px;
+}
+
 // Button groups ==============================================================
 .btn-group
 {
@@ -206,16 +212,23 @@ form
             width: 50%;
         }
 	}
+
+    button.active
+    {
+        background-color: #D6D6D6;
+    }
 }
 
 // Utilities ==================================================================
 .push-top { margin-top: $mediumMargin; }
+.push-top-title { margin-top: 15px; }
 .push-bottom { margin-bottom: $mediumMargin; }
 .push-right { margin-right: $mediumMargin; }
 .push-left { margin-left: $mediumMargin; }
 h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
 .center { text-align: center; }
 .spacer { height: 0; border-top: 1px solid $lightGray; margin: $largeMargin 0; }
+.index-partials { margin-top: 10px; }
 
 // Alerts =====================================================================
 .alert
@@ -317,4 +330,28 @@ footer
             margin-bottom: 0px;
         }
     }
+}
+
+.progress-addon
+{   
+    position: relative;
+
+    .progress-percentage
+    {
+        position: absolute;
+        margin-left: -50%;
+    }
+}
+
+.quarter
+{
+    width: 25%;
+    float: left;
+}
+
+.three-quarters
+{
+    width: 72%;
+    padding-left: 3%;
+    float: left;
 }

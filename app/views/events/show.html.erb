@@ -1,6 +1,6 @@
 <% provide(:title, @event.title) %>
 <div class="row">
-  <div class="span9">
+  <div class="span<% if current_user == @event.organizer %>6<% else %>12<% end %>">
     <div class="page-header">
       <h2>
         <%= event_image_tag @event, :large %>
@@ -15,14 +15,17 @@
   </div>
   <% if current_user == @event.organizer %>
     <div class="span3">
-      <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary pull-right push-top event-button" %>
+      <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
+    </div>
+    <div class="span3">
+      <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
     </div>
   <% elsif @event.public? && !@event.members.include?(current_user) %>
-    <div class="span3">
+    <div class="span4">
       <%= form_for [@event, @event_user] do |f| %>
           <%= f.hidden_field :event_id, :value => @event.id %>
           <%= f.hidden_field :user_id, :value => current_user.id %>
-          <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary pull-right push-top" %>
+          <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block pull-right push-top" %>
       <% end %>
     </div>
   <% end %>
@@ -37,14 +40,19 @@
         <div class="clearfix"></div>
       <% end %>
       <% unless @event.fundraiser? %>
-        <div class="quarter"><strong>Money Goal:</strong></div>
-        <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+        <% if @event.divide_total? %>
+          <div class="quarter"><strong>Total Goal</strong></div>
+          <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+        <% elsif @event.divide_per_person? %>
+          <div class="quarter"><strong>Per User Goal</strong></div>
+          <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
+        <% end %>
       <% end %>
       <div class="quarter"><strong>Money Due at</strong></div>
-      <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
+      <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
       <div class="quarter"><strong>Event Starts at</strong></div>
-      <div class="three-quarters"><%= @event.start_at.to_date.strftime("%m/%d/%Y at %I:%M%p") %></div>
+      <div class="three-quarters"><%= @event.start_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
     </div>
     <h3>Guest List</h3>
@@ -59,7 +67,7 @@
         <% end %>
       </div>
     </div>
-    <% if current_user == @event.organizer %>
+    <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
     <% elsif @event_user.paid? %>
       <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
     <% else %>
@@ -79,6 +87,9 @@
       <ul class="message-list" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
         <% if @messages.any? %>
           <%= render @messages %>
+          <% if @messages_count > Figaro.env.chat_msg_per_page.to_i %>
+            <span class="load-new-msgs">Loading new messages...</span>
+          <% end %>
         <% else %>
           <span class="no-messages">There are no messages.</span>
         <% end %>

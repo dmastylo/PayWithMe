@@ -19,6 +19,7 @@
 #  event_image_content_type :string(255)
 #  event_image_file_size    :integer
 #  event_image_url          :string(255)
+#  slug                     :string(255)
 #
 
 require 'spec_helper'

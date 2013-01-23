@@ -20,22 +20,6 @@
 }
 
 // Event Display ==============================================================
-.event-description
-{
-    .quarter
-    {
-        width: 25%;
-        float: left;
-    }
-
-    .three-quarters
-    {
-        width: 72%;
-        padding-left: 3%;
-        float: left;
-    }
-}
-
 .event-members
 {
     max-height: 350px;
@@ -252,4 +236,16 @@
     float:left;
     padding-right: 15px;
     margin-bottom: 2px;
+
+
+// ===============================
+#btn-bulk-invite
+{
+    margin-top: 17px;
+}
+
+#member_names
+{
+    margin-bottom: 0;
+    border-bottom: 0;
 }

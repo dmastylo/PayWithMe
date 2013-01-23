@@ -1,0 +1,21 @@
+<tr>
+  <td><%= user.name || user.email %></td>
+  <td>
+    <% if @event.paid?(user) %>
+      <%= distance_of_time_in_words_to_now @event.paid_at(user) %> ago
+    <% else %>
+      <span class="unpaid">Unpaid</span>
+    <% end %>
+  </td>
+  <td>
+    <% if @event.event_user(user).visited_event? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  <td>
+    <% unless @event.paid?(user) %>
+      <%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-success btn-block", method: :put %>
+    <% end %>
+  </td>
+</tr>

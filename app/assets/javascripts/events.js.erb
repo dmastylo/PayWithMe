@@ -1,5 +1,6 @@
 $(function()
 {
+    // Enter submits messages, shift-enter does a new line in the chat message
     if ($('.message-list').length > 0)
     {
         $("textarea").keypress(function(e)
@@ -13,6 +14,15 @@ $(function()
             }
         });
     }
+
+    // This needs to be tested
+    // $("#member_name").keyup(function(event)
+    // {
+    //     if(event.keyCode == 13)
+    //     {
+    //         $("#add_member").click();
+    //     }
+    // });
 });
 
 function fadeInNewMessages()

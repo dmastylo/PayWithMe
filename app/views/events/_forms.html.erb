@@ -48,8 +48,8 @@
       <%= f.label :fee_type, "Fee Setup" %>
       <%= f.hidden_field :fee_type %>
       <div class="btn-group input-block-level push-bottom" id="event_fee_type_btn_group" data-toggle="buttons-radio">
-        <button type="button" class="btn half" data-name="organizer" data-value="1" title="You will pay the fees.">Absorb Fees</button>
-        <button type="button" class="btn half" data-name="members" data-value="2" title="The members will pay the fees.">Members Pay Fees</button>
+        <button type="button" class="btn half" data-name="organizer" data-value="1" title="You will pay facilitator's fees.">You Pay Fees</button>
+        <button type="button" class="btn half" data-name="members" data-value="2" title="The members will pay the facilitator's fees.">Members Pay Fees</button>
       </div>
 
       <%= f.label :privacy_type, "Event Privacy" %>
@@ -63,13 +63,19 @@
 </div>
 <div class="row">
   <div class="span6">
-    <h3>Invite Members</h3>
+    <h3 class="pull-left">Invite Members</h3>
+    <a href="#" id="btn-bulk-invite" class="btn btn-primary pull-right">Bulk invitation mode</a>
+    <div class="clearfix"></div>
     <div class="well">
       <div class="alert alert-error hidden" id="add_member_error">
       </div>
-      <div class="input-append">
+      <div class="input-append" id="single-invite">
         <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
         <%= link_to "Add", "#", class: "btn", id: "add_member" %>
+      </div>
+      <div id="bulk-invite" class="hidden">
+         <%= text_area :member, :names, placeholder: "Enter email addresses separated by commas", class: "input-block-level", rows: 3 %>
+        <%= link_to "Add", "#", class: "btn btn-block", id: "add_members" %>
       </div>
       <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
       <div id="invited_members">
@@ -196,6 +202,15 @@
 
       $('.datepicker').datepicker();
       $('.timepicker').timepicker();
+
+      $('.datepicker').datepicker({
+        disableFocus: true
+      });
+
+      $('.timepicker').timepicker({
+        disableFocus: true
+      });
+
       $('.btn-group .btn').tooltip({
         container: 'body'
       });
@@ -214,7 +229,8 @@
       $("#event_privacy_type").buttonGroup();
 
       $('#member_name').addSomething({
-        somethings: <%= @member_emails.to_json.html_safe || "[]" %>
+        somethings: <%= @member_emails.to_json.html_safe || "[]" %>,
+        bulkEnabled: true
       });
 
       $("#group_name").addSomething({

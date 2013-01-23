@@ -13,7 +13,11 @@
 
         #logo
         {
-            margin-top: -4px;
+            margin-top: 8px;
+            width: 141px;
+            height: 32px;
+            background-image: url(asset_path("logo_white.png", image));
+            display: inline-block;
         }
 
         ul.nav
@@ -113,6 +117,11 @@ ul.dropdown-menu
                 color: $offWhite;
                 line-height: 22px;
                 padding: 5px 10px 5px 10px;
+            }
+
+            &.unread a
+            {
+                background-color: $lightBlue !important;
             }
         }
     }

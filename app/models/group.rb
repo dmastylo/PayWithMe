@@ -7,6 +7,7 @@
 #  description :text
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  slug        :string(255)
 #
 
 class Group < ActiveRecord::Base
@@ -17,7 +18,7 @@ class Group < ActiveRecord::Base
 
   # Validations
   # ========================================================
-  validates :title, presence: true, length: { minimum: 2, maximum: 120 }
+  validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long"  }
 
   # Relationships
   # ========================================================
@@ -25,6 +26,11 @@ class Group < ActiveRecord::Base
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
   has_many :event_groups, dependent: :destroy
   has_many :events, through: :event_groups, source: :event
+
+  # Pretty URLs
+  # ========================================================
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :history]
 
   # Member definitions
   # ========================================================
@@ -35,7 +41,7 @@ class Group < ActiveRecord::Base
         self.members << member
         Notification.create_for_group(self, member) if member != exclude_from_notifications
         if editing_group
-            NewsItem.create_for_new_group_member(self, member)
+            NewsItem.delay.create_for_new_group_member(self, member)
         end
       end
     end

@@ -1,0 +1,15 @@
+<% provide(:title, "New Reminder") %>
+<div class="row">
+  <div class="span8">
+  <div class="page-header">
+    <h2>New Email Reminder For <%= @event.title %></h2>
+  </div>
+  </div>
+  <div class="span4">
+    <%= link_to "Return to dashboard", admin_event_path(@event), class: "btn btn-primary pull-right push-top" %>
+  </div>
+</div>
+
+<%= form_for [@event, @reminder] do |f| %>
+  <% render "forms", f: f %>
+<% end %>

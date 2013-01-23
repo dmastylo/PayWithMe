@@ -1,13 +1,23 @@
 PayWithMe::Application.routes.draw do
   root to: "pages#index"
-  devise_for :users, controllers: { registrations: "my_devise/registrations", omniauth_callbacks: "my_devise/omniauth_callbacks", sessions: "my_devise/sessions", registrations: "my_devise/registrations" }
+  devise_for :users, controllers: { registrations: "my_devise/registrations", omniauth_callbacks: "my_devise/omniauth_callbacks", sessions: "my_devise/sessions", registrations: "my_devise/registrations", passwords: "my_devise/passwords" }
   match '/team', to: "pages#team"
+  match '/privacy_policy', to: "pages#privacy_policy"
+  match '/faq', to: "pages#faq"
 
   resources :contact_forms
 
   resources :events do
     resources :messages, only: :create
-    resources :event_users, only: [:create]
+    resources :reminders, only: [:new, :create]
+    resources :event_users, only: [:create] do
+      member do
+        put 'paid'
+      end
+    end
+    member do
+      get 'admin'
+    end
   end
   resources :messages, only: :index
 

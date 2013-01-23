@@ -2,7 +2,8 @@ class EventsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event, only: [:show]
-  before_filter :user_organizes_event, only: [:edit, :delete, :update]
+  before_filter :user_organizes_event, only: [:edit, :delete, :update, :admin]
+  before_filter :event_user_vist_true, only: [:show]
   
   def new
     @event = current_user.organized_events.new
@@ -31,7 +32,10 @@ class EventsController < ApplicationController
   end
 
   def show
-    @event_user = @event.event_users.find_by_user_id(current_user.id)
+    if request.path != event_path(@event)
+      redirect_to event_path(@event), status: :moved_permanently
+    end
+
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.size
     @message = Message.new
@@ -44,7 +48,6 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @event.members = @event.independent_members
     @member_emails = @event.members.collect { |member| member.email }
     @group_ids = @event.groups.collect { |group| group.id }
   end
@@ -67,6 +70,17 @@ class EventsController < ApplicationController
       @member_emails = @event.members.collect { |member| member.email }
       @group_ids = @event.groups.collect { |group| group.id }
       render "edit"
+    end
+  end
+
+  def admin
+  end
+
+private
+  def event_user_vist_true
+    if @event.members.include?(current_user)
+      @event_user = @event.event_users.find_by_user_id(current_user.id)
+      @event_user.visit_event!
     end
   end
 end
