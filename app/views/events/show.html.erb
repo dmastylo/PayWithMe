@@ -14,11 +14,9 @@
     </div>
   </div>
   <% if current_user == @event.organizer %>
-    <div class="span3">
-      <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
-    </div>
-    <div class="span3">
+    <div class="span3 event-button pull-right">
       <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
+      <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
     </div>
   <% elsif @event.public? && !@event.members.include?(current_user) %>
     <div class="span4">
