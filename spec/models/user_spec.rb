@@ -39,18 +39,20 @@ describe User do
   subject { @user }
 
   describe "attributes" do
-    it { should respond_to(:name) }
-    it { should respond_to(:email) }
-    it { should respond_to(:password) }
-    it { should respond_to(:password_confirmation) }
-    it { should respond_to(:encrypted_password) }
-    it { should respond_to(:stub) }
-    it { should respond_to(:profile_image_option) }
-    it { should respond_to(:profile_image_url) }
-    it { should respond_to(:time_zone) }
-    it { should respond_to(:last_seen) }
-    it { should respond_to(:using_oauth) }
-    it { should respond_to(:guest_token) }
+    [:name,
+     :email,
+     :password,
+     :password_confirmation,
+     :encrypted_password,
+     :stub,
+     :profile_image_option,
+     :profile_image_url,
+     :time_zone,
+     :last_seen,
+     :using_oauth,
+     :guest_token].each do |attribute|
+      it { should respond_to(attribute) }
+    end
   end
 
   describe "validations" do
@@ -117,6 +119,14 @@ describe User do
       it { should validate_presence_of(:guest_token) }
       it { should_not allow_value("@test.com").for(:email) }
     end
+
+    it { @user.password_required?.should == false }
+  end
+
+  describe "when using oauth" do
+    before { @user = FactoryGirl.create(:oauth_user) }
+
+    it { @user.password_required?.should == false }
   end
 
   describe "events" do
