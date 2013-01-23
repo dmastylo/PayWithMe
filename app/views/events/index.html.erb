@@ -5,14 +5,14 @@
   </div>
   <div class="span3">
     <% unless current_user.stub? %>
-      <%= link_to "Create event", new_event_path, class: "btn btn-primary push-top pull-right" %>
+      <%= link_to "Create event", new_event_path, class: "btn btn-primary btn-block push-top-title" %>
     <% end %>
   </div>
 </div>
 <div class="index-partials row">
   <% if @upcoming_events.empty? %>
     <div class="span12">
-      You currently don't have any upcoming events!
+      You currently don't have any upcoming events! <%= render "shared/maybe_create_event" %>
     </div>
   <% else %>
     <%= render @upcoming_events %>

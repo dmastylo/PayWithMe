@@ -26,6 +26,7 @@
 #  using_oauth                :boolean
 #  last_seen                  :datetime
 #  time_zone                  :string(255)      default("Eastern Time (US & Canada)")
+#  slug                       :string(255)
 #
 
 class User < ActiveRecord::Base
@@ -42,8 +43,8 @@ class User < ActiveRecord::Base
 
   # Validations
   # ========================================================
-  validates :name, presence: true, length: { minimum: 2, maximum: 50 }, unless: :stub?
-  validates :password, length: { minimum: 8 }, if: :password_required?, unless: :stub?
+  validates :name, presence: true, length: { minimum: 2, maximum: 50, message: "has to be between 2 and 50 characters long" }, unless: :stub?
+  validates :password, length: { minimum: 8, message: "has to be at least 8 characters long (for your safety!)" }, if: :password_required?, unless: :stub?
   validates :guest_token, presence: true, if: :stub?
   validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
   
@@ -70,6 +71,11 @@ class User < ActiveRecord::Base
   # Scopes
   # ========================================================
   scope :online, lambda{ where("last_seen > ?", 3.minutes.ago) }
+
+  # Pretty URLs
+  # ========================================================
+  extend FriendlyId
+  friendly_id :name, use: [:slugged, :history]
 
   # Profile Image
   # ========================================================
@@ -199,10 +205,6 @@ class User < ActiveRecord::Base
 
   def is_admin?
     %w{ dmastylo@gmail.com cceli@codequarry.net agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
-  end
-
-  def to_param
-    "#{id}-#{name}".parameterize
   end
 
   # Event Definitions

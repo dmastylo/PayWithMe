@@ -57,6 +57,9 @@ gem 'active_paypal_adaptive_payment'
 # Monitoring
 gem 'newrelic_rpm'
 
+# Pretty URLs
+gem 'friendly_id'
+
 group :development, :test do
   gem 'sqlite3'
 end

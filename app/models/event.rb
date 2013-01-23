@@ -15,6 +15,7 @@
 #  split_amount_cents :integer
 #  organizer_id       :integer
 #  privacy_type       :integer
+#  slug               :string(255)
 #
 
 class Event < ActiveRecord::Base
@@ -33,16 +34,16 @@ class Event < ActiveRecord::Base
   # Validations
   # ========================================================
   validates :organizer_id, presence: true
-  validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3 }
-  validates :fee_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }
-  validates :privacy_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }
-  validates :title, presence: true, length: { minimum: 2, maximum: 120 }
+  validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3, message: "is an invalid division type" }
+  validates :fee_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2, message: "is an invalid fee type" }
+  validates :privacy_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2, message: "is an invalid privacy type" }
+  validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long" }
   validates :due_at, presence: true
-  validates :due_at, date: { after: Proc.new { Time.now } }, if: :due_at_changed?
+  validates :due_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :due_at_changed?
   validates :start_at, presence: true
-  validates :start_at, date: { after: Proc.new { Time.now } }, if: :start_at_changed?
-  validates :total_amount, presence: true, numericality: { greater_than: 0 }, if: :divide_total?
-  validates :split_amount, presence: true, numericality: { greater_than: 0 }, if: :divide_per_person?
+  validates :start_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :start_at_changed?
+  validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
+  validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
 
   # Relationships
   # ========================================================
@@ -60,6 +61,11 @@ class Event < ActiveRecord::Base
   before_validation :concatenate_dates
   before_save :clear_dates
   before_save :add_organizer_to_members
+
+  # Pretty URLs
+  # ========================================================
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :history]
 
   # Money definitions
   # ========================================================
@@ -298,10 +304,6 @@ class Event < ActiveRecord::Base
 
   def paid_at(user)
     event_user(user).paid_at
-  end
-
-  def to_param
-    "#{id}-#{title}".parameterize
   end
 
 private

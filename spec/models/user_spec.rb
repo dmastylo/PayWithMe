@@ -26,6 +26,7 @@
 #  using_oauth                :boolean
 #  last_seen                  :datetime
 #  time_zone                  :string(255)      default("Eastern Time (US & Canada)")
+#  slug                       :string(255)
 #
 
 require 'spec_helper'

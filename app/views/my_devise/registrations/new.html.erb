@@ -52,7 +52,7 @@
         <% end %>
 
         <div class="form-actions">
-          <%= f.submit "Sign up", class: 'btn btn-primary' %>
+          <%= f.submit "Sign up", class: 'btn btn-block  btn-primary' %>
         </div>
       <% end %>
     </div>
@@ -60,8 +60,8 @@
   <div class="span5">
     <h3>Quick Registration</h3>
     <div class="well sidebar-nav">
-      <%= link_to "Register With Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary input-block-level push-bottom" %>
-      <%= link_to "Register With Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary input-block-level" %>
+      <%= link_to "Register With Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-block push-bottom" %>
+      <%= link_to "Register With Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-block" %>
     </div>
   </div>
 </div>
