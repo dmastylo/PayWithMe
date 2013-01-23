@@ -25,7 +25,7 @@ protected
   end
 
   def user_organizes_group
-    @group = current_user.groups.find_by_id(params[:group_id] || params[:id])
+    @group = current_user.groups.find(params[:group_id] || params[:id])
 
     if @group.nil? || !@group.is_admin?(current_user)
       flash[:error] = "You're not on the list."
@@ -34,7 +34,7 @@ protected
   end
 
   def user_in_event
-    @event = Event.find_by_id(params[:event_id] || params[:id])
+    @event = Event.find(params[:event_id] || params[:id])
 
     if !@event.members.include?(current_user) && !@event.public? && !current_user.is_admin?
       flash[:error] = "You're not on the list."
@@ -43,7 +43,7 @@ protected
   end
 
   def user_organizes_event
-    @event = current_user.organized_events.find_by_id(params[:event_id] || params[:id])
+    @event = current_user.organized_events.find(params[:event_id] || params[:id])
 
     if @event.nil?
       flash[:error] = "You're not on the list."
