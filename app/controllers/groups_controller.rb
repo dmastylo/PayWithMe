@@ -38,7 +38,7 @@ class GroupsController < ApplicationController
     if @group.update_attributes(params[:group])
       flash[:success] = "Group updated!"
 
-      @group.add_members(members + [current_user])
+      @group.set_members(members + [current_user])
 
       redirect_to group_path(@group)
     else
