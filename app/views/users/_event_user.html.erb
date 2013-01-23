@@ -15,7 +15,7 @@
     <% end %>
   <td>
     <% unless @event.paid?(user) %>
-      <%= link_to "Mark As Paid", paid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-success", method: :put %>
+      <%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-success btn-block", method: :put %>
     <% end %>
   </td>
 </tr>

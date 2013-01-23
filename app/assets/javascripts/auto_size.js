@@ -16,6 +16,15 @@
 
 		resize: function()
 		{
+			if(this.options.minSize != -1)
+			{
+				if($(document).width() < this.options.minSize)
+				{
+					this.$fluid.css('width', 'inherit');
+					return;
+				}
+			}
+
 			if(this.$parent.is(":visible"))
 			{
 				parentWidth = this.$parent.width();
@@ -63,6 +72,7 @@
 	$.fn.autoSize.defaults = {
 		fixed: 'span.add-on,.btn',
 		fluid: 'input',
-		offset: 0
+		offset: 0,
+		minSize: -1
 	}
 }(window.jQuery);
