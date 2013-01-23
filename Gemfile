@@ -74,6 +74,7 @@ group :test do
   gem 'guard-rspec'
   gem 'rb-inotify', '~> 0.8.8'
   gem 'delorean'
+  gem 'shoulda-matchers'
 end
 
 # Gems used only for assets and not required

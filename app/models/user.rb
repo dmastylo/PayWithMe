@@ -42,8 +42,9 @@ class User < ActiveRecord::Base
 
   # Validations
   # ========================================================
-  validates :name, presence: true, length: { maximum: 50 }, unless: :stub?
+  validates :name, presence: true, length: { minimum: 2, maximum: 50 }, unless: :stub?
   validates :password, length: { minimum: 8 }, if: :password_required?, unless: :stub?
+  validates :guest_token, presence: true, if: :stub?
   validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
   
   # Callbacks
@@ -56,14 +57,15 @@ class User < ActiveRecord::Base
   # ========================================================
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
   has_many :event_users, dependent: :destroy
-  has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_at, event_users.paid_at"
+  has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_at, event_users.paid_at", dependent: :destroy
   has_many :group_users, dependent: :destroy
   has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
   has_many :messages, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :linked_accounts, dependent: :destroy
   has_many :news_items, dependent: :destroy
-  has_many :payments, dependent: :destroy
+  has_many :received_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
+  has_many :sent_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
 
   # Scopes
   # ========================================================

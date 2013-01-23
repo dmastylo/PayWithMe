@@ -38,85 +38,94 @@ describe User do
 
   subject { @user }
 
-  it { should respond_to(:name) }
-  it { should respond_to(:email) }
-  it { should respond_to(:password) }
-  it { should respond_to(:password_confirmation) }
-  it { should respond_to(:encrypted_password) }
-  it { should respond_to(:organized_events) }
-  it { should respond_to(:member_events) }
-  it { should respond_to(:profile_image_url) }
-  it { should respond_to(:stub) }
+  describe "attributes" do
+    it { should respond_to(:name) }
+    it { should respond_to(:email) }
+    it { should respond_to(:password) }
+    it { should respond_to(:password_confirmation) }
+    it { should respond_to(:encrypted_password) }
+    it { should respond_to(:stub) }
+    it { should respond_to(:profile_image_option) }
+    it { should respond_to(:profile_image_url) }
+    it { should respond_to(:time_zone) }
+    it { should respond_to(:last_seen) }
+    it { should respond_to(:using_oauth) }
+    it { should respond_to(:guest_token) }
+  end
+
+  describe "validations" do
+    it { should validate_presence_of(:name) }
+    it { should ensure_length_of(:name).is_at_least(2).is_at_most(50) }
+    it { should validate_uniqueness_of(:email) }
+    it { should allow_value("test@test.com").for(:email) }
+    it { should allow_value("test+testing@test.com").for(:email) }
+    it { should_not allow_value("test.com").for(:email) }
+    it { should_not allow_value("test@test").for(:email) }
+    it { should_not allow_value("test@.com").for(:email) }
+    it { should_not allow_value("@test.com").for(:email) }
+    it { should ensure_length_of(:password).is_at_least(6) }
+    it { should_not allow_value("Not A Time Zone").for(:time_zone) }
+    it { should allow_value("Eastern Time (US & Canada)").for(:time_zone) }
+  end
+
+  describe "associations" do
+    it { should have_many(:organized_events).class_name("Event") }
+    it { should have_many(:event_users).dependent(:destroy) }
+    it { should have_many(:member_events).class_name("Event").through(:event_users).dependent(:destroy) }
+    it { should have_many(:group_users).dependent(:destroy) }
+    it { should have_many(:groups).through(:group_users) }
+    it { should have_many(:messages).dependent(:destroy) }
+    it { should have_many(:notifications).dependent(:destroy) }
+    it { should have_many(:linked_accounts).dependent(:destroy) }
+    it { should have_many(:news_items).dependent(:destroy) }
+    it { should have_many(:received_payments).class_name("Payment") }
+    it { should have_many(:sent_payments).class_name("Payment") }
+  end
+
+  describe "mass assignment" do
+    [:encrypted_password,
+     :reset_password_token,
+     :reset_password_sent_at,
+     :remember_created_at,
+     :sign_in_count,
+     :current_sign_in_ip,
+     :current_sign_in_at,
+     :last_sign_in_at,
+     :last_sign_in_ip,
+     :created_at,
+     :updated_at,
+     :profile_image_file_name,
+     :profile_image_file_size,
+     :profile_image_content_type,
+     :profile_image_updated_at,
+     :stub,
+     :guest_token,
+     :last_seen].each do |method|
+      it { should_not allow_mass_assignment_of(method) }
+    end
+  end
 
   it { should be_valid }
   it { should_not be_stub }
 
-  describe "accessible attributes" do
-    it "should not allow access to stub" do
-      expect do
-        User.new(stub: true)
-      end.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
-    end
-  end
-
-  describe "validation" do
-    describe "when a password is too short" do
-      before { @user.password = @user.password_confirmation = "x" * 5 }
-      it { should_not be_valid }
-    end
-
-    describe "when a password doesn't match confirmation" do
-      before { @user.password_confirmation = "mismatch" }
-      it { should_not be_valid }
-    end
-
-    describe "when name is not present" do
-      before { @user.name = nil }
-      it { should_not be_valid }
-    end
-    
-    describe "when email is not present" do
-      before { @user.email = nil }
-      it { should_not be_valid }
-    end
-
-    describe "when email is invalid" do
-      before { @user.email = "not.an.email" }
-      it { should_not be_valid }
-    end
-
-    after do
-      @user.destroy
-    end
-
-  end
-
   describe "when stub" do
+    before { @user = User.create_stub("test@test.com") }
+
+    describe "validations" do
+      it { should_not validate_presence_of(:password) }
+      it { should_not validate_presence_of(:name) }
+      it { should validate_presence_of(:guest_token) }
+      it { should_not allow_value("@test.com").for(:email) }
+    end
+  end
+
+  describe "events" do
     before do
-      @user = FactoryGirl.create(:user)
-      @user.stub = true
+      @event = FactoryGirl.create(:event)
+      @user = @event.organizer
     end
 
-    describe "validation" do
-      describe "when password is not present" do
-        before { @user.password = @user.password_confirmation = nil }
-        it { should be_valid }
-      end
-
-      describe "when name is not present" do
-        before { @user.name = "" }
-        it { should be_valid }
-      end
-
-      describe "when email is not present" do
-        before { @user.email = "" }
-        it { should_not be_valid }
-      end
-
-      describe "when email is invalid" do
-        before { @user.email = "not.an.email" }
-        it{ should_not be_valid }
-      end
-    end
+    it { @user.organized_events.should include(@event) }
+    it { @user.member_events.should include(@event) }
   end
 end

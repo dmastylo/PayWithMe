@@ -59,6 +59,7 @@ class Event < ActiveRecord::Base
   before_validation :clear_amounts
   before_validation :concatenate_dates
   before_save :clear_dates
+  before_save :add_organizer_to_members
 
   # Money definitions
   # ========================================================
@@ -323,6 +324,10 @@ private
 
   def clear_dates
     due_at_date = due_at_time = start_at_date = start_at_time = nil
+  end
+
+  def add_organizer_to_members
+    members << organizer
   end
 
 end

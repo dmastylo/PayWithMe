@@ -7,7 +7,7 @@ describe "Sign in page" do
 		visit new_user_session_path 
 	end
 
-	subject{ page }
+	subject { page }
 
 	describe "valid sign in" do
 		before do
@@ -23,7 +23,7 @@ describe "Sign in page" do
 
 	describe "invalid sign in" do
 
-		describe "with non-existant email" do
+		describe "with non-existent email" do
 			before do
 				fill_in "Email", with: "thisemaildoesnotexist@neverhasexisted.org"
 				fill_in "Password", with: "foobarbaz"
