@@ -67,7 +67,7 @@
             <div class="user_profile_image_option push-top" id="user_profile_image_gravatar">
               Your gravatar:<br />
               <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
-              <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top" %>
+              <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top input-block-level" %>
             </div>
             <div class="user_profile_image_option push-top" id="user_profile_image_url">
               <% if current_user.profile_image_url.present? %>
@@ -106,7 +106,7 @@
         <div class="control-group">
           <%= f.label :time_zone, "Preferred Time Zone", class: 'control-label' %>
           <div class="controls">
-            <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %>
+            <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, {:class => 'input-block-level'} %>
           </div>
         </div>
       </div>

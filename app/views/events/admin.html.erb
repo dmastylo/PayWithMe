@@ -1,15 +1,17 @@
 <% provide(:title, "#{@event.title} Dashboard") %>
 <div class="row">
-  <div class="span8">
+  <div class="span6">
     <div class="page-header">
       <h2>
         <%= @event.title %> Dashboard
       </h2>
     </div>
   </div>
-  <div class="span4">
-  	<%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary pull-right push-top" %>
-  	<%= link_to "View event", event_path(@event), class: "btn btn-primary pull-right push-top push-right" %>
+  <div class="span3">
+  	<%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
+  </div>
+  <div class="span3">
+  	<%= link_to "View event", event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
   </div>
 </div>
 <div class="row">
