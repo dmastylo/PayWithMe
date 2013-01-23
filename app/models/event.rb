@@ -15,6 +15,7 @@
 #  split_amount_cents :integer
 #  organizer_id       :integer
 #  privacy_type       :integer
+#  slug               :string(255)
 #
 
 class Event < ActiveRecord::Base
@@ -59,6 +60,11 @@ class Event < ActiveRecord::Base
   before_validation :clear_amounts
   before_validation :concatenate_dates
   before_save :clear_dates
+
+  # Pretty URLs
+  # ========================================================
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :history]
 
   # Money definitions
   # ========================================================
@@ -297,10 +303,6 @@ class Event < ActiveRecord::Base
 
   def paid_at(user)
     event_user(user).paid_at
-  end
-
-  def to_param
-    "#{id}-#{title}".parameterize
   end
 
 private

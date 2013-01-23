@@ -7,6 +7,7 @@
 #  description :text
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  slug        :string(255)
 #
 
 class Group < ActiveRecord::Base
@@ -25,6 +26,11 @@ class Group < ActiveRecord::Base
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
   has_many :event_groups, dependent: :destroy
   has_many :events, through: :event_groups, source: :event
+
+  # Pretty URLs
+  # ========================================================
+  extend FriendlyId
+  friendly_id :title, use: [:slugged, :history]
 
   # Member definitions
   # ========================================================

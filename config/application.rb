@@ -61,5 +61,10 @@ module PayWithMe
 
     # Error routing to routes.rb
     config.exceptions_app = self.routes
+
+    # Don't wrap fields with errors in another block
+    config.action_view.field_error_proc = Proc.new { |html_tag, instance| 
+      "#{html_tag}".html_safe 
+    }
   end
 end
