@@ -7,7 +7,7 @@
   </div>
   <% if @group.is_admin?(current_user) %>
     <div class="span3">
-      <%= link_to "Edit group", edit_group_path(@group), class: "btn btn-primary pull-right push-top" %>
+      <%= link_to "Edit group", edit_group_path(@group), class: "btn btn-primary btn-block pull-right push-top" %>
     </div>
   <% end %>
 </div>

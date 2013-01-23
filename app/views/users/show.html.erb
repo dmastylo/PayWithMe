@@ -37,7 +37,7 @@
     <% else %>
       <h3>Upcoming Public and Shared Events</h3>
     <% end %>
-    <div id="upcoming-events"<% if @upcoming_public_and_shared_events.empty? %> class="empty"<% end %>>
+    <div id="upcoming-events" class="events-third-list<% if @upcoming_public_and_shared_events.empty? %>  empty<% end %>">
       <% if @upcoming_public_and_shared_events.empty? %>
         No upcoming events!
       <% else %>
@@ -52,11 +52,13 @@
       <h3>Past Public and Shared Events</h3>
     <% end %>
 
-    <% if @past_public_and_shared_events.empty? %>
-      No past events!
-    <% else %>
-      <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
-    <% end %>
+    <div id="past-events" class="events-third-list<% if @past_public_and_shared_events.empty? %>  empty<% end %>">
+      <% if @past_public_and_shared_events.empty? %>
+        No past events!
+      <% else %>
+        <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
+      <% end %>
+    </div>
     <div class="clearfix"></div>
   </div>
 </div>
@@ -67,7 +69,8 @@
     {
       $('#user-wrapper').autoSize({
         fixed: '#user-left',
-        fluid: '#user-right'
+        fluid: '#user-right',
+        minSize: 767
       });
     });
   </script>

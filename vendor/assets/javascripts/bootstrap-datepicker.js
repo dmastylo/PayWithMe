@@ -71,6 +71,13 @@
 			this.autoclose = this.element.data('date-autoclose');
 		}
 
+		this.disableFocus = false;
+		if ('disableFocus' in options) {
+			this.disableFocus = options.disableFocus;
+		} else if ('dateDisableFocus' in this.element.data()) {
+			this.disableFocus = this.element.data('date-disableFocus');
+		}
+
 		this.keyboardNavigation = true;
 		if ('keyboardNavigation' in options) {
 			this.keyboardNavigation = options.keyboardNavigation;
@@ -169,6 +176,9 @@
 				e.stopPropagation();
 				e.preventDefault();
 			}
+            if (this.disableFocus) {
+                this.element.blur();
+            }
 			this.element.trigger({
 				type: 'show',
 				date: this.date
