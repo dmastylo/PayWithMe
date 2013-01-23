@@ -1,23 +1,26 @@
 <div class="well <% if current_user == event.organizer %>organized-event<% end %>">
   <% if current_user == event.organizer %>
     <div class="organized">
+      <% if event.public? %>
+        <a href="#" rel="tooltip" title="Public event" data-placement="left"><i class="icon-globe"></i></a>
+      <% else %>
+        <a href="#" rel="tooltip" title="Private event" data-placement="left"><i class="icon-lock"></i></a>
+      <% end %>
       <a href="#" rel="tooltip" title="You organize this event!" data-placement="left"><i class="icon-wrench"></i></a>
     </div>
   <% end %>
-  <%= event_image_tag event, :small %>
-
-  <h4 style="margin-top: 0;">
-    <%= link_to truncate(event.title, :length => 27, :separator => ' '), event %>
-    <% if event.public? %>
-      <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
+  <div class="event-sidebar">
+    <%= event_image_tag event, :medium %>
+  </div>
+  <div>
+    <h4 style="margin-top: 0;">
+      <%= link_to truncate(event.title, :length => 27, :separator => ' '), event %>
+    </h4>
+    <%= event.members.count %> member<% event.members.count > 1 ? "s" : "" %><br />
+    <% if event.start_at < Time.now %>
+      Started
     <% else %>
-      <a href="#" rel="tooltip" title="Private event" data-placement="right"><i class="icon-lock"></i></a>
-    <% end %>
-  </h4>
-  <%= event.members.count %> members<br />
-  <% if event.start_at < Time.now %>
-    Started
-  <% else %>
-    Starts
-  <% end %> at <%= event.start_at %>
+      Starts
+    <% end %> at <%= event.start_at %>
+  </div>
 </div>

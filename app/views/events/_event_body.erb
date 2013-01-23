@@ -9,14 +9,14 @@
       <a href="#" rel="tooltip" title="You organize this event!" data-placement="left"><i class="icon-wrench"></i></a>
     </div>
   <% end %>
-  <div>
+  <div class="event-sidebar">
     <%= event_image_tag event, :medium %>
   </div>
   <div>
     <h4 style="margin-top: 0;">
       <%= link_to truncate(event.title, :length => 27, :separator => ' '), event %>
     </h4>
-    <%= event.members.count %> members<br />
+    <%= event.members.count %> member<% event.members.count > 1 ? "s" : "" %><br />
     <% if event.start_at < Time.now %>
       Started
     <% else %>
