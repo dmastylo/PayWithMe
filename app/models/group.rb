@@ -34,9 +34,9 @@ class Group < ActiveRecord::Base
 
   # Member definitions
   # ========================================================
-  def add_members(members, exclude_from_notifications = nil)
+  def add_members(members_to_add, exclude_from_notifications=nil)
     editing_group = true if self.members.length != 0
-    members.each do |member|
+    members_to_add.each do |member|
       unless self.members.include?(member)
         self.members << member
         Notification.create_for_group(self, member) if member != exclude_from_notifications
@@ -49,6 +49,17 @@ class Group < ActiveRecord::Base
     delay.send_invitation_emails
     # Later, add them to open events as of
     # right now if they are added to the group
+  end
+
+  # Adds members and deletes any not in the set
+  def set_members(members_to_set, exclude_from_notifications=nil)
+    self.members.each do |member|
+      if !members_to_set.include?(member)
+        self.members.delete(member)
+      end
+    end
+
+    add_members(members_to_set, exclude_from_notifications)
   end
 
   def is_admin?(user)
