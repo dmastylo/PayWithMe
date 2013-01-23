@@ -2,7 +2,7 @@ class GroupsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_group, only: [:show]
-  before_filter :user_organizes_group, only: [:edit, :update, :delete]
+  before_filter :user_organizes_group, only: [:edit, :update, :delete, :destroy]
 
   def new
     @group = Group.new
