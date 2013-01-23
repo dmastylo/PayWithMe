@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130117190945) do
+ActiveRecord::Schema.define(:version => 20130123024552) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -71,7 +71,21 @@ ActiveRecord::Schema.define(:version => 20130117190945) do
     t.integer  "split_amount_cents"
     t.integer  "organizer_id"
     t.integer  "privacy_type"
+    t.string   "slug"
   end
+
+  add_index "events", ["slug"], :name => "index_events_on_slug"
+
+  create_table "friendly_id_slugs", :force => true do |t|
+    t.string   "slug",                         :null => false
+    t.integer  "sluggable_id",                 :null => false
+    t.string   "sluggable_type", :limit => 40
+    t.datetime "created_at"
+  end
+
+  add_index "friendly_id_slugs", ["slug", "sluggable_type"], :name => "index_friendly_id_slugs_on_slug_and_sluggable_type", :unique => true
+  add_index "friendly_id_slugs", ["sluggable_id"], :name => "index_friendly_id_slugs_on_sluggable_id"
+  add_index "friendly_id_slugs", ["sluggable_type"], :name => "index_friendly_id_slugs_on_sluggable_type"
 
   create_table "group_users", :force => true do |t|
     t.integer  "user_id"
@@ -87,7 +101,10 @@ ActiveRecord::Schema.define(:version => 20130117190945) do
     t.text     "description"
     t.datetime "created_at",  :null => false
     t.datetime "updated_at",  :null => false
+    t.string   "slug"
   end
+
+  add_index "groups", ["slug"], :name => "index_groups_on_slug"
 
   create_table "linked_accounts", :force => true do |t|
     t.string   "provider"
@@ -134,9 +151,16 @@ ActiveRecord::Schema.define(:version => 20130117190945) do
     t.integer  "subject_id"
   end
 
+  create_table "payment_methods", :force => true do |t|
+    t.integer  "event_id",       :limit => 255
+    t.integer  "payment_method", :limit => 255
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
   create_table "payments", :force => true do |t|
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.datetime "requested_at"
     t.datetime "paid_at"
     t.datetime "due_at"
@@ -145,6 +169,8 @@ ActiveRecord::Schema.define(:version => 20130117190945) do
     t.integer  "event_id"
     t.integer  "amount_cents"
     t.integer  "event_user_id"
+    t.integer  "payment_method"
+    t.string   "transaction_id"
   end
 
   create_table "reminder_users", :force => true do |t|
@@ -188,9 +214,11 @@ ActiveRecord::Schema.define(:version => 20130117190945) do
     t.boolean  "using_oauth"
     t.datetime "last_seen"
     t.string   "time_zone",                  :default => "Eastern Time (US & Canada)"
+    t.string   "slug"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
+  add_index "users", ["slug"], :name => "index_users_on_slug"
 
 end
