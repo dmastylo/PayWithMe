@@ -45,6 +45,13 @@ class Event < ActiveRecord::Base
   validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
   validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
 
+  # Callbacks
+  # ========================================================
+  before_validation :clear_amounts
+  before_validation :concatenate_dates
+  before_save :clear_dates
+  before_destroy :clear_notifications_and_news_items
+
   # Relationships
   # ========================================================
   belongs_to :organizer, class_name: "User"
@@ -54,12 +61,6 @@ class Event < ActiveRecord::Base
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
   has_many :reminders, dependent: :destroy
-
-  # Callbacks
-  # ========================================================
-  before_validation :clear_amounts
-  before_validation :concatenate_dates
-  before_save :clear_dates
 
   # Pretty URLs
   # ========================================================
@@ -173,7 +174,6 @@ class Event < ActiveRecord::Base
 
   # Dates
   # ========================================================
-
   def due_at_date
     if @due_at_date.present?
       @due_at_date
@@ -230,9 +230,9 @@ class Event < ActiveRecord::Base
     add_members([member])
   end
 
-  def add_members(members, exclude_from_notifications=nil)
+  def add_members(members_to_add, exclude_from_notifications=nil)
     editing_event = true if self.members.length != 0
-    members.each do |member|
+    members_to_add.each do |member|
       if member.valid?
         if self.members.include?(member)
           Notification.create_or_update_for_event_update(self, member) if member != exclude_from_notifications
@@ -248,6 +248,27 @@ class Event < ActiveRecord::Base
 
     delay.send_invitation_emails
     set_event_user_attributes(exclude_from_notifications)
+  end
+
+  # Adds members and deletes any not in the set
+  def set_members(members_to_set, exclude_from_notifications=nil)
+    members_to_delete = []
+    self.members.each do |member|
+      if !members_to_set.include?(member)
+        members_to_delete.push member
+      end
+    end
+    self.members -= members_to_delete
+
+    add_members(members_to_set, exclude_from_notifications)
+  end
+
+  def remove_members(members_to_remove)
+    set_members(self.members - members_to_remove)
+  end
+
+  def remove_member(member_to_remove)
+    remove_members([member_to_remove])
   end
 
   def set_event_user_attributes(exclude_from_notifications)
@@ -275,10 +296,28 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def add_groups(groups)
-    groups.each do |group|
+  def add_groups(groups_to_add)
+    groups_to_add.each do |group|
       self.groups << group unless self.groups.include?(group)
     end
+  end
+
+  def set_groups(groups_to_set)
+    self.groups.each do |group|
+      if !groups_to_set.include?(group)
+        self.groups.delete(group)
+      end
+    end
+
+    add_groups(groups_to_set)
+  end
+
+  def remove_groups(groups_to_remove)
+    self.set_groups(self.groups - groups_to_remove)
+  end
+
+  def remove_group(group_to_remove)
+    self.remove_groups([group_to_remove])
   end
 
   # This method is awesome
@@ -325,6 +364,11 @@ private
 
   def clear_dates
     due_at_date = due_at_time = start_at_date = start_at_time = nil
+  end
+
+  def clear_notifications_and_news_items
+    Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
+    NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all
   end
 
 end

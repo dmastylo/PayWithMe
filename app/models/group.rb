@@ -20,6 +20,11 @@ class Group < ActiveRecord::Base
   # ========================================================
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long"  }
 
+  # Callbacks
+  # ========================================================
+  before_destroy :clear_notifications_and_news_items
+  before_destroy :transfer_member_list
+
   # Relationships
   # ========================================================
   has_many :group_users, dependent: :destroy
@@ -34,9 +39,9 @@ class Group < ActiveRecord::Base
 
   # Member definitions
   # ========================================================
-  def add_members(members, exclude_from_notifications = nil)
+  def add_members(members_to_add, exclude_from_notifications=nil)
     editing_group = true if self.members.length != 0
-    members.each do |member|
+    members_to_add.each do |member|
       unless self.members.include?(member)
         self.members << member
         Notification.create_for_group(self, member) if member != exclude_from_notifications
@@ -49,6 +54,17 @@ class Group < ActiveRecord::Base
     delay.send_invitation_emails
     # Later, add them to open events as of
     # right now if they are added to the group
+  end
+
+  # Adds members and deletes any not in the set
+  def set_members(members_to_set, exclude_from_notifications=nil)
+    self.members.each do |member|
+      if !members_to_set.include?(member)
+        self.members.delete(member)
+      end
+    end
+
+    add_members(members_to_set, exclude_from_notifications)
   end
 
   def is_admin?(user)
@@ -102,6 +118,20 @@ class Group < ActiveRecord::Base
     end
 
     return groups.uniq, users.uniq
+  end
+
+private
+  def clear_notifications_and_news_items
+    Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::GROUP).destroy_all
+    NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::GROUP).destroy_all
+  end
+
+  def transfer_member_list
+    # TODO
+    # transfer the group users into the members
+    self.events.each do |event|
+      event.remove_group(self)
+    end
   end
 
 end

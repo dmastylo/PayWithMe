@@ -2,7 +2,17 @@ class GroupsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_group, only: [:show]
-  before_filter :user_organizes_group, only: [:edit, :update, :delete]
+  before_filter :user_organizes_group, only: [:edit, :update, :delete, :destroy]
+
+  def index
+    @groups = current_user.groups
+  end
+
+  def show
+    if request.path != group_path(@group)
+      redirect_to group_path(@group), status: :moved_permanently
+    end
+  end
 
   def new
     @group = Group.new
@@ -38,7 +48,7 @@ class GroupsController < ApplicationController
     if @group.update_attributes(params[:group])
       flash[:success] = "Group updated!"
 
-      @group.add_members(members + [current_user])
+      @group.set_members(members + [current_user])
 
       redirect_to group_path(@group)
     else
@@ -47,14 +57,10 @@ class GroupsController < ApplicationController
     end
   end
 
-  def index
-    @groups = current_user.groups
-  end
-
-  def show
-    if request.path != group_path(@group)
-      redirect_to group_path(@group), status: :moved_permanently
-    end
+  def destroy
+    @group.destroy
+    flash[:success] = "Group deleted!"
+    redirect_to groups_path
   end
 
   def search

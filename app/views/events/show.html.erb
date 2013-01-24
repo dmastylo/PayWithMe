@@ -1,6 +1,6 @@
 <% provide(:title, @event.title) %>
 <div class="row">
-  <div class="span<% if current_user == @event.organizer %>6<% else %>12<% end %>">
+  <div class="span<% if current_user == @event.organizer %>9<% else %>12<% end %>">
     <div class="page-header">
       <h2>
         <%= @event.title %>
@@ -17,9 +17,6 @@
       <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top" %>
     </div>
   <% elsif current_user == @event.organizer %>
-    <div class="span3">
-      <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
-    </div>
     <div class="span3">
       <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
     </div>
