@@ -128,6 +128,10 @@ private
 
   def transfer_member_list
     # TODO
+    # transfer the group users into the members
+    self.events.each do |event|
+      event.remove_group(self)
+    end
   end
 
 end
