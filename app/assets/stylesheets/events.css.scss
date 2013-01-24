@@ -190,6 +190,13 @@
             color: $mediumGray;
         }
 
+        .delete
+        {
+            float: right;
+            line-height: 34px;
+            cursor: pointer;
+        }
+
         &.member_with_email
         {
             height: 34px;
@@ -198,6 +205,10 @@
             {
                 font-weight: bold;
                 color: $offBlack;
+            }
+            .info
+            {
+                line-height: 34px;
             }
         }
     }
