@@ -3,15 +3,19 @@
   <div class="span6">
     <div class="page-header">
       <h2>
-        <%= @event.title %> Dashboard
+        <%= event_image_tag(@event, :medium) %>
+        <%= truncate(@event.title, :length => 38, :separator => ' ') %> Dashboard
+        <% if @event.public? %>
+          <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
+        <% else %>
+          <a href="#" rel="tooltip" title="Private event" data-placement="right"><i class="icon-lock"></i></a>
+        <% end %>
       </h2>
     </div>
   </div>
-  <div class="span3">
-  	<%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
-  </div>
-  <div class="span3">
+  <div class="span3 pull-right event-button">
   	<%= link_to "View event", event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
+    <%= link_to "Edit event", edit_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
   </div>
 </div>
 <div class="row">

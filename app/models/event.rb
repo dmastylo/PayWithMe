@@ -64,6 +64,7 @@ class Event < ActiveRecord::Base
   # ========================================================
   before_validation :clear_amounts
   before_validation :concatenate_dates
+  before_validation :set_image_to_default
   before_save :clear_dates
   before_save :set_event_image
 
@@ -357,6 +358,10 @@ private
     end
 
     event_image_option = nil
+  end
+
+  def set_image_to_default
+    self.event_image_option = "default_image"
   end
 
 end
