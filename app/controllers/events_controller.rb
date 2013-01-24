@@ -32,6 +32,10 @@ class EventsController < ApplicationController
   end
 
   def show
+    if request.path != event_path(@event)
+      redirect_to event_path(@event), status: :moved_permanently
+    end
+
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.size
     @message = Message.new
@@ -44,7 +48,6 @@ class EventsController < ApplicationController
   end
 
   def edit
-    @event.members = @event.independent_members
     @member_emails = @event.members.collect { |member| member.email }
     @group_ids = @event.groups.collect { |group| group.id }
   end

@@ -19,7 +19,7 @@ class Reminder < ActiveRecord::Base
   # Validations
   validates :body, presence: true
   validates :title, presence: true
-  validates :recipient_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3 }
+  validates :recipient_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3, message: "is an invalid recipient type" }
   validates :event_id, presence: true
 
   # Relationships

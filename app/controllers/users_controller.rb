@@ -3,6 +3,9 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    if request.path != user_path(@user)
+      redirect_to user_path(@user), status: :moved_permanently
+    end
     @your_organized_events = current_user.upcoming_organized_events
 
     if @user == current_user
