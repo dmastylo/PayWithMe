@@ -19,6 +19,7 @@ class Group < ActiveRecord::Base
 
   # Validations
   # ========================================================
+  validates :organizer_id, presence: true
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long"  }
 
   # Callbacks
@@ -28,8 +29,9 @@ class Group < ActiveRecord::Base
 
   # Relationships
   # ========================================================
+  belongs_to :organizer, class_name: "User"
   has_many :group_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
+  has_many :members, class_name: "User", through: :group_users, source: :user
   has_many :event_groups, dependent: :destroy
   has_many :events, through: :event_groups, source: :event
 
@@ -57,15 +59,29 @@ class Group < ActiveRecord::Base
     # right now if they are added to the group
   end
 
+  def add_member(member_to_add)
+    self.add_members( [ member_to_add ] )
+  end
+
   # Adds members and deletes any not in the set
   def set_members(members_to_set, exclude_from_notifications=nil)
+    members_to_delete = []
     self.members.each do |member|
       if !members_to_set.include?(member)
-        self.members.delete(member)
+        members_to_delete.push member
       end
     end
+    self.members -= members_to_delete
 
     add_members(members_to_set, exclude_from_notifications)
+  end
+
+  def remove_members(members_to_remove)
+    set_members(self.members - members_to_remove)
+  end
+
+  def remove_member(member_to_remove)
+    remove_members([member_to_remove])
   end
 
   def is_admin?(user)
@@ -96,7 +112,7 @@ class Group < ActiveRecord::Base
     if user.nil?
       Group.search(title_cont: query).result
     else
-      user.groups.search(title_cont: query).result
+      user.member_groups.search(title_cont: query).result
     end
   end
 
@@ -105,7 +121,7 @@ class Group < ActiveRecord::Base
     return [], [] if params.nil? || params.empty?
     params = ActiveSupport::JSON.decode(params)
 
-    base = user.groups if user.present?
+    base = user.member_groups if user.present?
     base ||= Group
 
     users = []

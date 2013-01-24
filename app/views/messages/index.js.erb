@@ -28,6 +28,9 @@
 
     // Done loading, can scroll again
     loadingOldMessages = false;
+
+    // Activates tooltips on new messages
+    $("[rel='tooltip']").tooltip();
     
 <% elsif !defined?(@new_messages).nil? && !@new_messages.empty? %>
     //////////////////////////////
@@ -67,4 +70,7 @@
         fixed: '.profile-image',
         fluid: '.body'
     });
+
+    // Activates tooltips on new message
+    $("[rel='tooltip']").tooltip();
 <% end %>
