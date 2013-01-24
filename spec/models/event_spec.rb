@@ -47,7 +47,7 @@ describe Event do
   end
 
   describe "validations" do
-    it { should ensure_length_of(:title).is_at_least(2).is_at_most(120) }
+    it { should ensure_length_of(:title).is_at_least(2).is_at_most(120).with_short_message(/has to be between/).with_long_message(/has to be between/) }
     it { should validate_presence_of(:organizer_id) }
     it { should validate_presence_of(:division_type) }
 
@@ -92,8 +92,88 @@ describe Event do
     end
   end
 
-  describe "adding users and groups" do
-    
+  describe "members" do
+    it { @event.members.should include(@event.organizer) }
+
+    describe "adding" do
+      describe "multiple" do
+        before do
+          @members = FactoryGirl.create_list(:user, 10)
+          @event.add_members(@members)
+        end
+        it "should include all members" do
+          @members.each do |member|
+            @event.members.should include(member)
+          end
+        end
+      end
+
+      describe "single" do
+        before do
+          @member = FactoryGirl.create(:user)
+          @event.add_member(@member)
+        end
+        it { @event.members.should include(@member) }
+      end
+    end
+
+    describe "setting" do
+      before do
+        @original_members = FactoryGirl.create_list(:user, 10)
+        @event.add_members(@original_members)
+        @new_members = FactoryGirl.create_list(:user, 10)
+        @event.set_members(@new_members)
+      end
+
+      it { @event.members.should eq @new_members }
+      it "should not include uninvited members" do
+        @original_members.each do |member|
+          @event.members.should_not include(member)
+        end
+      end
+    end
+
+    describe "removing" do
+      describe "multiple" do
+        before do
+          @uninvited_members = FactoryGirl.create_list(:user, 3)
+          @new_members = FactoryGirl.create_list(:user, 3)
+          @event.add_members(@uninvited_members + @new_members)
+          @event.remove_members(@uninvited_members)
+        end
+
+        it "should not include uninvited members" do
+          @uninvited_members.each do |member|
+            @event.members.should_not include(member)
+          end
+        end
+
+        it "should include other members" do
+          @new_members.each do |member|
+            @event.members.should include(member)
+          end
+        end
+      end
+
+      describe "single" do
+        before do
+          @uninvited_member = FactoryGirl.create(:user)
+          @new_members = FactoryGirl.create_list(:user, 3)
+          @event.add_members([@uninvited_member] + @new_members)
+          @event.remove_member(@uninvited_member)
+        end
+
+        it "should not include uninvited member" do
+          @event.members.should_not include(@uninvited_member)
+        end
+
+        it "should include other members" do
+          @new_members.each do |member|
+            @event.members.should include(member)
+          end
+        end
+      end
+    end
   end
 
   # describe "validations" do

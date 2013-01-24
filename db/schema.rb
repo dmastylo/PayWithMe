@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130123205315) do
+ActiveRecord::Schema.define(:version => 20130123205916) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -90,7 +90,6 @@ ActiveRecord::Schema.define(:version => 20130123205315) do
   create_table "group_users", :force => true do |t|
     t.integer  "user_id"
     t.integer  "group_id"
-    t.boolean  "admin",           :default => false
     t.datetime "created_at",                         :null => false
     t.datetime "updated_at",                         :null => false
     t.boolean  "invitation_sent", :default => false

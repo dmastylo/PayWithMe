@@ -54,15 +54,29 @@ class Group < ActiveRecord::Base
     # right now if they are added to the group
   end
 
+  def add_member(member_to_add)
+    self.add_members( [ member_to_add ] )
+  end
+
   # Adds members and deletes any not in the set
   def set_members(members_to_set, exclude_from_notifications=nil)
+    members_to_delete = []
     self.members.each do |member|
       if !members_to_set.include?(member)
-        self.members.delete(member)
+        members_to_delete.push member
       end
     end
+    self.members -= members_to_delete
 
     add_members(members_to_set, exclude_from_notifications)
+  end
+
+  def remove_members(members_to_remove)
+    set_members(self.members - members_to_remove)
+  end
+
+  def remove_member(member_to_remove)
+    remove_members([member_to_remove])
   end
 
   def is_admin?(user)
