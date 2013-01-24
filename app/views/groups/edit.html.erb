@@ -3,5 +3,5 @@
   <h2>Edit Group</h2>
 </div>
 <%= form_for @group do |f| %>
-  <%= render 'forms', f: f %>
+  <%= render 'forms', f: f, editing_event: true %>
 <% end %>
