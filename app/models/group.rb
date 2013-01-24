@@ -20,6 +20,11 @@ class Group < ActiveRecord::Base
   # ========================================================
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long"  }
 
+  # Callbacks
+  # ========================================================
+  before_destroy :clear_notifications_and_news_items
+  before_destroy :transfer_member_list
+
   # Relationships
   # ========================================================
   has_many :group_users, dependent: :destroy
@@ -113,6 +118,16 @@ class Group < ActiveRecord::Base
     end
 
     return groups.uniq, users.uniq
+  end
+
+private
+  def clear_notifications_and_news_items
+    Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::GROUP).destroy_all
+    NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::GROUP).destroy_all
+  end
+
+  def transfer_member_list
+    
   end
 
 end

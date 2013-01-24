@@ -4,6 +4,16 @@ class GroupsController < ApplicationController
   before_filter :user_in_group, only: [:show]
   before_filter :user_organizes_group, only: [:edit, :update, :delete, :destroy]
 
+  def index
+    @groups = current_user.groups
+  end
+
+  def show
+    if request.path != group_path(@group)
+      redirect_to group_path(@group), status: :moved_permanently
+    end
+  end
+
   def new
     @group = Group.new
   end
@@ -47,14 +57,10 @@ class GroupsController < ApplicationController
     end
   end
 
-  def index
-    @groups = current_user.groups
-  end
-
-  def show
-    if request.path != group_path(@group)
-      redirect_to group_path(@group), status: :moved_permanently
-    end
+  def destroy
+    @group.destroy
+    flash[:success] = "Group deleted!"
+    redirect_to groups_path
   end
 
   def search
