@@ -184,6 +184,7 @@ GEM
       railties (~> 3.0)
     multi_json (1.5.0)
     multipart-post (1.1.5)
+    mustache (0.99.4)
     mysql2 (0.3.11)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
@@ -354,6 +355,7 @@ DEPENDENCIES
   js-routes
   mail_form
   money-rails
+  mustache
   mysql2
   newrelic_rpm
   omniauth-facebook

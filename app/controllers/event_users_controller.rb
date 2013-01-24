@@ -15,14 +15,14 @@ class EventUsersController < ApplicationController
         @event.set_event_user_attributes(current_user)
 
         respond_to do |format|
-          format.html { redirect_to event_path(@event) } if @event_organizer.nil?
-          format.html { redirect_to user_path(@user) }
+          format.html { redirect_to event_path(@event) } if @event_organizer.nil? # Joining public event
+          format.html { redirect_to user_path(@user) }  # Being invited directly
           format.js
         end
       else
         flash[:error] = "Adding user failed!"
-        redirect_to event_path(@event) if @event_organizer.nil?
-        redirect_to user_path(@user)
+        redirect_to event_path(@event) if @event_organizer.nil? # Joining public event
+        redirect_to user_path(@user) # Being invited directly
       end
     end
   end

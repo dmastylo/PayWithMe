@@ -49,7 +49,7 @@
       <%= f.hidden_field :fee_type %>
       <div class="btn-group input-block-level push-bottom" id="event_fee_type_btn_group" data-toggle="buttons-radio">
         <button type="button" class="btn half" data-name="organizer" data-value="1" title="You will pay facilitator's fees.">You Pay Fees</button>
-        <button type="button" class="btn half" data-name="members" data-value="2" title="The members will pay the facilitator's fees.">Members Pay Fees</button>
+        <button type="button" class="btn half" data-name="members" data-value="2" title="Members will pay the facilitator's fees.">Members Pay Fees</button>
       </div>
 
       <%= f.label :privacy_type, "Event Privacy" %>
@@ -79,7 +79,9 @@
       </div>
       <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
       <div id="invited_members">
-        <%= render partial: "users/invited_user", collection: @event.independent_members %>
+        <% @event.independent_members.each do |user| %>
+          <%= render 'users/invited_user', mustache: user_for_mustache(user) %>
+        <% end %>
         <div class="clearfix"></div>
       </div>
     </div>
@@ -95,7 +97,9 @@
       </div>
       <%= f.hidden_field :groups, value: (@group_ids.to_json if @group_ids) %>
       <div id="invited_groups">
-        <%= render partial: "groups/invited_group", collection: @event.groups %>
+        <% @event.groups.each do |group| %>
+          <%= render 'groups/invited_group', mustache: group_for_mustache(group) %>
+        <% end %>
         <div class="clearfix"></div>
       </div>
     </div>
@@ -173,6 +177,14 @@
   </div>
 </div>
 
+<script type="text/html" id="invited_user_template">
+  <%= render 'users/invited_user' %>
+</script>
+
+<script type="text/html" id="invited_group_template">
+  <%= render 'groups/invited_group' %>
+</script>
+
 <% content_for(:before_body_end) do %>
   <!-- TODO: Move this elsewhere (please leave the image selection js)-->
   <script type="text/javascript">
@@ -237,6 +249,7 @@
         addButtonSelector: "#add_group",
         somethingsInputSelector: "#event_groups",
         somethingsSelector: "#invited_groups",
+        somethingsTemplateSelector: "#invited_group_template",
         errorSelector: "#add_group_error",
         source: "<%= search_groups_path(format: :json) %>",
         idAttribute: "id",
@@ -247,17 +260,6 @@
         {
           return;
         },
-        onCreate: function(something)
-        {
-          var $something;
-          $something = $("<div></div>").addClass("member member_with_email")
-            .append($("<div></div>")
-              .addClass("email")
-            .html(something.title)
-            )
-          ;
-          return $something;
-        }
       });
     });
   </script>

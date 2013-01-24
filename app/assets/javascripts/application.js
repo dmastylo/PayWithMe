@@ -16,4 +16,5 @@
 //= require bootstrap-datepicker
 //= require bootstrap-timepicker
 //= require js-routes
+//= require mustache
 //= require_tree .
