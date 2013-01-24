@@ -44,6 +44,7 @@ class Event < ActiveRecord::Base
   validates :start_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :start_at_changed?
   validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
   validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
+  validate :amounts_not_changed, on: :update, if: :received_money?
 
   # Relationships
   # ========================================================
@@ -345,6 +346,10 @@ class Event < ActiveRecord::Base
     event_user(user).paid_at
   end
 
+  def received_money?
+    paid_members.count > 0
+  end
+
 private
   def clear_amounts
     if division_type != DivisionType::Split
@@ -373,6 +378,16 @@ private
     end
   end
 
+  def amounts_not_changed
+    if divide_total? && total_amount_cents_changed?
+      errors.add(:total_amount, "cannot be changed after a member has paid")
+    end
+
+    if divide_per_person? && split_amount_cents_changed?
+      errors.add(:split_amount, "cannot be changed after a member has paid")
+    end
+  end
+  
   def clear_notifications_and_news_items
     Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all
