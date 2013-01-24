@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(:version => 20130123205916) do
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",               :null => false
+    t.datetime "updated_at",               :null => false
     t.datetime "start_at"
     t.integer  "division_type"
     t.integer  "fee_type"
@@ -71,6 +71,10 @@ ActiveRecord::Schema.define(:version => 20130123205916) do
     t.integer  "split_amount_cents"
     t.integer  "organizer_id"
     t.integer  "privacy_type"
+    t.string   "event_image_file_name"
+    t.string   "event_image_content_type"
+    t.integer  "event_image_file_size"
+    t.string   "event_image_url"
     t.string   "slug"
   end
 
