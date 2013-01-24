@@ -305,6 +305,10 @@ class Event < ActiveRecord::Base
     event_user(user).paid_at
   end
 
+  def received_money?
+    paid_members.count > 0
+  end
+
 private
   def clear_amounts
     if division_type != DivisionType::Split
