@@ -14,7 +14,7 @@
   </div>
   <% if current_user == @event.organizer %>
     <div class="span3">
-      <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
+      <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title", rel: "tooltip", title: "Manage your event and view statistics" %>
     </div>
   <% elsif @event.public? && !@event.members.include?(current_user) %>
     <div class="span4">
