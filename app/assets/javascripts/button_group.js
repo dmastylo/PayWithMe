@@ -60,6 +60,7 @@
 
 		showChild: function(name)
 		{
+			console.log("." + this.name + "_option#" + this.name + "_" + name);
 			$("." + this.name + "_option#" + this.name + "_" + name).fadeIn();
 		}
 

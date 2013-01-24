@@ -2,39 +2,40 @@
 #
 # Table name: events
 #
-#  id                       :integer          not null, primary key
-#  title                    :string(255)
-#  description              :text
-#  due_at                   :datetime
-#  created_at               :datetime         not null
-#  updated_at               :datetime         not null
-#  start_at                 :datetime
-#  division_type            :integer
-#  fee_type                 :integer
-#  total_amount_cents       :integer
-#  split_amount_cents       :integer
-#  organizer_id             :integer
-#  privacy_type             :integer
-#  event_image_file_name    :string(255)
-#  event_image_content_type :string(255)
-#  event_image_file_size    :integer
-#  event_image_url          :string(255)
-#  slug                     :string(255)
+#  id                 :integer          not null, primary key
+#  title              :string(255)
+#  description        :text
+#  due_at             :datetime
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  start_at           :datetime
+#  division_type      :integer
+#  fee_type           :integer
+#  total_amount_cents :integer
+#  split_amount_cents :integer
+#  organizer_id       :integer
+#  privacy_type       :integer
+#  slug               :string(255)
+#  image_file_name    :string(255)
+#  image_content_type :string(255)
+#  image_file_size    :integer
+#  image_updated_at   :datetime
+#  image_url          :string(255)
 #
 
 class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time, :event_image, :event_image_option, :event_image_url
-  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time, :event_image_option
+  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image, :image_option, :image_url
+  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image_option
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
   monetize :send_amount_cents, allow_nil: true
   monetize :our_fee_amount_cents, allow_nil: true
   monetize :money_collected_cents, allow_nil: true
-  has_attached_file :event_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>", large: "#{Figaro.env.large_size}x#{Figaro.env.large_size}" }
+  has_attached_file :image
 
   # Validations
   # ========================================================
@@ -64,7 +65,6 @@ class Event < ActiveRecord::Base
   # ========================================================
   before_validation :clear_amounts
   before_validation :concatenate_dates
-  before_validation :set_image_to_default
   before_save :clear_dates
   before_save :set_event_image
 
@@ -214,10 +214,10 @@ class Event < ActiveRecord::Base
 
   # Event image
   # ========================================================
-  def event_image_type
-    if event_image.present?
+  def image_type
+    if image.present?
       :upload
-    elsif event_image_url.present?
+    elsif image_url.present?
       :url
     else
       :default_image
@@ -385,23 +385,17 @@ private
   end
 
   def set_event_image
-    return unless self.event_image_option.present?
+    return unless self.image_option.present?
 
-    if self.event_image_option != "url"
-      self.event_image_url = nil
+    if self.image_option != "url"
+      self.image_url = nil
     end
 
-    if self.event_image_option != "upload"
-      self.event_image = nil
+    if self.image_option != "upload"
+      self.image = nil
     end
 
-    event_image_option = nil
-  end
-
-  def set_image_to_default
-    if self.event_image_option == nil
-      self.event_image_option = "default_image"
-    end
+    image_option = nil
   end
 
   def clear_notifications_and_news_items

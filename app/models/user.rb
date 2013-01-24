@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   # ========================================================
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_option, :profile_image_url, :time_zone
   attr_accessor :profile_image_option
-  has_attached_file :profile_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>" }
+  has_attached_file :profile_image
 
   # Validations
   # ========================================================

@@ -110,59 +110,48 @@
     <h3>Set Event Image</h3>
     <div class="well">
       <div class="control-group">
-          <%= f.label :event_image, class: 'control-label' %>
-          <div class="controls">
-            
-            <%= f.hidden_field :event_image_option, id: "event_image_type" %>
-            <div class="btn-group input-block-level" id="event_image_type_btn_group" data-toggle="buttons-radio">
-              <button type="button" class="btn third <%= :event_image_option == :url ? "active" : "" %>" data-value="url">
-                URL
-              </button>
-              <button type="button" class="btn third <%= :event_image_option == :upload ? "active" : "" %>" data-value="upload">
-                Image Upload
-              </button>
-              <button type="button" class="btn third last <%= :event_image_option == :default_image ? "active" : "" %>" data-value="default_image">None
-              </button>
-            </div>
+        <%= f.label :image, class: 'control-label' %>
+        <div class="controls">
+          <%= f.hidden_field :image_option %>
+          <div class="btn-group input-block-level" id="event_image_option_btn_group" data-toggle="buttons-radio">
+            <button type="button" class="btn third <%= "active" if @event.image_option == :url %>" data-value="url" data-name="url">URL</button>
+            <button type="button" class="btn third <%= "active" if @event.image_option %>" data-value="upload" data-name="upload">Image Upload</button>
+            <button type="button" class="btn third last <%= "active" if @event.image_option == :default_image %>" data-value="default_image" data-name="default_image">None</button>
+          </div>
 
-            <div class="event_image_type_option push-top" id="event_image_type_default_image">
+          <div class="event_image_option_option push-top" id="event_image_option_default_image">
+            <div class="push-bottom">The default:</div>
+            <div class="push-bottom">
+              <%= image_tag "default_event_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
+            </div>
+          </div>
+
+          <div class="event_image_option_option push-top" id="event_image_option_url">
+            <% if @event.image_url.present? %>
+              <div class="push-bottom">Current URL:</div>
               <div class="push-bottom">
-                The default:
+                <%= event_image_tag(@event, :medium) %>
               </div>
-              <div class="push-bottom">
-                <%= image_tag "default_event_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
+            <% end %>
+            <div class="control-group">
+              <%= f.label :image_url, "Event Image URL", class: 'control-label' %>
+              <div class="controls">
+                <%= f.text_field :image_url, placeholder: "http://example.com/image.png", class: 'input-block-level'  %>
               </div>
             </div>
-            <div class="event_image_type_option push-top" id="event_image_type_url">
-              <% if @event.event_image_url.present? %>
-                <div class="push-bottom">
-                  Current URL:
-                </div>
-                <div class="push-bottom">
-                  <%= event_image_tag(@event, :medium) %>
-                </div>
-              <% end %>
-              <div class="control-group">
-                <%= f.label :event_image_url, "Event Image URL", class: 'control-label' %>
-                <div class="controls">
-                  <%= f.text_field :event_image_url, placeholder: "http://example.com/image.png", class: 'input-block-level'  %>
-                </div>
+          </div>
+
+          <div class="event_image_option_option push-top" id="event_image_option_upload">
+            <% if @event.image.present? %>
+              <div class="push-bottom">Current uploaded image:</div>
+              <div class="push-bottom">
+                <%= event_image_tag(@event, :medium) %>
               </div>
-            </div>
-            <div class="event_image_type_option push-top" id="event_image_type_upload">
-              <% if @event.event_image.present? %>
-                <div class="push-bottom">
-                  Current uploaded image:
-                </div>
-                <div class="push-bottom">
-                  <%= event_image_tag(@event, :medium) %>
-                </div>
-              <% end %>
-              <div class="control-group">
-                <%= f.label :event_image, "Event Image File", class: 'control-label' %>
-                <div class="controls">
-                  <%= f.file_field :event_image, accept: 'image' %>
-                </div>
+            <% end %>
+            <div class="control-group">
+              <%= f.label :image, "Image File", class: 'control-label' %>
+              <div class="controls">
+                <%= f.file_field :image, accept: 'image' %>
               </div>
             </div>
           </div>
@@ -171,6 +160,7 @@
     </div>
   </div>
 </div>
+
 <div class="row">
   <div class="span12">
     <%= f.submit "#{submit_text(@event)} event", class: "btn btn-primary btn-block" %>
@@ -190,28 +180,6 @@
   <script type="text/javascript">
     $(document).ready(function()
     {
-      
-      //JS for image selection
-      $("#event_image_type_btn_group button").click(function()
-      {
-        var $this = $(this);
-        var $input = $("#event_image_type_");
-        var value = $this.data("value");
-
-        // Set the hidden field
-        $input.val(value);
-
-        // Show the hidden box
-        $(".event_image_type_option").hide();
-        $("#event_image_type_"+value).show();
-      });
-
-      $("#event_image_type_<%= :event_image_type %>").show();
-      
-      $("#event_image_type_btn_group").buttonGroup();
-
-      //End JS for image selection
-
       $('.datepicker').datepicker();
       $('.timepicker').timepicker();
 
@@ -239,6 +207,7 @@
       $("#event_division_type").buttonGroup();
       $("#event_fee_type").buttonGroup();
       $("#event_privacy_type").buttonGroup();
+      $("#event_image_option").buttonGroup();
 
       $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>,

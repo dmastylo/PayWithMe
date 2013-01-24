@@ -2,12 +2,13 @@
 #
 # Table name: groups
 #
-#  id          :integer          not null, primary key
-#  title       :string(255)
-#  description :text
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  slug        :string(255)
+#  id           :integer          not null, primary key
+#  title        :string(255)
+#  description  :text
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  slug         :string(255)
+#  organizer_id :integer
 #
 
 class Group < ActiveRecord::Base

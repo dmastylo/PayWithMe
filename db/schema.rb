@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130123024552) do
+ActiveRecord::Schema.define(:version => 20130124215937) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -72,6 +72,11 @@ ActiveRecord::Schema.define(:version => 20130123024552) do
     t.integer  "organizer_id"
     t.integer  "privacy_type"
     t.string   "slug"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.string   "image_url"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -90,7 +95,6 @@ ActiveRecord::Schema.define(:version => 20130123024552) do
   create_table "group_users", :force => true do |t|
     t.integer  "user_id"
     t.integer  "group_id"
-    t.boolean  "admin",           :default => false
     t.datetime "created_at",                         :null => false
     t.datetime "updated_at",                         :null => false
     t.boolean  "invitation_sent", :default => false
@@ -99,9 +103,10 @@ ActiveRecord::Schema.define(:version => 20130123024552) do
   create_table "groups", :force => true do |t|
     t.string   "title"
     t.text     "description"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.string   "slug"
+    t.integer  "organizer_id"
   end
 
   add_index "groups", ["slug"], :name => "index_groups_on_slug"
@@ -151,9 +156,16 @@ ActiveRecord::Schema.define(:version => 20130123024552) do
     t.integer  "subject_id"
   end
 
+  create_table "payment_methods", :force => true do |t|
+    t.integer  "event_id",       :limit => 255
+    t.integer  "payment_method", :limit => 255
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
+  end
+
   create_table "payments", :force => true do |t|
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.datetime "requested_at"
     t.datetime "paid_at"
     t.datetime "due_at"
@@ -162,6 +174,7 @@ ActiveRecord::Schema.define(:version => 20130123024552) do
     t.integer  "event_id"
     t.integer  "amount_cents"
     t.integer  "event_user_id"
+    t.string   "transaction_id"
   end
 
   create_table "reminder_users", :force => true do |t|

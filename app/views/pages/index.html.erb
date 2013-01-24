@@ -19,7 +19,7 @@
       <% if @upcoming_events.empty? %>
         No upcoming events! <%= render "shared/maybe_create_event" %>
       <% else %>
-        <%= render collection: @upcoming_events, partial: "events/sidebar_event", as: :event %>
+        <%= render collection: @upcoming_events, partial: "events/event_body", as: :event %>
       <% end %>
     </div>
   </div>
