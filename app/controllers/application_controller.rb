@@ -25,7 +25,7 @@ protected
   end
 
   def user_organizes_group
-    @group = current_user.groups.find(params[:group_id] || params[:id])
+    @group = current_user.member_groups.find(params[:group_id] || params[:id])
 
     if @group.nil? || !@group.is_admin?(current_user)
       flash[:error] = "You're not on the list."

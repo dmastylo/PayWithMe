@@ -107,7 +107,7 @@ class Group < ActiveRecord::Base
     if user.nil?
       Group.search(title_cont: query).result
     else
-      user.groups.search(title_cont: query).result
+      user.member_groups.search(title_cont: query).result
     end
   end
 
@@ -116,7 +116,7 @@ class Group < ActiveRecord::Base
     return [], [] if params.nil? || params.empty?
     params = ActiveSupport::JSON.decode(params)
 
-    base = user.groups if user.present?
+    base = user.member_groups if user.present?
     base ||= Group
 
     users = []
