@@ -19,8 +19,7 @@ protected
     if @group.members.include?(current_user) || current_user.is_admin?
       true
     else
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
+      redirect_to_login_or_root
     end
   end
 
@@ -28,26 +27,28 @@ protected
     @group = current_user.member_groups.find(params[:group_id] || params[:id])
 
     if @group.nil? || !@group.is_admin?(current_user)
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
+      redirect_to_login_or_root
     end
   end
 
   def user_in_event
-    @event = Event.find(params[:event_id] || params[:id])
+    @event ||= Event.find(params[:event_id] || params[:id])
 
-    if !@event.members.include?(current_user) && !@event.public? && !current_user.is_admin?
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
+    if !signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.is_admin?)
+      redirect_to_login_or_root
     end
+  end
+
+  def user_in_event_or_public
+    @event = Event.find_by_id(params[:event_id] || params[:id])
+    @event.public? || user_in_event
   end
 
   def user_organizes_event
     @event = current_user.organized_events.find(params[:event_id] || params[:id])
 
     if @event.nil?
-      flash[:error] = "You're not on the list."
-      redirect_to root_path
+      redirect_to_login_or_root
     end
   end
 
@@ -88,5 +89,15 @@ private
 
   def user_time_zone(&block)
     Time.use_zone(current_user.time_zone, &block)
+  end
+
+  def redirect_to_login_or_root
+    if !signed_in?
+      flash[:error] = "Please login or register to view that page."
+      redirect_to new_user_session_path
+    else
+      flash[:error] = "You're not on the list."
+      redirect_to root_path
+    end
   end
 end
