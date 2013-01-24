@@ -313,7 +313,7 @@ class Event < ActiveRecord::Base
   end
 
   def remove_groups(groups_to_remove)
-    self.set_groups(self.groups_to_remove - groups_to_remove)
+    self.set_groups(self.groups - groups_to_remove)
   end
 
   def remove_group(group_to_remove)
