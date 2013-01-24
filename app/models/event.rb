@@ -361,7 +361,9 @@ private
   end
 
   def set_image_to_default
-    self.event_image_option = "default_image"
+    if self.event_image_option == nil
+      self.event_image_option = "default_image"
+    end
   end
 
 end
