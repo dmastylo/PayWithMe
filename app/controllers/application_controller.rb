@@ -40,8 +40,8 @@ protected
   end
 
   def user_in_event_or_public
-    @event = Event.find_by_id(params[:event_id] || params[:id])
-    @event.public? || user_in_event
+    @event = Event.find(params[:event_id] || params[:id])
+    (@event.present? && @event.public?) || user_in_event
   end
 
   def user_organizes_event
