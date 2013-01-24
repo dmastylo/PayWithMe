@@ -3,7 +3,7 @@
   <div class="span<% current_user == @event.organizer ? 9 : 12 %>">
     <div class="page-header">
       <h2>
-        <%= event_image_tag @event, :medium %>
+        <!-- <%= event_image_tag @event, :medium %> -->
         <%= truncate(@event.title, :length => 48, :separator => ' ') %>
         <% if @event.public? %>
           <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
