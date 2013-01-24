@@ -62,6 +62,7 @@ class Event < ActiveRecord::Base
   before_validation :concatenate_dates
   before_save :clear_dates
   before_save :add_organizer_to_members
+  before_destroy :clear_notifications_and_news_items
 
   # Pretty URLs
   # ========================================================
@@ -175,7 +176,6 @@ class Event < ActiveRecord::Base
 
   # Dates
   # ========================================================
-
   def due_at_date
     if @due_at_date.present?
       @due_at_date
@@ -315,7 +315,7 @@ class Event < ActiveRecord::Base
   end
 
   def remove_groups(groups_to_remove)
-    self.set_groups(self.groups_to_remove - groups_to_remove)
+    self.set_groups(self.groups - groups_to_remove)
   end
 
   def remove_group(group_to_remove)
@@ -386,6 +386,11 @@ private
     if divide_per_person? && split_amount_cents_changed?
       errors.add(:split_amount, "cannot be changed after a member has paid")
     end
+  end
+  
+  def clear_notifications_and_news_items
+    Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
+    NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all
   end
 
 end
