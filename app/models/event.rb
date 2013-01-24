@@ -45,13 +45,6 @@ class Event < ActiveRecord::Base
   validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
   validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
 
-  # Callbacks
-  # ========================================================
-  before_validation :clear_amounts
-  before_validation :concatenate_dates
-  before_save :clear_dates
-  before_destroy :clear_notifications_and_news_items
-
   # Relationships
   # ========================================================
   belongs_to :organizer, class_name: "User"
@@ -68,6 +61,7 @@ class Event < ActiveRecord::Base
   before_validation :concatenate_dates
   before_save :clear_dates
   before_save :add_organizer_to_members
+  before_destroy :clear_notifications_and_news_items
 
   # Pretty URLs
   # ========================================================
