@@ -381,12 +381,10 @@ private
   def amounts_not_changed
     if divide_total? && total_amount_cents_changed?
       errors.add(:total_amount, "cannot be changed after a member has paid")
-      total_amount_cents = total_amount_cents_was
     end
 
     if divide_per_person? && split_amount_cents_changed?
       errors.add(:split_amount, "cannot be changed after a member has paid")
-      split_amount_cents = split_amount_cents_was
     end
   end
 

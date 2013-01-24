@@ -67,7 +67,6 @@ class EventsController < ApplicationController
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)
     else
-      @event.members = @event.independent_members
       @member_emails = @event.members.collect { |member| member.email }
       @group_ids = @event.groups.collect { |group| group.id }
       render "edit"
