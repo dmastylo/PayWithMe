@@ -34,8 +34,14 @@
     </div>
   </div>
 </div>
-<% if defined? editing_event %>
-  <div class="row">
+<div class="row">
+  <div class="span6">
+    <h3 class="pull-left">Group Image</h3>
+    <div class="clearfix"></div>
+    <div class="well">
+    </div>
+  </div>
+  <% if defined? editing_event %>
     <div class="span6">
       <h3 class="pull-left">Group Actions</h3>
       <div class="clearfix"></div>
@@ -43,8 +49,8 @@
         <%= link_to "Delete Group", @group, class: "btn btn-block btn-danger", data: { confirm: "This is irreversible, but members will still be attending the events they were invited to. Are you sure you want to delete this group?" }, method: :delete %>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
 <div class="row">
   <div class="span12">
     <%= f.submit "#{submit_text(@group)} group", class: "btn btn-block btn-primary" %>
