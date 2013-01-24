@@ -51,12 +51,22 @@
       <div class="three-quarters"><%= @event.start_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
     </div>
+
+    <h3>Organizer</h3>
+    <div class="well">
+      <div class="event-members">
+        <ul class="member-list">
+          <%= render @event.organizer %>
+        </ul>
+      </div>
+    </div>
+
     <h3>Guest List</h3>
     <div class="well">
       <div class="event-members">
         <% if @event.members.any? %>
           <ul class="member-list">
-            <%= render @event.members %>
+            <%= render @event.paying_members %>
           </ul>
         <% else %>
           There are no members. Add some!
