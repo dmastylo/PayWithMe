@@ -44,6 +44,7 @@ class Event < ActiveRecord::Base
   validates :start_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :start_at_changed?
   validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
   validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
+  validate :amounts_not_changed, on: :update, if: :received_money?
 
   # Relationships
   # ========================================================
@@ -373,6 +374,16 @@ private
 
   def add_organizer_to_members
     members << organizer
+  end
+
+  def amounts_not_changed
+    if divide_total? && total_amount_cents_changed?
+      errors.add(:total_amount, "Amounts cannot be changed after a member has paid")
+    end
+
+    if divide_per_person? && split_amount_cents_changed?
+      errors.add(:split_amount, "Amounts cannot be changed after a member has paid")
+    end
   end
 
 end
