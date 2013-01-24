@@ -21,7 +21,7 @@
       <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
     </div>
   <% elsif @event.public? && !@event.members.include?(current_user) %>
-    <div class="span4">
+    <div class="span3">
       <%= form_for [@event, @event_user] do |f| %>
           <%= f.hidden_field :event_id, :value => @event.id %>
           <%= f.hidden_field :user_id, :value => current_user.id %>
