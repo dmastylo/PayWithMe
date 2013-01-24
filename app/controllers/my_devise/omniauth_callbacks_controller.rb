@@ -24,10 +24,12 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
       user = current_user
       new_registration = false
     else
-      # Create new user
+      # Create new user or sign in existing
       user = User.from_omniauth(request.env["omniauth.auth"])
+      if user.new_record?
+        new_registration = true
+      end
       user.save
-      new_registration = true
     end
 
     if user.persisted?
@@ -67,7 +69,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
           flash[:success] = "Registered with #{provider} successfully."
         else
           # Sign in flash message
-          flash[:notice] = "Signed in with #{provider} successfully."
+          flash[:success] = "Signed in with #{provider} successfully."
         end
       end
       sign_in_and_redirect user
