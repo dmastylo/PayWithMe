@@ -3,7 +3,6 @@ require 'spec_helper'
 describe "Account Settings" do
 	
 	before do
-		
 		# Create a new user
 		@user = FactoryGirl.create(:user)
 		
@@ -17,9 +16,9 @@ describe "Account Settings" do
 		visit edit_user_registration_path
 	end
 
-	subject{ page }
+	subject { page }
 
-	let(:submit){ "Update Info" }
+	let(:submit) { "Update Info" }
 
 	describe "when profile picture" do
 

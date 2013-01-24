@@ -2,12 +2,13 @@
 #
 # Table name: groups
 #
-#  id          :integer          not null, primary key
-#  title       :string(255)
-#  description :text
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  slug        :string(255)
+#  id           :integer          not null, primary key
+#  title        :string(255)
+#  description  :text
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  slug         :string(255)
+#  organizer_id :integer
 #
 
 class Group < ActiveRecord::Base
@@ -18,10 +19,12 @@ class Group < ActiveRecord::Base
 
   # Validations
   # ========================================================
+  validates :organizer_id, presence: true
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long"  }
 
   # Relationships
   # ========================================================
+  belongs_to :organizer, class_name: "User"
   has_many :group_users, dependent: :destroy
   has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
   has_many :event_groups, dependent: :destroy
@@ -34,9 +37,9 @@ class Group < ActiveRecord::Base
 
   # Member definitions
   # ========================================================
-  def add_members(members, exclude_from_notifications = nil)
+  def add_members(members_to_add, exclude_from_notifications=nil)
     editing_group = true if self.members.length != 0
-    members.each do |member|
+    members_to_add.each do |member|
       unless self.members.include?(member)
         self.members << member
         Notification.create_for_group(self, member) if member != exclude_from_notifications
@@ -49,6 +52,31 @@ class Group < ActiveRecord::Base
     delay.send_invitation_emails
     # Later, add them to open events as of
     # right now if they are added to the group
+  end
+
+  def add_member(member_to_add)
+    self.add_members( [ member_to_add ] )
+  end
+
+  # Adds members and deletes any not in the set
+  def set_members(members_to_set, exclude_from_notifications=nil)
+    members_to_delete = []
+    self.members.each do |member|
+      if !members_to_set.include?(member)
+        members_to_delete.push member
+      end
+    end
+    self.members -= members_to_delete
+
+    add_members(members_to_set, exclude_from_notifications)
+  end
+
+  def remove_members(members_to_remove)
+    set_members(self.members - members_to_remove)
+  end
+
+  def remove_member(member_to_remove)
+    remove_members([member_to_remove])
   end
 
   def is_admin?(user)
