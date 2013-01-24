@@ -1,0 +1,16 @@
+<div class="member {{#stub}}member_with_email{{/stub}}" data-id="{{email}}">
+  {{#stub}}
+    <div class="info">
+      <div class="email">{{email}}</div>
+    </div>
+  {{/stub}}
+  {{^stub}}
+    <div class="profile_image">{{&profile_image_tag}}</div>
+    <div class="info">
+      <div class="name">{{name}}</div>
+      <div class="email">{{email}}</div>
+    </div>
+  {{/stub}}
+  <div class="delete"><i class="icon-trash"></i></div>
+  <div class="clearfix"></div>
+</div>
