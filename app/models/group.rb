@@ -26,7 +26,7 @@ class Group < ActiveRecord::Base
   # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :group_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :group_users, source: :user, select: "users.*, group_users.admin"
+  has_many :members, class_name: "User", through: :group_users, source: :user
   has_many :event_groups, dependent: :destroy
   has_many :events, through: :event_groups, source: :event
 
