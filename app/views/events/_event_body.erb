@@ -19,12 +19,12 @@
     <div class="count">
       <%= event.members.count %> member<% event.members.count > 1 ? "s" : "" %>
     </div>
-    <div class="start_at">
-      <% if event.start_at < Time.now %>
-        Started
+    <div class="due_at">
+      <% if event.due_at < Time.now %>
+        Was due
       <% else %>
-        Starts
-      <% end %> at <%= event.start_at %>
+        Due
+      <% end %> at <%= event.due_at %>
     </div>
   </div>
 </div>

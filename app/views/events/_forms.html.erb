@@ -7,11 +7,6 @@
       <%= f.text_field :title, class: "input-block-level" %>
       <%= f.label :description %>
       <%= f.text_area :description, class: "input-block-level", rows: 5 %>
-      <%= f.label :start_at %>
-      <div class="start_at">
-        <%= f.text_field :start_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
-        <%= f.text_field :start_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
-      </div>
       <div class="control-group">
         <%= f.label :image, class: 'control-label' %>
         <div class="controls">
@@ -188,7 +183,7 @@
         container: 'body'
       });
 
-      $.each(['due_at', 'start_at'], function(index, name)
+      $.each(['due_at'], function(index, name)
       {
         $('.' + name).autoSize({
           fixed: '#event_' + name + '_time',

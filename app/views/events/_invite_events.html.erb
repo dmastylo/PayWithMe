@@ -1,4 +1,4 @@
-<% unless Time.now > event.start_at || Time.now > event.due_at %>
+<% unless Time.now > event.due_at %>
   <li>
     <%= form_for [event, @event_user], remote: true do |f| %>
       <span id="event-<%= event.id %>">
