@@ -3,7 +3,7 @@
   <div class="span9">
     <div class="page-header">
       <h2>
-        <%= truncate(@event.title, :length => 48, :separator => ' ') %>
+        <%= @event.title %>
         <% if @event.public? %>
           <i class="icon-globe" rel="tooltip" title="Public event" data-placement="right"></i>
         <% else %>
