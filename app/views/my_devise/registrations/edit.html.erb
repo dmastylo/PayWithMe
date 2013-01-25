@@ -69,6 +69,7 @@
               <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
               <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top input-block-level" %>
             </div>
+
             <div class="user_profile_image_option push-top" id="user_profile_image_url">
               <% if current_user.profile_image_url.present? %>
                 <div class="push-bottom">
@@ -85,6 +86,7 @@
                 </div>
               </div>
             </div>
+            
             <div class="user_profile_image_option push-top" id="user_profile_image_upload">
               <% if current_user.profile_image.present? %>
                 <div class="push-bottom">

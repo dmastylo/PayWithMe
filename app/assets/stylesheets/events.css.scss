@@ -9,9 +9,48 @@
 	height: 34px;
 }
 
+.event-image
+{
+    border: 1px solid $mediumGray;
+    border-bottom: 0;
+    width: 100%;
+    height: 250px;
+    background-size: 100%;
+    background-position: center center;
+    box-sizing: border-box;
+
+    &.default
+    {
+        height: 100px;
+    }
+}
+
+// Facebook banner style event image
+// .event-header
+// {
+//     margin-right: -30px;
+//     padding-top: 200px;
+//     background-size: 100%;
+//     background-position: center center;
+
+//     .span9
+//     {
+//         background-color: rgba(255, 255, 255, 0.9);
+//         margin-left: 15px;
+//         padding-left: 15px;
+//         margin-bottom: 15px;
+//         border-radius: 10px;
+//     }
+// }
+
 .event_division_type_option
 {
 	display: none;
+}
+
+.event_image_type_option
+{
+    display: none;
 }
 
 // Event Display ==============================================================
@@ -70,6 +109,12 @@
             }
         }
     }
+}
+
+.event-button
+{
+    margin-top: 13px; // For medium image size
+    //margin-top: 65px; // For large image size
 }
 
 // Chat Messages Display ======================================================
@@ -219,6 +264,65 @@
     }
 }
 
+// // Sidebar content ============================================================
+// .sidebar
+// {
+//     padding: 0px;
+// }
+
+// .event-sidebar
+// {
+//     float: left;
+//     padding-right: 15px;
+//     padding-left: 10px;
+//     padding-top: 5px;
+// }
+
+// .event-info{
+//     padding: 19px;
+// }
+
+// .event-profile-page
+// {
+//     float:left;
+//     padding-right: 10px;
+//     padding-left: 10px;
+//     padding-top: 5px;
+//     margin-bottom: 2px;
+// }
+
+.event
+{
+    padding: 0;
+
+    .image
+    {
+        width: 100%;
+        height: 100px;
+        background-size: 100%;
+        background-position: center center;
+        border-bottom: 1px solid $mediumGray;
+        background-color: #FFF;
+    }
+
+    .info
+    {
+        padding: $mediumMargin;
+
+        h4
+        {
+            margin-top: 0;
+        }
+    }
+
+    .icons
+    {
+        float: right;
+        margin-top: -2px;
+    }
+}
+
+// ===============================
 #btn-bulk-invite
 {
     margin-top: 17px;

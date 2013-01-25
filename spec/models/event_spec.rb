@@ -16,6 +16,11 @@
 #  organizer_id       :integer
 #  privacy_type       :integer
 #  slug               :string(255)
+#  image_file_name    :string(255)
+#  image_content_type :string(255)
+#  image_file_size    :integer
+#  image_updated_at   :datetime
+#  image_url          :string(255)
 #
 
 require 'spec_helper'
