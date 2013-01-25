@@ -88,6 +88,10 @@ class Group < ActiveRecord::Base
     user == organizer
   end
 
+  def independent_members
+    self.members - [organizer]
+  end
+
   # def organizer
   #   group_user = self.group_users.where(admin: true).first
   #   if group_user.present?

@@ -19,7 +19,7 @@
           Unpaid
         <% end %>
       <% elsif @group.present? %>
-        <% if user.admin? %>
+        <% if @group.is_admin?(user) %>
           Group Organizer
         <% else %>
           Member

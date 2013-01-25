@@ -15,21 +15,17 @@ class GroupsController < ApplicationController
   end
 
   def new
-    @group = Group.new
+    @group = current_user.organized_groups.new
   end
 
   def create
     members = User.from_params(params[:group].delete(:members))
-    @group = Group.new(params[:group])
+    @group = current_user.organized_groups.new(params[:group])
 
     if @group.save
       flash[:success] = "Group created!"
 
       @group.add_members(members + [current_user], current_user)
-      
-      group_owner = current_user.group_users.where(group_id: @group.id).first
-      group_owner.admin = true
-      group_owner.save
 
       redirect_to group_path(@group)
     else
@@ -39,7 +35,7 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    @member_emails = @group.members.collect { |member| member.email }
+    @member_emails = @group.independent_members.collect { |member| member.email }
   end
 
   def update
