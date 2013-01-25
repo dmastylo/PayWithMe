@@ -31,7 +31,7 @@
         Posted <%= time_ago_in_words(message.created_at) %> ago.
       </div>
       <div class="message-content">
-        <%= message.message %>
+        <%= h(message.message).gsub(/\n/, '<br/>').html_safe %>
       </div>
     </div>
     <div class="clearfix"></div>
