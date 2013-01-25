@@ -15,21 +15,21 @@
       <div class="control-group">
         <%= f.label :image, class: 'control-label' %>
         <div class="controls">
-          <%= f.hidden_field :image_option %>
-          <div class="btn-group input-block-level" id="event_image_option_btn_group" data-toggle="buttons-radio">
-            <button type="button" class="btn third <%= "active" if @event.image_option == :url %>" data-value="url" data-name="url">URL</button>
-            <button type="button" class="btn third <%= "active" if @event.image_option %>" data-value="upload" data-name="upload">Image Upload</button>
-            <button type="button" class="btn third last <%= "active" if @event.image_option == :default_image %>" data-value="default_image" data-name="default_image">None</button>
+          <%= f.hidden_field :image_type %>
+          <div class="btn-group input-block-level" id="event_image_type_btn_group" data-toggle="buttons-radio">
+            <button type="button" class="btn third <%= "active" if @event.image_type == :url %>" data-value="url" data-name="url">URL</button>
+            <button type="button" class="btn third <%= "active" if @event.image_type %>" data-value="upload" data-name="upload">Image Upload</button>
+            <button type="button" class="btn third last <%= "active" if @event.image_type == :default_image %>" data-value="default_image" data-name="default_image">None</button>
           </div>
 
-          <div class="event_image_option_option push-top" id="event_image_option_default_image">
+          <div class="event_image_type_option push-top" id="event_image_type_default_image">
             <div class="push-bottom">The default:</div>
             <div class="push-bottom">
               <%= image_tag "default_event_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
             </div>
           </div>
 
-          <div class="event_image_option_option push-top" id="event_image_option_url">
+          <div class="event_image_type_option push-top" id="event_image_type_url">
             <% if @event.image_url.present? %>
               <div class="push-bottom">Current URL:</div>
               <div class="push-bottom">
@@ -44,7 +44,7 @@
             </div>
           </div>
 
-          <div class="event_image_option_option push-top" id="event_image_option_upload">
+          <div class="event_image_type_option push-top" id="event_image_type_upload">
             <% if @event.image.present? %>
               <div class="push-bottom">Current uploaded image:</div>
               <div class="push-bottom">
@@ -200,7 +200,7 @@
       $("#event_division_type").buttonGroup();
       $("#event_fee_type").buttonGroup();
       $("#event_privacy_type").buttonGroup();
-      $("#event_image_option").buttonGroup();
+      $("#event_image_type").buttonGroup();
 
       $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>,

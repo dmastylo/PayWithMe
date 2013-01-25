@@ -27,8 +27,8 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image, :image_option, :image_url
-  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image_option
+  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image, :image_type, :image_url
+  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image_type
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
@@ -218,7 +218,9 @@ class Event < ActiveRecord::Base
   # Event image
   # ========================================================
   def image_type
-    if image.present?
+    if @image_type.present?
+      @image_type
+    elsif image.present?
       :upload
     elsif image_url.present?
       :url
@@ -392,17 +394,17 @@ private
   end
 
   def set_event_image
-    return unless self.image_option.present?
+    return unless self.image_type.present?
 
-    if self.image_option != "url"
+    if self.image_type != "url"
       self.image_url = nil
     end
 
-    if self.image_option != "upload"
+    if self.image_type != "upload"
       self.image = nil
     end
 
-    image_option = nil
+    image_type = nil
   end
   
   def add_organizer_to_members
