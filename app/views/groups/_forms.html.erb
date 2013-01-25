@@ -10,7 +10,7 @@
 
 
       <div class="control-group">
-        <%= f.label :image, class: 'control-label' %>
+        <%= f.label :image, "Group Image", class: 'control-label' %>
         <div class="controls">
           <%=f.hidden_field :image_type %>
           <div class="btn-group input-block-level" id="group_image_type_btn_group" data-toggle="buttons-radio">
@@ -86,13 +86,6 @@
   </div>
 </div>
 <div class="row">
-  <div class="span6">
-    <h3 class="pull-left">Group Image</h3>
-    <div class="clearfix"></div>
-    <div class="well">
-      <!-- Content here -->
-    </div>
-  </div>
   <% if defined? editing_event %>
     <div class="span6">
       <h3 class="pull-left">Group Actions</h3>
@@ -122,6 +115,9 @@
         somethingsInputSelector: "#group_members",
         bulkEnabled: true
       });
+
+      $('#group_image_type').buttonGroup();
+
     });
   </script>
 <% end %>
