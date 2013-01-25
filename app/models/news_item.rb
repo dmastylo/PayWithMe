@@ -150,6 +150,10 @@ class NewsItem < ActiveRecord::Base
     User.find_by_id(subject_id)
   end
 
+  def subjects
+    [subject]
+  end
+
   # Constants
   class NewsType
     INVITE = 1

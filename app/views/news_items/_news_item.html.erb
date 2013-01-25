@@ -4,6 +4,11 @@
   
   <strong><%= link_to news_item.title, news_item.path %></strong>
   <span class="timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago</small></span><br />
-  <%= news_item.body %>
+  <!--<%= news_item.body %>-->
+  <% news_item.subjects.each do |subject| %>
+    <div class="subject" rel="tooltip" title="<%= user_name(subject) %>" data-placement="top">
+      <%= profile_image_tag(subject, :small) %>
+    </div>
+  <% end %>
   <div class="clearfix"></div>
 </li>
