@@ -49,7 +49,6 @@
 				}
 			});
 
-				console.log(this.val);
 			if(this.val)
 			{
 				this.$buttons.each(function()
