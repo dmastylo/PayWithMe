@@ -61,7 +61,7 @@
     <h3>Payment Information</h3>
     <div class="well">
       <%= f.label :due_at %>
-      <div class="due_at">
+      <div class="due_at <%= "field_with_error" if @event.errors[:due_at].present? %>">
         <%= f.text_field :due_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
         <%= f.text_field :due_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
       </div>
