@@ -8,7 +8,6 @@
 #  due_at             :datetime
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  start_at           :datetime
 #  division_type      :integer
 #  fee_type           :integer
 #  total_amount_cents :integer
@@ -37,7 +36,6 @@ describe Event do
      :due_at,
      :created_at,
      :updated_at,
-     :start_at,
      :total_amount_cents,
      :total_amount,
      :split_amount_cents,

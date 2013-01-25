@@ -8,7 +8,6 @@
 #  due_at             :datetime
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  start_at           :datetime
 #  division_type      :integer
 #  fee_type           :integer
 #  total_amount_cents :integer
@@ -27,8 +26,8 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image, :image_type, :image_url
-  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image_type, :payment_methods_raw
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url
+  attr_accessor :due_at_date, :due_at_time, :image_type
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
@@ -46,8 +45,6 @@ class Event < ActiveRecord::Base
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long" }
   validates :due_at, presence: true
   validates :due_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :due_at_changed?
-  validates :start_at, presence: true
-  validates :start_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :start_at_changed?
   validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
   validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
   validate :amounts_not_changed, on: :update, if: :received_money?
@@ -56,7 +53,7 @@ class Event < ActiveRecord::Base
   # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_at, event_users.paid_at"
+  has_many :members, class_name: "User", through: :event_users, source: :member
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
@@ -243,22 +240,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def start_at_date
-    if @start_at_date.present?
-      @start_at_date
-    elsif start_at.present?
-      start_at.to_date.to_s
-    end
-  end
-
-  def start_at_time
-    if @start_at_time.present?
-      @start_at_time
-    elsif start_at.present?
-      start_at.strftime('%I:%M%p')
-    end
-  end
-
   # Event image
   # ========================================================
   def image_type
@@ -302,7 +283,11 @@ class Event < ActiveRecord::Base
   end
 
   def paid_percentage
-    (paid_members.count * 100.0) / paying_members.count 
+    if paying_members.count > 0
+      (paid_members.count * 100.0) / paying_members.count 
+    else
+      0
+    end
   end
   
   def add_member(member)
@@ -442,7 +427,6 @@ private
 
   def concatenate_dates
     self.due_at = "#{self.due_at_date} #{self.due_at_time}"
-    self.start_at = "#{start_at_date} #{start_at_time}"
   end
 
   def parse_payment_methods
@@ -458,7 +442,7 @@ private
   end
 
   def clear_dates
-    due_at_date = due_at_time = start_at_date = start_at_time = nil
+    due_at_date = due_at_time = nil
   end
 
   def set_event_image
