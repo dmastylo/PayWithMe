@@ -5,7 +5,7 @@ class GroupsController < ApplicationController
   before_filter :user_organizes_group, only: [:edit, :update, :delete, :destroy]
 
   def index
-    @groups = current_user.groups
+    @groups = current_user.member_groups
   end
 
   def show
