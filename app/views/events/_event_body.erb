@@ -10,14 +10,14 @@
         <i class="icon-lock" rel="tooltip" title="Private event" data-placement="left"></i>
       <% end %>
       <% if current_user == event.organizer %>
-          <i class="icon-wrench" rel="tooltip" title="You organize this event!" data-placement="left"></i>
+          <i class="icon-wrench" rel="tooltip" title="You organize this event!" data-placement="right"></i>
       <% end %>
     </div>
     <h4>
       <%= link_to truncate(event.title, :length => 32, :separator => ' '), event %>
     </h4>
     <div class="count">
-      <%= event.members.count %> member<% event.members.count > 1 ? "s" : "" %>
+      <%= pluralize(event.paying_members.count, "member") %>
     </div>
     <div class="due_at">
       <% if event.due_at < Time.now %>
