@@ -11,6 +11,11 @@ body
     visibility: visible;
 }
 
+.inline
+{
+    display: inline;
+}
+
 // Test change
 
 // Typography =================================================================
@@ -93,11 +98,6 @@ p
         {
             width: 135px;
         }
-    }
-
-    i
-    {
-        margin-top: 5px;
     }
 }
 
@@ -247,6 +247,15 @@ h1,h2,h3,h4 { &.push-top { margin-top: $largeMargin; }}
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     width: 33%;
+    float: left;
+}
+
+.half
+{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    width: 50%;
     float: left;
 }
 

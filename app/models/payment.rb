@@ -13,7 +13,6 @@
 #  event_id       :integer
 #  amount_cents   :integer
 #  event_user_id  :integer
-#  payment_method :integer
 #  transaction_id :string(255)
 #
 

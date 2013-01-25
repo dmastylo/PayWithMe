@@ -16,6 +16,11 @@
 #  organizer_id       :integer
 #  privacy_type       :integer
 #  slug               :string(255)
+#  image_file_name    :string(255)
+#  image_content_type :string(255)
+#  image_file_size    :integer
+#  image_updated_at   :datetime
+#  image_url          :string(255)
 #
 
 require 'spec_helper'
@@ -172,6 +177,39 @@ describe Event do
             @event.members.should include(member)
           end
         end
+      end
+    end
+  end
+
+  describe "locking" do
+    describe "unlocked" do
+      before do
+        @user = FactoryGirl.create(:user)
+        @event.add_member(@user)
+      end
+
+      it "should allow changing total_amount" do
+        expect do
+          @event.total_amount = 123
+          @event.save
+        end.to change { Event.find_by_id(@event.id).total_amount_cents }.to(12300)
+      end
+    end
+
+    describe "locked" do
+      before do
+        @user = FactoryGirl.create(:user)
+        @event.add_member(@user)
+        event_user = @event.event_user(@user)
+        event_user.paid_at = true
+        event_user.save
+      end
+
+      it "should allow changing total_amount" do
+        expect do
+          @event.total_amount = 123
+          @event.save
+        end.to_not change { Event.find_by_id(@event.id).total_amount_cents }.to(12300)
       end
     end
   end

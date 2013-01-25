@@ -16,20 +16,26 @@
 #  organizer_id       :integer
 #  privacy_type       :integer
 #  slug               :string(255)
+#  image_file_name    :string(255)
+#  image_content_type :string(255)
+#  image_file_size    :integer
+#  image_updated_at   :datetime
+#  image_url          :string(255)
 #
 
 class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time
-  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time
+  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image, :image_type, :image_url
+  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image_type
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
   monetize :send_amount_cents, allow_nil: true
   monetize :our_fee_amount_cents, allow_nil: true
   monetize :money_collected_cents, allow_nil: true
+  has_attached_file :image
 
   # Validations
   # ========================================================
@@ -44,6 +50,7 @@ class Event < ActiveRecord::Base
   validates :start_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :start_at_changed?
   validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
   validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
+  validate :amounts_not_changed, on: :update, if: :received_money?
 
   # Relationships
   # ========================================================
@@ -60,6 +67,7 @@ class Event < ActiveRecord::Base
   before_validation :clear_amounts
   before_validation :concatenate_dates
   before_save :clear_dates
+  before_save :set_event_image
   before_save :add_organizer_to_members
   before_destroy :clear_notifications_and_news_items
 
@@ -207,6 +215,20 @@ class Event < ActiveRecord::Base
     end
   end
 
+  # Event image
+  # ========================================================
+  def image_type
+    if @image_type.present?
+      @image_type
+    elsif image.present?
+      :upload
+    elsif image_url.present?
+      :url
+    else
+      :default_image
+    end
+  end
+
   # Member definitions
   # ========================================================
   def paying_members
@@ -349,6 +371,10 @@ class Event < ActiveRecord::Base
     event_user(user).paid_at
   end
 
+  def received_money?
+    paid_members.count > 0
+  end
+
 private
   def clear_amounts
     if division_type != DivisionType::Split
@@ -371,12 +397,36 @@ private
     due_at_date = due_at_time = start_at_date = start_at_time = nil
   end
 
+  def set_event_image
+    return unless self.image_type.present?
+
+    if self.image_type != "url"
+      self.image_url = nil
+    end
+
+    if self.image_type != "upload"
+      self.image = nil
+    end
+
+    image_type = nil
+  end
+  
   def add_organizer_to_members
     if !members.include?(organizer)
       members << organizer
     end
   end
 
+  def amounts_not_changed
+    if divide_total? && total_amount_cents_changed?
+      errors.add(:total_amount, "cannot be changed after a member has paid")
+    end
+
+    if divide_per_person? && split_amount_cents_changed?
+      errors.add(:split_amount, "cannot be changed after a member has paid")
+    end
+  end
+  
   def clear_notifications_and_news_items
     Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all

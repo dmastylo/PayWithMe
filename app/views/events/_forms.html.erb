@@ -12,6 +12,54 @@
         <%= f.text_field :start_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
         <%= f.text_field :start_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
       </div>
+      <div class="control-group">
+        <%= f.label :image, class: 'control-label' %>
+        <div class="controls">
+          <%= f.hidden_field :image_type %>
+          <div class="btn-group input-block-level" id="event_image_type_btn_group" data-toggle="buttons-radio">
+            <button type="button" class="btn third <%= "active" if @event.image_type == :url %>" data-value="url" data-name="url">URL</button>
+            <button type="button" class="btn third <%= "active" if @event.image_type %>" data-value="upload" data-name="upload">Image Upload</button>
+            <button type="button" class="btn third last <%= "active" if @event.image_type == :default_image %>" data-value="default_image" data-name="default_image">None</button>
+          </div>
+
+          <div class="event_image_type_option push-top" id="event_image_type_default_image">
+            <div class="push-bottom">The default:</div>
+            <div class="push-bottom">
+              <%= image_tag "default_event_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
+            </div>
+          </div>
+
+          <div class="event_image_type_option push-top" id="event_image_type_url">
+            <% if @event.image_url.present? %>
+              <div class="push-bottom">Current URL:</div>
+              <div class="push-bottom">
+                <%= event_image_tag(@event, :medium) %>
+              </div>
+            <% end %>
+            <div class="control-group">
+              <%= f.label :image_url, "Event Image URL", class: 'control-label' %>
+              <div class="controls">
+                <%= f.text_field :image_url, placeholder: "http://example.com/image.png", class: 'input-block-level'  %>
+              </div>
+            </div>
+          </div>
+
+          <div class="event_image_type_option push-top" id="event_image_type_upload">
+            <% if @event.image.present? %>
+              <div class="push-bottom">Current uploaded image:</div>
+              <div class="push-bottom">
+                <%= event_image_tag(@event, :medium) %>
+              </div>
+            <% end %>
+            <div class="control-group">
+              <%= f.label :image, "Image File", class: 'control-label' %>
+              <div class="controls">
+                <%= f.file_field :image, accept: 'image' %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="span6">
@@ -105,6 +153,7 @@
     </div>
   </div>
 </div>
+
 <div class="row">
   <div class="span12">
     <%= f.submit "#{submit_text(@event)} event and send invitations", class: "btn btn-primary btn-block" %>
@@ -120,16 +169,21 @@
 </script>
 
 <% content_for(:before_body_end) do %>
-  <!-- TODO: Move this elsewhere -->
+  <!-- TODO: Move this elsewhere (please leave the image selection js)-->
   <script type="text/javascript">
     $(document).ready(function()
     {
+      $('.datepicker').datepicker();
+      $('.timepicker').timepicker();
+
       $('.datepicker').datepicker({
         disableFocus: true
       });
+
       $('.timepicker').timepicker({
         disableFocus: true
       });
+
       $('.btn-group .btn').tooltip({
         container: 'body'
       });
@@ -146,6 +200,7 @@
       $("#event_division_type").buttonGroup();
       $("#event_fee_type").buttonGroup();
       $("#event_privacy_type").buttonGroup();
+      $("#event_image_type").buttonGroup();
 
       $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>,
