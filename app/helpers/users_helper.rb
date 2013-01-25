@@ -17,8 +17,25 @@ module UsersHelper
     link_to image, user
   end
 
-  def user_name(user, length=20)
-    user.name || ( length > 0 ? user.email.truncate(20) : user.email )
+  def user_name(user, options = {})
+    options[:length] ||= 20
+    options[:use_you] ||= false
+
+    if options[:use_you] && signed_in? && current_user == user
+      "You"
+    elsif user.name
+      user.name
+    elsif options[:length] > 0
+      user.email.truncate(20)
+    else
+      user.email
+    end
+  end
+
+  def user_online(user)
+    if user.online?
+      '<div class="user-online" rel="tooltip" title="This user is online" data-placement="right"></div>'.html_safe
+    end
   end
 
   def user_for_mustache(user)

@@ -2,13 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-.event-title, input.event-title
-{
-	font-size: 28px;
-	line-height: 34px;
-	height: 34px;
-}
-
 .event-image
 {
     border: 1px solid $mediumGray;
@@ -54,59 +47,38 @@
     display: none;
 }
 
-// Event Display ==============================================================
-.event-members
+.event-show
 {
-    max-height: 350px;
-    overflow: auto;
-
-    /* Event members display */
-    .member-list
+    .members
     {
+        max-height: 350px;
+        overflow: auto;
         list-style: none;
         padding: 0;
         margin: 0;
-
         .member
         {
             margin-bottom: 5px;
             width: 50%;
             float: left;
-
-            &:last-child
-            {
-                margin-bottom: 0;
-            }
-
+            &:last-child { margin-bottom: 0; }
             .profile_image
             {
-                // margin-bottom: 5px;
                 margin-top: 3px;
-                // display: block;
                 float: left;
 
-                img
+                img { border: 1px solid $mediumGray; }
+            }
+            .body
+            {
+                padding-left: 10px;
+                float: left;
+                .user a
                 {
-                    border: 1px solid $mediumGray;
+                    color: $offBlack;
+                    font-weight: bold;
                 }
-            }
-        }
-
-        .body
-        {
-            padding-left: 10px;
-            // padding-top: 5px;
-            float: left;
-
-            .user a
-            {
-                color: $offBlack;
-                font-weight: bold;
-            }
-
-            .status
-            {
-                color: $mediumGray;
+                .status { color: $mediumGray; }
             }
         }
     }
@@ -124,90 +96,63 @@
     margin-bottom: 20px;
 }
 
-.message-list
+.messages
 {
     list-style-type: none;
     padding: 0;
     margin: 0;
     height: 380px;
     overflow-y: scroll;
-
     .message
     {
         margin-bottom: 10px;
-
         .profile-image
         {
             float: left;
+            img { border: 1px solid $mediumGray; }
         }
-
-        .current-user
+        &.current
         {
-            &.profile-image
+            .profile-image
             {
                 float: right;
                 padding-right: 15px;
             }
-
-            &.body
+            .body
             {
                 padding-right: 10px;
                 text-align: right;
             }
         }
-
-        img
-        {
-            border: 1px solid $mediumGray;
-        }
-
         .body
         {
             padding-left: 10px;
             float: left;
             @include box-sizing(border-box);
             margin-top: 3px;
-        }
-
-        .message-content
-        {
-            word-break: normal;
-            word-wrap: break-word;
-        }
-
-        .user a
-        {
-            color: $offBlack;
-            font-weight: bold;
-        }
-
-        .timestamp
-        {
-            color: $mediumGray;
-        }
-
-        .name
-        {
-            font-size: 1.3em;
-            color: #848484;
-            font-weight: bold;
-            line-height: 1;
-
-            &:hover
+            .content
             {
-                color: #000000;
-                text-decoration: none;
+                word-break: normal;
+                word-wrap: break-word;
+            }
+            .user a
+            {
+                color: $offBlack;
+                font-weight: bold;
+            }
+            .timestamp
+            {
+                color: $mediumGray;
             }
         }
     }
-
-    .new-message
+    .new-messages
     {
         display: none;
     }
 }
 
-.new-message-form
+.new-message
 {
     margin-top: -10px;
 }
