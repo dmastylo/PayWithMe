@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130123205916) do
+ActiveRecord::Schema.define(:version => 20130124215937) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -76,6 +76,11 @@ ActiveRecord::Schema.define(:version => 20130123205916) do
     t.integer  "event_image_file_size"
     t.string   "event_image_url"
     t.string   "slug"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.string   "image_url"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -173,7 +178,6 @@ ActiveRecord::Schema.define(:version => 20130123205916) do
     t.integer  "event_id"
     t.integer  "amount_cents"
     t.integer  "event_user_id"
-    t.integer  "payment_method"
     t.string   "transaction_id"
   end
 

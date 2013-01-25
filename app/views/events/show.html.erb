@@ -1,9 +1,9 @@
 <% provide(:title, @event.title) %>
 <div class="row">
-  <div class="span<% if current_user == @event.organizer %>9<% else %>12<% end %>">
+  <div class="span9">
     <div class="page-header">
       <h2>
-        <%= @event.title %>
+        <%= truncate(@event.title, :length => 48, :separator => ' ') %>
         <% if @event.public? %>
           <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
         <% else %>
@@ -33,6 +33,7 @@
 <div class="row">
   <div class="span5">
     <h3>Event Details</h3>
+    <div class="event-image <%= "default" if @event.image_type == :default_image %>" style="background-image: url('<%= event_image_path(@event, :full) %>');"></div>
     <div class="well event-description">
       <% if @event.description.present? %>
         <div class="quarter"><strong>Description:</strong></div>
