@@ -93,17 +93,21 @@ class Group < ActiveRecord::Base
   end
 
   def is_admin?(user)
-    self.group_users.find_by_user_id(user.id).admin?
+    user == organizer
   end
 
-  def organizer
-    group_user = self.group_users.where(admin: true).first
-    if group_user.present?
-      group_user.user
-    else
-      nil
-    end
+  def independent_members
+    self.members - [organizer]
   end
+
+  # def organizer
+  #   group_user = self.group_users.where(admin: true).first
+  #   if group_user.present?
+  #     group_user.user
+  #   else
+  #     nil
+  #   end
+  # end
 
   def send_invitation_emails
     self.group_users.each do |group_user|

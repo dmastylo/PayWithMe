@@ -7,11 +7,6 @@
       <%= f.text_field :title, class: "input-block-level" %>
       <%= f.label :description %>
       <%= f.text_area :description, class: "input-block-level", rows: 5 %>
-      <%= f.label :start_at %>
-      <div class="start_at">
-        <%= f.text_field :start_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
-        <%= f.text_field :start_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
-      </div>
       <div class="control-group">
         <%= f.label :image, class: 'control-label' %>
         <div class="controls">
@@ -66,7 +61,7 @@
     <h3>Payment Information</h3>
     <div class="well">
       <%= f.label :due_at %>
-      <div class="due_at">
+      <div class="due_at <%= "field_with_error" if @event.errors[:due_at].present? %>">
         <%= f.text_field :due_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
         <%= f.text_field :due_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
       </div>
@@ -74,7 +69,7 @@
       <div class="btn-group input-block-level push-bottom" id="event_division_type_btn_group" data-toggle="buttons-radio">
         <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount split evenly.">Divide among group</button>
         <button type="button" class="btn third" data-name="split" data-value="2" title="Each person must pay a certain amount.">Amount Per Person</button>
-        <button type="button" class="btn third last" data-name="fundraise" data-value="3" title="Any amount can be paid.">Fundraise/Donations</button>
+        <button type="button" class="btn third last" data-name="fundraise" data-value="3" title="Any amount can be paid as a donation.">Fundraise/Donations</button>
       </div>
 
       <div class="event_division_type_option push-bottom" id="event_division_type_total">
@@ -96,15 +91,23 @@
       <%= f.label :fee_type, "Fee Setup" %>
       <%= f.hidden_field :fee_type %>
       <div class="btn-group input-block-level push-bottom" id="event_fee_type_btn_group" data-toggle="buttons-radio">
-        <button type="button" class="btn half" data-name="organizer" data-value="1" title="You will pay facilitator's fees.">You Pay Fees</button>
+        <button type="button" class="btn half" data-name="organizer" data-value="1" title="You  will pay facilitator's fees.">You Pay Fees</button>
         <button type="button" class="btn half" data-name="members" data-value="2" title="Members will pay the facilitator's fees.">Members Pay Fees</button>
       </div>
 
       <%= f.label :privacy_type, "Event Privacy" %>
       <%= f.hidden_field :privacy_type %>
       <div class="btn-group input-block-level push-bottom" id="event_privacy_type_btn_group" data-toggle="buttons-radio">
-        <button type="button" class="btn half" data-name="private" data-value="1" title="Anyone can join.">Public Event</button>
-        <button type="button" class="btn half" data-name="public" data-value="2" title="Only those invited can join.">Private Event</button>
+        <button type="button" class="btn half" data-name="private" data-value="1" title="Anyone can join and view the event.">Public Event</button>
+        <button type="button" class="btn half" data-name="public" data-value="2" title="Only invited can join and view the event.">Private Event</button>
+      </div>
+
+      <%= f.label :payment_methods_raw, "Accepted Payment Methods (Select One Or More)" %>
+      <%= f.hidden_field :payment_methods_raw %>
+      <div class="btn-group input-block-level push-bottom" id="event_payment_methods_raw_btn_group"  data-toggle="buttons-checkbox">
+        <button type="button" class="btn third" data-name="cash" data-value="1" title="Manually mark cash payers as paid.">Cash</button>
+        <button type="button" class="btn third" data-name="paypal" data-value="2" title="You need a linked PayPal account.">PayPal</button>
+        <button type="button" class="btn third last" data-name="dwolla" data-value="3" title="You need a linked Dwolla account.">Dwolla</button>
       </div>
     </div>
   </div>
@@ -112,7 +115,7 @@
 <div class="row">
   <div class="span6">
     <h3 class="pull-left">Invite Members</h3>
-    <a href="#" id="btn-bulk-invite" class="btn btn-primary pull-right">Bulk invitation mode</a>
+    <a href="#" id="btn-bulk-invite" class="btn btn-primary pull-right" rel="tooltip" title="Submit a comma-separated list of emails">Bulk invitation mode</a>
     <div class="clearfix"></div>
     <div class="well">
       <div class="alert alert-error hidden" id="add_member_error">
@@ -156,7 +159,7 @@
 
 <div class="row">
   <div class="span12">
-    <%= f.submit "#{submit_text(@event)} event", class: "btn btn-primary btn-block" %>
+    <%= f.submit "#{submit_text(@event)} event and send invitations", class: "btn btn-primary btn-block" %>
   </div>
 </div>
 
@@ -173,9 +176,6 @@
   <script type="text/javascript">
     $(document).ready(function()
     {
-      $('.datepicker').datepicker();
-      $('.timepicker').timepicker();
-
       $('.datepicker').datepicker({
         disableFocus: true
       });
@@ -188,7 +188,7 @@
         container: 'body'
       });
 
-      $.each(['due_at', 'start_at'], function(index, name)
+      $.each(['due_at'], function(index, name)
       {
         $('.' + name).autoSize({
           fixed: '#event_' + name + '_time',

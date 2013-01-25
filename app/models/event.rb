@@ -8,7 +8,6 @@
 #  due_at             :datetime
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
-#  start_at           :datetime
 #  division_type      :integer
 #  fee_type           :integer
 #  total_amount_cents :integer
@@ -27,8 +26,8 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :start_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image, :image_type, :image_url
-  attr_accessor :due_at_date, :due_at_time, :start_at_date, :start_at_time, :image_type
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url
+  attr_accessor :due_at_date, :due_at_time, :image_type
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
@@ -46,8 +45,6 @@ class Event < ActiveRecord::Base
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long" }
   validates :due_at, presence: true
   validates :due_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :due_at_changed?
-  validates :start_at, presence: true
-  validates :start_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :start_at_changed?
   validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
   validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
   validate :amounts_not_changed, on: :update, if: :received_money?
@@ -56,20 +53,23 @@ class Event < ActiveRecord::Base
   # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_at, event_users.paid_at"
+  has_many :members, class_name: "User", through: :event_users, source: :member
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
   has_many :reminders, dependent: :destroy
+  has_many :payment_methods, dependent: :destroy
 
   # Callbacks
   # ========================================================
   before_validation :clear_amounts
   before_validation :concatenate_dates
+  before_validation :parse_payment_methods
   before_save :clear_dates
   before_save :set_event_image
   before_save :add_organizer_to_members
   before_destroy :clear_notifications_and_news_items
+  after_save :create_payment_methods
 
   # Pretty URLs
   # ========================================================
@@ -165,6 +165,47 @@ class Event < ActiveRecord::Base
     privacy_type == PrivacyType::Private
   end
 
+  # Payment methods
+  # ========================================================
+
+  def accepts_payment_method?(payment_method)
+    self.payment_methods.where(payment_method: payment_method).count > 0
+  end
+
+  def send_with_payment_method?(payment_method)
+    return true
+    return false unless accepts_payment_method?(payment_method)
+
+    if payment_method == PaymentMethod::MethodType::CASH
+      true
+    elsif payment_method == PaymentMethod::MethodType::PAYPAL
+      self.organizer.paypal_account.present?
+    elsif payment_method == PaymentMethod::MethodType::DWOLLA
+      self.organizer.dwolla_account.present?
+    end
+  end
+
+  def accepts_cash?
+    accepts_payment_method?(PaymentMethod::MethodType::CASH)
+  end
+  alias_method :send_cash?, :accepts_cash?
+
+  def accepts_paypal?
+    accepts_payment_method?(PaymentMethod::MethodType::PAYPAL)
+  end
+
+  def send_with_paypal?
+    send_with_payment_method?(PaymentMethod::MethodType::PAYPAL)
+  end
+
+  def accepts_dwolla?
+    accepts_payment_method?(PaymentMethod::MethodType::DWOLLA)
+  end
+
+  def send_with_dwolla?
+    send_with_payment_method?(PaymentMethod::MethodType::DWOLLA)
+  end
+
   # Constants
   # ========================================================
   class DivisionType
@@ -181,7 +222,7 @@ class Event < ActiveRecord::Base
     Private = 2
   end
 
-  # Dates
+  # Virtual attributes
   # ========================================================
   def due_at_date
     if @due_at_date.present?
@@ -199,22 +240,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def start_at_date
-    if @start_at_date.present?
-      @start_at_date
-    elsif start_at.present?
-      start_at.to_date.to_s
-    end
-  end
-
-  def start_at_time
-    if @start_at_time.present?
-      @start_at_time
-    elsif start_at.present?
-      start_at.strftime('%I:%M%p')
-    end
-  end
-
   # Event image
   # ========================================================
   def image_type
@@ -226,6 +251,18 @@ class Event < ActiveRecord::Base
       :url
     else
       :default_image
+    end
+  end
+
+  def payment_methods_raw
+    if @payment_methods_raw.present?
+      @payment_methods_raw
+    else
+      payment_methods_raw = []
+      payment_methods.each do |payment_method|
+        payment_methods_raw << payment_method.payment_method
+      end
+      payment_methods_raw
     end
   end
 
@@ -246,7 +283,11 @@ class Event < ActiveRecord::Base
   end
 
   def paid_percentage
-    (paid_members.count * 100.0) / paying_members.count 
+    if paying_members.count > 0
+      (paid_members.count * 100.0) / paying_members.count 
+    else
+      0
+    end
   end
   
   def add_member(member)
@@ -386,11 +427,22 @@ private
 
   def concatenate_dates
     self.due_at = "#{self.due_at_date} #{self.due_at_time}"
-    self.start_at = "#{start_at_date} #{start_at_time}"
+  end
+
+  def parse_payment_methods
+    self.payment_methods_raw = ActiveSupport::JSON.decode(self.payment_methods_raw).uniq
+  end
+
+  def create_payment_methods
+    self.payment_methods.destroy_all
+
+    self.payment_methods_raw.each do |payment_method|
+      self.payment_methods.create(payment_method: payment_method)
+    end
   end
 
   def clear_dates
-    due_at_date = due_at_time = start_at_date = start_at_time = nil
+    due_at_date = due_at_time = nil
   end
 
   def set_event_image

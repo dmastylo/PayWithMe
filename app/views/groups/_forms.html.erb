@@ -77,7 +77,7 @@
       </div>
       <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
       <div id="invited_members">
-        <% @group.members.each do |user| %>
+        <% @group.independent_members.each do |user| %>
           <%= render 'users/invited_user', mustache: user_for_mustache(user) %>
         <% end %>
         <div class="clearfix"></div>

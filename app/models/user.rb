@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
   # ========================================================
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
   has_many :event_users, dependent: :destroy
-  has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_at, event_users.paid_at", dependent: :destroy
+  has_many :member_events, class_name: "Event", through: :event_users, source: :event, dependent: :destroy
   has_many :organized_groups, class_name: "Group", foreign_key: "organizer_id"
   has_many :group_users, dependent: :destroy
   has_many :member_groups, class_name: "Group", through: :group_users, source: :group
@@ -212,29 +212,30 @@ class User < ActiveRecord::Base
   # Event Definitions
   # ========================================================
   def upcoming_organized_events
-    self.organized_events.where('start_at > ?', Time.now).order("start_at ASC")
+    self.organized_events.where('events.due_at > ?', Time.now).order("events.due_at ASC")
   end
 
   def past_organized_events
-    self.organized_events.where('start_at < ?', Time.now).order("start_at DESC")
+    self.organized_events.where('events.due_at < ?', Time.now).order("events.due_at DESC")
   end
 
   def upcoming_events
-    self.member_events.where('start_at > ?', Time.now).order("start_at ASC")
+    self.member_events.where('events.due_at > ?', Time.now).order("events.due_at ASC")
   end
 
   def limited_upcoming_events
-    self.member_events.where('start_at > ?', Time.now).order("start_at ASC").limit(5)
+    self.member_events.where('events.due_at > ?', Time.now).order("events.due_at ASC").limit(5)
   end
 
   def past_events
-    self.member_events.where('start_at < ?', Time.now).order("start_at DESC")
+    self.member_events.where('events.due_at < ?', Time.now).order("events.due_at DESC")
   end
   
   def invited_events
     self.member_events.delete_if { |event| event.organizer == self }
   end
 
+  # TODO: Simplify this, combine them
   def facebook_account
     self.linked_accounts.where(provider: :facebook).first
   end
@@ -247,12 +248,16 @@ class User < ActiveRecord::Base
     self.linked_accounts.where(provider: :paypal).first
   end
 
+  def dwolla_account
+    self.linked_accounts.where(provider: :dwolla).first
+  end
+
   def upcoming_invited_events
-    self.member_events.where('start_at > ?', Time.now).order("start_at ASC").delete_if { |event| event.organizer == self }
+    self.member_events.where('events.due_at > ?', Time.now).order("events.due_at ASC").delete_if { |event| event.organizer == self }
   end
 
   def past_invited_events
-    self.member_events.where('start_at < ?', Time.now).order("start_at DESC").delete_if { |event| event.organizer == self }
+    self.member_events.where('events.due_at < ?', Time.now).order("events.due_at DESC").delete_if { |event| event.organizer == self }
   end
 
 private
