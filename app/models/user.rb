@@ -212,23 +212,23 @@ class User < ActiveRecord::Base
   # Event Definitions
   # ========================================================
   def upcoming_organized_events
-    self.organized_events.where('due_at > ?', Time.now).order("due_at ASC")
+    self.organized_events.where('events.due_at > ?', Time.now).order("events.due_at ASC")
   end
 
   def past_organized_events
-    self.organized_events.where('due_at < ?', Time.now).order("due_at DESC")
+    self.organized_events.where('events.due_at < ?', Time.now).order("events.due_at DESC")
   end
 
   def upcoming_events
-    self.member_events.where('due_at > ?', Time.now).order("due_at ASC")
+    self.member_events.where('events.due_at > ?', Time.now).order("events.due_at ASC")
   end
 
   def limited_upcoming_events
-    self.member_events.where('due_at > ?', Time.now).order("due_at ASC").limit(5)
+    self.member_events.where('events.due_at > ?', Time.now).order("events.due_at ASC").limit(5)
   end
 
   def past_events
-    self.member_events.where('due_at < ?', Time.now).order("due_at DESC")
+    self.member_events.where('events.due_at < ?', Time.now).order("events.due_at DESC")
   end
   
   def invited_events
@@ -248,11 +248,11 @@ class User < ActiveRecord::Base
   end
 
   def upcoming_invited_events
-    self.member_events.where('due_at > ?', Time.now).order("due_at ASC").delete_if { |event| event.organizer == self }
+    self.member_events.where('events.due_at > ?', Time.now).order("events.due_at ASC").delete_if { |event| event.organizer == self }
   end
 
   def past_invited_events
-    self.member_events.where('due_at < ?', Time.now).order("due_at DESC").delete_if { |event| event.organizer == self }
+    self.member_events.where('events.due_at < ?', Time.now).order("events.due_at DESC").delete_if { |event| event.organizer == self }
   end
 
 private
