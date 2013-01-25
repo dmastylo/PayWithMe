@@ -4,7 +4,7 @@
   </div>
   <div class="body">
     <div class="user">
-      <%= link_to user_name(message.user, use_you: true), message.user %>
+      <%= link_to user_name(message.user, use_you: true, length: 0), message.user %>
       <%= user_online(message.user) %>
     </div>
     <div class="timestamp">

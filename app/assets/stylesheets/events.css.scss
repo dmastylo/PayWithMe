@@ -1,54 +1,22 @@
-// Place all the styles related to the Events controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
-.event-image
-{
-    border: 1px solid $mediumGray;
-    border-bottom: 0;
-    width: 100%;
-    height: 250px;
-    background-size: 100%;
-    background-position: center center;
-    background-repeat: no-repeat;
-    box-sizing: border-box;
-
-    &.default
-    {
-        height: 100px;
-    }
-}
-
-// Facebook banner style event image
-// .event-header
-// {
-//     margin-right: -30px;
-//     padding-top: 200px;
-//     background-size: 100%;
-//     background-position: center center;
-
-//     .span9
-//     {
-//         background-color: rgba(255, 255, 255, 0.9);
-//         margin-left: 15px;
-//         padding-left: 15px;
-//         margin-bottom: 15px;
-//         border-radius: 10px;
-//     }
-// }
-
-.event_division_type_option
-{
-	display: none;
-}
-
-.event_image_type_option
-{
-    display: none;
-}
-
+// Show
+// =========================
 .event-show
 {
+    .image
+    {
+        border: 1px solid $mediumGray;
+        border-bottom: 0;
+        width: 100%;
+        height: 250px;
+        background-size: 100%;
+        background-position: center center;
+        background-repeat: no-repeat;
+        @include box-sizing(border-box);
+        &.default
+        {
+            height: 100px;
+        }
+    }
     .members
     {
         max-height: 350px;
@@ -82,18 +50,6 @@
             }
         }
     }
-}
-
-.event-button
-{
-    margin-top: 13px; // For medium image size
-    //margin-top: 65px; // For large image size
-}
-
-// Chat Messages Display ======================================================
-.new-message-form
-{
-    margin-bottom: 20px;
 }
 
 .messages
@@ -155,92 +111,14 @@
 .new-message
 {
     margin-top: -10px;
+    margin-bottom: 20px;
 }
 
-// Adding users to events =====================================================
-#invited_members, #invited_groups
-{
-    .member
-    {
-        margin-top: 10px;
-
-        .profile_image
-        {
-            float: left;
-        }
-
-        .info
-        {
-            float: left;
-            margin-left: 5px;
-            line-height: 17px;
-        }
-
-        .name
-        {
-            font-weight: bold;
-        }
-
-        .email
-        {
-            color: $mediumGray;
-        }
-
-        .delete
-        {
-            float: right;
-            line-height: 34px;
-            cursor: pointer;
-        }
-
-        &.member_with_email
-        {
-            height: 34px;
-            line-height: 34px;
-            .email
-            {
-                font-weight: bold;
-                color: $offBlack;
-            }
-            .info
-            {
-                line-height: 34px;
-            }
-        }
-    }
-}
-
-// // Sidebar content ============================================================
-// .sidebar
-// {
-//     padding: 0px;
-// }
-
-// .event-sidebar
-// {
-//     float: left;
-//     padding-right: 15px;
-//     padding-left: 10px;
-//     padding-top: 5px;
-// }
-
-// .event-info{
-//     padding: 19px;
-// }
-
-// .event-profile-page
-// {
-//     float:left;
-//     padding-right: 10px;
-//     padding-left: 10px;
-//     padding-top: 5px;
-//     margin-bottom: 2px;
-// }
-
+// Partial
+// =========================
 .event
 {
     padding: 0;
-
     .image
     {
         width: 100%;
@@ -250,17 +128,11 @@
         border-bottom: 1px solid $mediumGray;
         background-color: #FFF;
     }
-
     .info
     {
         padding: $mediumMargin;
-
-        h4
-        {
-            margin-top: 0;
-        }
+        h4 { margin-top: 0; }
     }
-
     .icons
     {
         float: right;
@@ -268,14 +140,45 @@
     }
 }
 
-// ===============================
-#btn-bulk-invite
-{
-    margin-top: 17px;
-}
+// Forms
+// =========================
+.btn_group_option { display: none; }
+.well .control-group:last-child { margin-bottom: 0;}
+#btn-bulk-invite { margin-top: 17px; }
 
-#member_names
+#invited_members, #invited_groups
 {
-    margin-bottom: 0;
-    border-bottom: 0;
+    .member
+    {
+        margin-top: 10px;
+        .profile_image
+        {
+            float: left;
+        }
+        .info
+        {
+            float: left;
+            margin-left: 5px;
+            line-height: 17px;
+        }
+        .name { font-weight: bold; }
+        .email { color: $mediumGray; }
+        .delete
+        {
+            float: right;
+            line-height: 34px;
+            cursor: pointer;
+        }
+        &.member_with_email
+        {
+            height: 34px;
+            line-height: 34px;
+            .email
+            {
+                font-weight: bold;
+                color: $offBlack;
+            }
+            .info { line-height: 34px; }
+        }
+    }
 }

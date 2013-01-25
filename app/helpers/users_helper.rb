@@ -43,7 +43,7 @@ module UsersHelper
       id: user.id,
       stub: user.stub?,
       email: user.email,
-      name: user_name(user, 0),
+      name: user_name(user, length: 0),
       profile_image_tag: profile_image_tag(user)
     }
   end
