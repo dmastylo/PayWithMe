@@ -18,7 +18,7 @@
     </div>
   <% elsif current_user == @event.organizer %>
     <div class="span3">
-      <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
+      <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title", rel: "tooltip", title: "Manage your event and view statistics" %>
     </div>
   <% elsif @event.public? && !@event.members.include?(current_user) %>
     <div class="span3">
@@ -52,9 +52,6 @@
       <div class="quarter"><strong>Money Due at</strong></div>
       <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
-      <div class="quarter"><strong>Event Starts at</strong></div>
-      <div class="three-quarters"><%= @event.start_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
-      <div class="clearfix"></div>
     </div>
 
     <h3>Organizer</h3>
@@ -69,7 +66,7 @@
     <h3>Guest List</h3>
     <div class="well">
       <div class="event-members">
-        <% if @event.members.any? %>
+        <% if @event.paying_members.any? %>
           <ul class="member-list">
             <%= render @event.paying_members %>
           </ul>
@@ -82,7 +79,12 @@
     <% elsif @event_user.paid? %>
       <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
     <% else %>
-      <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} Now", pay_event_user_path(@event_user), class: "btn btn-primary btn-block" %>
+      <% if @event.send_with_paypal? %>
+        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With PayPal", pay_event_user_path(@event_user, method: PaymentMethod::MethodType::PAYPAL), class: "btn btn-primary btn-block push-bottom", method: :post %>
+      <% end %>
+      <% if @event.send_with_dwolla? %>
+        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With Dwolla", pin_event_user_path(@event_user), class: "btn btn-primary btn-block" %>
+      <% end %>
     <% end %>
   </div>
   <div class="span7">

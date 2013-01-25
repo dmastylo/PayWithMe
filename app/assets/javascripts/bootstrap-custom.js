@@ -5,8 +5,8 @@ $(function () {
   });
 
   // Fixes dropdown menu links not being clickable on mobile
-  $('.dropdown-menu').on('touchstart.dropdown.data-api', function(e)
-  {
+  $('body').on('touchstart.dropdown', '.dropdown-menu', function (e) {
     e.stopPropagation();
+    e.preventDefault();
   });
 });
