@@ -174,7 +174,6 @@ ActiveRecord::Schema.define(:version => 20130125014438) do
     t.integer  "amount_cents"
     t.integer  "event_user_id"
     t.integer  "payment_method"
-    t.string   "transaction_id"
   end
 
   create_table "reminder_users", :force => true do |t|
