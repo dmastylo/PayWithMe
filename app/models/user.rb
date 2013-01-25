@@ -39,12 +39,13 @@ class User < ActiveRecord::Base
   # ========================================================
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_option, :profile_image_url, :time_zone
   attr_accessor :profile_image_option
-  has_attached_file :profile_image, styles: { thumb: "#{Figaro.env.thumb_size}x#{Figaro.env.thumb_size}>", small: "#{Figaro.env.small_size}x#{Figaro.env.small_size}>", medium: "#{Figaro.env.medium_size}x#{Figaro.env.medium_size}>" }
+  has_attached_file :profile_image
 
   # Validations
   # ========================================================
-  validates :name, presence: true, length: { maximum: 50, message: "has to be less than 50 characters long"}, unless: :stub?
-  validates :password, length: { minimum: 8, message: "has to be at least 8 characters long (for your safety!)"}, if: :password_required?, unless: :stub?
+  validates :name, presence: true, length: { minimum: 2, maximum: 50, message: "has to be between 2 and 50 characters long" }, unless: :stub?
+  validates :password, length: { minimum: 8, message: "has to be at least 8 characters long (for your safety!)" }, if: :password_required?, unless: :stub?
+  validates :guest_token, presence: true, if: :stub?
   validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
   
   # Callbacks
@@ -57,14 +58,16 @@ class User < ActiveRecord::Base
   # ========================================================
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
   has_many :event_users, dependent: :destroy
-  has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_at, event_users.paid_at"
+  has_many :member_events, class_name: "Event", through: :event_users, source: :event, select: "events.*, event_users.amount_cents, event_users.due_at, event_users.paid_at", dependent: :destroy
+  has_many :organized_groups, class_name: "Group", foreign_key: "organizer_id"
   has_many :group_users, dependent: :destroy
-  has_many :groups, through: :group_users, source: :group, select: "groups.*, group_users.admin"
+  has_many :member_groups, class_name: "Group", through: :group_users, source: :group
   has_many :messages, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :linked_accounts, dependent: :destroy
   has_many :news_items, dependent: :destroy
-  has_many :payments, dependent: :destroy
+  has_many :received_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
+  has_many :sent_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
 
   # Scopes
   # ========================================================
@@ -145,6 +148,7 @@ class User < ActiveRecord::Base
     User.search(name_or_email_cont: query).result
   end
 
+  # Is this a duplicate?
   def profile_image_type
     if profile_image.present?
       :upload

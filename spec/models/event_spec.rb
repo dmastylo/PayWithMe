@@ -16,235 +16,339 @@
 #  organizer_id       :integer
 #  privacy_type       :integer
 #  slug               :string(255)
+#  image_file_name    :string(255)
+#  image_content_type :string(255)
+#  image_file_size    :integer
+#  image_updated_at   :datetime
+#  image_url          :string(255)
 #
 
 require 'spec_helper'
 
 describe Event do
-  let(:user) { FactoryGirl.create(:user) }
-  before { @event = user.organized_events.build(title: "Halloween Party", description: "We need beer for our Halloween party.", due_at: Time.now + 86400, start_at: Time.now + (86400 * 7), division_type: Event::DivisionType::Fundraise, fee_type: Event::FeeType::OrganizerPays, privacy_type: Event::PrivacyType::Public) }
+
+  before { @event = FactoryGirl.create(:event) }
   subject { @event }
   it { should be_valid }
 
-  describe "accessible attributes" do
-    it "should not give access to organizer_id" do
-      expect { Event.new(organizer_id: 1) }.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+  describe "attributes" do
+    [:title,
+     :description,
+     :due_at,
+     :created_at,
+     :updated_at,
+     :start_at,
+     :total_amount_cents,
+     :total_amount,
+     :split_amount_cents,
+     :split_amount,
+     :organizer,
+     :members,
+     :fee_type,
+     :division_type,
+     :privacy_type].each do |attribute|
+      it { should respond_to(attribute) }
     end
   end
 
   describe "validations" do
-    describe "title not present" do
-      before { @event.title = "" }
-      it { should_not be_valid }
+    it { should ensure_length_of(:title).is_at_least(2).is_at_most(120).with_short_message(/has to be between/).with_long_message(/has to be between/) }
+    it { should validate_presence_of(:organizer_id) }
+    it { should validate_presence_of(:division_type) }
+
+    describe "using total division_type" do
+      it { should allow_value("$1234").for(:total_amount) }
+      it { should_not allow_value("abcd").for(:total_amount) }
+      it { should allow_value("$1234").for(:split_amount) }
+      it { should allow_value("abcd").for(:split_amount) }
     end
 
-    describe "division_type not present" do
-      before { @event.division_type = nil }
-      it { should_not be_valid }
+    describe "using split division_type" do
+      before { @event.division_type = Event::DivisionType::Split }
+
+      it { should allow_value("$1234").for(:total_amount) }
+      it { should allow_value("abcd").for(:total_amount) }
+      it { should allow_value("$1234").for(:split_amount) }
+      it { should_not allow_value("abcd").for(:split_amount) }
     end
 
-    describe "division_type not present" do
-      before { @event.fee_type = nil }
-      it { should_not be_valid }
-    end
-
-    describe "total_amount not present" do
-      before { @event.total_amount = nil }
-      describe "with division_type total" do
-        before { @event.division_type = Event::DivisionType::Total }
-        it { should_not be_valid }
-      end
-
-      describe "with division_type other" do
-        before do
-          @event.split_amount = "$100.00"
-          @event.division_type = Event::DivisionType::Split
-        end
-        it { should be_valid }
-      end
-    end
-
-    describe "split_amount not present" do
-      before { @event.split_amount = nil }
-      describe "with division_type total" do
-        before { @event.division_type = Event::DivisionType::Split }
-        it { should_not be_valid }
-      end
-
-      describe "with division_type other" do
-        before do
-          @event.total_amount = "$100.00"
-          @event.division_type = Event::DivisionType::Total
-        end
-        it { should be_valid }
-      end
-    end
-
-    describe "total_amount not a number" do
-      before { @event.total_amount = "not.a.number" }
-      describe "with division_type total" do
-        before { @event.division_type = Event::DivisionType::Total }
-        it { should_not be_valid }
-      end
-
-      describe "with division_type other" do
-        before do
-          @event.split_amount = "$100.00"
-          @event.division_type = Event::DivisionType::Split
-        end
-        it { should be_valid }
-      end
-    end
-
-    describe "split_amount not a number" do
-      before { @event.split_amount = "not.a.number" }
-      describe "with division_type split" do
-        before { @event.division_type = Event::DivisionType::Split }
-        it { should_not be_valid }
-      end
-
-      describe "with division_type other" do
-        before do
-          @event.division_type = Event::DivisionType::Total
-          @event.total_amount = "$100.00"
-        end
-        it { should be_valid }
-      end
-    end
-
-    describe "due_at the past" do
-      describe "on initial creation" do
-        before { @event.due_at = Time.now - 86400 }
-        it { should_not be_valid }
-      end
-
-      describe "on update" do
-        before do
-          @event.due_at = Time.now
-          @event.save
-          Delorean.time_travel_to "1 month from now"
-        end
-        after { Delorean.back_to_the_present }
-
-        describe "without change" do
-          it { should be_valid }
-        end
-
-        describe "with past change" do
-          before { @event.due_at = Time.now + 3600 }
-          it { should_not be_valid }
-        end
-
-        describe "with future change" do
-          before { @event.due_at = Time.now + 86400 + 3600 }
-          it { should be_valid }
-        end
-      end
+    [:division_type, :fee_type, :privacy_type].each do |attribute|
+      it { should allow_value(Event::DivisionType::Total).for(attribute) }
+      it { should_not allow_value("test").for(attribute) }
+      it { should_not allow_value(123).for(attribute) }
     end
   end
 
-  describe "relationships" do
-    it { should respond_to(:organizer_id) }
-    it { should respond_to(:organizer) }
-    it { should respond_to(:members) }
+  describe "associations" do
+    it { should belong_to(:organizer).class_name("User") }
+    it { should have_many(:event_users).dependent(:destroy) }
+    it { should have_many(:members).through(:event_users).class_name("User") }
+    it { should have_many(:messages).dependent(:destroy) }
+    it { should have_many(:event_groups).dependent(:destroy) }
+    it { should have_many(:groups).through(:event_groups) }
+    it { should have_many(:reminders).dependent(:destroy) }
   end
 
-  describe "payment division" do
-    it { should respond_to(:division_type) }
-    it { should respond_to(:fee_type) }
-    it { should respond_to(:total_amount) }
-    it { should respond_to(:total_amount_cents) }
-    it { should respond_to(:split_amount) }
-    it { should respond_to(:split_amount_cents) }
+  describe "mass assignment" do
+    [:created_at,
+     :updated_at,
+     :organized_id].each do |attribute|
+      it { should_not allow_mass_assignment_of(attribute) }
+    end
+  end
 
-    describe "without modifications" do
+  describe "members" do
+    it { @event.members.should include(@event.organizer) }
+
+    describe "adding" do
+      describe "multiple" do
+        before do
+          @members = FactoryGirl.create_list(:user, 10)
+          @event.add_members(@members)
+        end
+        it "should include all members" do
+          @members.each do |member|
+            @event.members.should include(member)
+          end
+        end
+      end
+
+      describe "single" do
+        before do
+          @member = FactoryGirl.create(:user)
+          @event.add_member(@member)
+        end
+        it { @event.members.should include(@member) }
+      end
+    end
+
+    describe "setting" do
       before do
-        10.times do
-          @event.members << FactoryGirl.create(:user)
-        end
+        @original_members = FactoryGirl.create_list(:user, 10)
+        @event.add_members(@original_members)
+        @new_members = FactoryGirl.create_list(:user, 10)
+        @event.set_members(@new_members)
       end
 
-      share_examples_for "division_type calculations" do
-        describe "with organizer paying fees" do
-          before do
-            @event.fee_type = Event::FeeType::OrganizerPays
-            @event.save
-          end
-
-          it "should have nonzero entries" do
-            @event.split_amount_cents.should_not be_nil
-            @event.split_amount_cents.should_not == 0
-            @event.total_amount_cents.should_not be_nil
-            @event.total_amount_cents.should_not == 0
-            @event.receive_amount_cents.should_not be_nil
-            @event.receive_amount_cents.should_not == 0
-            @event.send_amount_cents.should_not be_nil
-            @event.send_amount_cents.should_not == 0
-          end
-
-          it "should have correct split_amount" do
-            @event.split_amount_cents.should == @event.total_amount_cents / @event.paying_members.count
-          end
-
-          it "should have equal split_amount and send_amount" do
-            @event.split_amount.should == @event.send_amount
-            @event.split_amount_cents.should == @event.send_amount_cents
-          end
-
-          it "should have correct receive_amount" do
-            total = @event.total_amount_cents * (1 - Figaro.env.fee_rate.to_f) - @event.paying_members.count * (Figaro.env.fee_static.to_f * 100.0)
-
-            @event.receive_amount_cents.should == total.floor
-          end
-        end
-
-        describe "with members paying fees" do
-          before do
-            @event.fee_type = Event::FeeType::MembersPay
-            @event.save
-          end
-
-          it "should have correct split_amount" do
-            @event.split_amount_cents.should == @event.total_amount_cents / @event.paying_members.count
-          end
-
-          it "should have correct send_amount" do
-            send = (@event.total_amount_cents / @event.members.count + Figaro.env.fee_static.to_f * 100.0) / (1 - Figaro.env.fee_rate.to_f)
-
-            @event.send_amount_cents.should == send.ceil
-          end
-
-          it "should have equal total_amount and receive_amount" do
-            @event.total_amount.should == @event.receive_amount
-            @event.total_amount_cents.should == @event.receive_amount_cents
-          end
-
-          # it "should have equal total calculated from send_amount and receive_amount" do
-          #   split = @event.members.count * @event.send_amount_cents
-          #   total = @event.receive_amount_cents
-            
-          #   split.should == total
-          # end
+      it { @event.members.should eq @new_members }
+      it "should not include uninvited members" do
+        @original_members.each do |member|
+          @event.members.should_not include(member)
         end
       end
+    end
 
-      describe "with total amount set" do
+    describe "removing" do
+      describe "multiple" do
         before do
-          @event.total_amount = "$100.00"
-          @event.division_type = Event::DivisionType::Total
+          @uninvited_members = FactoryGirl.create_list(:user, 3)
+          @new_members = FactoryGirl.create_list(:user, 3)
+          @event.add_members(@uninvited_members + @new_members)
+          @event.remove_members(@uninvited_members)
         end
 
-        it_behaves_like "division_type calculations"
+        it "should not include uninvited members" do
+          @uninvited_members.each do |member|
+            @event.members.should_not include(member)
+          end
+        end
+
+        it "should include other members" do
+          @new_members.each do |member|
+            @event.members.should include(member)
+          end
+        end
       end
 
-      describe "with split amount set" do
+      describe "single" do
         before do
-          @event.split_amount = "$10.00"
-          @event.division_type = Event::DivisionType::Split
+          @uninvited_member = FactoryGirl.create(:user)
+          @new_members = FactoryGirl.create_list(:user, 3)
+          @event.add_members([@uninvited_member] + @new_members)
+          @event.remove_member(@uninvited_member)
         end
 
-        it_behaves_like "division_type calculations"
+        it "should not include uninvited member" do
+          @event.members.should_not include(@uninvited_member)
+        end
+
+        it "should include other members" do
+          @new_members.each do |member|
+            @event.members.should include(member)
+          end
+        end
       end
     end
   end
+
+  describe "locking" do
+    describe "unlocked" do
+      before do
+        @user = FactoryGirl.create(:user)
+        @event.add_member(@user)
+      end
+
+      it "should allow changing total_amount" do
+        expect do
+          @event.total_amount = 123
+          @event.save
+        end.to change { Event.find_by_id(@event.id).total_amount_cents }.to(12300)
+      end
+    end
+
+    describe "locked" do
+      before do
+        @user = FactoryGirl.create(:user)
+        @event.add_member(@user)
+        event_user = @event.event_user(@user)
+        event_user.paid_at = true
+        event_user.save
+      end
+
+      it "should allow changing total_amount" do
+        expect do
+          @event.total_amount = 123
+          @event.save
+        end.to_not change { Event.find_by_id(@event.id).total_amount_cents }.to(12300)
+      end
+    end
+  end
+
+  # describe "validations" do
+
+  #   describe "due_at the past" do
+  #     describe "on initial creation" do
+  #       before { @event.due_at = Time.now - 86400 }
+  #       it { should_not be_valid }
+  #     end
+
+  #     describe "on update" do
+  #       before do
+  #         @event.due_at = Time.now
+  #         @event.save
+  #         Delorean.time_travel_to "1 month from now"
+  #       end
+  #       after { Delorean.back_to_the_present }
+
+  #       describe "without change" do
+  #         it { should be_valid }
+  #       end
+
+  #       describe "with past change" do
+  #         before { @event.due_at = Time.now + 3600 }
+  #         it { should_not be_valid }
+  #       end
+
+  #       describe "with future change" do
+  #         before { @event.due_at = Time.now + 86400 + 3600 }
+  #         it { should be_valid }
+  #       end
+  #     end
+  #   end
+  # end
+
+  # describe "relationships" do
+  #   it { should respond_to(:organizer_id) }
+  #   it { should respond_to(:organizer) }
+  #   it { should respond_to(:members) }
+  # end
+
+  # describe "payment division" do
+  #   it { should respond_to(:division_type) }
+  #   it { should respond_to(:fee_type) }
+  #   it { should respond_to(:total_amount) }
+  #   it { should respond_to(:total_amount_cents) }
+  #   it { should respond_to(:split_amount) }
+  #   it { should respond_to(:split_amount_cents) }
+
+  #   describe "without modifications" do
+  #     before do
+  #       10.times do
+  #         @event.members << FactoryGirl.create(:user)
+  #       end
+  #     end
+
+  #     share_examples_for "division_type calculations" do
+  #       describe "with organizer paying fees" do
+  #         before do
+  #           @event.fee_type = Event::FeeType::OrganizerPays
+  #           @event.save
+  #         end
+
+  #         it "should have nonzero entries" do
+  #           @event.split_amount_cents.should_not be_nil
+  #           @event.split_amount_cents.should_not == 0
+  #           @event.total_amount_cents.should_not be_nil
+  #           @event.total_amount_cents.should_not == 0
+  #           @event.receive_amount_cents.should_not be_nil
+  #           @event.receive_amount_cents.should_not == 0
+  #           @event.send_amount_cents.should_not be_nil
+  #           @event.send_amount_cents.should_not == 0
+  #         end
+
+  #         it "should have correct split_amount" do
+  #           @event.split_amount_cents.should == @event.total_amount_cents / @event.paying_members.count
+  #         end
+
+  #         it "should have equal split_amount and send_amount" do
+  #           @event.split_amount.should == @event.send_amount
+  #           @event.split_amount_cents.should == @event.send_amount_cents
+  #         end
+
+  #         it "should have correct receive_amount" do
+  #           total = @event.total_amount_cents * (1 - Figaro.env.fee_rate.to_f) - @event.paying_members.count * (Figaro.env.fee_static.to_f * 100.0)
+
+  #           @event.receive_amount_cents.should == total.floor
+  #         end
+  #       end
+
+  #       describe "with members paying fees" do
+  #         before do
+  #           @event.fee_type = Event::FeeType::MembersPay
+  #           @event.save
+  #         end
+
+  #         it "should have correct split_amount" do
+  #           @event.split_amount_cents.should == @event.total_amount_cents / @event.paying_members.count
+  #         end
+
+  #         it "should have correct send_amount" do
+  #           send = (@event.total_amount_cents / @event.members.count + Figaro.env.fee_static.to_f * 100.0) / (1 - Figaro.env.fee_rate.to_f)
+
+  #           @event.send_amount_cents.should == send.ceil
+  #         end
+
+  #         it "should have equal total_amount and receive_amount" do
+  #           @event.total_amount.should == @event.receive_amount
+  #           @event.total_amount_cents.should == @event.receive_amount_cents
+  #         end
+
+  #         # it "should have equal total calculated from send_amount and receive_amount" do
+  #         #   split = @event.members.count * @event.send_amount_cents
+  #         #   total = @event.receive_amount_cents
+            
+  #         #   split.should == total
+  #         # end
+  #       end
+  #     end
+
+  #     describe "with total amount set" do
+  #       before do
+  #         @event.total_amount = "$100.00"
+  #         @event.division_type = Event::DivisionType::Total
+  #       end
+
+  #       it_behaves_like "division_type calculations"
+  #     end
+
+  #     describe "with split amount set" do
+  #       before do
+  #         @event.split_amount = "$10.00"
+  #         @event.division_type = Event::DivisionType::Split
+  #       end
+
+  #       it_behaves_like "division_type calculations"
+  #     end
+  #   end
+  # end
 end

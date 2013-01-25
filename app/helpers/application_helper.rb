@@ -32,4 +32,8 @@ module ApplicationHelper
   def current_page_link(path)
     "current-page" if current_page?(path)
   end
+
+  def asset_url(source)
+    "#{root_url}#{asset_path(source)}"
+  end
 end

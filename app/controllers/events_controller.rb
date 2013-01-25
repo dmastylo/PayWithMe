@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, except: [:show]
   before_filter :user_not_stub, only: [:new, :create]
-  before_filter :user_in_event, only: [:show]
+  before_filter :user_in_event_or_public, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin]
   before_filter :event_user_vist_true, only: [:show]
   before_filter :check_for_payers, only: :destroy
@@ -68,7 +68,6 @@ class EventsController < ApplicationController
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)
     else
-      @event.members = @event.independent_members
       @member_emails = @event.members.collect { |member| member.email }
       @group_ids = @event.groups.collect { |group| group.id }
       render "edit"
