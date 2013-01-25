@@ -3,7 +3,8 @@ class EventsController < ApplicationController
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event_or_public, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin]
-  before_filter :event_user_vist_true, only: [:show]
+  before_filter :check_organizer_accounts, only: [:show, :admin]
+  before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: :destroy
 
   def index
@@ -14,6 +15,14 @@ class EventsController < ApplicationController
   def show
     if request.path != event_path(@event)
       redirect_to event_path(@event), status: :moved_permanently
+    end
+
+    if params[:success]
+      flash[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
+      redirect_to event_path(@event)
+    elsif params[:cancel]
+      flash[:error] = "Payment cancelled!"
+      redirect_to event_path(@event)
     end
 
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
@@ -84,7 +93,7 @@ class EventsController < ApplicationController
   end
 
 private
-  def event_user_vist_true
+  def event_user_visit_true
     if @event.members.include?(current_user)
       @event_user = @event.event_users.find_by_user_id(current_user.id)
       @event_user.visit_event!
@@ -95,6 +104,17 @@ private
     unless @event.paid_members.empty?
       flash[:error] = "You can't delete an event with paying members!"
       redirect_to event_path(@event)
+    end
+  end
+
+  def check_organizer_accounts
+    return unless current_user == @event.organizer
+    if @event.accepts_paypal? && @event.organizer.paypal_account.nil?
+      flash[:error] = "Hey! You have to add a PayPal account before users can pay with it. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+    end
+
+    if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
+      flash[:error] = "Hey! You have to add a Dwolla account before users can pay with it. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
     end
   end
 end
