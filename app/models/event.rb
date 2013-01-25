@@ -224,7 +224,11 @@ class Event < ActiveRecord::Base
   end
 
   def paid_percentage
-    (paid_members.count * 100.0) / paying_members.count 
+    if paying_members.count > 0
+      (paid_members.count * 100.0) / paying_members.count 
+    else
+      0
+    end
   end
   
   def add_member(member)
