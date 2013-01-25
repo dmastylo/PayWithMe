@@ -2,18 +2,17 @@
 #
 # Table name: payments
 #
-#  id             :integer          not null, primary key
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  requested_at   :datetime
-#  paid_at        :datetime
-#  due_at         :datetime
-#  payer_id       :integer
-#  payee_id       :integer
-#  event_id       :integer
-#  amount_cents   :integer
-#  event_user_id  :integer
-#  transaction_id :string(255)
+#  id            :integer          not null, primary key
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  requested_at  :datetime
+#  paid_at       :datetime
+#  due_at        :datetime
+#  payer_id      :integer
+#  payee_id      :integer
+#  event_id      :integer
+#  amount_cents  :integer
+#  event_user_id :integer
 #
 
 class Payment < ActiveRecord::Base
