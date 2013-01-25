@@ -53,7 +53,7 @@ class Event < ActiveRecord::Base
   # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :member, select: "users.*, event_users.amount_cents, event_users.due_at, event_users.paid_at"
+  has_many :members, class_name: "User", through: :event_users, source: :member
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
