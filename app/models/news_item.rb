@@ -43,6 +43,7 @@ class NewsItem < ActiveRecord::Base
         if !news_item.subjects.include?(new_member)
           news_item.subjects << new_member
         end
+        news_item.unread!
       end
     end
   end
@@ -55,12 +56,16 @@ class NewsItem < ActiveRecord::Base
     }
     event.members.each do |member|
       unless member == message_creator
-        member_news_items = member.news_items # Prevent multiple database queries below
-        if (!member_news_items.empty? && member_news_items.first.message? && member_news_items.first.foreign_id == event.id)
-          member.news_items.first.update_attributes(read: false)
-        else
-          member.news_items.create!(values)
-         end
+        news_item = member.news_items.where(values).first
+
+        if news_item.nil? || news_item.created_at < 2.hours.ago
+          news_item = member.news_items.create(values)
+        end
+
+        if !news_item.subjects.include?(message_creator)
+          news_item.subjects << message_creator
+        end
+        news_item.unread!
       end
     end
   end
@@ -69,12 +74,20 @@ class NewsItem < ActiveRecord::Base
     values = {
       news_type: NewsType::INVITE,
       foreign_type: ForeignType::GROUP,
-      foreign_id: group.id,
-      subjects: [ new_member ]
+      foreign_id: group.id
     }
     group.members.each do |member|
-      unless member == new_member || group.is_admin?(member)
-        member.news_items.create!(values)
+      unless member == new_member || member == group.organizer
+        news_item = member.news_items.where(values).first
+
+        if news_item.nil? || news_item.created_at < 2.hours.ago
+          news_item = member.news_items.create(values)
+        end
+
+        if !news_item.subjects.include?(new_member)
+          news_item.subjects << new_member
+        end
+        news_item.unread!
       end
     end
   end
@@ -151,6 +164,11 @@ class NewsItem < ActiveRecord::Base
     if group?
       Group.find_by_id(foreign_id)
     end
+  end
+
+  def unread!
+    self.read = false
+    save
   end
 
   # def subject

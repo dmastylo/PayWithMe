@@ -39,28 +39,64 @@ describe NewsItem do
       before do
         @event = FactoryGirl.create(:event)
         @organizer = @event.organizer
-        @new_members = FactoryGirl.create_list(:user, 10)
-        @event.add_members(@new_members)
+        @members = FactoryGirl.create_list(:user, 10)
+        @event.add_members(@members)
       end
 
       describe "new members" do
         before do
-          @new_members.each do |member|
+          @members.each do |member|
             NewsItem.create_for_new_event_member(@event, member)
           end
-          @news_item = @new_members.last.news_items.last
+          @news_item = @members.last.news_items.last
         end
         subject { @news_item }
 
         it { @news_item.news_type.should eq NewsItem::NewsType::INVITE }
         it { @news_item.foreign_type.should eq NewsItem::ForeignType::EVENT }
         it { @news_item.event.should eq @event }
-        it { @news_item.subjects.should eq @new_members - [@new_members.last] }
+        it { @news_item.subjects.should eq @members - [@members.last] }
+      end
+
+      describe "new messages" do
+        before do
+          @members.each do |member|
+            message = FactoryGirl.create(:message, user: member, event: @event)
+            NewsItem.create_for_new_messages(@event, member)
+          end
+          @news_item = @members.last.news_items.last
+        end
+        subject { @news_item }
+
+        it { @news_item.news_type.should eq NewsItem::NewsType::MESSAGE }
+        it { @news_item.foreign_type.should eq NewsItem::ForeignType::EVENT }
+        it { @news_item.event.should eq @event }
+        it { @news_item.subjects.should eq @members - [@members.last] }
       end
     end
 
     describe "for group" do
+      before do
+        @group = FactoryGirl.create(:group)
+        @organizer = @group.organizer
+        @members = FactoryGirl.create_list(:user, 10)
+        @group.add_members(@members)
+      end
 
+      describe "new members" do
+        before do
+          @members.each do |member|
+            NewsItem.create_for_new_group_member(@group, member)
+          end
+          @news_item = @members.last.news_items.last
+        end
+        subject { @news_item }
+
+        it { @news_item.news_type.should eq NewsItem::NewsType::INVITE }
+        it { @news_item.foreign_type.should eq NewsItem::ForeignType::GROUP }
+        it { @news_item.group.should eq @group }
+        it { @news_item.subjects.should eq @members - [@members.last] }
+      end
     end
   end
 

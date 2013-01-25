@@ -1,5 +1,7 @@
-<li class="news-item <%= cycle("unread", "unread", "", "") %>">
-  <div class="image" style="background-image: url('<%= news_item_image_path(news_item, :medium) %>');"></div>
+<li class="news-item <%= "unread" if !news_item.read? %>">
+  <a href="<%= news_item.path %>">
+    <div class="image" style="background-image: url('<%= news_item_image_path(news_item, :medium) %>');"></div>
+  </a>
   
   <strong><%= link_to news_item.title, news_item.path %></strong>
   <span class="timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago</small></span><br />
