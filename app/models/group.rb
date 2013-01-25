@@ -103,7 +103,7 @@ class Group < ActiveRecord::Base
 
   def send_invitation_emails
     self.group_users.each do |group_user|
-      if !group_user.invitation_sent? && !group_user.admin?
+      if !group_user.invitation_sent? && !is_admin?(group_user.user)
         UserMailer.group_notification(group_user.user, self).deliver
         group_user.toggle(:invitation_sent).save
       end
