@@ -5,7 +5,6 @@ FactoryGirl.define do
     fee_type Event::FeeType::OrganizerPays
     privacy_type Event::PrivacyType::Public
     due_at { 7.days.from_now }
-    start_at { 8.days.from_now }
     total_amount_cents 1000
     association :organizer, factory: :user
   end

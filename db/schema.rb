@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125040227) do
+ActiveRecord::Schema.define(:version => 20130125014438) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -64,7 +64,6 @@ ActiveRecord::Schema.define(:version => 20130125040227) do
     t.datetime "due_at"
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
-    t.datetime "start_at"
     t.integer  "division_type"
     t.integer  "fee_type"
     t.integer  "total_amount_cents"
