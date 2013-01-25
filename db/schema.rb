@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125181541) do
+ActiveRecord::Schema.define(:version => 20130125223340) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -138,7 +138,6 @@ ActiveRecord::Schema.define(:version => 20130125181541) do
     t.datetime "updated_at",                      :null => false
     t.integer  "foreign_id"
     t.integer  "foreign_type"
-    t.integer  "subject_id"
     t.boolean  "read",         :default => false
   end
 
