@@ -50,21 +50,5 @@ ul.vertical-list
         {
             color: $offBlack;
         }
-
-        .news-timestamp
-        {
-            color: $mediumGray;
-        }
-
-        &:last-child
-        {
-            margin-bottom: 25px;
-        }
-    }
-
-    .unread-news-item
-    {
-        background: $lightGray;
-        padding: 10px 10px;
     }
 }

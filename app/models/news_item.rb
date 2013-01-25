@@ -83,7 +83,8 @@ class NewsItem < ActiveRecord::Base
   def body
     if event?
       if invite?
-        "#{subject.first_name} is now attending #{event.title}."
+        name = subject.first_name.present?? subject.first_name : subject.email
+        "#{name} is now attending #{event.title}."
       elsif message?
         "Check out #{event.title} to see the ongoing discussion."
       end

@@ -1,9 +1,9 @@
-<% if !news_item.read? %>
-    <li class="unread-news-item">
-<% else %>
-    <li>
-<% end %>
-    <strong><%= link_to news_item.title, news_item.path %></strong>
-    <span class="news-timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago</small></span><br />
-    <%= news_item.body %>
+<li class="news-item <%= cycle("unread", "unread", "", "") %>">
+  <!--<%= "unread" if !news_item.read? %>">-->
+  <div class="image" style="background-image: url('<%= news_item_image_path(news_item, :medium) %>');"></div>
+  
+  <strong><%= link_to news_item.title, news_item.path %></strong>
+  <span class="timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago</small></span><br />
+  <%= news_item.body %>
+  <div class="clearfix"></div>
 </li>

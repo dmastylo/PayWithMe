@@ -1,0 +1,24 @@
+.news-item
+{
+  .image
+  {
+    width: 64px;
+    height: 64px;
+    background-size: 150%;
+    background-position: center center;
+    border: 1px solid $mediumGray;
+    float: left;
+    margin-right: $mediumMargin;
+  }
+
+  .timestamp
+  {
+    color: $mediumGray;
+  }
+
+  &.unread
+  {
+    background: $lightGray;
+    padding: 10px 10px;
+  }
+}
