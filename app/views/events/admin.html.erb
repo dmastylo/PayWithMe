@@ -5,9 +5,9 @@
       <h2>
         <%= truncate(@event.title, :length => 20, :separator => ' ') %> Dashboard
         <% if @event.public? %>
-          <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
+          <i class="icon-globe" rel="tooltip" title="Public event" data-placement="right"></i>
         <% else %>
-          <a href="#" rel="tooltip" title="Private event" data-placement="right"><i class="icon-lock"></i></a>
+          <i class="icon-lock" rel="tooltip" title="Private event" data-placement="right"></i>
         <% end %>
       </h2>
     </div>

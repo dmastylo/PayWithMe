@@ -5,12 +5,12 @@
   <div class="info">
     <div class="icons">
       <% if event.public? %>
-        <a href="#" rel="tooltip" title="Public event" data-placement="left"><i class="icon-globe"></i></a>
+        <i class="icon-globe" rel="tooltip" title="Public event" data-placement="left"></i>
       <% else %>
-        <a href="#" rel="tooltip" title="Private event" data-placement="left"><i class="icon-lock"></i></a>
+        <i class="icon-lock" rel="tooltip" title="Private event" data-placement="left"></i>
       <% end %>
       <% if current_user == event.organizer %>
-          <a href="#" rel="tooltip" title="You organize this event!" data-placement="right"><i class="icon-wrench"></i></a>
+          <i class="icon-wrench" rel="tooltip" title="You organize this event!" data-placement="left"></i>
       <% end %>
     </div>
     <h4>

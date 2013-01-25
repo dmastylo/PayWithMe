@@ -5,9 +5,9 @@
       <h2>
         <%= @event.title %>
         <% if @event.public? %>
-          <a href="#" rel="tooltip" title="Public event" data-placement="right"><i class="icon-globe"></i></a>
+          <i class="icon-globe" rel="tooltip" title="Public event" data-placement="right"></i>
         <% else %>
-          <a href="#" rel="tooltip" title="Private event" data-placement="right"><i class="icon-lock"></i></a>
+          <i class="icon-lock" rel="tooltip" title="Private event" data-placement="right"></i>
         <% end %>
       </h2>
     </div>
@@ -56,12 +56,22 @@
       <div class="three-quarters"><%= @event.start_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
       <div class="clearfix"></div>
     </div>
+
+    <h3>Organizer</h3>
+    <div class="well">
+      <div class="event-members">
+        <ul class="member-list">
+          <%= render @event.organizer %>
+        </ul>
+      </div>
+    </div>
+
     <h3>Guest List</h3>
     <div class="well">
       <div class="event-members">
         <% if @event.members.any? %>
           <ul class="member-list">
-            <%= render @event.members %>
+            <%= render @event.paying_members %>
           </ul>
         <% else %>
           There are no members. Add some!
