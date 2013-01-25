@@ -430,7 +430,9 @@ private
   end
 
   def parse_payment_methods
-    self.payment_methods_raw = ActiveSupport::JSON.decode(self.payment_methods_raw).uniq
+    if !self.payment_methods_raw.is_a?(Array)
+      self.payment_methods_raw = ActiveSupport::JSON.decode(self.payment_methods_raw).uniq
+    end
   end
 
   def create_payment_methods
