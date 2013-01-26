@@ -26,8 +26,8 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url
-  attr_accessor :due_at_date, :due_at_time, :image_type
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw
+  attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :receive_amount_cents, allow_nil: true
@@ -430,7 +430,9 @@ private
   end
 
   def parse_payment_methods
-    self.payment_methods_raw = ActiveSupport::JSON.decode(self.payment_methods_raw).uniq
+    if !self.payment_methods_raw.is_a?(Array)
+      self.payment_methods_raw = ActiveSupport::JSON.decode(self.payment_methods_raw).uniq
+    end
   end
 
   def create_payment_methods

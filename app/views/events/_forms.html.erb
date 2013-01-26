@@ -201,6 +201,7 @@
       $("#event_fee_type").buttonGroup();
       $("#event_privacy_type").buttonGroup();
       $("#event_image_type").buttonGroup();
+      $("#event_payment_methods_raw").buttonGroup();
 
       $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>,

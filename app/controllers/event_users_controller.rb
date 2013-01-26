@@ -63,7 +63,7 @@ class EventUsersController < ApplicationController
   end
 
   def paid
-    payment = Payment.create_or_find_from_event_user(@event_user)
+    payment = Payment.create_or_find_from_event_user(@event_user, PaymentMethod::MethodType::CASH)
     payment.paid_at = Time.now
     payment.save
     @event_user.paid_at = Time.now

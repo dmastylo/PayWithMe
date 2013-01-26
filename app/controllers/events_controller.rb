@@ -110,11 +110,11 @@ private
   def check_organizer_accounts
     return unless current_user == @event.organizer
     if @event.accepts_paypal? && @event.organizer.paypal_account.nil?
-      flash[:error] = "Hey! You have to add a PayPal account before users can pay with it. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      flash[:error] = "Hey! You have to add a PayPal account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
     end
 
     if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
-      flash[:error] = "Hey! You have to add a Dwolla account before users can pay with it. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      flash[:error] = "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
     end
   end
 end
