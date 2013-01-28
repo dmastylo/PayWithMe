@@ -144,8 +144,15 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.search_by_name_and_email(query)
-    User.search(name_or_email_cont: query).result
+  def self.search_by_name_and_email(query, context=nil)
+    if context.present?
+      event_users = context.member_events.all.collect { |event| event.members }.flatten
+      group_users = context.member_groups.all.collect { |group| group.members }.flatten
+      users = (event_users + group_users).uniq
+      User.search(name_or_email_cont: query).result.select { |user| users.include?(user) }
+    else
+      User.search(name_or_email_cont: query).result
+    end
   end
 
   # Is this a duplicate?

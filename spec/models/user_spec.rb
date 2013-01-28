@@ -58,7 +58,7 @@ describe User do
 
   describe "validations" do
     it { should validate_presence_of(:name) }
-    it { should ensure_length_of(:name).is_at_least(2).is_at_most(50) }
+    it { should ensure_length_of(:name).is_at_least(2).is_at_most(50).with_short_message(/has to be between/).with_long_message(/has to be between/) }
     it { should validate_uniqueness_of(:email) }
     it { should allow_value("test@test.com").for(:email) }
     it { should allow_value("test+testing@test.com").for(:email) }
@@ -75,7 +75,7 @@ describe User do
     it { should have_many(:organized_events).class_name("Event") }
     it { should have_many(:event_users).dependent(:destroy) }
     it { should have_many(:member_events).class_name("Event").through(:event_users).dependent(:destroy) }
-    it { should have_many(:organized_groups).class_name("Group").dependent(:destroy) }
+    it { should have_many(:organized_groups).class_name("Group") }
     it { should have_many(:group_users).dependent(:destroy) }
     it { should have_many(:member_groups).class_name("Group").through(:group_users) }
     it { should have_many(:messages).dependent(:destroy) }
@@ -140,5 +140,48 @@ describe User do
 
     it { @user.organized_events.should include(@event) }
     it { @user.member_events.should include(@event) }
+  end
+
+  describe "search" do
+    before do
+      @base_user = FactoryGirl.create(:user)
+    end
+
+    describe "without events" do
+      before do
+        @results = User.search_by_name_and_email("person", @base_user)
+      end
+
+      it "should be empty" do
+        @results.should be_empty
+      end
+    end
+
+    describe "with events" do
+      before do
+        @enemy_users = FactoryGirl.create_list(:user, 10)
+        @friend_users = FactoryGirl.create_list(:user, 10)
+        @event = FactoryGirl.create(:event)
+        @event.add_members(@friend_users + [ @base_user ])
+        @results = User.search_by_name_and_email("person", @base_user)
+      end
+      
+      it "should not contain enemy users" do
+        @enemy_users.each do |user|
+          @results.should_not include(user)
+        end
+      end
+
+      it "should contain friend users" do
+        @friend_users.each do |user|
+          @results.should include(user)
+        end
+      end
+    end
+
+    describe "with groups" do
+
+    end
+
   end
 end
