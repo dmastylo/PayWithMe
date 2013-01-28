@@ -119,6 +119,7 @@
       {
         var something = {};
         something[that.options.idAttribute] = email;
+        something["stub"] = true;
         that.select(something);
       });
       this.$somethingsMultipleTextarea.val('');
