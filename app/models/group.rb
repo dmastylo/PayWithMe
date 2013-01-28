@@ -2,20 +2,27 @@
 #
 # Table name: groups
 #
-#  id           :integer          not null, primary key
-#  title        :string(255)
-#  description  :text
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  slug         :string(255)
-#  organizer_id :integer
+#  id                 :integer          not null, primary key
+#  title              :string(255)
+#  description        :text
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  slug               :string(255)
+#  organizer_id       :integer
+#  image_file_name    :string(255)
+#  image_content_type :string(255)
+#  image_file_size    :integer
+#  image_updated_at   :datetime
+#  image_url          :string(255)
 #
 
 class Group < ActiveRecord::Base
 
   # Accesible attributes
   # ========================================================
-  attr_accessible :description, :title
+  attr_accessible :description, :title, :image, :image_type, :image_url
+  attr_accessor :image_type
+  has_attached_file :image
 
   # Validations
   # ========================================================
@@ -24,6 +31,7 @@ class Group < ActiveRecord::Base
 
   # Callbacks
   # ========================================================
+  before_save :set_group_image
   before_destroy :clear_notifications_and_news_items
   before_destroy :transfer_member_list
 
@@ -109,6 +117,20 @@ class Group < ActiveRecord::Base
       end
     end
   end
+  
+  # Group Image functions
+  # ========================================================
+  def image_type
+    if @image_type.present?
+      @image_type
+    elsif image.present?
+      :upload
+    elsif image_url.present?
+      :url
+    else
+      :default_image
+    end
+  end
 
   # Static functions
   # ========================================================
@@ -155,4 +177,17 @@ private
     end
   end
 
+  def set_group_image
+    return unless self.image_type.present?
+
+    if self.image_type != "url"
+      self.image_url = nil
+    end
+
+    if self.image_type != "upload"
+      self.image = nil
+    end
+
+    image_type = nil
+  end
 end
