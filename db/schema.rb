@@ -182,7 +182,6 @@ ActiveRecord::Schema.define(:version => 20130125223340) do
     t.integer  "event_id"
     t.integer  "amount_cents"
     t.integer  "event_user_id"
-    t.string   "transaction_id"
     t.integer  "payment_method"
   end
 
