@@ -7,6 +7,57 @@
       <%= f.text_field :title, class: "input-block-level" %>
       <%= f.label :description %>
       <%= f.text_area :description, class: "input-block-level", rows: 5 %>
+
+
+      <div class="control-group">
+        <%= f.label :image, "Group Image", class: 'control-label' %>
+        <div class="controls">
+          <%=f.hidden_field :image_type %>
+          <div class="btn-group input-block-level" id="group_image_type_btn_group" data-toggle="buttons-radio">
+            <button type="button" class="btn third <%= "active" if @group.image_type == :url %>" data-value="url" data-name="url">URL</button>
+            <button type="button" class="btn third <%= "active" if @group.image_type == :upload %>" data-value="upload" data-name="upload">Image Upload</button>
+            <button type="button" class="btn third last <%= "active" if @group.image_type == :default_image %>" data-value="default_image" data-name="default_image">None</button>
+          </div>
+
+          <div class="group_image_type_option push-top" id="group_image_type_default_image">
+            <div class="push-bottom">The default</div>
+            <div class="push-bottom">
+              <%= image_tag "default_group_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
+            </div>
+          </div>
+
+          <div class="group_image_type_option push-top" id="group_image_type_url">
+            <% if @group.image_url.present? %>
+              <div class="push-bottom">Current URL:</div>
+              <div class="push-bottom">
+                <%= group_image_tag(@group, :medium) %>
+              </div>
+            <% end %>
+            <div class="control-group">
+              <%= f.label :image_url, "Group Image URL", class: 'control-label' %>
+              <div class="controls">
+                <%= f.text_field :image_url, placeholder: "http://example.com/image.png", class: 'input-block-level' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="group_image_type_option push-top" id="group_image_type_upload">
+            <% if @group.image.present? %>
+              <div class="push-bottom">Current uploaded image:</div>
+              <div class="push-bottom">
+                <%= group_image_tag(@group, :medium) %>
+              </div>
+            <% end %>
+            <div class="control-group">
+              <%= f.label :image, "Image File", class: 'control-label' %>
+              <div class="controls">
+                <%= f.file_field :image, accept: 'image' %>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
   </div>
   <div class="span6">
@@ -34,8 +85,8 @@
     </div>
   </div>
 </div>
-<% if defined? editing_event %>
-  <div class="row">
+<div class="row">
+  <% if defined? editing_event %>
     <div class="span6">
       <h3 class="pull-left">Group Actions</h3>
       <div class="clearfix"></div>
@@ -43,8 +94,8 @@
         <%= link_to "Delete Group", @group, class: "btn btn-block btn-danger", data: { confirm: "This is irreversible, but members will still be attending the events they were invited to. Are you sure you want to delete this group?" }, method: :delete %>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
 <div class="row">
   <div class="span12">
     <%= f.submit "#{submit_text(@group)} group", class: "btn btn-block btn-primary" %>
@@ -64,6 +115,9 @@
         somethingsInputSelector: "#group_members",
         bulkEnabled: true
       });
+
+      $('#group_image_type').buttonGroup();
+
     });
   </script>
 <% end %>
