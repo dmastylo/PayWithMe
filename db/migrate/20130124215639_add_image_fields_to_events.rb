@@ -1,9 +1,5 @@
 class AddImageFieldsToEvents < ActiveRecord::Migration
-  def up
-    add_attachment :events, :image
-  end
-
-  def down
+  def change
     add_attachment :events, :image
   end
 end

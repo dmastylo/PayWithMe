@@ -7,13 +7,14 @@
   </div>
   <% if @group.is_admin?(current_user) %>
     <div class="span3">
-      <%= link_to "Edit group", edit_group_path(@group), class: "btn btn-primary btn-block pull-right push-top" %>
+      <%= link_to "Edit group", edit_group_path(@group), class: "btn btn-primary btn-block pull-right push-top", rel: "tooltip", title: "Manage the group attributes and members" %>
     </div>
   <% end %>
 </div>
 <div class="row">
   <div class="span5">
     <h3>Group Details</h3>
+    <div class="group-image <%= "default" if @group.image_type == :default_image %>" style="background-image: url('<%= group_image_path(@group, :full) %>');"></div>
     <div class="well event-description">
       <% if @group.description.present? %>
         <div class="quarter"><strong>Description:</strong></div>
