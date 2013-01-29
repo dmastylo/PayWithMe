@@ -145,6 +145,7 @@ describe User do
   describe "search" do
     before do
       @base_user = FactoryGirl.create(:user)
+      @enemy_users = FactoryGirl.create_list(:user, 10)
     end
 
     describe "without events" do
@@ -159,7 +160,6 @@ describe User do
 
     describe "with events" do
       before do
-        @enemy_users = FactoryGirl.create_list(:user, 10)
         @friend_users = FactoryGirl.create_list(:user, 10)
         @event = FactoryGirl.create(:event)
         @event.add_members(@friend_users + [ @base_user ])
@@ -177,10 +177,35 @@ describe User do
           @results.should include(user)
         end
       end
+
+      it "should not contain the context user" do
+        @results.should_not include(@base_user)
+      end
     end
 
     describe "with groups" do
+      before do
+        @friend_users = FactoryGirl.create_list(:user, 10)
+        @group = FactoryGirl.create(:group)
+        @group.add_members(@friend_users + [ @base_user ])
+        @results = User.search_by_name_and_email("person", @base_user)
+      end
+      
+      it "should not contain enemy users" do
+        @enemy_users.each do |user|
+          @results.should_not include(user)
+        end
+      end
 
+      it "should contain friend users" do
+        @friend_users.each do |user|
+          @results.should include(user)
+        end
+      end
+
+      it "should not contain the context user" do
+        @results.should_not include(@base_user)
+      end
     end
 
   end

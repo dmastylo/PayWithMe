@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125040227) do
+ActiveRecord::Schema.define(:version => 20130125223340) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -143,11 +143,15 @@ ActiveRecord::Schema.define(:version => 20130125040227) do
     t.datetime "updated_at",                      :null => false
     t.integer  "foreign_id"
     t.integer  "foreign_type"
-    t.integer  "subject_id"
     t.boolean  "read",         :default => false
   end
 
   add_index "news_items", ["user_id"], :name => "index_news_items_on_user_id"
+
+  create_table "news_items_users", :force => true do |t|
+    t.integer "user_id"
+    t.integer "news_item_id"
+  end
 
   create_table "notifications", :force => true do |t|
     t.integer  "user_id"
@@ -178,7 +182,6 @@ ActiveRecord::Schema.define(:version => 20130125040227) do
     t.integer  "event_id"
     t.integer  "amount_cents"
     t.integer  "event_user_id"
-    t.string   "transaction_id"
     t.integer  "payment_method"
   end
 

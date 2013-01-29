@@ -31,7 +31,7 @@ class UsersController < ApplicationController
     if @query.nil? || @query.empty?
       flash.now[:error] = "Please enter a search term."
     else
-      @users = User.search_by_name_and_email(@query)
+      @users = User.search_by_name_and_email(@query, current_user)
       @users = @users.reject { |result| result == current_user }
     end
     @users ||= []

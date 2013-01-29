@@ -149,7 +149,13 @@ class User < ActiveRecord::Base
       event_users = context.member_events.all.collect { |event| event.members }.flatten
       group_users = context.member_groups.all.collect { |group| group.members }.flatten
       users = (event_users + group_users).uniq
-      User.search(name_or_email_cont: query).result.select { |user| users.include?(user) }
+      users = users.reject { |result| result == context }
+      user_ids = users.collect { |user| user.id }
+      if user_ids.empty?
+        []
+      else
+        User.search(name_or_email_cont: query, id_in: user_ids).result
+      end
     else
       User.search(name_or_email_cont: query).result
     end
