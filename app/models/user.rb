@@ -146,11 +146,10 @@ class User < ActiveRecord::Base
 
   def self.search_by_name_and_email(query, context=nil)
     if context.present?
-      event_users = context.member_events.all.collect { |event| event.members }.flatten
-      group_users = context.member_groups.all.collect { |group| group.members }.flatten
-      users = (event_users + group_users).uniq
-      users = users.reject { |result| result == context }
-      user_ids = users.collect { |user| user.id }
+      event_users = context.member_events.includes(:event_users).all.collect { |event| event.event_users }.flatten
+      group_users = context.member_groups.includes(:group_users).all.collect { |group| group.group_users }.flatten
+      relations = event_users + group_users
+      user_ids = relations.reject { |relation| relation.user_id == context.id }.collect { |relation| relation.user_id }.uniq
       if user_ids.empty?
         []
       else
