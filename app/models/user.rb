@@ -68,6 +68,7 @@ class User < ActiveRecord::Base
   has_many :news_items, dependent: :destroy
   has_many :received_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
   has_many :sent_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
+  has_and_belongs_to_many :subject_news_items, class_name: "NewsItem"
 
   # Scopes
   # ========================================================
