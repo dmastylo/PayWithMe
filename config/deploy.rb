@@ -79,11 +79,20 @@ namespace :deploy do
         changed_asset_count = capture("cd #{latest_release} && #{source.local.log(from)} #{asset_locations} | wc -l").to_i
       rescue Exception => e
         logger.info "Error: #{e}, forcing precompile"
-        force_compile = false
+        force_compile = true
       end
       if changed_asset_count > 0 || force_compile
         logger.info "#{changed_asset_count} assets have changed. Pre-compiling"
-        run %Q{cd #{latest_release} && #{rake} RAILS_ENV=#{rails_env} #{asset_env} assets:precompile}
+        run_locally "rake assets:precompile"
+
+        storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: Figaro.env.rackspace_key, rackspace_username: Figaro.env.rackspace_username, rackspace_storage_url: Figaro.env.rackspace_url)
+
+        directory = storage.directories.get('static-assets')
+        Dir.glob(File.join("public", "assets", "*")).each do |file|
+          directory.files.create(key: File.join("assets", File.basename(file)), body: File.open(file)) unless File.directory?(file)
+        end
+
+        run_locally "rm -rf public/assets"
       else
         logger.info "#{changed_asset_count} assets have changed. Skipping asset pre-compilation"
       end
