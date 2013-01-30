@@ -5,6 +5,9 @@ class MessagesController < ApplicationController
     if params[:event_id] && params[:after]
         # Polling for new messages
         @new_messages = Message.where("event_id = ? AND created_at > ?", params[:event_id], Time.at(params[:after].to_i + 1))
+        # links = pulled_messages.scan(/(((file|gopher|news|nntp|telnet|http|ftp|https|ftps|sftp):\/\/)|(www\.))+(([a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(\/[a-zA-Z0-9\&amp;%_\.\/-~-]*)?/)
+        # links.each do |link|
+        # end
         @new_messages.delete_if { |message| message.user == current_user }
     elsif params[:event_id] && params[:last_message_time]
         # Infinite scrolling
