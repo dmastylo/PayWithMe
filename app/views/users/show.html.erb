@@ -37,11 +37,16 @@
     <% else %>
       <h3>Upcoming Public and Shared Events</h3>
     <% end %>
-    <div id="upcoming-events" class="events-third-list<% if @upcoming_public_and_shared_events.empty? %>  empty<% end %>">
+    <div id="upcoming-events" class="events-third-list<% if @upcoming_public_and_shared_events.empty? %> empty<% end %>">
       <% if @upcoming_public_and_shared_events.empty? %>
         No upcoming events!
       <% else %>
-        <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
+        <% @upcoming_public_and_shared_events.each_with_index do |upase, index| %>
+          <%= render partial: "events/profile_event", locals: { event: upase } %>
+          <% if index % 2 == 1 %>
+            <div class="clearfix"></div>
+          <% end %>
+        <% end %>
       <% end %>
     </div>
     <div class="clearfix"></div>
