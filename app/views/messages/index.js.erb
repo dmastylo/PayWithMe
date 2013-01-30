@@ -53,7 +53,25 @@
   <% @new_message = true %>
   $('.message-list').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
 
-  // add the last-message class
+  // Consolidate message content into one message if multiple messages from one user
+  $last-message = $(".message:first-child");
+  $('.message').each(function()
+  {
+    $this = $(this);
+    if ($this == $last-message) continue;
+
+    if ($this.attr("data-user") == $last-message.attr("data-user"))
+    {
+      $($last-message + ".message-content").append($($this + ".message-content").html());
+      $this.remove();
+    }
+    else
+    {
+      $last-message = $this;
+    }
+  });
+
+  // add the latest-message class
   $(".message:first-child").addClass("latest-message");
   
   // Fade the messages in for a cool effect (events.js)
