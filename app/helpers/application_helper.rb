@@ -36,4 +36,17 @@ module ApplicationHelper
   def asset_url(source)
     "#{root_url}#{asset_path(source)}"
   end
+
+  # Convert URLs to links
+  def convert_urls_to_links(text)
+    # url = /(((file|gopher|news|nntp|telnet|http|ftp|https|ftps|sftp):\/\/)|(www\.))+(([a-zA-Z0-9\._-]+\.[a-zA-Z]{2,6})|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(\/[a-zA-Z0-9\&amp;%_\.\/-~-]*)?/
+    url = /( |^)http:\/\/([^\s]*\.[^\s]*)( |$)/
+
+    while text =~ url
+        name = $2
+        text.sub! /( |^)http:\/\/#{name}( |$)/, " <a href='http://#{name}' >#{name}</a> "
+    end
+
+    text
+  end
 end
