@@ -219,6 +219,7 @@ describe Event do
         @event.add_members FactoryGirl.create_list(:user, 10)
       end
 
+      # Sometimes off by one penny
       it "should have the correct send_amount" do
         receive_amount = ((@event.send_amount_cents - Figaro.env.fee_static.to_f * 100.0) * (1.0 - Figaro.env.fee_rate.to_f)).round / 100.0
         receive_amount.should == amount
