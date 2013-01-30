@@ -16,12 +16,18 @@
 class EventUser < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :amount, :due_at, :event_id, :paid_at, :user_id
+  # None
+
+  # Validations
+  validates :event_id, presence: true
+  validates :user_id, presence: true
+  validates :amount_cents, presence: true
 
   # Relationships
   belongs_to :member, class_name: "User", foreign_key: "user_id"
   belongs_to :event
   has_one :payment
+  has_many :nudges
 
   monetize :amount_cents
 

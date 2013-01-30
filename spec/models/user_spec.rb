@@ -84,6 +84,8 @@ describe User do
     it { should have_many(:news_items).dependent(:destroy) }
     it { should have_many(:received_payments).class_name("Payment") }
     it { should have_many(:sent_payments).class_name("Payment") }
+    it { should have_many(:received_nudges).class_name("Nudge") }
+    it { should have_many(:sent_nudges).class_name("Nudge") }
   end
 
   describe "mass assignment" do

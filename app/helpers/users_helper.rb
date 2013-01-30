@@ -17,8 +17,8 @@ module UsersHelper
     link_to image, user
   end
 
-  def user_name(user, length=20)
-    user.name || ( length > 0 ? user.email.truncate(20) : user.email )
+  def user_name(user, length=18)
+    user.name || ( length > 0 ? user.email.truncate(length) : user.email )
   end
 
   def user_for_mustache(user)

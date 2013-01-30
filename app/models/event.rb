@@ -59,6 +59,7 @@ class Event < ActiveRecord::Base
   has_many :groups, through: :event_groups, source: :group
   has_many :reminders, dependent: :destroy
   has_many :payment_methods, dependent: :destroy
+  has_many :nudges
 
   # Callbacks
   # ========================================================
