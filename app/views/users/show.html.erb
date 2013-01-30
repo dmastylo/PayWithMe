@@ -61,7 +61,12 @@
       <% if @past_public_and_shared_events.empty? %>
         No past events!
       <% else %>
-        <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
+        <% @past_public_and_shared_events.each_with_index do |ppase, index| %>
+          <%= render partial: "events/profile_event", locals: { event: ppase } %>
+          <% if index % 2 == 1 %>
+            <div class="clearfix"></div>
+          <% end %>
+        <% end %>
       <% end %>
     </div>
     <div class="clearfix"></div>
