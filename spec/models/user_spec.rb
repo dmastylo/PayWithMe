@@ -45,7 +45,7 @@ describe User do
      :password_confirmation,
      :encrypted_password,
      :stub,
-     :profile_image_option,
+     :profile_image_type,
      :profile_image_url,
      :time_zone,
      :last_seen,

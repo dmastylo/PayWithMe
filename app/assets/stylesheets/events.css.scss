@@ -49,68 +49,68 @@
             }
         }
     }
-}
 
-.messages
-{
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    height: 380px;
-    overflow-y: scroll;
-    .message
+    .messages
     {
-        margin-bottom: 10px;
-        .profile-image
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        height: 380px;
+        overflow-y: scroll;
+        .message
         {
-            float: left;
-            img { border: 1px solid $mediumGray; }
-        }
-        &.current
-        {
+            margin-bottom: 10px;
             .profile-image
             {
-                float: right;
-                padding-right: 15px;
+                float: left;
+                img { border: 1px solid $mediumGray; }
+            }
+            &.current
+            {
+                .profile-image
+                {
+                    float: right;
+                    padding-right: 15px;
+                }
+                .body
+                {
+                    padding-right: 10px;
+                    text-align: right;
+                }
             }
             .body
             {
-                padding-right: 10px;
-                text-align: right;
+                padding-left: 10px;
+                float: left;
+                @include box-sizing(border-box);
+                margin-top: 3px;
+                .content
+                {
+                    word-break: normal;
+                    word-wrap: break-word;
+                }
+                .user a
+                {
+                    color: $offBlack;
+                    font-weight: bold;
+                }
+                .timestamp
+                {
+                    color: $mediumGray;
+                }
             }
         }
-        .body
+        .new-messages
         {
-            padding-left: 10px;
-            float: left;
-            @include box-sizing(border-box);
-            margin-top: 3px;
-            .content
-            {
-                word-break: normal;
-                word-wrap: break-word;
-            }
-            .user a
-            {
-                color: $offBlack;
-                font-weight: bold;
-            }
-            .timestamp
-            {
-                color: $mediumGray;
-            }
+            display: none;
         }
     }
-    .new-messages
-    {
-        display: none;
-    }
-}
 
-.new-message
-{
-    margin-top: -10px;
-    margin-bottom: 20px;
+    .new-message
+    {
+        margin-top: -10px;
+        margin-bottom: 20px;
+    }
 }
 
 // Partial
@@ -141,10 +141,6 @@
 
 // Forms
 // =========================
-.btn_group_option { display: none; }
-.well .control-group:last-child { margin-bottom: 0;}
-#btn-bulk-invite { margin-top: 17px; }
-
 #invited_members, #invited_groups
 {
     .member

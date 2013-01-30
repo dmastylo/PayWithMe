@@ -37,8 +37,8 @@ class User < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_option, :profile_image_url, :time_zone
-  attr_accessor :profile_image_option
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone
+  attr_accessor :profile_image_type
   has_attached_file :profile_image
 
   # Validations
@@ -81,7 +81,9 @@ class User < ActiveRecord::Base
   # Profile Image
   # ========================================================
   def profile_image_type
-    if profile_image.present?
+    if @profile_image_type.present?
+      @profile_image_type
+    elsif profile_image.present?
       :upload
     elsif profile_image_url.present?
       :url
@@ -262,16 +264,17 @@ class User < ActiveRecord::Base
 
 private
   def set_profile_image
-    return unless self.profile_image_option.present?
+    return unless self.profile_image_type.present?
+    raise self.profile_image_type.to_s
     
-    if self.profile_image_option != "url"
+    if self.profile_image_type != "url"
       self.profile_image_url = nil
     end
-    if self.profile_image_option != "upload"
+    if self.profile_image_type != "upload"
       self.profile_image = nil
     end
 
-    profile_image_option = nil
+    profile_image_type = nil
   end
 
   def set_stub
