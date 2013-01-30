@@ -43,8 +43,8 @@ module ApplicationHelper
     url = /( |^)http:\/\/([^\s]*\.[^\s]*)( |$)/
 
     while text =~ url
-        name = $2
-        text.sub! /( |^)http:\/\/#{name}( |$)/, " <a href='http://#{name}' >#{name}</a> "
+      name = $2
+      text.sub! /( |^)http:\/\/#{name}( |$)/, " <a href='http://#{name}' >#{name}</a> "
     end
 
     text
