@@ -6,7 +6,10 @@
 
     <p><%= @reminder.body %></p>
 
-    <p><%= link_to image_tag(asset_url('visit_event.png'), alt: "Visit #{@reminder.event.title}"), event_url(@reminder.event, guest_params(@user)) %></p>
-    <small><%= link_to '(Visit Event Page!)', event_url(@reminder.event, guest_params(@user)) %></small>
+    <p>
+    	<%= link_to image_tag(asset_url('visit_event.png'), alt: "Visit #{@reminder.event.title}"), event_url(@reminder.event, guest_params(@user)) %>
+	</p>
+	<small><%= link_to '(Click here if the above link doesn\'t work)', event_url(@reminder.event, guest_params(@user)) %></small>
+    <p></p>
   </td>
 </tr>
