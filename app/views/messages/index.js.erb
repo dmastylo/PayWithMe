@@ -7,6 +7,9 @@
   // Render new messages
   $('.message-list').append('<%= j render(@next_messages) %>');
 
+  // Combine messages that are from the same author
+  combineUserMessages();
+
   // Set autosize
   $("<% @next_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
     fixed: '.profile-image',
@@ -53,23 +56,8 @@
   <% @new_message = true %>
   $('.message-list').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
 
-  // Consolidate message content into one message if multiple messages from one user
-  $last-message = $(".message:first-child");
-  $('.message').each(function()
-  {
-    $this = $(this);
-    if ($this == $last-message) continue;
-
-    if ($this.attr("data-user") == $last-message.attr("data-user"))
-    {
-      $($last-message + ".message-content").append($($this + ".message-content").html());
-      $this.remove();
-    }
-    else
-    {
-      $last-message = $this;
-    }
-  });
+  // Combine messages that are from the same author
+  combineUserMessages();
 
   // add the latest-message class
   $(".message:first-child").addClass("latest-message");
