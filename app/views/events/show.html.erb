@@ -68,12 +68,7 @@
       <div class="event-members">
         <% if @event.paying_members.any? %>
           <ul class="member-list">
-            <% @event.paying_members.each_with_index do |user, index| %>
-              <%= render user %>
-              <% if index.odd? %>
-                <div class="clearfix"></div>
-              <% end %>
-            <% end %>
+            <%= render partial: "user", collection: @event.paying_members %>
           </ul>
         <% else %>
           There are no members. Add some!

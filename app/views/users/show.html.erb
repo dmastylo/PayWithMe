@@ -41,12 +41,7 @@
       <% if @upcoming_public_and_shared_events.empty? %>
         No upcoming events!
       <% else %>
-        <% @upcoming_public_and_shared_events.each_with_index do |event, index| %>
-          <%= render partial: "events/profile_event", locals: { event: event } %>
-          <% if index.odd? %>
-            <div class="clearfix"></div>
-          <% end %>
-        <% end %>
+        <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
       <% end %>
     </div>
     <div class="clearfix"></div>
@@ -61,12 +56,7 @@
       <% if @past_public_and_shared_events.empty? %>
         No past events!
       <% else %>
-        <% @past_public_and_shared_events.each_with_index do |event, index| %>
-          <%= render partial: "events/profile_event", locals: { event: event } %>
-          <% if index.odd? %>
-            <div class="clearfix"></div>
-          <% end %>
-        <% end %>
+        <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
       <% end %>
     </div>
     <div class="clearfix"></div>
