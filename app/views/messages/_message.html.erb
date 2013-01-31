@@ -8,7 +8,7 @@
       <div class="timestamp">
         Posted <%= time_ago_in_words(message.created_at) %> ago.
       </div>
-      <div class="message-content">
+      <div class="message-content" data-count="1">
         <%= convert_urls_to_links(h(message.message).gsub(/\n/, '<br/>')).html_safe %>
       </div>
     </div>
@@ -30,7 +30,7 @@
       <div class="timestamp">
         Posted <%= time_ago_in_words(message.created_at) %> ago.
       </div>
-      <div class="message-content">
+      <div class="message-content" data-count="1">
         <%= convert_urls_to_links(h(message.message).gsub(/\n/, '<br/>')).html_safe %>
       </div>
     </div>

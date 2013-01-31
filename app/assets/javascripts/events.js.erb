@@ -39,6 +39,7 @@ function combineUserMessages() {
     if ($this.attr('data-user') === $lastMessage.attr('data-user') && $this.attr('data-time') !== $lastMessage.attr('data-time'))
     {
       $lastMessage.find(".message-content").append("<br />" + $this.find(".message-content").html());
+      $lastMessage.find(".message-content").attr('data-count', parseInt($lastMessage.find(".message-content").attr('data-count')) + parseInt($this.find(".message-content").attr('data-count')));
       $this.remove();
     }
     else
