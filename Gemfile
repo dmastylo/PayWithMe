@@ -111,6 +111,7 @@ gem 'jquery-rails'
 # Deploy with Capistrano
 gem 'capistrano'
 gem 'rvm-capistrano'
+gem 'fog'
 
 # To use debugger
 # gem 'debugger'

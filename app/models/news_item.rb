@@ -16,25 +16,34 @@
 class NewsItem < ActiveRecord::Base
 
   # Accessible Attributes
-  attr_accessible :news_type, :foreign_id, :foreign_type, :subject_id, :read
+  attr_accessible :news_type, :foreign_id, :foreign_type, :subjects, :read
 
   # Validations
-  validates_presence_of :title, :news_type, :foreign_type, :user_id, :foreign_id
+  validates_presence_of :news_type, :foreign_type, :user_id, :foreign_id
 
   # Relationships
   belongs_to :user
+  has_and_belongs_to_many :subjects, class_name: "User"
 
   # Creation Methods
   def self.create_for_new_event_member(event, new_member)
     values = {
       news_type: NewsType::INVITE,
       foreign_type: ForeignType::EVENT,
-      foreign_id: event.id,
-      subject_id: new_member.id
+      foreign_id: event.id
     }
     event.members.each do |member|
       unless member == new_member || member == event.organizer
-        member.news_items.create!(values)
+        news_item = member.news_items.where(values).first
+
+        if news_item.nil? || news_item.created_at < 2.hours.ago
+          news_item = member.news_items.create(values)
+        end
+
+        if !news_item.subjects.include?(new_member)
+          news_item.subjects << new_member
+        end
+        news_item.unread!
       end
     end
   end
@@ -47,12 +56,16 @@ class NewsItem < ActiveRecord::Base
     }
     event.members.each do |member|
       unless member == message_creator
-        member_news_items = member.news_items # Prevent multiple database queries below
-        if (!member_news_items.empty? && member_news_items.first.message? && member_news_items.first.foreign_id == event.id)
-          member.news_items.first.update_attributes(read: false)
-        else
-          member.news_items.create!(values)
-         end
+        news_item = member.news_items.where(values).first
+
+        if news_item.nil? || news_item.created_at < 2.hours.ago
+          news_item = member.news_items.create(values)
+        end
+
+        if !news_item.subjects.include?(message_creator)
+          news_item.subjects << message_creator
+        end
+        news_item.unread!
       end
     end
   end
@@ -61,12 +74,20 @@ class NewsItem < ActiveRecord::Base
     values = {
       news_type: NewsType::INVITE,
       foreign_type: ForeignType::GROUP,
-      foreign_id: group.id,
-      subject_id: new_member.id
+      foreign_id: group.id
     }
     group.members.each do |member|
-      unless member == new_member || group.is_admin?(member)
-        member.news_items.create!(values)
+      unless member == new_member || member == group.organizer
+        news_item = member.news_items.where(values).first
+
+        if news_item.nil? || news_item.created_at < 2.hours.ago
+          news_item = member.news_items.create(values)
+        end
+
+        if !news_item.subjects.include?(new_member)
+          news_item.subjects << new_member
+        end
+        news_item.unread!
       end
     end
   end
@@ -83,7 +104,8 @@ class NewsItem < ActiveRecord::Base
   def body
     if event?
       if invite?
-        "#{subject.first_name} is now attending #{event.title}."
+        name = "name"
+        "#{name} is now attending #{event.title}."
       elsif message?
         "Check out #{event.title} to see the ongoing discussion."
       end
@@ -105,13 +127,13 @@ class NewsItem < ActiveRecord::Base
   def title
     if event?
       if invite?
-        "#{event.title} has a new attendee!"
+        "#{event.title} has #{subjects.count == 1 ? "a new attendee" : "new attendees"}!"
       elsif message?
         "#{event.title} has new messages!"
       end
     elsif group?
       if invite?
-        "#{group.title} has a new member!"
+        "#{group.title} has  #{subjects.count == 1 ? "a new member" : "new members"}!"
       end
     end
   end
@@ -144,10 +166,19 @@ class NewsItem < ActiveRecord::Base
     end
   end
 
-  def subject
-    # For now, subject is always a user
-    User.find_by_id(subject_id)
+  def unread!
+    self.read = false
+    save
   end
+
+  # def subject
+  #   # For now, subject is always a user
+  #   User.find_by_id(subject_id)
+  # end
+
+  # def subjects
+  #   [subject]
+  # end
 
   # Constants
   class NewsType
