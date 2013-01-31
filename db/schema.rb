@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125223340) do
+ActiveRecord::Schema.define(:version => 20130131205430) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -123,6 +123,7 @@ ActiveRecord::Schema.define(:version => 20130125223340) do
     t.string   "token_secret"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.string   "email"
   end
 
   create_table "messages", :force => true do |t|
@@ -162,6 +163,15 @@ ActiveRecord::Schema.define(:version => 20130125223340) do
     t.integer  "foreign_id"
     t.integer  "foreign_type"
     t.integer  "subject_id"
+  end
+
+  create_table "nudges", :force => true do |t|
+    t.integer  "nudgee_id"
+    t.integer  "nudger_id"
+    t.integer  "event_id"
+    t.integer  "event_user_id"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "payment_methods", :force => true do |t|
