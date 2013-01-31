@@ -213,6 +213,98 @@ describe Event do
     end
   end
 
+  describe "nudging" do
+    before do
+      @nudger = FactoryGirl.create(:user)
+      @nudgee = FactoryGirl.create(:user)
+    end
+
+    describe "nudger uninvited" do
+      before do
+        @event.add_member(@nudgee)
+      end
+      specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+    end
+
+    describe "nudgee uninvited" do
+      before do
+        @event.add_member(@nudger)
+      end
+      specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+    end
+
+    describe "both invited" do
+      before do
+        @event.add_member(@nudger)
+        @event.add_member(@nudgee)
+      end
+
+      describe "unpaid" do
+        specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+      end
+
+      describe "both paid" do
+        before do
+          [@nudgee, @nudger].each do |user|
+            @event.mark_paid(user)
+          end
+        end
+
+        specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+      end
+
+      describe "nudger paid and nudgee unpaid" do
+        before do
+          event_user = @event.event_user(@nudger)
+          event_user.paid_at = Time.now
+          event_user.save
+        end
+
+        describe "with nudges left" do
+          specify { @event.can_nudge?(@nudger, @nudgee).should be_true }
+        end
+
+        describe "already nudged" do
+          before do
+            FactoryGirl.create(:nudge, nudgee: @nudgee, nudger: @nudger, event: @event)
+          end
+
+          specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+        end
+
+        describe "without nudges left" do
+          before do
+            users = FactoryGirl.create_list(:user, Figaro.env.nudge_limit.to_i + 5)
+            @event.add_members(users)
+            users.each do |user|
+              FactoryGirl.create(:nudge, nudgee: user, nudger: @nudger, event: @event)
+            end
+          end
+
+          specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+        end
+
+        describe "nudging the event organizer" do
+          specify { @event.can_nudge?(@nudger, @event.organizer).should_not be_true }
+        end
+
+        describe "nudging themselves" do
+          specify { @event.can_nudge?(@nudger, @nudger).should_not be_true }
+        end
+
+        describe "nudger is a stub" do
+          before do
+            @stub_nudger = User.create_stub("test@example.com")
+            @event.add_member(@stub_nudger)
+            @event.mark_paid(@stub_nudger)
+          end
+
+          specify { @event.can_nudge?(@stub_nudger, @nudgee).should_not be_true }
+        end
+      end
+    end
+  end
+
   # describe "validations" do
 
   #   describe "due_at the past" do

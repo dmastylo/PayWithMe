@@ -207,6 +207,13 @@ class Event < ActiveRecord::Base
     send_with_payment_method?(PaymentMethod::MethodType::DWOLLA)
   end
 
+  # Mostly used in testing
+  def mark_paid(user)
+    event_user = event_user(user)
+    event_user.paid_at = Time.now
+    event_user.save
+  end
+
   # Constants
   # ========================================================
   class DivisionType
@@ -396,6 +403,10 @@ class Event < ActiveRecord::Base
     nfgdi_members
   end
 
+  def invited?(user)
+    members.include?(user)
+  end
+
   def event_user(user)
     event_users.find_by_user_id(user)
   end
@@ -411,6 +422,28 @@ class Event < ActiveRecord::Base
 
   def received_money?
     paid_members.count > 0
+  end
+
+  # Nudges
+  def can_nudge?(nudger, nudgee)
+    if !invited?(nudger) ||
+      !invited?(nudgee) ||
+      paid_at(nudger).nil? ||
+      paid_at(nudgee).present? ||
+      nudgee == self.organizer ||
+      nudger.stub? ||
+      nudger.sent_nudges.find_all_by_event_id(self.id).count >= Figaro.env.nudge_limit.to_i ||
+      self.nudges.where(nudgee_id: nudgee.id, nudger_id: nudger.id).count > 0
+      false
+    else
+      true
+    end
+  end
+
+  def nudge!(nudger, nudgee)
+    if can_nudge?(nudger, nudgee)
+      nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id)
+    end
   end
 
 private
