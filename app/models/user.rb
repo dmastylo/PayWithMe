@@ -219,7 +219,7 @@ class User < ActiveRecord::Base
   end
 
   def is_admin?
-    %w{ dmastylo@gmail.com cceli@codequarry.net agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
+    %w{ dmastylo@gmail.com celic@rpi.edu agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
   end
 
   # Event Definitions
