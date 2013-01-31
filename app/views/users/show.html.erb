@@ -10,10 +10,10 @@
     <% end %>
     <div class="spacer"></div>
     <div class="large-statistic">
-      <span class="count"><%= @user.organized_events.count %></span> organized <%= pluralize @user.organized_events.count, 'event' %>
+      <span class="count"><%= @user.organized_events.count %></span> organized <%= @user.organized_events.count == 1 ? 'event' : 'event'.pluralize %>
     </div>
     <div class="large-statistic">
-      <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member <%= pluralize @user.member_events.count, 'event' %>
+      <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member <%= @user.member_events.count == 1 ? 'event' : 'event'.pluralize %>
     </div>
 
     <% unless @user == current_user %>
