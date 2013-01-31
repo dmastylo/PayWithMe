@@ -1,76 +1,79 @@
 <% if !defined?(@next_messages).nil? && !@next_messages.empty? %>
-    /////////////////////////////////////////
-    // Infinite scrolling for old messages //
-    /////////////////////////////////////////
-    
-    // Render new messages
-    $('.message-list').append('<%= j render(@next_messages) %>');
 
-    // Set autosize
-    $("<% @next_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
-        fixed: '.profile-image',
-        fluid: '.body'
-    });
+  /////////////////////////////////////////
+  // Infinite scrolling for old messages //
+  /////////////////////////////////////////
+  
+  // Render new messages
+  $('.message-list').append('<%= j render(@next_messages) %>');
 
-    // Remove the "loading messages" message
-    $('.load-new-msgs').remove();
+  // Set autosize
+  $("<% @next_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
+    fixed: '.profile-image',
+    fluid: '.body'
+  });
 
+  // Remove the "loading messages" message
+  $('.load-new-msgs').remove();
+
+  if (<%= @messages_count.to_i %> <= $('.message').size())
+  {
     // If there are no more messages available, set the bool to false
-    if (<%= @messages_count.to_i %> <= $('.message').size())
-    {
-        moreMessageContent = false;
-    }
-    else
-    {
-        // Let the user know that the messages are being loaded
-        $('.message-list').append('<span class="load-new-msgs">Loading new messages...</span>');
-    }
+    moreMessageContent = false;
+  }
+  else
+  {
+    // Let the user know that the messages are being loaded
+    $('.message-list').append('<span class="load-new-msgs">Loading new messages...</span>');
+  }
 
-    // Done loading, can scroll again
-    loadingOldMessages = false;
+  // Done loading, can scroll again
+  loadingOldMessages = false;
 
-    // Activates tooltips on new messages
-    $("[rel='tooltip']").tooltip();
-    
+  // Activates tooltips on new messages
+  $("[rel='tooltip']").tooltip();
+  
 <% elsif !defined?(@new_messages).nil? && !@new_messages.empty? %>
-    //////////////////////////////
-    // Polling for new messages //
-    //////////////////////////////
 
-    // Remove "no messages"
-    $('.no-messages').remove();
+  //////////////////////////////
+  // Polling for new messages //
+  //////////////////////////////
 
-    // Remove the highlighting on new messages
-    $('.new-message').each(function()
-    {
-        $(this).removeClass('new-message');
-        $(this).removeClass('latest-message');
-    });
+  // Remove "no messages"
+  $('.no-messages').remove();
 
-    // Render the new messages
-    <% @new_message = true %>
-    $('.message-list').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
+  // Remove the highlighting on new messages
+  $('.new-message').each(function()
+  {
+    $(this).removeClass('new-message');
+    $(this).removeClass('latest-message');
+  });
 
-    // add the last-message class
-    $(".message:first-child").addClass("latest-message");
-    
-    // Fade the messages in for a cool effect (events.js)
-    fadeInNewMessages();
+  // Render the new messages
+  <% @new_message = true %>
+  $('.message-list').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
 
-    // Flash the title if page is not in focus (jquery.titlealert.min.js)
-    $.titleAlert("New Chat Message!", {
-        requireBlur: true,
-        stopOnFocus: true,
-        stopOnMouseMove: true,
-        interval: 500
-    });
+  // add the last-message class
+  $(".message:first-child").addClass("latest-message");
+  
+  // Fade the messages in for a cool effect (events.js)
+  fadeInNewMessages();
 
-    // Set autosize
-    $("<% @new_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
-        fixed: '.profile-image',
-        fluid: '.body'
-    });
+  // Flash the title if page is not in focus (jquery.titlealert.min.js)
+  $.titleAlert("New Chat Message!", {
+    requireBlur: true,
+    stopOnFocus: true,
+    stopOnMouseMove: true,
+    interval: 500
+  });
 
-    // Activates tooltips on new message
-    $("[rel='tooltip']").tooltip();
+  // Set autosize
+  $("<% @new_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
+    fixed: '.profile-image',
+    fluid: '.body'
+  });
+
+  // Activates tooltips on new messages
+  $("[rel='tooltip']").tooltip();
+
 <% end %>
