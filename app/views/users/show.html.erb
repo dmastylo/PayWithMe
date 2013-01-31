@@ -10,10 +10,10 @@
     <% end %>
     <div class="spacer"></div>
     <div class="large-statistic">
-      <span class="count"><%= @user.organized_events.count %></span> organized event<% if @user.organized_events.count != 1 %>s<% end %>
+      <span class="count"><%= @user.organized_events.count %></span> organized <%= @user.organized_events.count == 1 ? 'event' : 'event'.pluralize %>
     </div>
     <div class="large-statistic">
-      <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member event<% if @user.member_events.count != 1 %>s<% end %>
+      <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member <%= @user.member_events.count == 1 ? 'event' : 'event'.pluralize %>
     </div>
 
     <% unless @user == current_user %>
@@ -37,7 +37,7 @@
     <% else %>
       <h3>Upcoming Public and Shared Events</h3>
     <% end %>
-    <div id="upcoming-events" class="events-third-list<% if @upcoming_public_and_shared_events.empty? %>  empty<% end %>">
+    <div id="upcoming-events" class="events-third-list<% if @upcoming_public_and_shared_events.empty? %> empty<% end %>">
       <% if @upcoming_public_and_shared_events.empty? %>
         No upcoming events!
       <% else %>
