@@ -221,7 +221,7 @@ class User < ActiveRecord::Base
   end
 
   def is_admin?
-    %w{ dmastylo@gmail.com cceli@codequarry.net agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
+    %w{ dmastylo@gmail.com celic@rpi.edu agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
   end
 
   # Event Definitions
@@ -278,7 +278,6 @@ class User < ActiveRecord::Base
 private
   def set_profile_image
     return unless self.profile_image_type.present?
-    raise self.profile_image_type.to_s
     
     if self.profile_image_type != "url"
       self.profile_image_url = nil

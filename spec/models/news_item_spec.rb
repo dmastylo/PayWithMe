@@ -1,3 +1,17 @@
+# == Schema Information
+#
+# Table name: news_items
+#
+#  id           :integer          not null, primary key
+#  news_type    :integer
+#  user_id      :integer
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  foreign_id   :integer
+#  foreign_type :integer
+#  read         :boolean          default(FALSE)
+#
+
 require 'spec_helper'
 
 describe NewsItem do
