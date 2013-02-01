@@ -53,7 +53,6 @@ class Payment < ActiveRecord::Base
       payment_attributes
     ).first || create(payment_attributes.merge(
       due_at: event_user.due_at,
-      paid_at: Time.now,
       requested_at: event_user.event.created_at,
       event_user_id: event_user.id
     ))

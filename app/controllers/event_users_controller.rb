@@ -65,8 +65,8 @@ class EventUsersController < ApplicationController
 
   def paid
     payment = Payment.create_or_find_from_event_user(@event_user, PaymentMethod::MethodType::CASH)
-    @event_user.paid_at = Time.now
-    @event_user.save
+    payment.update_attributes(paid_at: Time.now)
+    @event_user.update_attributes(paid_at: Time.now)
     redirect_to admin_event_path(@event)
   end
 
