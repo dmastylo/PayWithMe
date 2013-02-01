@@ -57,4 +57,22 @@ describe EventUser do
     it { should belong_to(:event) }
   end
 
+  describe "pay! method" do
+    it "should create a payment" do
+      expect { @event_user.pay! }.to change(@user.sent_payments, :count).by(1)
+    end
+
+    it "should create a full payment if amount unspecified" do
+      before { @payment = @event_user.pay! }
+      expect { @payment.amount_cents.should == @event_user.amount_cents }
+      expect { @event_user.paid?.should be_true }
+    end
+
+    it "should create a payment for a specific amount" do
+      before { @payment = @event_user.pay!(@event_user.amount_cents / 2) }
+      expect { @payment.amount_cents.should == (@event_user.amount_cents / 2) }
+      expect { @event_user.paid?.should_not be_true }
+    end
+  end
+
 end

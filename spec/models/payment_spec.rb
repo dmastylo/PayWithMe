@@ -53,6 +53,12 @@ describe Payment do
     it { should validate_presence_of(:amount) }
     it { should allow_value("$1234").for(:amount) }
     it { should_not allow_value("abcd").for(:amount) }
+
+    describe "after paid" do
+      before { @payment.pay! }
+      it { should validate_presence_of(:paid_at) }
+      it { should validate_presence_of(:transaction_id) }
+    end
   end
 
   describe "mass assignment" do
@@ -74,6 +80,14 @@ describe Payment do
     it { should belong_to(:payee).class_name("Payee") }
     it { should belong_to(:event) }
     it { should belong_to(:event_user) }
+  end
+
+  describe "pay! method" do
+    before do
+      @payment.pay!
+    end
+
+    it { @payment.paid_at.should_not be_nil }
   end
 
 end
