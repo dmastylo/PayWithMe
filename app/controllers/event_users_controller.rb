@@ -5,6 +5,7 @@ class EventUsersController < ApplicationController
   before_filter :valid_payment_method, only: [:pay]
   before_filter :user_organizes_event, only: [:paid, :unpaid]
   before_filter :event_owns_event_user, only: [:paid, :unpaid]
+  before_filter :event_user_paid_with_cash, only: [:unpaid]
   skip_before_filter :verify_authenticity_token, only: [:ipn]
 
   def create
@@ -91,7 +92,7 @@ private
       # If user doesn't organize event, it must be public and the user_id must be equal to current_user
       if @event.public?
         if params[:event_user][:user_id].to_i != current_user.id
-          flash[:error] = "Trying to hack...? #{params[:event_user][:user_id]} #{current_user.id}"
+          flash[:error] = "Trying to hack...?" #{params[:event_user][:user_id]} #{current_user.id}"
           redirect_to root_path
         end
       else
@@ -104,6 +105,13 @@ private
   def event_owns_event_user
     @event_user = @event.event_users.find_by_id(params[:id])
     redirect_to root_path unless @event_user.present?
+  end
+
+  def event_user_paid_with_cash
+    if @event_user.payment.payment_method != PaymentMethod::MethodType::CASH
+      flash[:error] = "Can only mark users who paid with cash as unpaid."
+      redirect_to admin_event_path(@event)
+    end
   end
 
   def valid_payment_method
