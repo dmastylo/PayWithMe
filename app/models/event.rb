@@ -482,4 +482,8 @@ private
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all
   end
 
+  def time_after_event?
+    Time.now > self.due_at
+  end
+
 end
