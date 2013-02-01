@@ -9,7 +9,6 @@
 #  updated_at   :datetime         not null
 #  foreign_id   :integer
 #  foreign_type :integer
-#  subject_id   :integer
 #  read         :boolean          default(FALSE)
 #
 
