@@ -67,15 +67,20 @@ class EventUsersController < ApplicationController
     payment = Payment.create_or_find_from_event_user(@event_user, PaymentMethod::MethodType::CASH)
     payment.update_attributes(paid_at: Time.now)
     @event_user.update_attributes(paid_at: Time.now)
-    redirect_to admin_event_path(@event)
+    respond_to do |format|
+      format.html { redirect_to admin_event_path(@event) }
+      format.js
+    end
   end
 
   # Mark user as unpaid if he/she paid with cash
   def unpaid
     Payment.where(payer_id: @event_user.member.id).first.delete
-    @event_user.paid_at = nil
-    @event_user.save
-    redirect_to admin_event_path(@event)
+    @event_user.update_attributes(paid_at: nil)
+    respond_to do |format|
+      format.html { redirect_to admin_event_path(@event) }
+      format.js
+    end
   end
 
 private

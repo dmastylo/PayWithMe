@@ -1,0 +1,5 @@
+<% if !event.paid?(user) && event.send_cash? %>
+  <%= link_to "Mark Paid", paid_event_event_user_path(event, event.event_user(user)), class: "btn btn-success btn-block", method: :put, remote: true %>
+<% elsif event.paid?(user) && event.send_cash? && event.paid_with_cash?(user) %>
+  <%= link_to "Mark Unpaid", unpaid_event_event_user_path(event, event.event_user(user)), class: "btn btn-success btn-block", method: :put, remote: true %>
+<% end %>

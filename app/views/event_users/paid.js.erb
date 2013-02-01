@@ -1,0 +1,4 @@
+console.log("FUCK YOU")
+$('.unpaid').remove();
+$('#user-status-<%= @event_user.member.id %>').html('<%= distance_of_time_in_words_to_now @event.paid_at(@event_user.member) %> ago');
+// $('.payment-links').html('<%= render partial: "users/mark_payment_links", locals: { event: @event, user: @event_user.member } %>');
