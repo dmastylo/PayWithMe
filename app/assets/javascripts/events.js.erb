@@ -1,49 +1,74 @@
 $(function()
 {
-    // Enter submits messages, shift-enter does a new line in the chat message
-    if ($('.message-list').length > 0)
-    {
-        $("textarea").keypress(function(e)
-        {
-            if (e.keyCode == 13 && !e.shiftKey)
-            {
-                e.preventDefault();
-                // now call the code to submit your form
-                $(this).parent('form').submit();
-                return;
-            }
-        });
-    }
+  // Enter submits messages, shift-enter does a new line in the chat message
+  if ($('.message-list').length > 0)
+  {
+    combineUserMessages();
 
-    // This needs to be tested
-    // $("#member_name").keyup(function(event)
-    // {
-    //     if(event.keyCode == 13)
-    //     {
-    //         $("#add_member").click();
-    //     }
-    // });
+    $("textarea").keypress(function(e)
+    {
+      if (e.keyCode == 13 && !e.shiftKey)
+      {
+        e.preventDefault();
+        // now call the code to submit your form
+        $(this).parent('form').submit();
+        return;
+      }
+    });
+  }
+
+  // This needs to be tested
+  // $("#member_name").keyup(function(event)
+  // {
+  //   if(event.keyCode == 13)
+  //   {
+  //     $("#add_member").click();
+  //   }
+  // });
 });
+
+// Consolidate message content into one message if multiple messages from one user
+function combineUserMessages() {
+  $lastMessage = $(".message:first-child");
+
+  $('.message').each(function()
+  {
+    $this = $(this);
+
+    if ($this.attr('data-user') === $lastMessage.attr('data-user') && $this.attr('data-time') !== $lastMessage.attr('data-time'))
+    {
+      $lastMessage.find(".message-content").append("<br />" + $this.find(".message-content").html());
+      $lastMessage.find(".message-content").attr('data-count', parseInt($lastMessage.find(".message-content").attr('data-count')) + parseInt($this.find(".message-content").attr('data-count')));
+      $lastMessage.attr('data-oldest-time', $this.attr('data-oldest-time'));
+      $this.remove();
+    }
+    else
+    {
+      $lastMessage = $this;
+    }
+  });
+}
+
 
 function fadeInNewMessages()
 {
-    // fade in new messages
-    $('.new-message').each(function()
-    {
-        $(this).fadeIn();
-    });
+  // fade in new messages
+  $('.new-message').each(function()
+  {
+    $(this).fadeIn();
+  });
 }
 
 function temporarySpamBlock()
 {
-    // Disable the ability to post a new message for a second
-    if ($('.post-message').attr("disabled"))
-    {
-        $('.post-message').removeAttr("disabled");
-    }
-    else
-    {
-        $('.post-message').attr("disabled", "disabled");
-        setTimeout(temporarySpamBlock, <%= Figaro.env.chat_limit.to_i %>);
-    }
+  // Disable the ability to post a new message for a second
+  if ($('.post-message').attr("disabled"))
+  {
+    $('.post-message').removeAttr("disabled");
+  }
+  else
+  {
+    $('.post-message').attr("disabled", "disabled");
+    setTimeout(temporarySpamBlock, <%= Figaro.env.chat_limit.to_i %>);
+  }
 }
