@@ -51,12 +51,22 @@
           <%= link_to "Register With Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary input-block-level push-bottom" %>
           <%= link_to "Register With Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary input-block-level" %>
         </div>
+
+        <h3>Continue as Guest</h3>
+        <div class="well">
+          <% @stub_user.name = @stub_user.email.split('@').first %>
+          <%= form_for(@stub_user, url: user_registration_path()) do |f| %>
+            <div class="control-group">
+              <%= f.label :name, class: 'control-label' %>
+              <div class="controls">
+                <%= f.text_field :name, class: 'input-block-level' %>
+              </div>
+            </div>
+            <%= f.submit "Continue as guest", class: 'btn btn-primary btn-block' %>
+          <% end %>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">Continue as guest</button>
   </div>
 </div>
 
