@@ -277,6 +277,20 @@ class User < ActiveRecord::Base
     self.member_events.where('events.due_at < ?', Time.now).order("events.due_at DESC").delete_if { |event| event.organizer == self }
   end
 
+  # Stub user
+  def complete_registration
+    if stub?
+      self.guest_token = nil
+      self.toggle(:stub)
+      self.completed_at = Time.now
+    end
+  end
+
+  def complete_registration!
+    complete_registration
+    save
+  end
+
 private
   def set_profile_image
     return unless self.profile_image_option.present?
@@ -293,7 +307,6 @@ private
 
   def set_stub
     if encrypted_password.present? || using_oauth?
-      completed_at = Time.now if stub?
       stub = false
       guest_token = nil
     end
