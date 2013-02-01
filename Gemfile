@@ -53,7 +53,7 @@ gem 'mail_form'
 gem 'js-routes'
 
 # Payments
-gem 'active_paypal_adaptive_payment'
+gem 'active_paypal_adaptive_payment', git: 'git://github.com/austingulati/active_paypal_adaptive_payment.git'
 gem 'dwolla', git: 'git://github.com/austingulati/dwolla-ruby.git'
 
 # Monitoring

@@ -1,4 +1,15 @@
 GIT
+  remote: git://github.com/austingulati/active_paypal_adaptive_payment.git
+  revision: f0608557a3a4d64459b8e8dc895517c7c2584ad3
+  specs:
+    active_paypal_adaptive_payment (0.3.16)
+      activemerchant (>= 1.5.1)
+      hashie (>= 1.2.0)
+      mocha (>= 0.10.0)
+      money (>= 3.6.0)
+      multi_json (>= 1.0.0)
+
+GIT
   remote: git://github.com/austingulati/bootstrap-sass.git
   revision: 3560e5eb20023243a41ea11989d8fe64909f159e
   specs:
@@ -46,12 +57,6 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.2.1)
-    active_paypal_adaptive_payment (0.3.16)
-      activemerchant (>= 1.5.1)
-      hashie (>= 1.2.0)
-      mocha (>= 0.10.0)
-      money (>= 3.6.0)
-      multi_json (>= 1.0.0)
     active_utils (1.0.5)
       activesupport (>= 2.3.11)
       i18n
@@ -361,7 +366,7 @@ PLATFORMS
 
 DEPENDENCIES
   actionmailer-callbacks
-  active_paypal_adaptive_payment
+  active_paypal_adaptive_payment!
   american_date
   annotate
   bootstrap-sass!
