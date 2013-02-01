@@ -1,6 +1,10 @@
-// Place all the styles related to the Users controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+.user-show
+{
+    &.stub
+    {
+        h2 { word-break: break-all; }
+    }
+}
 
 // Global
 .user_profile_image_option
@@ -9,28 +13,28 @@
 }
 
 // User online display
-.user-online {
+.user-online, .user-offline {
     display: inline-block;
     border-radius: 4px;
     margin-bottom: 1px;
     width: 8px;
     height: 8px;
     background-color: $mediumGreen;
-}
 
-.user-online-block, .user-offline-block
-{
-	background-color: $mediumGreen;
-	display: inline-block;
-	border-radius: 5px;
-	padding: 2px 5px;
-	color: $offWhite;
-	font-weight: bold;
-}
+    &.block
+    {
+    	border-radius: 5px;
+    	padding: 2px 5px;
+        width: auto;
+        height: auto;
+    	color: $offWhite;
+    	font-weight: bold;
+    }
 
-.user-offline-block
-{
-	background-color: $mediumRed;
+    &.user-offline
+    {
+    	background-color: $mediumRed;
+    }
 }
 
 // User profile page

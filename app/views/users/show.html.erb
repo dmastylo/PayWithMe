@@ -1,3 +1,16 @@
+<<<<<<< HEAD
+<% provide(:title, user_name(@user)) %>
+<div class="user-show <%= "stub" if @user.stub? %>">
+  <div class="row" id="user-wrapper">
+    <div class="span3" id="user-left">
+      <%= profile_image_tag @user, :large %>
+      <h2><%= user_name(@user) %></h2>
+      <% if @user.online? %>
+        <div class="user-online block">ONLINE</div>
+      <% else %>
+        <div class="user-offline block">OFFLINE</div>
+      <% end %>
+=======
 <% provide(:title, @user.name) %>
 <div class="row" id="user-wrapper">
   <div class="span3" id="user-left">
@@ -17,20 +30,29 @@
     </div>
 
     <% unless @user == current_user %>
+>>>>>>> master
       <div class="spacer"></div>
-      <div class="invite-to-event-button">
-        <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
-        <ul class="events-to-invite">
-          <% unless @your_organized_events.empty? %>
-            <%= render partial: 'events/invite_events', collection: @your_organized_events, as: :event %>
-          <% else %>
-            <li>You don't have any events!</li>
-          <% end %>
-        </ul>
+      <div class="large-statistic">
+        <span class="count"><%= @user.organized_events.count %></span> organized event<%= "s" unless @user.organized_events.count == 1 %>
       </div>
-    <% end %>
-  </div>
+      <div class="large-statistic">
+        <span class="count" id="member-event-count"><%= @user.member_events.count %></span> attended event<%= "s" unless @user.member_events.count == 1 %>
+      </div>
 
+<<<<<<< HEAD
+      <% unless @user == current_user %>
+        <div class="spacer"></div>
+        <div class="invite-to-event-button">
+          <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
+          <ul class="events-to-invite">
+            <% unless @your_organized_events.empty? %>
+              <%= render partial: 'events/invite_events', collection: @your_organized_events, as: :event %>
+            <% else %>
+              <li>You don't have any events!</li>
+            <% end %>
+          </ul>
+        </div>
+=======
   <div class="span9" id="user-right">
     <% if @user == current_user %>
       <h3>Your Upcoming Events</h3>
@@ -42,24 +64,40 @@
         No upcoming events!
       <% else %>
         <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
+>>>>>>> master
       <% end %>
     </div>
-    <div class="clearfix"></div>
 
-    <% if @user == current_user %>
-      <h3>Your Past Events</h3>
-    <% else %>
-      <h3>Past Public and Shared Events</h3>
-    <% end %>
-
-    <div id="past-events" class="events-third-list<% if @past_public_and_shared_events.empty? %>  empty<% end %>">
-      <% if @past_public_and_shared_events.empty? %>
-        No past events!
+    <div class="span9" id="user-right">
+      <% if @user == current_user %>
+        <h3>Your Upcoming Events</h3>
       <% else %>
-        <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
+        <h3>Upcoming Events</h3>
       <% end %>
+      <div id="upcoming-events" <%= "class=\"empty\"" if @upcoming_public_and_shared_events.empty? %>>
+        <% if @upcoming_public_and_shared_events.empty? %>
+          No upcoming events!
+        <% else %>
+          <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
+        <% end %>
+      </div>
+      <div class="clearfix"></div>
+
+      <% if @user == current_user %>
+        <h3>Your Past Events</h3>
+      <% else %>
+        <h3>Past Events</h3>
+      <% end %>
+
+      <div id="past-events" class="events-third-list<% if @past_public_and_shared_events.empty? %>  empty<% end %>">
+        <% if @past_public_and_shared_events.empty? %>
+          No past events!
+        <% else %>
+          <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
+        <% end %>
+      </div>
+      <div class="clearfix"></div>
     </div>
-    <div class="clearfix"></div>
   </div>
 </div>
 
