@@ -3,8 +3,8 @@ class EventUsersController < ApplicationController
   before_filter :event_public_or_user_organizes_event, only: [:create]
   before_filter :user_owns_event_user, only: [:pay, :pin]
   before_filter :valid_payment_method, only: [:pay]
-  before_filter :user_organizes_event, only: [:paid]
-  before_filter :event_owns_event_user, only: [:paid]
+  before_filter :user_organizes_event, only: [:paid, :unpaid]
+  before_filter :event_owns_event_user, only: [:paid, :unpaid]
   skip_before_filter :verify_authenticity_token, only: [:ipn]
 
   def create
@@ -64,9 +64,15 @@ class EventUsersController < ApplicationController
 
   def paid
     payment = Payment.create_or_find_from_event_user(@event_user, PaymentMethod::MethodType::CASH)
-    payment.paid_at = Time.now
-    payment.save
     @event_user.paid_at = Time.now
+    @event_user.save
+    redirect_to admin_event_path(@event)
+  end
+
+  # Mark user as unpaid if he/she paid with cash
+  def unpaid
+    Payment.where(payer_id: @event_user.member.id).first.delete
+    @event_user.paid_at = nil
     @event_user.save
     redirect_to admin_event_path(@event)
   end

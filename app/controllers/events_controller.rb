@@ -75,7 +75,7 @@ class EventsController < ApplicationController
       @event.set_groups(groups)
 
       # For some reason, redirect_to @event doesn't work
-      redirect_to event_path(@event)
+      redirect_to admin_event_path(@event)
     else
       @member_emails = @event.members.collect { |member| member.email }
       @group_ids = @event.groups.collect { |group| group.id }
@@ -103,7 +103,7 @@ private
   def check_for_payers
     unless @event.paid_members.empty?
       flash[:error] = "You can't delete an event with paying members!"
-      redirect_to event_path(@event)
+      redirect_to admin_event_path(@event)
     end
   end
 
