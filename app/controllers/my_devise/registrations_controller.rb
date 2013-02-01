@@ -20,8 +20,7 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
     if signed_in?
       user = current_user
       user.update_attributes!(params[:user])
-      user.guest_token = nil
-      user.toggle(:stub)
+      user.complete_registration
 
       if user.save
         flash[:success] = "Account registration successfully completed!"

@@ -36,7 +36,7 @@ class EventsController < ApplicationController
   end
 
   def create
-    members_from_users = User.from_params(params[:event].delete(:members))
+    members_from_users = User.from_params(params[:event].delete(:members), current_user)
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
     @event = current_user.organized_events.new(params[:event])
 
@@ -63,7 +63,7 @@ class EventsController < ApplicationController
   end
 
   def update
-    members_from_users = User.from_params(params[:event].delete(:members))
+    members_from_users = User.from_params(params[:event].delete(:members), current_user)
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
     # raise [members_from_users, '=====', members_from_groups].to_yaml
     # @event = current_user.organized_events.new(params[:event])
