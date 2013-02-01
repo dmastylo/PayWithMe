@@ -30,4 +30,8 @@ module UsersHelper
       profile_image_tag: profile_image_tag(user)
     }
   end
+
+  def give_stub_default_name(stub_user)
+    stub_user.name = stub_user.email.split('@').first
+  end
 end

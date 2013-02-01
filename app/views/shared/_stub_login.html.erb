@@ -54,7 +54,7 @@
 
         <h3>Continue as Guest</h3>
         <div class="well">
-          <% @stub_user.name = @stub_user.email.split('@').first %>
+          <% give_stub_default_name(@stub_user) %>
           <%= form_for(@stub_user, url: user_registration_path()) do |f| %>
             <div class="control-group">
               <%= f.label :name, class: 'control-label' %>
