@@ -1,2 +1,2 @@
 $('#user-status-<%= @event_user.member.id %>').html('<span class="unpaid">Unpaid</span>');
-$('#payment-links').html('<%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(@event_user.member)), class: "btn btn-success btn-block", method: :put, remote: true %>');
+$('#payment-links-<%= @event_user.member.id %>').html('<%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(@event_user.member)), class: "btn btn-success btn-block", method: :put, remote: true %>');
