@@ -1,10 +1,23 @@
 $('.no-messages').remove();
 $('.message-list').prepend('<%= j render(@message) %>');
+
+// If posting multiple messages in a row, combine them
+$previousMessage = $('.message:nth-child(2)');
+$newMessage = $('.message:first-child');
+if ($previousMessage.attr('data-user') === $newMessage.attr('data-user'))
+{
+  $newMessage.find(".message-content").append("<br />" + $previousMessage.find('.message-content').html());
+  $newMessage.attr('data-oldest-time', $previousMessage.attr('data-oldest-time'));
+  $previousMessage.hide();
+}
+
 $('.message-text-field').val('');
 temporarySpamBlock();
+
 $('.message#message-<%= @message.id %>').autoSize({
 	fixed: '.profile-image',
 	fluid: '.body'
 });
+
 // Activates tooltips on new message
 $("[rel='tooltip']").tooltip();

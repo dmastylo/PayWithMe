@@ -3,4 +3,6 @@
     <%= render partial: "events/event_body", locals: { event: event } %>
   </div>
 </div>
-<%= cycle('', '<div class="clearfix"></div>'.html_safe) %>
+<% if event_counter.odd? %>
+  <div class="clearfix"></div>
+<% end %>

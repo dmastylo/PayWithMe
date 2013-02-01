@@ -69,6 +69,8 @@ class User < ActiveRecord::Base
   has_many :received_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
   has_many :sent_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
   has_and_belongs_to_many :subject_news_items, class_name: "NewsItem"
+  belongs_to :creator, class_name: "User"
+  has_many :created_users, class_name: "User", foreign_key: "creator_id"
 
   # Scopes
   # ========================================================
@@ -93,8 +95,9 @@ class User < ActiveRecord::Base
 
   # Static functions
   # ========================================================
-  # Returns a list of users from email addresses, creating stub units as necessary
-  def self.from_params(params)
+  # Returns a list of users from email addresses,
+  # creating stub units as necessary
+  def self.from_params(params, creator=nil)
     return [] if params.nil? || params.empty?
     params = ActiveSupport::JSON.decode(params)
     users = []
@@ -102,7 +105,7 @@ class User < ActiveRecord::Base
     params.each do |email|
       user = User.find_by_email(email)
       if user.nil?
-        user = User.create_stub(email)
+        user = User.create_stub(email, creator)
       end
 
       users.push user
@@ -111,11 +114,12 @@ class User < ActiveRecord::Base
     users.uniq
   end
 
-  def self.create_stub(email)
+  def self.create_stub(email, creator=nil)
     user = User.new(email: email)
     user.stub = true
     user.save
     user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s}#{pepper}")
+    user.creator_id = creator.id if creator.present?
     user.save
     user
   end
@@ -219,7 +223,7 @@ class User < ActiveRecord::Base
   end
 
   def is_admin?
-    %w{ dmastylo@gmail.com cceli@codequarry.net agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
+    %w{ dmastylo@gmail.com celic@rpi.edu agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
   end
 
   # Event Definitions
@@ -271,6 +275,20 @@ class User < ActiveRecord::Base
 
   def past_invited_events
     self.member_events.where('events.due_at < ?', Time.now).order("events.due_at DESC").delete_if { |event| event.organizer == self }
+  end
+
+  # Stub user
+  def complete_registration
+    if stub?
+      self.guest_token = nil
+      self.toggle(:stub)
+      self.completed_at = Time.now
+    end
+  end
+
+  def complete_registration!
+    complete_registration
+    save
   end
 
 private

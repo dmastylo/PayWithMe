@@ -122,6 +122,7 @@ ActiveRecord::Schema.define(:version => 20130130005311) do
     t.string   "token_secret"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.string   "email"
   end
 
   create_table "messages", :force => true do |t|
@@ -163,6 +164,14 @@ ActiveRecord::Schema.define(:version => 20130130005311) do
     t.integer  "subject_id"
   end
 
+  create_table "nudges", :force => true do |t|
+    t.integer  "nudgee_id"
+    t.integer  "nudger_id"
+    t.integer  "event_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "payment_methods", :force => true do |t|
     t.integer  "event_id",       :limit => 255
     t.integer  "payment_method", :limit => 255
@@ -181,6 +190,7 @@ ActiveRecord::Schema.define(:version => 20130130005311) do
     t.integer  "event_id"
     t.integer  "amount_cents"
     t.integer  "event_user_id"
+    t.string   "transaction_id"
     t.integer  "payment_method"
   end
 
@@ -226,6 +236,8 @@ ActiveRecord::Schema.define(:version => 20130130005311) do
     t.datetime "last_seen"
     t.string   "time_zone",                  :default => "Eastern Time (US & Canada)"
     t.string   "slug"
+    t.integer  "creator_id"
+    t.datetime "completed_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
