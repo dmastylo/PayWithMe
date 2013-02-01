@@ -404,6 +404,11 @@ class Event < ActiveRecord::Base
     event_user.present? && event_user.paid?
   end
 
+  def paid_with_cash?(user)
+    event_user = event_user(user)
+    event_user.payment.payment_method == PaymentMethod::MethodType::CASH
+  end
+
   def paid_at(user)
     event_user(user).paid_at
   end
