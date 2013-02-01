@@ -1,24 +1,23 @@
 // Bool that will determine whether or not more content can be loaded
-var moreMessageContent = $('.messages').data('count') > $('.messages').data('limit')
-                       ? true : false;
+var moreMessageContent = $('.messages').data('count') > $('.messages').data('limit');
 
 // Bool that will prevent the scrolling from constantly be fired
 var loadingOldMessages = false;
 
 $(function() {
-    $('.messages').scroll(function() {
-        if (($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
-            !loadingOldMessages && moreMessageContent) {
+  $('.messages').scroll(function() {
+    if (($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
+      !loadingOldMessages && moreMessageContent) {
 
-            var event_id = $(".messages").attr("data-id");
-            var last_message_time = $(".message").length > 0
-                      ? $(".message:last").attr("data-time")
-                      : "0";
+      var event_id = $(".messages").attr("data-id");
+      var last_message_time = $(".message").length > 0
+                ? $(".message:last").attr("data-oldest-time")
+                : "0";
 
-            // currently loading new data so prevent this from being fired
-            loadingOldMessages = true;
+      // currently loading new data so prevent this from being fired
+      loadingOldMessages = true;
 
-            $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
-        }
-    });
+      $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
+    }
+  });
 });

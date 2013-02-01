@@ -9,13 +9,26 @@
   // Remove the "loading messages" message
   $('.load-messages').remove();
 
+  // Combine messages that are from the same author
+  combineUserMessages();
+
   // Set autosize
   $("<% @next_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
     fixed: '.profile-image',
     fluid: '.body'
   });
 
-  if (<%= @messages_count.to_i %> <= $('.message').size())
+  var messageSize = 0;
+  $('.message').each(function()
+  {
+    console.log($(this).find(".content"));
+    thisMessageSize = parseInt($(this).find(".content").attr('data-count'));
+    messageSize += thisMessageSize;
+  });
+
+  console.log(messageSize);
+
+  if (<%= @messages_count.to_i %> <= messageSize)
   {
     moreMessageContent = false;
   }
@@ -51,7 +64,10 @@
   <% @new_message = true %>
   $('.messages').prepend('<%= j render(@new_messages, :locals => { :new_message => @new_message }) %>');
 
-  // add the last-message class
+  // Combine messages that are from the same author
+  combineUserMessages();
+
+  // add the latest-message class
   $(".message:first-child").addClass("latest");
   
   // Fade the messages in for a cool effect (events.js)

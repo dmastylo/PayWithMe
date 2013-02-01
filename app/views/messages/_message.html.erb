@@ -1,4 +1,4 @@
-<li class="message <%= "new" unless @new_message.nil? %> <%= "current" if message.user == current_user %>" data-time="<%= message.created_at.to_i %>" id="message-<%= message.id %>">
+<li class="message <%= "new" unless @new_message.nil? %> <%= "current" if message.user == current_user %>" data-time="<%= message.created_at.to_i %>" data-oldest-time="<%= message.created_at.to_i %>" data-user="<%= message.user.id %>" id="message-<%= message.id %>">
   <div class="profile-image">
     <%= profile_image_tag message.user, :small %> 
   </div>
@@ -10,9 +10,7 @@
     <div class="timestamp">
       Posted <%= time_ago_in_words(message.created_at) %> ago.
     </div>
-    <div class="content">
-      <%= convert_urls_to_links(h(message.message).gsub(/\n/, '<br/>')).html_safe %>
-    </div>
+    <div class="content" data-count="1"><%= convert_urls_to_links(h(message.message).gsub(/\n/, '<br/>')).html_safe %></div>
   </div>
   <div class="clearfix"></div>
 </li>
