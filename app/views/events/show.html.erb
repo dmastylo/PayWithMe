@@ -68,7 +68,7 @@
       <div class="event-members">
         <% if @event.paying_members.any? %>
           <ul class="member-list">
-            <%= render @event.paying_members %>
+            <%= render partial: 'users/user', collection: @event.paying_members, as: :user %>
           </ul>
         <% else %>
           There are no members. Add some!

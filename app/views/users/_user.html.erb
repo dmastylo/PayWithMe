@@ -27,5 +27,7 @@
       <% end %>
     </div>
   </div>
-  <div class="clearfix"></div>
 </li>
+<% if user != @event.organizer && user_counter.odd? %>
+  <div class="clearfix"></div>
+<% end %>
