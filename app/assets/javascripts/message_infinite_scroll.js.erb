@@ -1,16 +1,15 @@
 // Bool that will determine whether or not more content can be loaded
-var moreMessageContent = $('.message-list').data('count') > $('.message-list').data('limit')
-                       ? true : false;
+var moreMessageContent = $('.messages').data('count') > $('.messages').data('limit');
 
 // Bool that will prevent the scrolling from constantly be fired
 var loadingOldMessages = false;
 
 $(function() {
-  $('.message-list').scroll(function() {
+  $('.messages').scroll(function() {
     if (($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
       !loadingOldMessages && moreMessageContent) {
 
-      var event_id = $(".message-list").attr("data-id");
+      var event_id = $(".messages").attr("data-id");
       var last_message_time = $(".message").length > 0
                 ? $(".message:last").attr("data-oldest-time")
                 : "0";

@@ -1,7 +1,7 @@
 $(function()
 {
   // Enter submits messages, shift-enter does a new line in the chat message
-  if ($('.message-list').length > 0)
+  if ($('.messages').length > 0)
   {
     combineUserMessages();
 
@@ -37,8 +37,8 @@ function combineUserMessages() {
 
     if ($this.attr('data-user') === $lastMessage.attr('data-user') && $this.attr('data-time') !== $lastMessage.attr('data-time'))
     {
-      $lastMessage.find(".message-content").append("<br />" + $this.find(".message-content").html());
-      $lastMessage.find(".message-content").attr('data-count', parseInt($lastMessage.find(".message-content").attr('data-count')) + parseInt($this.find(".message-content").attr('data-count')));
+      $lastMessage.find(".content").append("<br />" + $this.find(".content").html());
+      $lastMessage.find(".content").attr('data-count', parseInt($lastMessage.find(".content").attr('data-count')) + parseInt($this.find(".content").attr('data-count')));
       $lastMessage.attr('data-oldest-time', $this.attr('data-oldest-time'));
       $this.remove();
     }
