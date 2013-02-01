@@ -16,6 +16,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
       if current_user.stub?
         current_user.name = request.env["omniauth.auth"].info.name if request.env["omniauth.auth"].info.name
         current_user.email = request.env["omniauth.auth"].info.email if request.env["omniauth.auth"].info.email
+        current_user.completed_at = Time.now
       end
       
       # Update user
