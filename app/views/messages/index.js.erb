@@ -16,10 +16,18 @@
     fluid: '.body'
   });
 
-  // Remove the "loading messages" message
   $('.load-new-msgs').remove();
 
-  if (<%= @messages_count.to_i %> <= $('.message').size())
+  var messageSize = 0;
+  $('.message').each(function()
+  {
+    thisMessageSize = parseInt($(this).find(".message-content").attr('data-count'));
+    messageSize += thisMessageSize;
+  });
+
+  console.log("messageSize = " + messageSize);
+
+  if (<%= @messages_count.to_i %> <= messageSize)
   {
     // If there are no more messages available, set the bool to false
     moreMessageContent = false;

@@ -1,4 +1,4 @@
-<li class="message<% unless @new_message.nil? %> new-message<% end %>" data-time="<%= message.created_at.to_i %>" data-user="<%= message.user.id %>" id="message-<%= message.id %>">
+<li class="message<% unless @new_message.nil? %> new-message<% end %>" data-time="<%= message.created_at.to_i %>" data-oldest-time="<%= message.created_at.to_i %>" data-user="<%= message.user.id %>" id="message-<%= message.id %>">
   <% if message.user == current_user %>
     <div class="current-user body">
       <div class="user">

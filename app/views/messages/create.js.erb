@@ -6,8 +6,8 @@ $previousMessage = $('.message:nth-child(2)');
 $newMessage = $('.message:first-child');
 if ($previousMessage.attr('data-user') === $newMessage.attr('data-user'))
 {
-  console.log("same doe!!!");
   $newMessage.find(".message-content").append("<br />" + $previousMessage.find('.message-content').html());
+  $newMessage.attr('data-oldest-time', $previousMessage.attr('data-oldest-time'));
   $previousMessage.hide();
 }
 

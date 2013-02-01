@@ -12,7 +12,7 @@ $(function() {
 
       var event_id = $(".message-list").attr("data-id");
       var last_message_time = $(".message").length > 0
-                ? $(".message:last").attr("data-time")
+                ? $(".message:last").attr("data-oldest-time")
                 : "0";
 
       // currently loading new data so prevent this from being fired
