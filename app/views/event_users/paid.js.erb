@@ -1,4 +1,3 @@
-console.log("FUCK YOU")
 $('.unpaid').remove();
-$('#user-status-<%= @event_user.member.id %>').html('<%= distance_of_time_in_words_to_now @event.paid_at(@event_user.member) %> ago');
-// $('.payment-links').html('<%= render partial: "users/mark_payment_links", locals: { event: @event, user: @event_user.member } %>');
+$('#user-status-<%= @event_user.member.id %>').html('<%= j distance_of_time_in_words_to_now @event.paid_at(@event_user.member) %> ago');
+$('#payment-links').html('<%= link_to "Mark Unpaid", unpaid_event_event_user_path(@event, @event.event_user(@event_user.member)), class: "btn btn-success btn-block", method: :put, remote: true %>');

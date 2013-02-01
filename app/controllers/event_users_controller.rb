@@ -68,8 +68,8 @@ class EventUsersController < ApplicationController
     payment.update_attributes(paid_at: Time.now)
     @event_user.update_attributes(paid_at: Time.now)
     respond_to do |format|
-      format.html { redirect_to admin_event_path(@event) }
       format.js
+      format.html { redirect_to admin_event_path(@event) }
     end
   end
 
@@ -78,8 +78,8 @@ class EventUsersController < ApplicationController
     Payment.where(payer_id: @event_user.member.id).first.delete
     @event_user.update_attributes(paid_at: nil)
     respond_to do |format|
-      format.html { redirect_to admin_event_path(@event) }
       format.js
+      format.html { redirect_to admin_event_path(@event) }
     end
   end
 
