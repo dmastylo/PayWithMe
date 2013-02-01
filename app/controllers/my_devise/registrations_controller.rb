@@ -20,10 +20,14 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
     if signed_in?
       user = current_user
       user.update_attributes!(params[:user])
-      user.complete_registration
 
       if user.save
-        flash[:success] = "Account registration successfully completed!"
+        if user.password.present?
+          flash[:success] = "Account registration successfully completed!"
+          user.complete_registration
+        else
+          flash[:success] = "Name successfully changed!"
+        end
         sign_in user, bypass: true
         redirect_to after_sign_in_path_for(resource)
       else
