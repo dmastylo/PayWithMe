@@ -58,20 +58,20 @@
         <div class="control-group">
           <%= f.label :profile_image, class: 'control-label' %>
           <div class="controls">
-            <%= f.hidden_field :profile_image_option, id: "user_profile_image" %>
-            <div class="btn-group input-block-level" id="user_profile_image_btn_group" data-toggle="buttons-radio">
-              <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :gravatar %>" data-value="gravatar">Gravatar</button>
-              <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :url %>" data-value="url">URL</button>
-              <button type="button" class="btn third last <%= "active" if current_user.profile_image_type == :upload %>" data-value="upload">Image Upload</button>
+            <%= f.hidden_field :profile_image_type %>
+            <div class="btn-group input-block-level" id="user_profile_image_type_btn_group" data-toggle="buttons-radio">
+              <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :gravatar %>" data-value="gravatar" data-name="gravatar">Gravatar</button>
+              <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :url %>" data-value="url" data-name="url">URL</button>
+              <button type="button" class="btn third last <%= "active" if current_user.profile_image_type == :upload %>" data-value="upload" data-name="upload">Image Upload</button>
             </div>
 
-            <div class="user_profile_image_option push-top" id="user_profile_image_gravatar">
+            <div class="user_profile_image_type_option btn_group_option push-top" id="user_profile_image_type_gravatar">
               Your gravatar:<br />
               <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
               <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top input-block-level" %>
             </div>
 
-            <div class="user_profile_image_option push-top" id="user_profile_image_url">
+            <div class="user_profile_image_type_option btn_group_option push-top" id="user_profile_image_type_url">
               <% if current_user.profile_image_url.present? %>
                 <div class="push-bottom">
                   Current URL:
@@ -88,7 +88,7 @@
               </div>
             </div>
             
-            <div class="user_profile_image_option push-top" id="user_profile_image_upload">
+            <div class="user_profile_image_type_option btn_group_option push-top" id="user_profile_image_type_upload">
               <% if current_user.profile_image.present? %>
                 <div class="push-bottom">
                   Current uploaded image:
@@ -128,22 +128,7 @@
   <script type="text/javascript">
     $(document).ready(function()
     {
-      $("#user_profile_image_btn_group button").click(function()
-      {
-        var $this = $(this);
-        var $input = $("#user_profile_image");
-        var value = $this.data("value");
-
-        // Set the hidden field
-        $input.val(value);
-
-        // Show the hidden box
-        $(".user_profile_image_option").hide();
-        $("#user_profile_image_"+value).show();
-      });
-
-      $("#user_profile_image_<%= current_user.profile_image_type %>").show();
-      $("")
+      $("#user_profile_image_type").buttonGroup();
     });
   </script>
 <% end %>

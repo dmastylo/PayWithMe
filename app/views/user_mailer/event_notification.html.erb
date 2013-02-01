@@ -4,6 +4,10 @@
 
     <p>You've been invited! <%= @event.organizer.first_name %> has requested that you attend <%= @event.title %>.</p>
 
-    <p><%= link_to image_tag(asset_url('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
+    <p>
+    	<%= link_to image_tag(asset_url('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %>
+	</p>
+    <small>(<%= link_to 'Click here if the above link doesn\'t work', event_url(@event, guest_params(@user)) %>)</small>
+    <p></p>
   </td>
 </tr>

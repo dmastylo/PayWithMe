@@ -37,8 +37,8 @@ class User < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_option, :profile_image_url, :time_zone
-  attr_accessor :profile_image_option
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone
+  attr_accessor :profile_image_type
   has_attached_file :profile_image
 
   # Validations
@@ -69,6 +69,8 @@ class User < ActiveRecord::Base
   has_many :received_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
   has_many :sent_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
   has_and_belongs_to_many :subject_news_items, class_name: "NewsItem"
+  belongs_to :creator, class_name: "User"
+  has_many :created_users, class_name: "User", foreign_key: "creator_id"
 
   # Scopes
   # ========================================================
@@ -82,7 +84,9 @@ class User < ActiveRecord::Base
   # Profile Image
   # ========================================================
   def profile_image_type
-    if profile_image.present?
+    if @profile_image_type.present?
+      @profile_image_type
+    elsif profile_image.present?
       :upload
     elsif profile_image_url.present?
       :url
@@ -93,8 +97,9 @@ class User < ActiveRecord::Base
 
   # Static functions
   # ========================================================
-  # Returns a list of users from email addresses, creating stub units as necessary
-  def self.from_params(params)
+  # Returns a list of users from email addresses,
+  # creating stub units as necessary
+  def self.from_params(params, creator=nil)
     return [] if params.nil? || params.empty?
     params = ActiveSupport::JSON.decode(params)
     users = []
@@ -102,7 +107,7 @@ class User < ActiveRecord::Base
     params.each do |email|
       user = User.find_by_email(email)
       if user.nil?
-        user = User.create_stub(email)
+        user = User.create_stub(email, creator)
       end
 
       users.push user
@@ -111,11 +116,12 @@ class User < ActiveRecord::Base
     users.uniq
   end
 
-  def self.create_stub(email)
+  def self.create_stub(email, creator=nil)
     user = User.new(email: email)
     user.stub = true
     user.save
     user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s}#{pepper}")
+    user.creator_id = creator.id if creator.present?
     user.save
     user
   end
@@ -273,18 +279,32 @@ class User < ActiveRecord::Base
     self.member_events.where('events.due_at < ?', Time.now).order("events.due_at DESC").delete_if { |event| event.organizer == self }
   end
 
+  # Stub user
+  def complete_registration
+    if stub?
+      self.guest_token = nil
+      self.toggle(:stub)
+      self.completed_at = Time.now
+    end
+  end
+
+  def complete_registration!
+    complete_registration
+    save
+  end
+
 private
   def set_profile_image
-    return unless self.profile_image_option.present?
+    return unless self.profile_image_type.present?
     
-    if self.profile_image_option != "url"
+    if self.profile_image_type != "url"
       self.profile_image_url = nil
     end
-    if self.profile_image_option != "upload"
+    if self.profile_image_type != "upload"
       self.profile_image = nil
     end
 
-    profile_image_option = nil
+    profile_image_type = nil
   end
 
   def set_stub

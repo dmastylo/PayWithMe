@@ -1,114 +1,104 @@
 <% provide(:title, @event.title) %>
-<div class="row">
-  <div class="span9">
-    <div class="page-header">
-      <h2>
-        <%= @event.title %>
-        <% if @event.public? %>
-          <i class="icon-globe" rel="tooltip" title="Public event" data-placement="right"></i>
-        <% else %>
-          <i class="icon-lock" rel="tooltip" title="Private event" data-placement="right"></i>
-        <% end %>
-      </h2>
+<div class="event-show">
+  <div class="row">
+    <div class="span9">
+      <div class="page-header">
+        <h2>
+          <%= @event.title %>
+          <% if @event.public? %>
+            <i class="icon-globe" rel="tooltip" title="Public event" data-placement="right"></i>
+          <% else %>
+            <i class="icon-lock" rel="tooltip" title="Private event" data-placement="right"></i>
+          <% end %>
+        </h2>
+      </div>
     </div>
+    <% if !signed_in? %>
+      <div class="span3">
+        <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top" %>
+      </div>
+    <% elsif current_user == @event.organizer %>
+      <div class="span3">
+        <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title", rel: "tooltip", title: "Manage your event and view statistics" %>
+      </div>
+    <% elsif @event.public? && !@event.members.include?(current_user) %>
+      <div class="span3">
+        <%= form_for [@event, @event_user] do |f| %>
+            <%= f.hidden_field :event_id, :value => @event.id %>
+            <%= f.hidden_field :user_id, :value => current_user.id %>
+            <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block pull-right push-top" %>
+        <% end %>
+      </div>
+    <% end %>
   </div>
-  <% if !signed_in? %>
-    <div class="span3">
-      <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top" %>
-    </div>
-  <% elsif current_user == @event.organizer %>
-    <div class="span3">
-      <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title", rel: "tooltip", title: "Manage your event and view statistics" %>
-    </div>
-  <% elsif @event.public? && !@event.members.include?(current_user) %>
-    <div class="span3">
-      <%= form_for [@event, @event_user] do |f| %>
-          <%= f.hidden_field :event_id, :value => @event.id %>
-          <%= f.hidden_field :user_id, :value => current_user.id %>
-          <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block pull-right push-top" %>
-      <% end %>
-    </div>
-  <% end %>
-</div>
-<div class="row">
-  <div class="span5">
-    <h3>Event Details</h3>
-    <div class="event-image <%= "default" if @event.image_type == :default_image %>" style="background-image: url('<%= event_image_path(@event, :full) %>');"></div>
-    <div class="well event-description">
-      <% if @event.description.present? %>
-        <div class="quarter"><strong>Description:</strong></div>
-        <div class="three-quarters"><%= @event.description %></div>
-        <div class="clearfix"></div>
-      <% end %>
-      <% unless @event.fundraiser? %>
-        <% if @event.divide_total? %>
-          <div class="quarter"><strong>Total Goal</strong></div>
-          <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
-        <% elsif @event.divide_per_person? %>
-          <div class="quarter"><strong>Per User Goal</strong></div>
-          <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
+  <div class="row">
+    <div class="span5">
+      <h3>Event Details</h3>
+      <div class="image <%= "default" if @event.image_type == :default_image %>" style="background-image: url('<%= event_image_path(@event, :full) %>');"></div>
+      <div class="well description">
+        <% if @event.description.present? %>
+          <div class="quarter"><strong>Description:</strong></div>
+          <div class="three-quarters"><%= @event.description %></div>
+          <div class="clearfix"></div>
         <% end %>
-      <% end %>
-      <div class="quarter"><strong>Money Due at</strong></div>
-      <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
-      <div class="clearfix"></div>
-    </div>
+        <% unless @event.fundraiser? %>
+          <% if @event.divide_total? %>
+            <div class="quarter"><strong>Total Goal</strong></div>
+            <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+          <% elsif @event.divide_per_person? %>
+            <div class="quarter"><strong>Per User Goal</strong></div>
+            <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
+          <% end %>
+        <% end %>
+        <div class="quarter"><strong>Money Due at</strong></div>
+        <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
+        <div class="clearfix"></div>
+      </div>
 
-    <h3>Organizer</h3>
-    <div class="well">
-      <div class="event-members">
-        <ul class="member-list">
+      <h3>Organizer</h3>
+      <div class="well">
+        <ul class="members">
           <%= render @event.organizer %>
         </ul>
       </div>
-    </div>
 
-    <h3>Guest List</h3>
-    <div class="well">
-      <div class="event-members">
+      <h3>Guest List</h3>
+      <div class="well">
         <% if @event.paying_members.any? %>
-          <ul class="member-list">
+          <ul class="members">
             <%= render partial: 'users/user', collection: @event.paying_members, as: :user %>
           </ul>
         <% else %>
           There are no members. Add some!
         <% end %>
       </div>
-    </div>
-    <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
-    <% elsif @event_user.paid? %>
-      <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
-    <% else %>
-      <% if @event.send_with_paypal? %>
-        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With PayPal", pay_event_user_path(@event_user, method: PaymentMethod::MethodType::PAYPAL), class: "btn btn-success btn-block push-bottom", method: :post %>
-      <% end %>
-      <% if @event.send_with_dwolla? %>
-        <%= link_to "Pay #{humanized_money_with_symbol @event.split_amount} With Dwolla", pin_event_user_path(@event_user), class: "btn btn-success btn-block" %>
-      <% end %>
-    <% end %>
-  </div>
-  <div class="span7">
-    <h3>Chat Board</h3>
-    <div class="well">
-      <% if signed_in? %>
-        <div class="new-message-form">
-          <h4>Leave Message</h4>
-          <%= form_for [@event, @message], remote: true do |f| %>
-            <%= f.text_area :message, class: "input-block-level message-text-field", rows: "3", placeholder: "Compose a message..." %>
-            <%= f.submit "Post Message", class: "post-message btn btn-block" %>
-          <% end %>
-        </div>
-      <% end %>
-      <ul class="message-list" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
-        <% if @messages.any? %>
-          <%= render @messages %>
-          <% if @messages_count > Figaro.env.chat_msg_per_page.to_i %>
-            <span class="load-new-msgs">Loading new messages...</span>
-          <% end %>
-        <% else %>
-          <span class="no-messages">There are no messages.</span>
+      <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
+      <% elsif @event_user.paid? %>
+        <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block" %>
+      <% else %>
+        <% if @event.send_with_paypal? %>
+          <%= event_user_pay_button(@event_user, "PayPal") %>
         <% end %>
-      </ul>
+        <% if @event.send_with_dwolla? %>
+          <%= event_user_pay_button(@event_user, "Dwolla") %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="span7">
+      <h3>Chat Board</h3>
+      <div class="well">
+        <%= render 'messages/form', event: @event, message: @message if signed_in? %>
+        <ul class="messages" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
+          <% if @messages.any? %>
+            <%= render @messages %>
+            <% if @messages_count > Figaro.env.chat_msg_per_page.to_i %>
+              <span class="load-messages">Loading new messages...</span>
+            <% end %>
+          <% else %>
+            <span class="no-messages">There are no messages.</span>
+          <% end %>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
