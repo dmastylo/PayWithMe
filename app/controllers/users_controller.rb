@@ -13,12 +13,12 @@ class UsersController < ApplicationController
         @past_public_and_shared_events = current_user.past_events
     else
         # Upcoming Events
-        upcoming_public_events = @user.upcoming_events.where(privacy_type: Event::PrivacyType::Public)
+        upcoming_public_events = @user.upcoming_events.where(privacy_type: Event::PrivacyType::PUBLIC)
         upcoming_shared_events = @user.upcoming_events.merge current_user.upcoming_events.select { |your_member_event| @user.upcoming_events.include? your_member_event }
         @upcoming_public_and_shared_events = upcoming_public_events | upcoming_shared_events
 
         # Past Events
-        past_public_events = @user.past_events.where(privacy_type: Event::PrivacyType::Public)
+        past_public_events = @user.past_events.where(privacy_type: Event::PrivacyType::PUBLIC)
         past_shared_events = @user.past_events.merge current_user.past_events.select { |your_member_event| @user.past_events.include? your_member_event }
         @past_public_and_shared_events = past_public_events | past_shared_events
     end
