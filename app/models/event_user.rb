@@ -16,7 +16,7 @@
 class EventUser < ActiveRecord::Base
   
   # Accessible attributes
-  # attr_accessible :amount, :due_at, :event_id, :paid_at, :user_id
+  attr_accessible :amount, :due_at, :event_id, :paid_at, :user_id
   monetize :amount_cents, allow_nil: true
 
   # Relationships

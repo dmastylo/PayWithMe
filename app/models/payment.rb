@@ -20,7 +20,7 @@
 class Payment < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :error_message
+  attr_accessible :error_message, :payer_id, :payee_id, :event_id, :payment_method, :amount_cents, :due_at, :requested_at, :event_user_id
   attr_accessor :error_message
   monetize :amount_cents, allow_nil: true
 
@@ -93,30 +93,32 @@ class Payment < ActiveRecord::Base
     #     :back_to_event
     #   end
     # else
-    #   # Defaults to PayPal
-    #   recipients = [
-    #     {
-    #       email: Figaro.env.paypal_email,
-    #       amount: event.our_fee_amount.to_f,
-    #       primary: false
-    #     },
-    #     {
-    #       email: payee.email,
-    #       amount: event.send_amount.to_f,
-    #       primary: true
-    #     }
-    #   ]
+      # Defaults to PayPal
+      # recipients = [
+      #   # {
+      #   #   email: Figaro.env.paypal_email,
+      #   #   amount: event.our_fee_amount.to_f,
+      #   #   primary: false
+      #   # },
+      #   {
+      #     email: payee.email,
+      #     amount: event.send_amount.to_f
+      #     # primary: true
+      #   }
+      # ]
 
-    #   gateway = Payment.paypal_gateway
-    #   response = gateway.setup_purchase(
-    #     return_url: Rails.application.routes.url_helpers.event_url(event_id, success: 1),
-    #     cancel_url: Rails.application.routes.url_helpers.event_url(event_id, cancel: 1),
-    #     ipn_notification_url: Rails.application.routes.url_helpers.ipn_event_user_url(event_user_id),
-    #     receiver_list: recipients,
-    #     fees_payer: "PRIMARYRECEIVER"
-    #   )
+      # gateway = Payment.paypal_gateway
+      # response = gateway.setup_purchase(
+      #   return_url: Rails.application.routes.url_helpers.event_url(event_id, success: 1),
+      #   cancel_url: Rails.application.routes.url_helpers.event_url(event_id, cancel: 1),
+      #   ipn_notification_url: Rails.application.routes.url_helpers.ipn_event_user_url(event_user_id),
+      #   receiver_list: recipients,
+      #   # fees_payer: "PRIMARYRECEIVER"
+      # )
 
-    #   gateway.redirect_url_for(response["payKey"])
+      # raise response.to_yaml
+
+      # gateway.redirect_url_for(response["payKey"])
     # end
   end
 
@@ -130,11 +132,12 @@ class Payment < ActiveRecord::Base
 
 private
   def self.paypal_gateway
+    appid = Rails.env.production? ? Figaro.env.paypal_appid : Figaro.env.paypal_sandbox_appid
     ActiveMerchant::Billing::PaypalAdaptivePayment.new(
       login: Figaro.env.paypal_username,
       password: Figaro.env.paypal_password,
       signature: Figaro.env.paypal_signature,
-      appid: Figaro.env.paypal_sandbox_appid
+      appid: appid
     )
   end
 end
