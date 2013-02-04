@@ -4,7 +4,7 @@
     <% if @event.paid?(user) %>
       <%= distance_of_time_in_words_to_now @event.paid_at(user) %> ago
     <% else %>
-      <span class="unpaid">Unpaid</span>
+      <span class="unpaid" id="user-unpaid-<%= user.id %>">Unpaid</span>
     <% end %>
   </td>
   <td>
