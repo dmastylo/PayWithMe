@@ -22,7 +22,6 @@ describe EventUser do
     @user = FactoryGirl.create(:user)
     @event.add_member(@user)
     @event_user = @event.event_user(@user)
-    raise @event_user.to_yaml
   end
   subject { @event_user }
   it { should be_valid }
@@ -59,6 +58,15 @@ describe EventUser do
     it { should have_many(:payments) }
     it { should belong_to(:user) }
     it { should belong_to(:event) }
+  end
+
+  describe "callbacks" do
+    it "should have set due_at" do
+      @event_user.due_at.should == @event.due_at
+    end
+    it "should have set the amount" do
+      @event_user.amount_cents.should == @event.split_amount_cents
+    end
   end
 
   describe "pay! method" do

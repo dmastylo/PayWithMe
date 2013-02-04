@@ -2,11 +2,13 @@
 #
 # Table name: payment_methods
 #
-#  id             :integer          not null, primary key
-#  event_id       :integer
-#  payment_method :integer
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
+#  id                  :integer          not null, primary key
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  static_fee_cents    :integer
+#  percent_fee         :decimal(, )
+#  minimum_fee_cents   :integer
+#  fee_threshold_cents :integer
 #
 
 class PaymentMethod < ActiveRecord::Base

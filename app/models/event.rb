@@ -9,6 +9,7 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  division_type      :integer
+#  fee_type           :integer
 #  total_amount_cents :integer
 #  split_amount_cents :integer
 #  organizer_id       :integer
@@ -76,21 +77,21 @@ class Event < ActiveRecord::Base
 
   # Money definitions
   # ========================================================
-  def receive_amount_cents
-    if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || send_amount_cents.nil?
-      nil
-    else
-      split_amount_cents
-    end
-  end
+  # def receive_amount_cents
+  #   if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || send_amount_cents.nil?
+  #     nil
+  #   else
+  #     split_amount_cents
+  #   end
+  # end
 
-  def send_amount_cents
-    if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || split_amount_cents.nil?
-      nil
-    else
-      ((split_amount_cents + Figaro.env.fee_static.to_f * 100.0) / (1.0 - Figaro.env.fee_rate.to_f)).floor
-    end
-  end
+  # def send_amount_cents
+  #   if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || split_amount_cents.nil?
+  #     nil
+  #   else
+  #     ((split_amount_cents + Figaro.env.fee_static.to_f * 100.0) / (1.0 - Figaro.env.fee_rate.to_f)).floor
+  #   end
+  # end
 
   def total_amount_cents
     if division_type == DivisionType::TOTAL
@@ -112,14 +113,14 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def our_fee_amount_cents
-    0
-    # if send_amount_cents.present?
-    #   (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
-    # else
-    #   nil
-    # end
-  end
+  # def our_fee_amount_cents
+  #   0
+  #   # if send_amount_cents.present?
+  #   #   (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
+  #   # else
+  #   #   nil
+  #   # end
+  # end
   
   def money_collected_cents
     if split_amount_cents.present?
@@ -293,7 +294,7 @@ class Event < ActiveRecord::Base
     end
 
     delay.send_invitation_emails
-    set_event_user_attributes(exclude_from_notifications)
+    # set_event_user_attributes(exclude_from_notifications)
   end
 
   # Adds members and deletes any not in the set
@@ -317,15 +318,15 @@ class Event < ActiveRecord::Base
     remove_members([member_to_remove])
   end
 
-  def set_event_user_attributes(exclude_from_notifications)
-    self.event_users.each do |event_user|
-      if event_user.user != exclude_from_notifications
-        event_user.due_at = self.due_at
-        event_user.amount_cents = self.send_amount_cents
-        event_user.save
-      end
-    end
-  end
+  # def set_event_user_attributes(exclude_from_notifications)
+  #   self.event_users.each do |event_user|
+  #     if event_user.user != exclude_from_notifications
+  #       event_user.due_at = self.due_at
+  #       event_user.amount_cents = self.send_amount_cents
+  #       event_user.save
+  #     end
+  #   end
+  # end
 
   def send_invitation_emails
     self.event_users.each do |event_user|

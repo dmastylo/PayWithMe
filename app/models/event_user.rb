@@ -16,7 +16,7 @@
 class EventUser < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :amount, :due_at, :event_id, :paid_at, :user_id
+  attr_accessible :event_id, :user_id
   monetize :amount_cents, allow_nil: true
 
   # Relationships
@@ -32,6 +32,8 @@ class EventUser < ActiveRecord::Base
 
   # Callbacks
   before_validation :copy_event_attributes
+  after_initialize :copy_event_attributes
+  after_save :copy_event_attributes
 
   def paid?
   	paid_at.present?
@@ -53,6 +55,10 @@ class EventUser < ActiveRecord::Base
 
   def organizer?
     self.event.present? && self.event.organizer == self.user
+  end
+
+  def pay!
+
   end
 
 private

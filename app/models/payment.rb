@@ -2,26 +2,33 @@
 #
 # Table name: payments
 #
-#  id             :integer          not null, primary key
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  requested_at   :datetime
-#  paid_at        :datetime
-#  due_at         :datetime
-#  payer_id       :integer
-#  payee_id       :integer
-#  event_id       :integer
-#  amount_cents   :integer
-#  event_user_id  :integer
-#  payment_method :integer
+#  id                         :integer          not null, primary key
+#  created_at                 :datetime         not null
+#  updated_at                 :datetime         not null
+#  requested_at               :datetime
+#  paid_at                    :datetime
+#  due_at                     :datetime
+#  payer_id                   :integer
+#  payee_id                   :integer
+#  event_id                   :integer
+#  amount_cents               :integer
+#  event_user_id              :integer
+#  transaction_id             :string(255)
+#  payment_method             :integer
+#  processor_fee_amount_cents :integer
+#  our_fee_amount_cents       :integer
 #
 
 class Payment < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :error_message, :payer_id, :payee_id, :event_id, :payment_method, :amount_cents, :due_at, :requested_at, :event_user_id
+  # There is no available create route right now so we
+  # can get away with things that shouldn't be accessible
+  attr_accessible :error_message, :payer_id, :payee_id, :event_id, :payment_method, :amount_cents, :processor_fee_amount_cents, :our_fee_amount_cents, :due_at, :requested_at, :event_user_id
   attr_accessor :error_message
   monetize :amount_cents, allow_nil: true
+  monetize :processor_fee_amount_cents, allow_nil: true
+  monetize :our_fee_amount_cents, allow_nil: true
 
   # Relationships
   belongs_to :payer, class_name: "User"
@@ -37,6 +44,8 @@ class Payment < ActiveRecord::Base
   validates :due_at, presence: true
   validates :event_user_id, presence: true
   validates :amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }
+  validates :processor_fee_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :our_fee_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :payment_method, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2 }, if: :paid?
   validates :transaction_id, presence: true, if: :paid?
 
@@ -63,10 +72,10 @@ class Payment < ActiveRecord::Base
   end
 
   def pay!(options={})
-    self.paid_at = Time.now
-    self.transaction_id = "1234567890"
-    self.payment_method = options[:payment_method] || PaymentMethod::MethodType::CASH
-    self.save
+    # self.paid_at = Time.now
+    # self.transaction_id = "1234567890"
+    # self.payment_method = options[:payment_method] || PaymentMethod::MethodType::CASH
+    # self.save
     # if self.paid_at.present?
     #   self.error_message = "You have already paid!"
     #   return :back_to_event
@@ -93,31 +102,31 @@ class Payment < ActiveRecord::Base
     #   end
     # else
       # Defaults to PayPal
-      # recipients = [
-      #   # {
-      #   #   email: Figaro.env.paypal_email,
-      #   #   amount: event.our_fee_amount.to_f,
-      #   #   primary: false
-      #   # },
-      #   {
-      #     email: payee.email,
-      #     amount: event.send_amount.to_f
-      #     # primary: true
-      #   }
-      # ]
+      recipients = [
+        # {
+        #   email: Figaro.env.paypal_email,
+        #   amount: event.our_fee_amount.to_f,
+        #   primary: false
+        # },
+        {
+          email: payee.email,
+          amount: event.send_amount.to_f
+          # primary: true
+        }
+      ]
 
-      # gateway = Payment.paypal_gateway
-      # response = gateway.setup_purchase(
-      #   return_url: Rails.application.routes.url_helpers.event_url(event_id, success: 1),
-      #   cancel_url: Rails.application.routes.url_helpers.event_url(event_id, cancel: 1),
-      #   ipn_notification_url: Rails.application.routes.url_helpers.ipn_event_user_url(event_user_id),
-      #   receiver_list: recipients,
-      #   # fees_payer: "PRIMARYRECEIVER"
-      # )
+      gateway = Payment.paypal_gateway
+      response = gateway.setup_purchase(
+        return_url: Rails.application.routes.url_helpers.event_url(event_id, success: 1),
+        cancel_url: Rails.application.routes.url_helpers.event_url(event_id, cancel: 1),
+        ipn_notification_url: Rails.application.routes.url_helpers.ipn_event_user_url(event_user_id),
+        receiver_list: recipients,
+        # fees_payer: "PRIMARYRECEIVER"
+      )
 
-      # raise response.to_yaml
+      raise response.to_yaml
 
-      # gateway.redirect_url_for(response["payKey"])
+      gateway.redirect_url_for(response["payKey"])
     # end
   end
 
