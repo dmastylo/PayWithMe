@@ -8,7 +8,7 @@ describe "Event" do
 
     before do
       @public_event = FactoryGirl.create(:event)
-      @private_event = FactoryGirl.create(:event, privacy_type: Event::PrivacyType::Private)
+      @private_event = FactoryGirl.create(:event, privacy_type: Event::PrivacyType::PRIVATE)
     end
     
     describe "not signed in" do

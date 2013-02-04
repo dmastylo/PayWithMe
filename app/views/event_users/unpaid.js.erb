@@ -1,2 +1,12 @@
 $('#user-status-<%= @event_user.member.id %>').html('<span class="unpaid">Unpaid</span>');
 $('#payment-links-<%= @event_user.member.id %>').html('<%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(@event_user.member)), class: "btn btn-success btn-block", method: :put, remote: true %>');
+$('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
+var money_collected = <%= @event.money_collected %>;
+if (money_collected === 0)
+{
+  $('.progress').remove();
+}
+else
+{
+  $('.progress').html('<div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div>');
+}
