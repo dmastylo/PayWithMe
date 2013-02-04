@@ -22,9 +22,11 @@ describe EventUser do
     @user = FactoryGirl.create(:user)
     @event.add_member(@user)
     @event_user = @event.event_user(@user)
+    raise @event_user.to_yaml
   end
   subject { @event_user }
   it { should be_valid }
+  it { should be_member }
 
   describe "attributes" do
     [:event_id,
@@ -40,7 +42,7 @@ describe EventUser do
   describe "validations" do
     it { should validate_presence_of(:event_id) }
     it { should validate_presence_of(:user_id) }
-    it { should validate_presence_of(:due_at) }
+    # it { should validate_presence_of(:due_at) }
     # it { should allow_value("$1234").for(:amount) }
     # it { should_not allow_value("abcd").for(:amount) }
   end
