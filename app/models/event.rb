@@ -417,10 +417,6 @@ class Event < ActiveRecord::Base
     paid_members.count > 0
   end
 
-  def has_passed?
-    Time.now < self.due_at
-  end
-
 private
   def clear_amounts
     if division_type != DivisionType::Split
