@@ -9,6 +9,7 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  division_type      :integer
+#  fee_type           :integer
 #  total_amount_cents :integer
 #  split_amount_cents :integer
 #  organizer_id       :integer
@@ -25,7 +26,7 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :fee_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw
   attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
@@ -39,6 +40,7 @@ class Event < ActiveRecord::Base
   # ========================================================
   validates :organizer_id, presence: true
   validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3, message: "is an invalid division type" }
+  validates :fee_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2, message: "is an invalid fee type" }
   validates :privacy_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2, message: "is an invalid privacy type" }
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long" }
   validates :due_at, presence: true
@@ -77,25 +79,29 @@ class Event < ActiveRecord::Base
   # Money definitions
   # ========================================================
   def receive_amount_cents
-    if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || send_amount_cents.nil?
+    if division_type == DivisionType::Fundraise || paying_members.size == 0 || send_amount_cents.nil?
       nil
+    elsif fee_type == FeeType::OrganizerPays
+      (paying_members.size * (send_amount_cents * (1 - Figaro.env.fee_rate.to_f) - Figaro.env.fee_static.to_f * 100.0)).floor
     else
       split_amount_cents
     end
   end
 
   def send_amount_cents
-    if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || split_amount_cents.nil?
+    if division_type == DivisionType::Fundraise || paying_members.size == 0 || split_amount_cents.nil?
       nil
+    elsif fee_type == FeeType::OrganizerPays
+      split_amount_cents
     else
-      ((split_amount_cents + Figaro.env.fee_static.to_f * 100.0) / (1.0 - Figaro.env.fee_rate.to_f)).floor
+      ((split_amount_cents + Figaro.env.fee_static.to_f * 100.0) / (1.0 - Figaro.env.fee_rate.to_f)).ceil
     end
   end
 
   def total_amount_cents
-    if division_type == DivisionType::TOTAL
+    if division_type == DivisionType::Total
       super
-    elsif paying_members.size == 0 || division_type == DivisionType::FUNDRAISE || division_type.nil? || split_amount_cents.nil?
+    elsif paying_members.size == 0 || division_type == DivisionType::Fundraise || division_type.nil? || split_amount_cents.nil?
       nil
     else
       split_amount_cents * paying_members.size
@@ -103,9 +109,9 @@ class Event < ActiveRecord::Base
   end
 
   def split_amount_cents
-    if division_type == DivisionType::SPLIT
+    if division_type == DivisionType::Split
       super
-    elsif paying_members.size == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE
+    elsif paying_members.size == 0 || division_type.nil? || division_type == DivisionType::Fundraise
       nil
     else
       total_amount_cents / paying_members.size
@@ -113,12 +119,11 @@ class Event < ActiveRecord::Base
   end
 
   def our_fee_amount_cents
-    0
-    # if send_amount_cents.present?
-    #   (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
-    # else
-    #   nil
-    # end
+    if send_amount_cents.present?
+      (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
+    else
+      nil
+    end
   end
   
   def money_collected_cents
@@ -130,25 +135,34 @@ class Event < ActiveRecord::Base
   # Division types
   # ========================================================
   def divide_total?
-    division_type == DivisionType::TOTAL
+    division_type == DivisionType::Total
   end
 
   def divide_per_person?
-    division_type == DivisionType::SPLIT
+    division_type == DivisionType::Split
   end
 
   def fundraiser?
-    division_type == DivisionType::FUNDRAISE
+    division_type == DivisionType::Fundraise
+  end
+
+  # Fee types
+  # ========================================================
+  def organizer_pays?
+    fee_type == FeeType::OrganizerPays
+  end
+
+  def members_pay?
+    fee_type == FeeType::MembersPay
   end
 
   # Privacy types
-  # ========================================================
   def public?
-    privacy_type == PrivacyType::PUBLIC
+    privacy_type == PrivacyType::Public
   end
 
   def private?
-    privacy_type == PrivacyType::PRIVATE
+    privacy_type == PrivacyType::Private
   end
 
   # Payment methods
@@ -195,13 +209,17 @@ class Event < ActiveRecord::Base
   # Constants
   # ========================================================
   class DivisionType
-    TOTAL = 1
-    SPLIT = 2
-    FUNDRAISE = 3
+    Total = 1
+    Split = 2
+    Fundraise = 3
+  end
+  class FeeType
+    OrganizerPays = 1
+    MembersPay = 2
   end
   class PrivacyType
-    PUBLIC = 1
-    PRIVATE = 2
+    Public = 1
+    Private = 2
   end
 
   # Virtual attributes
@@ -399,14 +417,18 @@ class Event < ActiveRecord::Base
     paid_members.count > 0
   end
 
+  def is_past?
+    Time.now > self.due_at
+  end
+
 private
   def clear_amounts
-    if division_type != DivisionType::SPLIT
+    if division_type != DivisionType::Split
       split_amount_cents = nil
       split_amount = nil
     end
 
-    if division_type != DivisionType::TOTAL
+    if division_type != DivisionType::Total
       total_amount_cents = nil
       total_amount = nil
     end

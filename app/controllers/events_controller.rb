@@ -116,7 +116,7 @@ private
   end
 
   def check_event_past
-    unless Time.now < @event.due_at
+    if @event.is_past?
       flash[:error] = "Can't edit an event that has already happened."
       redirect_to event_path(@event)
     end
