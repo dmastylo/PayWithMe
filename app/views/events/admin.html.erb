@@ -34,14 +34,14 @@
   </div>
   <div class="span4">
     <h3>Quick Statistics</h3>
-    <div class="well">
+    <div class="well" id="quick-statistics">
       <% if @event.paid_percentage > 0 %>
         <div class="progress">
           <div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div>
         </div>
       <% end %>
       <div class="quarter"><strong>Collected:</strong></div>
-      <div class="three-quarters"><%= humanized_money_with_symbol @event.money_collected %></div>
+      <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.money_collected %></div>
       <div class="clearfix"></div>
       <div class="quarter"><strong>Goal:</strong></div>
       <div class="three-quarters"><%= humanized_money_with_symbol @event.total_amount %></div>
