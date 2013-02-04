@@ -53,7 +53,7 @@ class Event < ActiveRecord::Base
   # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :member
+  has_many :members, class_name: "User", through: :event_users, source: :user
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
@@ -274,12 +274,12 @@ class Event < ActiveRecord::Base
 
   def paid_members
     paid_event_users = event_users.where("paid_at IS NOT NULL")
-    users = paid_event_users.collect { |event_user| event_user.member }
+    users = paid_event_users.collect { |event_user| event_user.user }
   end
 
   def unpaid_members
     unpaid_event_users = event_users.where("paid_at IS NULL")
-    users = unpaid_event_users.collect { |event_user| event_user.member }
+    users = unpaid_event_users.collect { |event_user| event_user.user }
   end
 
   def paid_percentage
@@ -337,7 +337,7 @@ class Event < ActiveRecord::Base
 
   def set_event_user_attributes(exclude_from_notifications)
     self.event_users.each do |event_user|
-      if event_user.member != exclude_from_notifications
+      if event_user.user != exclude_from_notifications
         event_user.due_at = self.due_at
         event_user.amount_cents = self.send_amount_cents
         event_user.save
@@ -347,8 +347,8 @@ class Event < ActiveRecord::Base
 
   def send_invitation_emails
     self.event_users.each do |event_user|
-      if !event_user.invitation_sent? && event_user.member != self.organizer
-        UserMailer.event_notification(event_user.member, self).deliver
+      if !event_user.invitation_sent? && event_user.user != self.organizer
+        UserMailer.event_notification(event_user.user, self).deliver
         event_user.toggle(:invitation_sent).save
       end
     end

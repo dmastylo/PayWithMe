@@ -12,7 +12,7 @@ class EventUsersController < ApplicationController
     # for some reason member_ids.include? does not work
     unless @event.members.include?(User.find(params[:event_user][:user_id]))
       @event_user = EventUser.create(params[:event_user])
-      NewsItem.create_for_new_event_member(@event, @event_user.member)
+      NewsItem.create_for_new_event_member(@event, @event_user.user)
       if @event_user.save
         @event.set_event_user_attributes(current_user)
 
@@ -72,7 +72,7 @@ class EventUsersController < ApplicationController
 
   # Mark user as unpaid if he/she paid with cash
   def unpaid
-    Payment.where(payer_id: @event_user.member.id).first.delete
+    Payment.where(payer_id: @event_user.user.id).first.delete
     @event_user.paid_at = nil
     @event_user.save
     redirect_to admin_event_path(@event)

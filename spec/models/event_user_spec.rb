@@ -22,6 +22,7 @@ describe EventUser do
     @user = FactoryGirl.create(:user)
     @event.add_member(@user)
     @event_user = @event.event_user(@user)
+    raise @event_user.to_yaml
   end
   subject { @event_user }
   it { should be_valid }
@@ -40,8 +41,9 @@ describe EventUser do
   describe "validations" do
     it { should validate_presence_of(:event_id) }
     it { should validate_presence_of(:user_id) }
-    it { should validate_presence_of(:amount_cents) }
     it { should validate_presence_of(:due_at) }
+    # it { should allow_value("$1234").for(:amount) }
+    # it { should_not allow_value("abcd").for(:amount) }
   end
 
   describe "mass assignment" do
@@ -49,6 +51,7 @@ describe EventUser do
       :invitation_sent,
       :visited_event].each do |attribute|
       it { should_not allow_mass_assignment_of(attribute) }
+    end
   end
 
   describe "relationships" do
@@ -62,16 +65,20 @@ describe EventUser do
       expect { @event_user.pay! }.to change(@user.sent_payments, :count).by(1)
     end
 
-    it "should create a full payment if amount unspecified" do
+    describe "amount unspecified" do
       before { @payment = @event_user.pay! }
-      expect { @payment.amount_cents.should == @event_user.amount_cents }
-      expect { @event_user.paid?.should be_true }
+      it "should create a full payment" do
+        expect { @payment.amount_cents.should == @event_user.amount_cents }
+        expect { @event_user.paid?.should be_true }
+      end
     end
 
-    it "should create a payment for a specific amount" do
+    describe "specific amount" do
       before { @payment = @event_user.pay!(@event_user.amount_cents / 2) }
-      expect { @payment.amount_cents.should == (@event_user.amount_cents / 2) }
-      expect { @event_user.paid?.should_not be_true }
+      it "should use that amount" do
+        expect { @payment.amount_cents.should == (@event_user.amount_cents / 2) }
+        expect { @event_user.paid?.should_not be_true }
+      end
     end
   end
 

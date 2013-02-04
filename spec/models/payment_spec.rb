@@ -48,15 +48,16 @@ describe Payment do
     it { should validate_presence_of(:event_id) }
     it { should validate_presence_of(:event_user_id) }
     it { should validate_presence_of(:event_user_id) }
-    it { should validate_presence_of(:payment_method) }
-    it { should validate_numericality_of(:payment_method) }
     it { should validate_presence_of(:amount) }
     it { should allow_value("$1234").for(:amount) }
     it { should_not allow_value("abcd").for(:amount) }
+    it { should_not validate_presence_of(:payment_method) }
+    it { should_not validate_numericality_of(:payment_method) }
 
     describe "after paid" do
       before { @payment.pay! }
-      it { should validate_presence_of(:paid_at) }
+      it { should validate_presence_of(:payment_method) }
+      it { should validate_numericality_of(:payment_method) }
       it { should validate_presence_of(:transaction_id) }
     end
   end
@@ -76,8 +77,8 @@ describe Payment do
   end
 
   describe "relationships" do
-    it { should belong_to(:payer).class_name("Payer") }
-    it { should belong_to(:payee).class_name("Payee") }
+    it { should belong_to(:payer).class_name("User") }
+    it { should belong_to(:payee).class_name("User") }
     it { should belong_to(:event) }
     it { should belong_to(:event_user) }
   end
