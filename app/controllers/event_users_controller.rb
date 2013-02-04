@@ -3,8 +3,9 @@ class EventUsersController < ApplicationController
   before_filter :event_public_or_user_organizes_event, only: [:create]
   before_filter :user_owns_event_user, only: [:pay, :pin]
   before_filter :valid_payment_method, only: [:pay]
-  before_filter :user_organizes_event, only: [:paid]
-  before_filter :event_owns_event_user, only: [:paid]
+  before_filter :user_organizes_event, only: [:paid, :unpaid]
+  before_filter :event_owns_event_user, only: [:paid, :unpaid]
+  before_filter :event_user_paid_with_cash, only: [:unpaid]
   skip_before_filter :verify_authenticity_token, only: [:ipn]
 
   def create
@@ -64,11 +65,22 @@ class EventUsersController < ApplicationController
 
   def paid
     payment = Payment.create_or_find_from_event_user(@event_user, PaymentMethod::MethodType::CASH)
-    payment.paid_at = Time.now
-    payment.save
-    @event_user.paid_at = Time.now
-    @event_user.save
-    redirect_to admin_event_path(@event)
+    payment.update_attributes(paid_at: Time.now)
+    @event_user.update_attributes(paid_at: Time.now)
+    respond_to do |format|
+      format.js
+      format.html { redirect_to admin_event_path(@event) }
+    end
+  end
+
+  # Mark user as unpaid if he/she paid with cash
+  def unpaid
+    Payment.where(payer_id: @event_user.member.id).first.delete
+    @event_user.update_attributes(paid_at: nil)
+    respond_to do |format|
+      format.js
+      format.html { redirect_to admin_event_path(@event) }
+    end
   end
 
 private
@@ -85,7 +97,7 @@ private
       # If user doesn't organize event, it must be public and the user_id must be equal to current_user
       if @event.public?
         if params[:event_user][:user_id].to_i != current_user.id
-          flash[:error] = "Trying to hack...? #{params[:event_user][:user_id]} #{current_user.id}"
+          flash[:error] = "Trying to hack...?" #{params[:event_user][:user_id]} #{current_user.id}"
           redirect_to root_path
         end
       else
@@ -98,6 +110,13 @@ private
   def event_owns_event_user
     @event_user = @event.event_users.find_by_id(params[:id])
     redirect_to root_path unless @event_user.present?
+  end
+
+  def event_user_paid_with_cash
+    if @event_user.payment.payment_method != PaymentMethod::MethodType::CASH
+      flash[:error] = "Can only mark users who paid with cash as unpaid."
+      redirect_to admin_event_path(@event)
+    end
   end
 
   def valid_payment_method

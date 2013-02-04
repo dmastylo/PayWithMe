@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130125223340) do
+ActiveRecord::Schema.define(:version => 20130201212652) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -228,6 +228,8 @@ ActiveRecord::Schema.define(:version => 20130125223340) do
     t.datetime "last_seen"
     t.string   "time_zone",                  :default => "Eastern Time (US & Canada)"
     t.string   "slug"
+    t.integer  "creator_id"
+    t.datetime "completed_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

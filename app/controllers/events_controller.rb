@@ -5,7 +5,7 @@ class EventsController < ApplicationController
   before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin]
   before_filter :check_organizer_accounts, only: [:show, :admin]
   before_filter :event_user_visit_true, only: [:show]
-  before_filter :check_for_payers, only: :destroy
+  before_filter :check_for_payers, only: [:destroy]
 
   def index
     @upcoming_events = current_user.upcoming_events
@@ -36,7 +36,7 @@ class EventsController < ApplicationController
   end
 
   def create
-    members_from_users = User.from_params(params[:event].delete(:members))
+    members_from_users = User.from_params(params[:event].delete(:members), current_user)
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
     @event = current_user.organized_events.new(params[:event])
 
@@ -69,7 +69,7 @@ class EventsController < ApplicationController
 
   def update
     if @event.has_passed?
-      members_from_users = User.from_params(params[:event].delete(:members))
+      members_from_users = User.from_params(params[:event].delete(:members), current_user)
       groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
       # raise [members_from_users, '=====', members_from_groups].to_yaml
       # @event = current_user.organized_events.new(params[:event])
@@ -81,11 +81,7 @@ class EventsController < ApplicationController
         @event.set_groups(groups)
 
         # For some reason, redirect_to @event doesn't work
-        redirect_to event_path(@event)
-      else
-        @member_emails = @event.members.collect { |member| member.email }
-        @group_ids = @event.groups.collect { |group| group.id }
-        render "edit"
+        redirect_to admin_event_path(@event)
       end
     else
       redirect_to event_path(@event)
@@ -113,7 +109,7 @@ private
   def check_for_payers
     unless @event.paid_members.empty?
       flash[:error] = "You can't delete an event with paying members!"
-      redirect_to event_path(@event)
+      redirect_to admin_event_path(@event)
     end
   end
 

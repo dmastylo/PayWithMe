@@ -29,7 +29,6 @@
 
 			if(this.checkbox)
 			{
-				console.log('test');
 				this.val = [];
 				var that = this;
 				this.$buttons.each(function()
