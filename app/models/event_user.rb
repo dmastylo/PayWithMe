@@ -25,7 +25,7 @@ class EventUser < ActiveRecord::Base
   has_many :payments
 
   # Validations
-  validates :due_at, presence: true
+  validates :due_at, presence: true, if: :member?
   validates :user_id, presence: true
   validates :event_id, presence: true
   # validates :amount, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :amount_present?
@@ -51,9 +51,13 @@ class EventUser < ActiveRecord::Base
     self.event.present? && self.event.organizer != self.user
   end
 
+  def organizer?
+    self.event.present? && self.event.organizer == self.user
+  end
+
 private
   def copy_event_attributes
-    if self.event.present?
+    if self.event.present? && self.member?
       self.due_at = self.event.due_at
       self.amount_cents = self.event.split_amount_cents
     end

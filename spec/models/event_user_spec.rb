@@ -22,7 +22,6 @@ describe EventUser do
     @user = FactoryGirl.create(:user)
     @event.add_member(@user)
     @event_user = @event.event_user(@user)
-    raise @event_user.to_yaml
   end
   subject { @event_user }
   it { should be_valid }
@@ -48,8 +47,8 @@ describe EventUser do
 
   describe "mass assignment" do
     [:paid_at,
-      :invitation_sent,
-      :visited_event].each do |attribute|
+     :invitation_sent,
+     :visited_event].each do |attribute|
       it { should_not allow_mass_assignment_of(attribute) }
     end
   end
