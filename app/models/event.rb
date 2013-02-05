@@ -127,6 +127,14 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def paypal_fee_split_amount_cents
+    # split_amount_cents * Figaro.env.paypal_fee_rate.to_f + Figaro.env.paypal_fee_static.to_f + our_fee_amount_cents
+  end
+
+  def dwolla_fee_split_amount_cents
+    # split_amount_cents + our_fee_amount_cents
+  end
+
   # Division types
   # ========================================================
   def divide_total?
