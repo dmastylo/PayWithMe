@@ -5,3 +5,25 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+PaymentMethod.create(
+  [
+    {
+      name: "Cash"
+    },
+    {
+      name: "PayPal",
+      static_fee_cents: 30,
+      percent_fee: 2.9,
+      minimum_fee_cents: 0,
+      fee_threshold_cents: 1000
+    },
+    {
+      name: "Dwolla",
+      static_fee_cents: 25,
+      percent_fee: 0,
+      minimum_fee_cents: 0,
+      fee_threshold_cents: 1000
+    }
+  ]
+)

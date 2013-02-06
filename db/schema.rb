@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130204224831) do
+ActiveRecord::Schema.define(:version => 20130206215552) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -65,7 +65,6 @@ ActiveRecord::Schema.define(:version => 20130204224831) do
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.integer  "division_type"
-    t.integer  "fee_type"
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
     t.integer  "organizer_id"
@@ -79,6 +78,11 @@ ActiveRecord::Schema.define(:version => 20130204224831) do
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
+
+  create_table "events_payment_methods", :force => true do |t|
+    t.integer "event_id"
+    t.integer "payment_method_id"
+  end
 
   create_table "friendly_id_slugs", :force => true do |t|
     t.string   "slug",                         :null => false
@@ -123,7 +127,6 @@ ActiveRecord::Schema.define(:version => 20130204224831) do
     t.string   "token_secret"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
-    t.string   "email"
   end
 
   create_table "messages", :force => true do |t|
@@ -165,14 +168,6 @@ ActiveRecord::Schema.define(:version => 20130204224831) do
     t.integer  "subject_id"
   end
 
-  create_table "nudges", :force => true do |t|
-    t.integer  "nudgee_id"
-    t.integer  "nudger_id"
-    t.integer  "event_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "payment_methods", :force => true do |t|
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
@@ -180,7 +175,7 @@ ActiveRecord::Schema.define(:version => 20130204224831) do
     t.decimal  "percent_fee"
     t.integer  "minimum_fee_cents"
     t.integer  "fee_threshold_cents"
-    t.integer  "payment_method"
+    t.string   "name"
   end
 
   create_table "payments", :force => true do |t|
