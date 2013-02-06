@@ -6,6 +6,7 @@ class EventsController < ApplicationController
   before_filter :check_organizer_accounts, only: [:show, :admin]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
+  before_filter :check_event_past, only: [:edit, :update]
 
   def index
     @upcoming_events = current_user.upcoming_events
@@ -76,10 +77,6 @@ class EventsController < ApplicationController
 
       # For some reason, redirect_to @event doesn't work
       redirect_to admin_event_path(@event)
-    else
-      @member_emails = @event.members.collect { |member| member.email }
-      @group_ids = @event.groups.collect { |group| group.id }
-      render "edit"
     end
   end
 
@@ -115,6 +112,13 @@ private
 
     if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
       flash[:error] = "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+    end
+  end
+
+  def check_event_past
+    unless @event.is_past?
+      flash[:error] = "Can't edit an event that has already happened."
+      redirect_to event_path(@event)
     end
   end
 end
