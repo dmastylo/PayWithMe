@@ -88,6 +88,21 @@
         </div>
       </div>
 
+      <%= f.label :privacy_type, "Event Privacy" %>
+      <%= f.hidden_field :privacy_type %>
+      <div class="btn-group input-block-level push-bottom" id="event_privacy_type_btn_group" data-toggle="buttons-radio">
+        <button type="button" class="btn half" data-name="private" data-value="1" title="Anyone can join and view the event.">Public Event</button>
+        <button type="button" class="btn half" data-name="public" data-value="2" title="Only invited can join and view the event.">Private Event</button>
+      </div>
+
+      <%= f.label :payment_methods_raw, "Accepted Payment Methods (Select One Or More)" %>
+      <%= f.hidden_field :payment_methods_raw %>
+      <div class="btn-group input-block-level push-bottom" id="event_payment_methods_raw_btn_group"  data-toggle="buttons-toggle">
+        <button type="button" class="btn third" data-name="cash" data-value="1" title="Manually mark cash payers as paid.">Cash</button>
+        <button type="button" class="btn third" data-name="paypal" data-value="2" title="You need a linked PayPal account.">PayPal</button>
+        <button type="button" class="btn third last" data-name="dwolla" data-value="3" title="You need a linked Dwolla account.">Dwolla</button>
+      </div>
+
       <div class="event_payment_methods_raw_option btn_group_option push-bottom" id="event_payment_methods_raw_paypal">
         <label>PayPal fee per person</label>
         <div class="input-prepend">
@@ -110,21 +125,6 @@
           <span class="add-on">$</span>
           <input class="add-on input-block-level" disabled value="0.00">
         </div>
-      </div>
-
-      <%= f.label :privacy_type, "Event Privacy" %>
-      <%= f.hidden_field :privacy_type %>
-      <div class="btn-group input-block-level push-bottom" id="event_privacy_type_btn_group" data-toggle="buttons-radio">
-        <button type="button" class="btn half" data-name="private" data-value="1" title="Anyone can join and view the event.">Public Event</button>
-        <button type="button" class="btn half" data-name="public" data-value="2" title="Only invited can join and view the event.">Private Event</button>
-      </div>
-
-      <%= f.label :payment_methods_raw, "Accepted Payment Methods (Select One Or More)" %>
-      <%= f.hidden_field :payment_methods_raw %>
-      <div class="btn-group input-block-level push-bottom" id="event_payment_methods_raw_btn_group"  data-toggle="buttons-toggle">
-        <button type="button" class="btn third" data-name="cash" data-value="1" title="Manually mark cash payers as paid.">Cash</button>
-        <button type="button" class="btn third" data-name="paypal" data-value="2" title="You need a linked PayPal account.">PayPal</button>
-        <button type="button" class="btn third last" data-name="dwolla" data-value="3" title="You need a linked Dwolla account.">Dwolla</button>
       </div>
     </div>
   </div>

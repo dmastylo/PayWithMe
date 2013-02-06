@@ -38,6 +38,11 @@
 					{
 						that.val.push($this.data("value"));
 					}
+
+					//if((!$this.hasClass('active') || $button[0] == $this[0])) 
+					//{
+					//	that.val.push($this.data("value"));
+					//}
 				});
 
 				this.$input.val(JSON.stringify(this.val));
@@ -46,7 +51,7 @@
 			{
 				this.val = value;
 				this.$input.val(value);
-				this.$children.hide();
+				//this.$children.hide();
 				this.showChild(name);
 			}
 		},
