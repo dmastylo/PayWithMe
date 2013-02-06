@@ -34,12 +34,7 @@
 				this.$buttons.each(function()
 				{
 					var $this = $(this);
-					//if((!$this.hasClass('active') && $button[0] == $this[0]) || ($this.hasClass('active') && $button[0] !== $this[0])) // XOR
-					//{
-					//	that.val.push($this.data("value"));
-					//}
-
-					if((!$this.hasClass('active') || $button[0] == $this[0])) 
+					if((!$this.hasClass('active') && $button[0] == $this[0]) || ($this.hasClass('active') && $button[0] !== $this[0])) // XOR
 					{
 						that.val.push($this.data("value"));
 					}
@@ -51,7 +46,7 @@
 			{
 				this.val = value;
 				this.$input.val(value);
-				this.$children.hide();
+				this.$children.hide();		//Comment this line to allow more than 1 to appear
 				this.showChild(name);
 			}
 		},
