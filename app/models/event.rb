@@ -399,6 +399,10 @@ class Event < ActiveRecord::Base
     paid_members.count > 0
   end
 
+  def is_past?
+    Time.now > self.due_at
+  end
+
 private
   def clear_amounts
     if division_type != DivisionType::SPLIT
@@ -468,5 +472,4 @@ private
     Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all
   end
-
 end
