@@ -407,8 +407,8 @@ class Event < ActiveRecord::Base
     paid_members.count > 0
   end
 
-  def has_passed?
-    Time.now < self.due_at
+  def is_past?
+    Time.now > self.due_at
   end
 
 private
