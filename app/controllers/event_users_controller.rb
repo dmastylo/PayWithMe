@@ -35,9 +35,8 @@ class EventUsersController < ApplicationController
   end
 
   def paid
-    payment = Payment.create_or_find_from_event_user(@event_user, PaymentMethod::MethodType::CASH)
-    payment.update_attributes(paid_at: Time.now)
-    @event_user.update_attributes(paid_at: Time.now)
+    payment = @event_user.create_payment
+    @event_user.pay!(payment)
     respond_to do |format|
       format.js
       format.html { redirect_to admin_event_path(@event) }
@@ -46,8 +45,13 @@ class EventUsersController < ApplicationController
 
   # Mark user as unpaid if he/she paid with cash
   def unpaid
-    Payment.where(payer_id: @event_user.member.id).first.delete
-    @event_user.update_attributes(paid_at: nil)
+    @event_user.payments.each do |payment|
+      if payment.payment_method_id == PaymentMethod::MethodType::CASH
+        payment.destroy
+      end
+    end
+    @event_user.paid_at = nil
+    @event_user.save
     respond_to do |format|
       format.js
       format.html { redirect_to admin_event_path(@event) }
@@ -84,7 +88,7 @@ private
   end
 
   def event_user_paid_with_cash
-    if @event_user.payment.payment_method != PaymentMethod::MethodType::CASH
+    if !@event_user.event.paid_with_cash?(@event_user.user)
       flash[:error] = "Can only mark users who paid with cash as unpaid."
       redirect_to admin_event_path(@event)
     end

@@ -49,7 +49,7 @@ class Payment < ActiveRecord::Base
   validates :processor_fee_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :our_fee_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :payment_method, presence: true, if: :paid?
-  validates :transaction_id, presence: true, if: :paid?
+  validates :transaction_id, presence: true, if: :paid_and_not_cash?
 
   # Callbacks
   before_validation :copy_event_attributes
@@ -74,6 +74,10 @@ class Payment < ActiveRecord::Base
 
   def paid?
     paid_at.present?
+  end
+
+  def paid_and_not_cash?
+    paid? && payment_method_id != PaymentMethod::MethodType::CASH
   end
 
   def total_amount_cents

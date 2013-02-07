@@ -53,8 +53,17 @@ describe Payment do
     it { should_not allow_value("abcd").for(:amount) }
     it { should_not validate_presence_of(:payment_method) }
 
-    describe "after paid" do
+    describe "after paid with cash" do
       before { @payment.pay! }
+      it { should validate_presence_of(:payment_method) }
+      it { should_not validate_presence_of(:transaction_id) }
+    end
+
+    describe "after paid with other method" do
+      before do
+        @payment.payment_method_id = PaymentMethod::MethodType::PAYPAL
+        @payment.pay!
+      end
       it { should validate_presence_of(:payment_method) }
       it { should validate_presence_of(:transaction_id) }
     end

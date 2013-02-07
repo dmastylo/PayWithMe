@@ -1,5 +1,7 @@
-$('#user-status-<%= @event_user.member.id %>').html('<%= j distance_of_time_in_words_to_now @event.paid_at(@event_user.member) %> ago');
-$('#payment-links-<%= @event_user.member.id %>').html('<%= link_to "Mark Unpaid", unpaid_event_event_user_path(@event, @event.event_user(@event_user.member)), class: "btn btn-success btn-block", method: :put, remote: true %>');
+<% if @event_user.paid? %>
+  $('#user-status-<%= @event_user.user.id %>').html('<%= j distance_of_time_in_words_to_now @event_user.paid_at %> ago');
+<% end %>
+$('#payment-links-<%= @event_user.user.id %>').html('<%= link_to "Mark Unpaid", unpaid_event_event_user_path(@event, @event.event_user(@event_user.user)), class: "btn btn-danger", method: :put, remote: true %>');
 $('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
 if ($('.progress').length === 0)
 {

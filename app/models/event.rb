@@ -345,7 +345,11 @@ class Event < ActiveRecord::Base
 
   def paid_with_cash?(user)
     event_user = event_user(user)
-    event_user.payment.payment_method == PaymentMethod::MethodType::CASH
+    paid_with_cash = true
+    event_user.payments.each do |payment|
+      paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH
+    end
+    paid_with_cash
   end
 
   def paid_at(user)
