@@ -1,5 +1,6 @@
 class MessagesController < ApplicationController
   before_filter :user_in_event
+  before_filter :user_on_page
 
   def index
     if params[:event_id] && params[:after]
@@ -30,5 +31,10 @@ class MessagesController < ApplicationController
     else
       render nothing: true
     end
+  end
+
+  private
+  def user_on_page
+    current_user.event_users.find_by_event_id(@event.id).update_attribute(:last_seen, Time.now)
   end
 end

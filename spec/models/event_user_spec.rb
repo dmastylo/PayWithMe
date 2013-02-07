@@ -11,6 +11,7 @@
 #  invitation_sent :boolean          default(FALSE)
 #  payment_id      :integer
 #  visited_event   :boolean          default(FALSE)
+#  last_seen       :datetime
 #
 
 require 'spec_helper'

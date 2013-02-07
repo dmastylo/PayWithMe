@@ -53,7 +53,8 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
-    event.members.each do |member|
+    event.members.includes(:event_users).each do |member|
+      # event_user = member.event_users.find_by_event_id(event.id)
       unless member == message_creator
         news_item = member.news_items.where(values).first
 
