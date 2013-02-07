@@ -45,8 +45,6 @@ describe Payment do
   describe "validations" do
     it { should validate_presence_of(:payer_id) }
     it { should validate_presence_of(:payee_id) }
-    it { should validate_presence_of(:due_at) }
-    it { should validate_presence_of(:requested_at) }
     it { should validate_presence_of(:event_id) }
     it { should validate_presence_of(:event_user_id) }
     it { should validate_presence_of(:event_user_id) }
@@ -54,28 +52,26 @@ describe Payment do
     it { should allow_value("$1234").for(:amount) }
     it { should_not allow_value("abcd").for(:amount) }
     it { should_not validate_presence_of(:payment_method) }
-    it { should_not validate_numericality_of(:payment_method) }
 
     describe "after paid" do
       before { @payment.pay! }
       it { should validate_presence_of(:payment_method) }
-      it { should validate_numericality_of(:payment_method) }
       it { should validate_presence_of(:transaction_id) }
     end
   end
 
   describe "mass assignment" do
-    [:requested_at,
-     :paid_at,
-     :payer_id,
-     :payee_id,
-     :event_id,
-     :amount,
-     :event_user_id,
-     :transaction_id,
-     :payment_method].each do |attribute|
-      it { should_not allow_mass_assignment_of(attribute) }
-    end
+    # [:requested_at,
+    #  :paid_at,
+    #  :payer_id,
+    #  :payee_id,
+    #  :event_id,
+    #  :amount,
+    #  :event_user_id,
+    #  :transaction_id,
+    #  :payment_method].each do |attribute|
+    #   it { should_not allow_mass_assignment_of(attribute) }
+    # end
   end
 
   describe "relationships" do
@@ -83,11 +79,22 @@ describe Payment do
     it { should belong_to(:payee).class_name("User") }
     it { should belong_to(:event) }
     it { should belong_to(:event_user) }
+    it { should belong_to(:payment_method) }
+  end
+
+  describe "callbacks" do
+    it "should set relevant values" do
+      @payment.requested_at.to_s.should == @payment.event.created_at.to_s
+      @payment.due_at.to_s.should == @payment.event.due_at.to_s
+      @payment.processor_fee_amount_cents.should_not be_nil
+      @payment.our_fee_amount_cents.should_not be_nil
+    end
   end
 
   describe "pay! method" do
     before do
       @payment.pay!
+      raise @payment.to_yaml
     end
 
     it { @payment.paid_at.should_not be_nil }

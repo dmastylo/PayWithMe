@@ -29,9 +29,6 @@ class Event < ActiveRecord::Base
   attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
-  # monetize :receive_amount_cents, allow_nil: true
-  # monetize :send_amount_cents, allow_nil: true
-  # monetize :our_fee_amount_cents, allow_nil: true
   monetize :money_collected_cents, allow_nil: true
   has_attached_file :image
 
@@ -76,22 +73,6 @@ class Event < ActiveRecord::Base
 
   # Money definitions
   # ========================================================
-  # def receive_amount_cents
-  #   if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || send_amount_cents.nil?
-  #     nil
-  #   else
-  #     split_amount_cents
-  #   end
-  # end
-
-  # def send_amount_cents
-  #   if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || split_amount_cents.nil?
-  #     nil
-  #   else
-  #     ((split_amount_cents + Figaro.env.fee_static.to_f * 100.0) / (1.0 - Figaro.env.fee_rate.to_f)).floor
-  #   end
-  # end
-
   def total_amount_cents
     if division_type == DivisionType::TOTAL
       super
@@ -112,15 +93,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  # def our_fee_amount_cents
-  #   0
-  #   # if send_amount_cents.present?
-  #   #   (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
-  #   # else
-  #   #   nil
-  #   # end
-  # end
-  
   def money_collected_cents
     if split_amount_cents.present?
       split_amount_cents * paid_members.count
@@ -312,16 +284,6 @@ class Event < ActiveRecord::Base
   def remove_member(member_to_remove)
     remove_members([member_to_remove])
   end
-
-  # def set_event_user_attributes(exclude_from_notifications)
-  #   self.event_users.each do |event_user|
-  #     if event_user.user != exclude_from_notifications
-  #       event_user.due_at = self.due_at
-  #       event_user.amount_cents = self.send_amount_cents
-  #       event_user.save
-  #     end
-  #   end
-  # end
 
   def send_invitation_emails
     self.event_users.each do |event_user|

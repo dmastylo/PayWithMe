@@ -3,12 +3,12 @@
   <div class="span8">
     <div class="page-header">
       <h2>
-        Pay <%= @event_user.event.title %>
+        Pay <%= @payment.event.title %>
       </h2>
     </div>
   </div>
 </div>
-<%= form_tag(pay_event_user_path(@event_user, method: PaymentMethod::MethodType::DWOLLA)) do %>
+<%= form_tag(pay_payment_path(@payment, method: PaymentMethod::MethodType::DWOLLA)) do %>
   <div class="row">
     <div class="span4">
       <h3>Enter Dwolla Pin</h3>

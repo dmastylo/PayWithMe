@@ -19,20 +19,29 @@ class PaymentMethod < ActiveRecord::Base
 
   def processor_fee(amount)
     fee = 0
-    if amount > fee_threshold_cents
-      fee = static_fee_cents + amount * (percent_fee.to_f / 100.0)
+    if amount >= fee_threshold_cents
+      fee = (amount + static_fee_cents) / ((100.0 - percent_fee.to_f) / 100.0) - amount
     end
     if fee < minimum_fee_cents
       fee = minimum_fee_cents
     end
-    return fee
+    return fee.round
   end
 
   def our_fee(amount)
+    0
+  end
+
+  def processor_fee_after_our_fee(amount)
+    processor_fee(amount + our_fee(amount))
   end
 
   def total_fee(amount)
-    processor_fee(amount) + our_fee(amount)
+    processor_fee(amount + our_fee(amount)) + our_fee(amount)
+  end
+
+  def total_amount(amount)
+    amount + total_fee(amount)
   end
 
   # Validations

@@ -9,14 +9,18 @@
 PaymentMethod.create(
   [
     {
-      name: "Cash"
+      name: "Cash",
+      static_fee_cents: 0,
+      percent_fee: 0,
+      minimum_fee_cents: 0,
+      fee_threshold_cents: 0
     },
     {
       name: "PayPal",
       static_fee_cents: 30,
       percent_fee: 2.9,
       minimum_fee_cents: 0,
-      fee_threshold_cents: 1000
+      fee_threshold_cents: 0
     },
     {
       name: "Dwolla",

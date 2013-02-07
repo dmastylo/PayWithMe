@@ -1,5 +1,5 @@
 class EventUsersController < ApplicationController
-  before_filter :authenticate_user!, except: [:ipn]
+  before_filter :authenticate_user!
   before_filter :event_public_or_user_organizes_event, only: [:create]
   before_filter :user_owns_event_user, only: [:pay, :pin]
   before_filter :valid_payment_method, only: [:pay]
@@ -30,37 +30,8 @@ class EventUsersController < ApplicationController
   end
 
   def pay
-    payment = Payment.create_or_find_from_event_user(@event_user, params[:method])
-    result = payment.pay!(params[:pin])
-
-    if result == :back_to_pin
-      flash[:error] = payment.error_message
-      redirect_to pin_event_user_path(@event_user, method: PaymentMethod::MethodType::DWOLLA)
-    elsif result == :back_to_event
-      flash[:success] = "Payment received!"
-      redirect_to event_path(@event_user.event)
-    elsif result.present?
-      redirect_to result
-    end
-  end
-
-  def pin
-  end
-
-  def ipn
-    notify = ActiveMerchant::Billing::Integrations::PaypalAdaptivePayment::Notification.new(request.raw_post)
-    event_user = EventUser.find_by_id(params[:id])
-    if notify.acknowledge && event_user.present?
-      if notify.complete?
-        event_user.paid_at = Time.now
-        event_user.payment.paid_at = Time.now
-        event_user.payment.transaction_id = params["transaction"]["1"][".id"]
-        event_user.payment.save
-        event_user.save
-      else
-        # Nothing for now
-      end
-    end
+    payment = @event_user.create_payment(payment_method: params[:method])
+    redirect_to payment.url
   end
 
   def paid
@@ -120,7 +91,7 @@ private
   end
 
   def valid_payment_method
-    if !(["2", "3"].include? params[:method]) || !@event_user.event.send_with_payment_method?(params[:method].to_i)
+    if PaymentMethod.find_by_id(params[:method]).nil? || !@event_user.event.send_with_payment_method?(params[:method].to_i)
       flash[:error] = "That payment method is no longer accepted."
       redirect_to root_path
     end

@@ -28,7 +28,6 @@ class EventUser < ActiveRecord::Base
   validates :due_at, presence: true, if: :member?
   validates :user_id, presence: true
   validates :event_id, presence: true
-  # validates :amount, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :amount_present?
 
   # Callbacks
   before_validation :copy_event_attributes
@@ -57,8 +56,35 @@ class EventUser < ActiveRecord::Base
     self.event.present? && self.event.organizer == self.user
   end
 
-  def pay!
+  def paid_total_cents
+    payments.where("paid_at IS NOT NULL").sum(&:amount_cents)
+  end
 
+  def create_payment(options={})
+    current_cents = options[:amount_cents] || amount_cents
+    payment_method = PaymentMethod.find_by_id(options[:payment_method] || PaymentMethod::MethodType::CASH)
+    if current_cents > amount_cents
+      return false
+    end
+
+    payment = user.sent_payments.find_or_create_by_payee_id_and_event_id_and_event_user_id_and_amount_cents_and_payment_method_id_and_paid_at(
+      payee_id: event.organizer.id,
+      event_id: event.id,
+      event_user_id: self.id,
+      amount_cents: current_cents,
+      payment_method_id: payment_method.id,
+      paid_at: nil
+    )
+  end
+
+  def pay!(payment, options={})
+    payment.pay!(options)
+
+    if self.paid_total_cents >= self.amount_cents
+      self.paid_at = Time.now
+      save
+    end
+    true
   end
 
 private

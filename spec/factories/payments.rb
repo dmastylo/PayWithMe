@@ -5,6 +5,7 @@ FactoryGirl.define do
     association :event
     requested_at { Time.now }
     due_at { 7.days.from_now }
+    payment_method { PaymentMethod.first }
     amount_cents 1000
 
     after(:build) do |payment|
