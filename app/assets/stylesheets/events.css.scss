@@ -30,7 +30,7 @@
             width: 50%;
             float: left;
             &:last-child { margin-bottom: 0; }
-            .profile_image
+            .profile-image
             {
                 margin-top: 3px;
                 float: left;
@@ -40,6 +40,7 @@
             {
                 padding-left: 10px;
                 float: left;
+                @include box-sizing(border-box);
                 .user a
                 {
                     color: $offBlack;
