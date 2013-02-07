@@ -99,11 +99,11 @@
       <%= f.hidden_field :payment_methods_raw %>
       <div class="btn-group input-block-level push-bottom" id="event_payment_methods_raw_btn_group"  data-toggle="buttons-toggle">
         <button type="button" class="btn third" data-name="cash" data-value="1" title="Manually mark cash payers as paid.">Cash</button>
-        <button type="button" class="btn third" data-name="paypal" data-value="2" title="You need a linked PayPal account.">PayPal</button>
-        <button type="button" class="btn third last" data-name="dwolla" data-value="3" title="You need a linked Dwolla account.">Dwolla</button>
+        <button type="button" class="btn third" id="allow-paypal-payment" data-name="paypal" data-value="2" title="You need a linked PayPal account.">PayPal</button>
+        <button type="button" class="btn third last" id="allow-dwolla-payment" data-name="dwolla" data-value="3" title="You need a linked Dwolla account.">Dwolla</button>
       </div>
 
-      <div class="event_payment_methods_raw_option btn_group_option push-bottom" id="event_payment_methods_raw_paypal">
+      <div class="event_payment_methods_raw_option btn_group_option push-bottom" id="paypal-fee">
         <label>PayPal fee per person</label>
         <div class="input-prepend">
           <span class="add-on">$</span>
@@ -111,7 +111,7 @@
         </div>
       </div>
 
-      <div class="event_payment_methods_raw_option btn_group_option push-bottom" id="event_payment_methods_raw_dwolla">
+      <div class="event_payment_methods_raw_option btn_group_option push-bottom" id="dwolla-fee">
         <label>Dwolla fee per person</label>
         <div class="input-prepend">
           <span class="add-on">$</span>
@@ -119,7 +119,7 @@
         </div>
       </div>
 
-      <div class="event_payment_methods_raw_option btn_group_option push-bottom" id="event_payment_methods_raw_paypal">
+      <div class="event_payment_methods_raw_option btn_group_option push-bottom" id="paywithme-fee">
         <label>PayWithMe fee per person</label>
         <div class="input-prepend">
           <span class="add-on">$</span>
@@ -218,8 +218,8 @@
       //$("#event_fee_type").buttonGroup();
       $("#event_privacy_type").buttonGroup();
       $("#event_image_type").buttonGroup();
-      
-      $("#event_payment_methods_raw").feeButtons();
+
+      //$("#event_payment_methods_raw").feeButtons();
 
       $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>,
