@@ -16,7 +16,7 @@
 class EventUser < ActiveRecord::Base
   
   # Accessible attributes
-  # None
+  attr_accessible :amount, :due_at, :event_id, :paid_at, :user_id
 
   # Validations
   validates :event_id, presence: true
