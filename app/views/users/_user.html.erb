@@ -1,6 +1,10 @@
 <li class="member">
   <div class="profile_image <%= "nudge\" rel=\"tooltip\" title=\"Nudge #{user_name(user)}\" data-placement=\"top".html_safe if signed_in? && @event.can_nudge?(current_user, user) %>">
-    <%= profile_image_tag user, :thumb %> 
+    <% if @event.can_nudge?(current_user, user) %>
+      <%= nudge_image_tag user, @event, :thumb %> 
+    <% else %>
+      <%= profile_image_tag user, :thumb %> 
+    <% end %>
   </div>
   <div class="body">
     <div class="user">

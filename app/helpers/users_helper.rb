@@ -17,6 +17,16 @@ module UsersHelper
     link_to image, user
   end
 
+  def nudge_image_tag(user, event, size=:thumb)
+    width = Figaro.env.send(size.to_s+"_size")
+    if user.profile_image.present? || user.profile_image_url.present?
+      image = image_tag(profile_image_path(user, size), width: width)
+    else
+      image = gravatar_image_tag user.email, alt: user.name, gravatar: { size: width }
+    end
+    link_to image, nudge_event_event_user_path(event, event.event_user(user)), method: :put, remote: true
+  end
+
   def user_name(user, options = {})
     options[:length] ||= 20
     options[:use_you] ||= false
