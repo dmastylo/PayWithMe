@@ -78,16 +78,29 @@ describe EventUser do
       before { @payment = @event_user.create_payment }
       it "should create a full payment" do
         @payment.amount_cents.should == @event_user.amount_cents
-        @event_user.paid?.should be_true
       end
+
+      describe "paying the payment" do
+        before { @event_user.pay!(@payment, transaction_id: "asdfghjkl") }
+        it "should be able to be paid" do
+          @event_user.paid?.should be_true
+        end
+      end 
     end
 
     describe "specific amount" do
       before { @payment = @event_user.create_payment(amount_cents: @event_user.amount_cents / 2) }
       it "should use that amount" do
         @payment.amount_cents.should == (@event_user.amount_cents / 2)
-        @event_user.paid?.should_not be_true
-        @event_user.paid_at.should be_nil
+      end
+
+      describe "paying the payment" do
+        before { @event_user.pay!(@payment, transaction_id: "asdfghjkl") }
+        it "should be able to be paid" do
+          @event_user.paid_total_cents.should_not == 0
+          @event_user.paid?.should_not be_true
+          @event_user.paid_at.should be_nil
+        end
       end
     end
   end

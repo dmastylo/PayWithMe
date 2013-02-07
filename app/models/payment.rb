@@ -77,7 +77,7 @@ class Payment < ActiveRecord::Base
   end
 
   def total_amount_cents
-    amount_cents + processor_fee_amount_cents + our_fee_amount_cents
+    (amount_cents || 0) + (processor_fee_amount_cents || 0) + (our_fee_amount_cents || 0)
   end
 
   def url
@@ -106,15 +106,12 @@ class Payment < ActiveRecord::Base
         # fees_payer: "PRIMARYRECEIVER"
       )
 
-      raise response.to_yaml
-
       gateway.redirect_url_for(response["payKey"])
     end
   end
 
   def pay!(options={})
     self.transaction_id = options[:transaction_id]
-    # self.payment_method_id ||= options[:payment_method] || PaymentMethod::MethodType::CASH
     self.paid_at = Time.now
     self.save
   end
@@ -129,13 +126,21 @@ class Payment < ActiveRecord::Base
 
 private
   def self.paypal_gateway
-    appid = Rails.env.production? ? Figaro.env.paypal_appid : Figaro.env.paypal_sandbox_appid
-    ActiveMerchant::Billing::PaypalAdaptivePayment.new(
-      login: Figaro.env.paypal_username,
-      password: Figaro.env.paypal_password,
-      signature: Figaro.env.paypal_signature,
-      appid: appid
-    )
+    if Rails.env.production? 
+      ActiveMerchant::Billing::PaypalAdaptivePayment.new(
+        login: Figaro.env.paypal_username,
+        password: Figaro.env.paypal_password,
+        signature: Figaro.env.paypal_signature,
+        appid: Figaro.env.paypal_appid
+      )
+    else
+      ActiveMerchant::Billing::PaypalAdaptivePayment.new(
+        login: Figaro.env.paypal_sandbox_username,
+        password: Figaro.env.paypal_sandbox_password,
+        signature: Figaro.env.paypal_sandbox_signature,
+        appid: Figaro.env.paypal_sandbox_appid
+      )
+    end
   end
 
   def copy_event_attributes

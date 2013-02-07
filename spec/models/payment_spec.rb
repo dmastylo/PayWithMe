@@ -94,7 +94,6 @@ describe Payment do
   describe "pay! method" do
     before do
       @payment.pay!
-      raise @payment.to_yaml
     end
 
     it { @payment.paid_at.should_not be_nil }

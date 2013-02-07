@@ -48,6 +48,10 @@ private
 
   def valid_payment_method_for_pin
     redirect_to root_path unless @payment.payment_method.name == "Dwolla"
+    unless current_user.dwolla_account.present?
+      flash[:error] = "Please link your Dwolla account before paying with Dwolla."
+      redirect_to edit_user_registration_path
+    end
   end
 
 end
