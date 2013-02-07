@@ -57,9 +57,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
       if signed_in?
         if current_user.stub?
           # Final stub updates
-          current_user.toggle(:stub)
-          current_user.guest_token = nil
-          current_user.save
+          current_user.complete_registration!
 
           # Stub flash message
           flash[:success] = "Account registration successfully completed with #{provider} account!"

@@ -1,13 +1,14 @@
-<% provide(:title, @user.name) %>
-<div class="row" id="user-wrapper">
-  <div class="span3" id="user-left">
-    <%= profile_image_tag @user, :large %>
-    <h2><%= user_name(@user) %></h2>
-    <% if @user.online? %>
-      <div class="user-online-block">ONLINE</div>
-    <% else %>
-      <div class="user-offline-block">OFFLINE</div>
-    <% end %>
+<% provide(:title, user_name(@user)) %>
+<div class="user-show <%= "stub" if @user.stub? %>">
+  <div class="row" id="user-wrapper">
+    <div class="span3" id="user-left">
+      <%= profile_image_tag @user, :large %>
+      <h2><%= user_name(@user) %></h2>
+      <% if @user.online? %>
+        <div class="user-online block">ONLINE</div>
+      <% else %>
+        <div class="user-offline block">OFFLINE</div>
+      <% end %>
     <div class="spacer"></div>
     <div class="large-statistic">
       <span class="count"><%= @user.organized_events.count %></span> organized <%= @user.organized_events.count == 1 ? 'event' : 'event'.pluralize %>
@@ -29,37 +30,38 @@
         </ul>
       </div>
     <% end %>
-  </div>
-
-  <div class="span9" id="user-right">
-    <% if @user == current_user %>
-      <h3>Your Upcoming Events</h3>
-    <% else %>
-      <h3>Upcoming Public and Shared Events</h3>
-    <% end %>
-    <div id="upcoming-events" class="events-third-list<% if @upcoming_public_and_shared_events.empty? %> empty<% end %>">
-      <% if @upcoming_public_and_shared_events.empty? %>
-        No upcoming events!
-      <% else %>
-        <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
-      <% end %>
     </div>
-    <div class="clearfix"></div>
 
-    <% if @user == current_user %>
-      <h3>Your Past Events</h3>
-    <% else %>
-      <h3>Past Public and Shared Events</h3>
-    <% end %>
-
-    <div id="past-events" class="events-third-list<% if @past_public_and_shared_events.empty? %>  empty<% end %>">
-      <% if @past_public_and_shared_events.empty? %>
-        No past events!
+    <div class="span9" id="user-right">
+      <% if @user == current_user %>
+        <h3>Your Upcoming Events</h3>
       <% else %>
-        <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
+        <h3>Upcoming Events</h3>
       <% end %>
+      <div id="upcoming-events" <%= "class=\"empty\"" if @upcoming_public_and_shared_events.empty? %>>
+        <% if @upcoming_public_and_shared_events.empty? %>
+          No upcoming events!
+        <% else %>
+          <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
+        <% end %>
+      </div>
+      <div class="clearfix"></div>
+
+      <% if @user == current_user %>
+        <h3>Your Past Events</h3>
+      <% else %>
+        <h3>Past Events</h3>
+      <% end %>
+
+      <div id="past-events" class="events-third-list<% if @past_public_and_shared_events.empty? %>  empty<% end %>">
+        <% if @past_public_and_shared_events.empty? %>
+          No past events!
+        <% else %>
+          <%= render partial: "events/profile_event", collection: @past_public_and_shared_events, as: :event %>
+        <% end %>
+      </div>
+      <div class="clearfix"></div>
     </div>
-    <div class="clearfix"></div>
   </div>
 </div>
 

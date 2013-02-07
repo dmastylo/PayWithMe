@@ -13,6 +13,7 @@ PayWithMe::Application.routes.draw do
     resources :event_users, only: [:create] do
       member do
         put 'paid'
+        put 'unpaid'
       end
     end
     member do

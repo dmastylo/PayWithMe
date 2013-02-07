@@ -17,14 +17,14 @@
             <button type="button" class="btn third last <%= "active" if @event.image_type == :default_image %>" data-value="default_image" data-name="default_image">None</button>
           </div>
 
-          <div class="event_image_type_option push-top" id="event_image_type_default_image">
+          <div class="event_image_type_option btn_group_option push-top" id="event_image_type_default_image">
             <div class="push-bottom">The default:</div>
             <div class="push-bottom">
               <%= image_tag "default_event_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
             </div>
           </div>
 
-          <div class="event_image_type_option push-top" id="event_image_type_url">
+          <div class="event_image_type_option btn_group_option push-top" id="event_image_type_url">
             <% if @event.image_url.present? %>
               <div class="push-bottom">Current URL:</div>
               <div class="push-bottom">
@@ -39,7 +39,7 @@
             </div>
           </div>
 
-          <div class="event_image_type_option push-top" id="event_image_type_upload">
+          <div class="event_image_type_option btn_group_option push-top" id="event_image_type_upload">
             <% if @event.image.present? %>
               <div class="push-bottom">Current uploaded image:</div>
               <div class="push-bottom">
@@ -72,7 +72,7 @@
         <button type="button" class="btn third last" data-name="fundraise" data-value="3" title="Any amount can be paid as a donation.">Fundraise/Donations</button>
       </div>
 
-      <div class="event_division_type_option push-bottom" id="event_division_type_total">
+      <div class="event_division_type_option btn_group_option push-bottom" id="event_division_type_total">
         <%= f.label :total_amount, "Total Amount" %>
         <div class="input-prepend">
           <span class="add-on">$</span>
@@ -80,19 +80,12 @@
         </div>
       </div>
 
-      <div class="event_division_type_option push-bottom" id="event_division_type_split">
+      <div class="event_division_type_option btn_group_option push-bottom" id="event_division_type_split">
         <%= f.label :split_amount, "Amount Per Person" %>
         <div class="input-prepend">
           <span class="add-on">$</span>
           <%= f.text_field :split_amount, class: "input-block-level" %>
         </div>
-      </div>
-
-      <%= f.label :fee_type, "Fee Setup" %>
-      <%= f.hidden_field :fee_type %>
-      <div class="btn-group input-block-level push-bottom" id="event_fee_type_btn_group" data-toggle="buttons-radio">
-        <button type="button" class="btn half" data-name="organizer" data-value="1" title="You  will pay facilitator's fees.">You Pay Fees</button>
-        <button type="button" class="btn half" data-name="members" data-value="2" title="Members will pay the facilitator's fees.">Members Pay Fees</button>
       </div>
 
       <%= f.label :privacy_type, "Event Privacy" %>

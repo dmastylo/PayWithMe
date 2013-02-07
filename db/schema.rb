@@ -65,7 +65,6 @@ ActiveRecord::Schema.define(:version => 20130131205430) do
     t.datetime "created_at",         :null => false
     t.datetime "updated_at",         :null => false
     t.integer  "division_type"
-    t.integer  "fee_type"
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
     t.integer  "organizer_id"
@@ -238,6 +237,8 @@ ActiveRecord::Schema.define(:version => 20130131205430) do
     t.datetime "last_seen"
     t.string   "time_zone",                  :default => "Eastern Time (US & Canada)"
     t.string   "slug"
+    t.integer  "creator_id"
+    t.datetime "completed_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
