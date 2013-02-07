@@ -91,7 +91,7 @@ class Payment < ActiveRecord::Base
           primary: false
         },
         {
-          email: payee.email,
+          email: payee.paypal_account.email,
           amount: event.send_amount.to_f,
           primary: true
         }

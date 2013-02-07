@@ -42,6 +42,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
         linked_account = user.linked_accounts.create(provider: request.env["omniauth.auth"].provider, uid: request.env["omniauth.auth"].uid)
         update = false
       end
+      linked_account.email = request.env["omniauth.auth"].info.email if request.env["omniauth.auth"].info.email
 
       if request.env["omniauth.auth"].provider == "dwolla"
         token = Payment.dwolla_gateway.request_token(params[:code], user_omniauth_callback_url(:dwolla, port: nil))
