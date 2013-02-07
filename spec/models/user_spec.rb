@@ -45,7 +45,7 @@ describe User do
      :password_confirmation,
      :encrypted_password,
      :stub,
-     :profile_image_option,
+     :profile_image_type,
      :profile_image_url,
      :time_zone,
      :last_seen,
@@ -86,6 +86,7 @@ describe User do
     it { should have_many(:sent_payments).class_name("Payment") }
     it { should have_many(:received_nudges).class_name("Nudge") }
     it { should have_many(:sent_nudges).class_name("Nudge") }
+    it { should have_one(:creator).class_name("User") }
   end
 
   describe "mass assignment" do

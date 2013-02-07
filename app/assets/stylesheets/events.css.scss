@@ -1,88 +1,38 @@
-// Place all the styles related to the Events controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
-
-.event-title, input.event-title
+// Show
+// =========================
+.event-show
 {
-	font-size: 28px;
-	line-height: 34px;
-	height: 34px;
-}
-
-.event-image
-{
-    border: 1px solid $mediumGray;
-    border-bottom: 0;
-    width: 100%;
-    height: 250px;
-    background-size: 100%;
-    background-position: center center;
-    background-repeat: no-repeat;
-    box-sizing: border-box;
-
-    &.default
+    .image
     {
-        height: 100px;
+        border: 1px solid $mediumGray;
+        border-bottom: 0;
+        width: 100%;
+        height: 250px;
+        background-size: 100%;
+        background-position: center center;
+        background-repeat: no-repeat;
+        @include box-sizing(border-box);
+        &.default
+        {
+            height: 100px;
+        }
     }
-}
-
-// Facebook banner style event image
-// .event-header
-// {
-//     margin-right: -30px;
-//     padding-top: 200px;
-//     background-size: 100%;
-//     background-position: center center;
-
-//     .span9
-//     {
-//         background-color: rgba(255, 255, 255, 0.9);
-//         margin-left: 15px;
-//         padding-left: 15px;
-//         margin-bottom: 15px;
-//         border-radius: 10px;
-//     }
-// }
-
-.event_division_type_option
-{
-	display: none;
-}
-
-.event_image_type_option
-{
-    display: none;
-}
-
-// Event Display ==============================================================
-.event-members
-{
-    max-height: 350px;
-    overflow: auto;
-
-    /* Event members display */
-    .member-list
+    .members
     {
+        max-height: 350px;
+        overflow: auto;
         list-style: none;
         padding: 0;
         margin: 0;
-
         .member
         {
             margin-bottom: 5px;
             width: 50%;
             float: left;
-
-            &:last-child
-            {
-                margin-bottom: 0;
-            }
-
+            &:last-child { margin-bottom: 0; }
             .profile_image
             {
-                // margin-bottom: 5px;
                 margin-top: 3px;
-                // display: block;
                 float: left;
                 position: relative;
 
@@ -130,192 +80,75 @@
             }
         }
     }
-}
 
-.event-button
-{
-    margin-top: 13px; // For medium image size
-    //margin-top: 65px; // For large image size
-}
-
-// Chat Messages Display ======================================================
-.new-message-form
-{
-    margin-bottom: 20px;
-}
-
-.message-list
-{
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    height: 380px;
-    overflow-y: scroll;
-
-    .message
+    .messages
     {
-        margin-bottom: 10px;
-
-        .profile-image
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        height: 380px;
+        overflow-y: scroll;
+        .message
         {
-            float: left;
-        }
-
-        .current-user
-        {
-            &.profile-image
+            margin-bottom: 10px;
+            .profile-image
             {
-                float: right;
-                padding-right: 15px;
+                float: left;
+                img { border: 1px solid $mediumGray; }
             }
-
-            &.body
+            &.current
             {
-                padding-right: 10px;
-                text-align: right;
+                .profile-image
+                {
+                    float: right;
+                    padding-right: 15px;
+                }
+                .body
+                {
+                    padding-right: 10px;
+                    text-align: right;
+                }
             }
-        }
-
-        img
-        {
-            border: 1px solid $mediumGray;
-        }
-
-        .body
-        {
-            padding-left: 10px;
-            float: left;
-            @include box-sizing(border-box);
-            margin-top: 3px;
-        }
-
-        .message-content
-        {
-            word-break: normal;
-            word-wrap: break-word;
-        }
-
-        .user a
-        {
-            color: $offBlack;
-            font-weight: bold;
-        }
-
-        .timestamp
-        {
-            color: $mediumGray;
-        }
-
-        .name
-        {
-            font-size: 1.3em;
-            color: #848484;
-            font-weight: bold;
-            line-height: 1;
-
-            &:hover
+            .body
             {
-                color: #000000;
-                text-decoration: none;
+                padding-left: 10px;
+                float: left;
+                @include box-sizing(border-box);
+                margin-top: 3px;
+                .content
+                {
+                    word-break: normal;
+                    word-wrap: break-word;
+                }
+                .user a
+                {
+                    color: $offBlack;
+                    font-weight: bold;
+                }
+                .timestamp
+                {
+                    color: $mediumGray;
+                }
             }
+        }
+        .new-messages
+        {
+            display: none;
         }
     }
 
     .new-message
     {
-        display: none;
+        margin-top: -10px;
+        margin-bottom: 20px;
     }
 }
 
-.new-message-form
-{
-    margin-top: -10px;
-}
-
-// Adding users to events =====================================================
-#invited_members, #invited_groups
-{
-    .member
-    {
-        margin-top: 10px;
-
-        .profile_image
-        {
-            float: left;
-        }
-
-        .info
-        {
-            float: left;
-            margin-left: 5px;
-            line-height: 17px;
-        }
-
-        .name
-        {
-            font-weight: bold;
-        }
-
-        .email
-        {
-            color: $mediumGray;
-        }
-
-        .delete
-        {
-            float: right;
-            line-height: 34px;
-            cursor: pointer;
-        }
-
-        &.member_with_email
-        {
-            height: 34px;
-            line-height: 34px;
-            .email
-            {
-                font-weight: bold;
-                color: $offBlack;
-            }
-            .info
-            {
-                line-height: 34px;
-            }
-        }
-    }
-}
-
-// // Sidebar content ============================================================
-// .sidebar
-// {
-//     padding: 0px;
-// }
-
-// .event-sidebar
-// {
-//     float: left;
-//     padding-right: 15px;
-//     padding-left: 10px;
-//     padding-top: 5px;
-// }
-
-// .event-info{
-//     padding: 19px;
-// }
-
-// .event-profile-page
-// {
-//     float:left;
-//     padding-right: 10px;
-//     padding-left: 10px;
-//     padding-top: 5px;
-//     margin-bottom: 2px;
-// }
-
+// Partial
+// =========================
 .event
 {
     padding: 0;
-
     .image
     {
         width: 100%;
@@ -325,17 +158,11 @@
         border-bottom: 1px solid $mediumGray;
         background-color: #FFF;
     }
-
     .info
     {
         padding: $mediumMargin;
-
-        h4
-        {
-            margin-top: 0;
-        }
+        h4 { margin-top: 0; }
     }
-
     .icons
     {
         float: right;
@@ -343,14 +170,41 @@
     }
 }
 
-// ===============================
-#btn-bulk-invite
+// Forms
+// =========================
+#invited_members, #invited_groups
 {
-    margin-top: 17px;
-}
-
-#member_names
-{
-    margin-bottom: 0;
-    border-bottom: 0;
+    .member
+    {
+        margin-top: 10px;
+        .profile_image
+        {
+            float: left;
+        }
+        .info
+        {
+            float: left;
+            margin-left: 5px;
+            line-height: 17px;
+        }
+        .name { font-weight: bold; }
+        .email { color: $mediumGray; }
+        .delete
+        {
+            float: right;
+            line-height: 34px;
+            cursor: pointer;
+        }
+        &.member_with_email
+        {
+            height: 34px;
+            line-height: 34px;
+            .email
+            {
+                font-weight: bold;
+                color: $offBlack;
+            }
+            .info { line-height: 34px; }
+        }
+    }
 }

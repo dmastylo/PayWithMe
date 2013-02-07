@@ -1,39 +1,16 @@
-<li class="message<% unless @new_message.nil? %> new-message<% end %>" data-time="<%= message.created_at.to_i %>" id="message-<%= message.id %>">
-  <% if message.user == current_user %>
-    <div class="current-user body">
-      <div class="user">
-        <div class="user-online" rel="tooltip" title="This user is online" data-placement="left"></div>
-        <%= link_to "You", current_user %>
-      </div>
-      <div class="timestamp">
-        Posted <%= time_ago_in_words(message.created_at) %> ago.
-      </div>
-      <div class="message-content">
-        <%= h(message.message).gsub(/\n/, '<br/>').html_safe %>
-      </div>
+<li class="message <%= "new" unless @new_message.nil? %> <%= "current" if message.user == current_user %>" data-time="<%= message.created_at.to_i %>" data-oldest-time="<%= message.created_at.to_i %>" data-user="<%= message.user.id %>" id="message-<%= message.id %>">
+  <div class="profile-image">
+    <%= profile_image_tag message.user, :small %> 
+  </div>
+  <div class="body">
+    <div class="user">
+      <%= link_to user_name(message.user, use_you: true, length: 0), message.user %>
+      <%= user_online(message.user) %>
     </div>
-    <div class="current-user profile-image">
-      <%= profile_image_tag message.user, :small %> 
+    <div class="timestamp">
+      Posted <%= time_ago_in_words(message.created_at) %> ago.
     </div>
-    <div class="clearfix"></div>
-  <% else %>
-    <div class="profile-image">
-      <%= profile_image_tag message.user, :small %> 
-    </div>
-    <div class="body">
-      <div class="user">
-        <%= link_to user_name(message.user), message.user %>
-        <% if message.user.online? %>
-          <div class="user-online" rel="tooltip" title="This user is online" data-placement="right"></div>
-        <% end %>
-      </div>
-      <div class="timestamp">
-        Posted <%= time_ago_in_words(message.created_at) %> ago.
-      </div>
-      <div class="message-content">
-        <%= h(message.message).gsub(/\n/, '<br/>').html_safe %>
-      </div>
-    </div>
-    <div class="clearfix"></div>
-  <% end %>
+    <div class="content" data-count="1"><%= convert_urls_to_links(h(message.message).gsub(/\n/, '<br/>')).html_safe %></div>
+  </div>
+  <div class="clearfix"></div>
 </li>

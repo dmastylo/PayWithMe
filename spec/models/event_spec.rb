@@ -9,7 +9,6 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  division_type      :integer
-#  fee_type           :integer
 #  total_amount_cents :integer
 #  split_amount_cents :integer
 #  organizer_id       :integer
@@ -42,7 +41,6 @@ describe Event do
      :split_amount,
      :organizer,
      :members,
-     :fee_type,
      :division_type,
      :privacy_type].each do |attribute|
       it { should respond_to(attribute) }
@@ -62,7 +60,7 @@ describe Event do
     end
 
     describe "using split division_type" do
-      before { @event.division_type = Event::DivisionType::Split }
+      before { @event.division_type = Event::DivisionType::SPLIT }
 
       it { should allow_value("$1234").for(:total_amount) }
       it { should allow_value("abcd").for(:total_amount) }
@@ -70,8 +68,8 @@ describe Event do
       it { should_not allow_value("abcd").for(:split_amount) }
     end
 
-    [:division_type, :fee_type, :privacy_type].each do |attribute|
-      it { should allow_value(Event::DivisionType::Total).for(attribute) }
+    [:division_type, :privacy_type].each do |attribute|
+      it { should allow_value(Event::DivisionType::TOTAL).for(attribute) }
       it { should_not allow_value("test").for(attribute) }
       it { should_not allow_value(123).for(attribute) }
     end
@@ -301,6 +299,23 @@ describe Event do
 
           specify { @event.can_nudge?(@stub_nudger, @nudgee).should_not be_true }
         end
+      end
+    end
+  end
+
+  describe "amounts" do
+    let(:amount) { 100.00 }
+
+    describe "when setting amount per person" do
+      before do
+        @event = FactoryGirl.create(:event, division_type: Event::DivisionType::SPLIT, split_amount: amount)
+        @event.add_members FactoryGirl.create_list(:user, 10)
+      end
+
+      # Sometimes off by one penny
+      it "should have the correct send_amount" do
+        receive_amount = ((@event.send_amount_cents - Figaro.env.fee_static.to_f * 100.0) * (1.0 - Figaro.env.fee_rate.to_f)).round / 100.0
+        receive_amount.should == amount
       end
     end
   end
