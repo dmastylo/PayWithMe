@@ -1,9 +1,9 @@
 !function($)
 {
-	var ButtonGroup = function(input, options)
+	var FeeButtons = function(input, options)
 	{
 		// Load options
-		this.$input = $(input);
+		this.$input = $(input); //Where does input come from?
 		this.name = this.$input.attr("id");
 		this.$buttons = $("#" + this.name + "_btn_group button");
 		this.$children = $("." + this.name + "_option");
@@ -17,9 +17,9 @@
 		this.onCreate();
 	};
 
-	ButtonGroup.prototype = {
+	FeeButtons.prototype = {
 
-		constructor: ButtonGroup,
+		constructor: FeeButtons,
 
 		onClick: function(e)
 		{
@@ -29,14 +29,20 @@
 
 			if(this.checkbox)
 			{
+				//This happens if the one clicked is already true
+
 				this.val = [];
-				var that = this;
+				var that = this; //Why is this needed?
+
 				this.$buttons.each(function()
 				{
-					var $this = $(this);
-					if((!$this.hasClass('active') && $button[0] == $this[0]) || ($this.hasClass('active') && $button[0] !== $this[0])) // XOR
+					var $this = $(this); //Why is this needed?
+
+					//XOR can be simplified to a comparison between boolean values.
+					// ($this.hasClass('active')) !== ($button[0] == $this[0])
+					if((!$this.hasClass('active') && $button[0] == $this[0]) || ($this.hasClass('active') && $button[0] !== $this[0]))
 					{
-						that.val.push($this.data("value"));
+						that.val.push($this.data("value")); //What does this line do?
 					}
 				});
 
@@ -44,9 +50,10 @@
 			}
 			else if(!$button.hasClass('disabled'))
 			{
+				//This happens if the one clicked is false
+
 				this.val = value;
 				this.$input.val(value);
-				this.$children.hide();
 				this.showChild(name);
 			}
 		},
@@ -91,12 +98,12 @@
 
 	}
 
-	$.fn.buttonGroup = function(option)
+	$.fn.feeButtons = function(option)
 	{
 		return this.each(function()
 		{
 			var $this = $(this), options = typeof option == 'object' && option;
-			new ButtonGroup(this, options);
+			new FeeButtons(this, options);
 		});
 	}
 }(window.jQuery);
