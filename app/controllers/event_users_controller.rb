@@ -86,7 +86,7 @@ class EventUsersController < ApplicationController
   end
 
   def nudge
-    @event.nudge!(current_user, @event_user)
+    @event.nudge!(current_user, @event_user.member)
     respond_to do |format|
       format.js
       format.html { redirect_to event_path(@event) }
@@ -130,7 +130,10 @@ private
   end
 
   def can_nudge_user
-
+    unless @event.can_nudge?(current_user, @event_user.member)
+      flash[:error] = "You can't nudge this user!"
+      redirect_to event_path(@event)
+    end
   end
 
   def valid_payment_method
