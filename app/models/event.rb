@@ -430,8 +430,6 @@ class Event < ActiveRecord::Base
   def nudge!(nudger, nudgee)
     if can_nudge?(nudger, nudgee)
       nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id, event_id: self.id)
-    else
-      puts "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n YO \n\n\n\n\n\n\n\n\n\n\n\n\n\n"
     end
   end
   
