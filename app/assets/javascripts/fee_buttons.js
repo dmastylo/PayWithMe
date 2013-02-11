@@ -1,6 +1,5 @@
 $(document).ready(function()
 {
-
 	var $pwmFeeDiv = $("#paywithme-fee");
 	var $paypalFeeDiv = $("#paypal-fee");
 	var $dwollaFeeDiv = $("#dwolla-fee");
@@ -42,11 +41,14 @@ $(document).ready(function()
 		if($totalAmount.is(':visible'))
 		{
 			$value = $totalAmount.val();
+
+			//Need to determine amount of people in event *******************************************************************
 		}
 		else if($splitAmount.is(':visible'))
 		{
 			$value = $splitAmount.val();
 		}
+
 
 		/* --- PayPal 2.9% + 30 cent static --- */
 		//Calculate fee
