@@ -28,6 +28,7 @@ class Nudge < ActiveRecord::Base
   # Callbacks
   after_create :send_nudge_email
 
+private
   # Two methods to keep the delayed_job job clean and without extra information
   def send_nudge_email
     Nudge.delay.send_nudge_email(self.id)
