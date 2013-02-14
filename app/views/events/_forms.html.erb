@@ -67,7 +67,7 @@
       </div>
       <%= f.hidden_field :division_type %>
       <div class="btn-group input-block-level push-bottom" id="event_division_type_btn_group" data-toggle="buttons-radio">
-        <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount split evenly.">Divide among group</button>
+        <button type="button" class="btn third" data-name="total" data-value="1" title="You need a total amount split evenly.">Divide Among Group</button>
         <button type="button" class="btn third" data-name="split" data-value="2" title="Each person must pay a certain amount.">Amount Per Person</button>
         <button type="button" class="btn third last" data-name="fundraise" data-value="3" title="Any amount can be paid as a donation.">Fundraise/Donations</button>
       </div>
@@ -98,9 +98,9 @@
       <%= f.label :payment_methods_raw, "Accepted Payment Methods (Select One Or More)" %>
       <%= f.hidden_field :payment_methods_raw %>
       <div class="btn-group input-block-level push-bottom" id="event_payment_methods_raw_btn_group"  data-toggle="buttons-checkbox">
-        <button type="button" class="btn third" data-name="cash" data-value="1" title="Manually mark cash payers as paid.">Cash</button>
-        <button type="button" class="btn third" data-name="paypal" data-value="2" title="You need a linked PayPal account.">PayPal</button>
-        <button type="button" class="btn third last" data-name="dwolla" data-value="3" title="You need a linked Dwolla account.">Dwolla</button>
+        <button type="button" class="btn third" data-name="cash" data-value="<%= PaymentMethod::MethodType::CASH %>" title="Manually mark cash payers as paid.">Cash</button>
+        <button type="button" class="btn third" data-name="paypal" data-value="<%= PaymentMethod::MethodType::PAYPAL %>" title="You need a linked PayPal account.">PayPal</button>
+        <button type="button" class="btn third last" data-name="dwolla" data-value="<%= PaymentMethod::MethodType::DWOLLA %>" title="You need a linked Dwolla account.">Dwolla</button>
       </div>
     </div>
   </div>
