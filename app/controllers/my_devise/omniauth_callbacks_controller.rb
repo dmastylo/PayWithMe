@@ -50,6 +50,9 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
           linked_account.token = token
           linked_account.save
         end
+      elsif request.env["omniauth.auth"].provider == "wepay"
+        linked_account.token = request.env["omniauth.auth"].credentials.token
+        linked_account.save
       end
 
       user.save
@@ -93,4 +96,5 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
   alias_method :facebook, :all
   alias_method :paypal, :all
   alias_method :dwolla, :all
+  alias_method :wepay, :all
 end

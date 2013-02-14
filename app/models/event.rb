@@ -164,6 +164,14 @@ class Event < ActiveRecord::Base
     send_with_payment_method?(PaymentMethod::MethodType::DWOLLA)
   end
 
+  def accepts_wepay?
+    accepts_payment_method?(PaymentMethod::MethodType::WEPAY)
+  end
+
+  def send_with_wepay?
+    send_with_payment_method?(PaymentMethod::MethodType::WEPAY)
+  end
+
   # Constants
   # ========================================================
   class DivisionType
