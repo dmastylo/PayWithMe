@@ -18,6 +18,9 @@ gem 'omniauth-facebook'
 gem 'omniauth-paypal', git: 'git://github.com/datariot/omniauth-paypal.git'
 gem 'omniauth-dwolla'
 
+# Social integration
+gem 'fb_graph'
+
 # User profiles
 gem 'gravatar_image_tag'
 gem 'paperclip'

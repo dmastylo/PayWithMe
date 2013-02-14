@@ -51,6 +51,11 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
         end
       end
 
+      if request.env["omniauth.auth"].credentials.token
+        linked_account.token = request.env["omniauth.auth"].credentials.token
+        linked_account.save
+      end
+
       user.save
 
       if signed_in?

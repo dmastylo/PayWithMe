@@ -107,8 +107,11 @@
 </div>
 <div class="row">
   <div class="span6">
-    <h3 class="pull-left">Invite Members</h3>
-    <a href="#" id="btn-bulk-invite" class="btn btn-primary pull-right" rel="tooltip" title="Submit a comma-separated list of emails">Bulk invitation mode</a>
+    <h3>Invite Members</h3>
+    <a href="#" id="btn-bulk-invite" class="btn btn-primary half" rel="tooltip" title="Submit a comma-separated list of emails">Bulk invitation mode</a>
+    <div class="half" id="facebook-invite">
+      <a href="#" id="btn-facebook-invite" class="btn btn-block btn-primary" rel="tooltip" title="Submit a comma-separated list of emails">Invite using Facebook</a>
+    </div>
     <div class="clearfix"></div>
     <div class="well">
       <div class="alert alert-error hidden" id="add_member_error">
@@ -196,7 +199,7 @@
       $("#event_image_type").buttonGroup();
       $("#event_payment_methods_raw").buttonGroup();
 
-      $('#member_name').addSomething({
+      inviteMembers = $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>,
         bulkEnabled: true
       });
@@ -219,4 +222,8 @@
       });
     });
   </script>
+<% end %>
+
+<% if current_user.facebook_account.present? %>
+  <%= render 'shared/facebookjs' %>
 <% end %>

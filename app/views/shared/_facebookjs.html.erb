@@ -1,0 +1,47 @@
+<div id="fb-root"></div>
+<script type="text/javascript">
+  window.fbAsyncInit = function() {
+    // init the FB JS SDK
+    FB.init({
+      appId      : '141836152608292', // App ID from the App Dashboard
+      channelUrl : '<%= request.protocol + request.host_with_port %>/channel.html', // Channel File for x-domain communication
+      status     : true, // check the login status upon init?
+      cookie     : true, // set sessions cookies to allow your server to access the session?
+      xfbml      : false  // parse XFBML tags on this page?
+    });
+
+    // Additional initialization code such as adding Event Listeners goes here
+    $("#btn-facebook-invite").click(function()
+    {
+      FB.ui({method: 'apprequests',
+        message: 'You\'re invited: EVENT NAME'
+      }, handleFacebookInvite);
+    });
+
+    function handleFacebookInvite(request)
+    {
+      $.each(request.to, function(index, friend)
+      {
+        FB.api('/' + friend, function(response)
+        {
+          if(response.username && response.name)
+          {
+            inviteMembers.select({name: response.name, email: response.username + "@facebook.com"});
+          }
+        });
+      });
+    }
+  };
+
+  // Load the SDK's source Asynchronously
+  // Note that the debug version is being actively developed and might 
+  // contain some type checks that are overly strict. 
+  // Please report such bugs using the bugs tool.
+  (function(d, debug){
+     var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement('script'); js.id = id; js.async = true;
+     js.src = "//connect.facebook.net/en_US/all" + (debug ? "/debug" : "") + ".js";
+     ref.parentNode.insertBefore(js, ref);
+   }(document, /*debug*/ false));
+</script>

@@ -200,12 +200,15 @@
     }
   }
 
+  // Only works for one at the moment
   $.fn.addSomething = function (option) {
-    return this.each(function () {
+    var as;
+    this.each(function () {
       var $this = $(this)
       , options = typeof option == 'object' && option;
-      new AddSomething(this, options);
+      as = new AddSomething(this, options);
     });
+    return as;
   }
 
   $.fn.addSomething.defaults = {
