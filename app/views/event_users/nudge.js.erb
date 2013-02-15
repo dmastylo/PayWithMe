@@ -1,3 +1,4 @@
+$('.tooltip').remove();
 $('#image-user-<%= @event_user.member.id %>').remove();
 $('#member-<%= @event_user.member.id %>').prepend('<div class="profile_image"><%= profile_image_tag @event_user.member, :thumb %></div>');
 $('#link-user-<%= @event_user.member.id %>').html('<%= link_to " ", @event_user.member %>');
