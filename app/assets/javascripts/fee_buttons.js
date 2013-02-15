@@ -10,6 +10,11 @@ $(document).ready(function()
 
 	var $totalAmount = $("#event_total_amount");
 	var $splitAmount = $("#event_split_amount");
+	var $fundAmount = $("#event_fund_amount");
+
+	var $totalButton = $("#payment-option-total");
+	var $splitButton = $("#payment-option-total");
+	var $fundButton = $("#payment-option-total");
 
 	//Function to convert number value into a money value
 	Number.prototype.toMoney = function(decimals)
@@ -36,6 +41,7 @@ $(document).ready(function()
 		var $paypalFee = 0;
 		var $dwollaFee = 0;
 		var $pwmFee = 0;
+		var $members = 0;
 
 		//Determine value owed per person
 		if($totalAmount.is(':visible'))
@@ -43,12 +49,21 @@ $(document).ready(function()
 			$value = $totalAmount.val();
 
 			//Need to determine amount of people in event *******************************************************************
+			$members = 1;
+
+			//Should loop through things with the class 'member' keeping a count of all of them
+
+			$value /= $members;
 		}
 		else if($splitAmount.is(':visible'))
 		{
 			$value = $splitAmount.val();
 		}
-
+		else if($fundAmount.is(':visible'))
+		{
+			//Until we decide what to do with this
+			$value = 0;
+		}
 
 		/* --- PayPal 2.9% + 30 cent static --- */
 		//Calculate fee
@@ -137,4 +152,20 @@ $(document).ready(function()
 			calculateFees();
 		}
 	});
+
+	//Recalculate if the payment type buttons are clicked
+	$totalButton.click(function(e)
+	{
+		calculateFees();
+	});
+
+	$splitButton.click(function(e)
+	{
+		calculateFees();
+	});
+
+	$fundButton.click(function(e)
+	{
+		calculateFees();
+	})
 });
