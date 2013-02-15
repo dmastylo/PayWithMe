@@ -82,5 +82,5 @@ PayWithMe::Application.configure do
   routes.default_url_options[:host] = "paywith.me"
 
   # Active merchant and PayPal
-  ActiveMerchant::Billing::Base.mode = :test
+  # ActiveMerchant::Billing::Base.mode = :test
 end
