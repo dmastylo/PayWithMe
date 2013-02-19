@@ -38,6 +38,32 @@ describe "Event pages" do
     end
   end
 
+  describe "updating" do
+    before do
+      @event = FactoryGirl.create(:event)
+      @event.add_members(FactoryGirl.create_list(:user, 2))
+      @user = @event.organizer
+      sign_in @user
+      visit edit_event_path(@event)
+    end
+
+    describe "with invalid information" do
+      before do
+        fill_in "Title", with: ""
+        click_button "Update event and send invitations"
+      end
+
+      it { should have_selector("title", text: full_title("Edit Event")) }
+      it { should have_selector("div.alert.alert-error", text: "can't be blank") }
+    end
+
+    describe "with valid information" do
+      before { click_button "Update event and send invitations" }
+
+      it { should have_selector("title", text: full_title("Test Event Dashboard")) }
+    end
+  end
+
   describe "show page" do
     before do
       @public_event = FactoryGirl.create(:event)
