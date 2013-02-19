@@ -1,4 +1,5 @@
 PayWithMe::Application.routes.draw do
+
   root to: "pages#index"
   devise_for :users, controllers: { registrations: "my_devise/registrations", omniauth_callbacks: "my_devise/omniauth_callbacks", sessions: "my_devise/sessions", registrations: "my_devise/registrations", passwords: "my_devise/passwords" }
   match '/team', to: "pages#team"
@@ -45,8 +46,14 @@ PayWithMe::Application.routes.draw do
 
   resources :event_users, only: [] do
     member do
-      post 'pay'
+      get 'pay'
+    end
+  end
+
+  resources :payments, only: [] do
+    member do
       get 'pin'
+      post 'pay'
       post 'ipn'
     end
   end

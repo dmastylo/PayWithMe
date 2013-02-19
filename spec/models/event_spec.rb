@@ -83,6 +83,7 @@ describe Event do
     it { should have_many(:event_groups).dependent(:destroy) }
     it { should have_many(:groups).through(:event_groups) }
     it { should have_many(:reminders).dependent(:destroy) }
+    it { should have_and_belong_to_many(:payment_methods) }
     it { should have_many(:nudges) }
   end
 

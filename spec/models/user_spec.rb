@@ -27,6 +27,8 @@
 #  last_seen                  :datetime
 #  time_zone                  :string(255)      default("Eastern Time (US & Canada)")
 #  slug                       :string(255)
+#  creator_id                 :integer
+#  completed_at               :datetime
 #
 
 require 'spec_helper'
@@ -86,7 +88,7 @@ describe User do
     it { should have_many(:sent_payments).class_name("Payment") }
     it { should have_many(:received_nudges).class_name("Nudge") }
     it { should have_many(:sent_nudges).class_name("Nudge") }
-    it { should have_one(:creator).class_name("User") }
+    it { should belong_to(:creator).class_name("User") }
   end
 
   describe "mass assignment" do
