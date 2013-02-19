@@ -117,7 +117,7 @@ textarea,input
     }
 }
 
-.field_with_error input
+.field_with_error input,.field_with_error textarea
 {
     border-color: $mediumRed !important;
 }

@@ -5,7 +5,7 @@ PayWithMe::Application.routes.draw do
   match '/privacy_policy', to: "pages#privacy_policy"
   match '/faq', to: "pages#faq"
 
-  resources :contact_forms
+  resources :contact_forms, only: [:new, :create]
 
   resources :events do
     resources :messages, only: :create
