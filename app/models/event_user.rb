@@ -18,6 +18,7 @@ class EventUser < ActiveRecord::Base
   # Accessible attributes
   attr_accessible :event_id, :user_id
   monetize :amount_cents, allow_nil: true
+  monetize :paid_total_cents, allow_nil: true
 
   # Relationships
   belongs_to :user, class_name: "User", foreign_key: "user_id"

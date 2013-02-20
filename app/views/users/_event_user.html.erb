@@ -15,7 +15,12 @@
     <% end %>
   <td id="payment-links-<%= user.id %>">
     <% if !@event.paid?(user) && @event.send_with_cash? %>
-      <%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-success", method: :put, remote: true %>
+      <% form_for(@event.event_user(user), method: :put, remote: true, url: paid_event_event_user_path(@event, @event.event_user(user))) do |f| %>
+        <div class="input-append">
+          <%= f.text_field :paid_total, placeholder: "Enter amount unless fully paid" %>
+          <%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-success", method: :put, remote: true %>
+        </div>
+      <% end %>
     <% elsif @event.paid?(user) && @event.send_with_cash? && @event.paid_with_cash?(user) %>
       <%= link_to "Mark Unpaid", unpaid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-danger", method: :put, remote: true %>
     <% end %>
