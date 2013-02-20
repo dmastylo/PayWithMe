@@ -117,10 +117,15 @@ class Payment < ActiveRecord::Base
       {
         account_id: payee.wepay_account.uid,
         amount: self.amount.to_s,
+        app_fee: self.our_fee_amount.to_s,
         short_description: "Payment for #{self.event.title}",
         type: "EVENT",
-        redirect_uri: Rails.application.routes.url_helpers.event_url(self.event, success: 1)
+        redirect_uri: Rails.application.routes.url_helpers.event_url(self.event, success: 1),
+        callback_uri: Rails.env.development?? nil: Rails.application.routes.url_helpers.ipn_payment_url(self)
       })
+
+      self.transaction_id = response["checkout_id"]
+      self.save
 
       response["checkout_uri"]
     end
@@ -132,12 +137,34 @@ class Payment < ActiveRecord::Base
     self.save
   end
 
+  def unpay!
+    self.transaction_id = nil
+    self.paid_at = nil
+    self.save
+  end
+
   # Public because needed in another spot
   def self.dwolla_gateway
     Dwolla::Client.new(
       Figaro.env.dwolla_key,
       Figaro.env.dwolla_secret_key
     )
+  end
+
+  def self.wepay_gateway
+    if Rails.env.production?
+      WePay.new(Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, _use_stage = false)
+    else
+      WePay.new(Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret, _use_stage = true)
+    end
+  end
+
+  def self.wepay_access_token
+    if Rails.env.production?
+      Figaro.env.wepay_access_token
+    else
+      Figaro.env.wepay_sandbox_access_token
+    end
   end
 
 private
@@ -156,22 +183,6 @@ private
         signature: Figaro.env.paypal_sandbox_signature,
         appid: Figaro.env.paypal_sandbox_appid
       )
-    end
-  end
-
-  def self.wepay_gateway
-    if Rails.env.production?
-      WePay.new(Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, _use_stage = false)
-    else
-      WePay.new(Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret, _use_stage = true)
-    end
-  end
-
-  def self.wepay_access_token
-    if Rails.env.production?
-      Figaro.env.wepay_access_token
-    else
-      Figaro.env.wepay_sandbox_access_token
     end
   end
 
