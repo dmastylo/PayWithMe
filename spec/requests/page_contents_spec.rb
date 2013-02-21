@@ -14,7 +14,7 @@ describe "PageContents" do
 
 			click_link "Register"
 			# response.should have_selector('title', text: 'Register | PayWithMe')
-			response.should have_selector('h1', content: 'Register')
+			response.should have_selector('h2', content: 'Register')
 
 			click_link "Login With Facebook"
 			response.should have_selector('title', content: 'Facebook')
