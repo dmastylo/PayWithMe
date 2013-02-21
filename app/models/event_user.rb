@@ -88,6 +88,10 @@ class EventUser < ActiveRecord::Base
     true
   end
 
+  def paid_with_cash?
+    self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
+  end
+
 private
   def copy_event_attributes
     if self.event.present? && self.member?

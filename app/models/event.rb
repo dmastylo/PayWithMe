@@ -89,14 +89,12 @@ class Event < ActiveRecord::Base
     elsif paying_members.size == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE
       nil
     else
-      total_amount_cents / paying_members.size
+      total_amount_cents / paying_member_count
     end
   end
 
   def money_collected_cents
-    if split_amount_cents.present?
-      split_amount_cents * paid_members.count
-    end
+    Payment.where("event_user_id IN (?) AND paid_at IS NOT NULL", self.event_user_ids).sum(&:amount_cents)
   end
 
   # Division types
@@ -222,9 +220,17 @@ class Event < ActiveRecord::Base
     self.members - [self.organizer]
   end
 
+  def paying_member_count
+    self.event_users.count - 1
+  end
+
   def paid_members
-    paid_event_users = event_users.where("paid_at IS NOT NULL")
+    paid_event_users = self.event_users.where("paid_at IS NOT NULL")
     users = paid_event_users.collect { |event_user| event_user.user }
+  end
+
+  def paid_member_count
+    self.event_users.where("paid_at IS NOT NULL").count
   end
 
   def unpaid_members
@@ -232,9 +238,13 @@ class Event < ActiveRecord::Base
     users = unpaid_event_users.collect { |event_user| event_user.user }
   end
 
+  def unpaid_member_count
+    self.event_users.where("paid_at IS NULL").count
+  end
+
   def paid_percentage
-    if paying_members.count > 0
-      (paid_members.count * 100.0) / paying_members.count 
+    if paying_member_count > 0
+      (paid_member_count * 100.0) / paying_member_count 
     else
       0
     end
@@ -345,11 +355,7 @@ class Event < ActiveRecord::Base
 
   def paid_with_cash?(user)
     event_user = event_user(user)
-    paid_with_cash = true
-    event_user.payments.each do |payment|
-      paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH
-    end
-    paid_with_cash
+    event_user.paid_with_cash?
   end
 
   def paid_at(user)

@@ -1,13 +1,33 @@
-<% if @event_user.paid? %>
-  $('#user-status-<%= @event_user.user.id %>').html('<%= j distance_of_time_in_words_to_now @event_user.paid_at %> ago');
+<% if @error_message %>
+   $('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip({
+    title: "<%=j @error_message %>",
+    container: 'body',
+    trigger: 'manual',
+    placement: 'left'
+   });
+
+   $('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('show');
+
+   setTimeout(function() { $('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('hide'); }, 5000);
+<% else %>
+
+  <% if @event_user.paid? %>
+    $('#user-status-<%= @event_user.user.id %>').html('<%=j distance_of_time_in_words_to_now @event_user.paid_at %> ago');
+  <% elsif @event_user.paid_total_cents > 0 %>
+    $('#user-status-<%= @event_user.user.id %>').html('<%= humanized_money_with_symbol @event_user.paid_total %> of <%= humanized_money_with_symbol @event_user.event.split_amount %>');
+  <% else %>
+    $('#user-status-<%= @event_user.user.id %>').html('Unpaid');
+  <% end %>
+
+  $('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/event_user_form", event: @event_user.event, user: @event_user.user, event_user: @event_user %>');
+ $('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('hide');
+  $('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
+  if ($('.progress').length === 0)
+  {
+    $('#quick-statistics').prepend('<div class="progress"><div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div></div>');
+  }
+  else
+  {
+    $('.progress').html('<div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div>');
+  }
 <% end %>
-$('#payment-links-<%= @event_user.user.id %>').html('<%= link_to "Mark Unpaid", unpaid_event_event_user_path(@event, @event.event_user(@event_user.user)), class: "btn btn-danger", method: :put, remote: true %>');
-$('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
-if ($('.progress').length === 0)
-{
-  $('#quick-statistics').prepend('<div class="progress"><div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div></div>');
-}
-else
-{
-  $('.progress').html('<div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div>');
-}

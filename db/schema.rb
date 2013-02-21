@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130207191332) do
+ActiveRecord::Schema.define(:version => 20130221030650) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -51,6 +51,9 @@ ActiveRecord::Schema.define(:version => 20130207191332) do
     t.integer  "payment_id"
     t.boolean  "visited_event",   :default => false
   end
+
+  add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
+  add_index "event_users", ["event_id"], :name => "index_event_users_on_event_id"
 
   create_table "events", :force => true do |t|
     t.string   "title"
@@ -154,24 +157,26 @@ ActiveRecord::Schema.define(:version => 20130207191332) do
 
   create_table "notifications", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "notification_type", :limit => 255
-    t.datetime "created_at",                                          :null => false
-    t.datetime "updated_at",                                          :null => false
-    t.boolean  "read",                             :default => false
+    t.integer  "notification_type"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.boolean  "read",              :default => false
     t.integer  "foreign_id"
     t.integer  "foreign_type"
     t.integer  "subject_id"
   end
 
   create_table "payment_methods", :force => true do |t|
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                                         :null => false
+    t.datetime "updated_at",                                         :null => false
     t.integer  "static_fee_cents"
-    t.decimal  "percent_fee"
+    t.decimal  "percent_fee",         :precision => 10, :scale => 0
     t.integer  "minimum_fee_cents"
     t.integer  "fee_threshold_cents"
     t.string   "name"
   end
+
+  add_index "payment_methods", ["name"], :name => "index_payment_methods_on_name"
 
   create_table "payments", :force => true do |t|
     t.datetime "created_at",                 :null => false
@@ -189,6 +194,8 @@ ActiveRecord::Schema.define(:version => 20130207191332) do
     t.integer  "our_fee_amount_cents"
     t.integer  "payment_method_id"
   end
+
+  add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
 
   create_table "reminder_users", :force => true do |t|
     t.integer  "reminder_id"

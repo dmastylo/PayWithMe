@@ -1,28 +1,25 @@
+<% event_user = @event.event_user(user) %>
+
 <tr>
   <td><%= user.name || user.email %></td>
   <td id="user-status-<%= user.id %>">
-    <% if @event.paid?(user) %>
-      <%= distance_of_time_in_words_to_now @event.paid_at(user) %> ago
+    <% if event_user.paid? %>
+      <%= distance_of_time_in_words_to_now event_user.paid_at %> ago
+    <% elsif event_user.paid_total_cents > 0 %>
+      <%= humanized_money_with_symbol event_user.paid_total %> of <%= humanized_money_with_symbol @event.split_amount %>
     <% else %>
       <span class="unpaid" id="user-unpaid-<%= user.id %>">Unpaid</span>
     <% end %>
   </td>
   <td>
-    <% if @event.event_user(user).visited_event? %>
+    <% if event_user.visited_event? %>
       Yes
     <% else %>
       No
     <% end %>
   <td id="payment-links-<%= user.id %>">
-    <% if !@event.paid?(user) && @event.send_with_cash? %>
-      <% form_for(@event.event_user(user), method: :put, remote: true, url: paid_event_event_user_path(@event, @event.event_user(user))) do |f| %>
-        <div class="input-append">
-          <%= f.text_field :paid_total, placeholder: "Enter amount unless fully paid" %>
-          <%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-success", method: :put, remote: true %>
-        </div>
-      <% end %>
-    <% elsif @event.paid?(user) && @event.send_with_cash? && @event.paid_with_cash?(user) %>
-      <%= link_to "Mark Unpaid", unpaid_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-danger", method: :put, remote: true %>
+    <% if @event.send_with_cash? %>
+      <%= render "users/event_user_form", event: @event, user: user, event_user: event_user %>
     <% end %>
   </td>
 </tr>

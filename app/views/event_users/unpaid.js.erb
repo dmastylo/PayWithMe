@@ -1,5 +1,5 @@
 $('#user-status-<%= @event_user.user.id %>').html('<span class="unpaid">Unpaid</span>');
-$('#payment-links-<%= @event_user.user.id %>').html('<%= link_to "Mark Paid", paid_event_event_user_path(@event, @event.event_user(@event_user.user)), class: "btn btn-success", method: :put, remote: true %>');
+$('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/event_user_form", event: @event_user.event, user: @event_user.user %>');
 $('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
 var money_collected = <%= @event.money_collected %>;
 if (money_collected === 0)
