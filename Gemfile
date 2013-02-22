@@ -62,6 +62,9 @@ gem 'newrelic_rpm'
 # Pretty URLs
 gem 'friendly_id'
 
+# PDF Generation
+gem 'prawn'
+
 group :development, :test do
   gem 'sqlite3'
 end
