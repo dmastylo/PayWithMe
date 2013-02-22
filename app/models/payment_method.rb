@@ -55,11 +55,11 @@ class PaymentMethod < ActiveRecord::Base
   class MethodType
     def self.const_missing(const)
       if :CASH == const
-        PaymentMethod.find_by_name("Cash").id
+        PaymentMethod.find_by_name("Cash").object_id
       elsif :PAYPAL == const
-        PaymentMethod.find_by_name("PayPal").id
+        PaymentMethod.find_by_name("PayPal").object_id
       elsif :DWOLLA == const
-        PaymentMethod.find_by_name("Dwolla").id
+        PaymentMethod.find_by_name("Dwolla").object_id
       else
         super(const)
       end
