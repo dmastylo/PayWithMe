@@ -7,6 +7,7 @@ PayWithMe::Application.routes.draw do
   match '/faq', to: "pages#faq"
 
   resources :contact_forms
+  resources :guest_checklists
 
   resources :events do
     resources :messages, only: :create

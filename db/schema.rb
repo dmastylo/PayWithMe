@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130207191332) do
+ActiveRecord::Schema.define(:version => 20130223232522) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -112,6 +112,11 @@ ActiveRecord::Schema.define(:version => 20130207191332) do
   end
 
   add_index "groups", ["slug"], :name => "index_groups_on_slug"
+
+  create_table "guest_checklists", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "linked_accounts", :force => true do |t|
     t.string   "provider"
