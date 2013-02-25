@@ -19,6 +19,7 @@ PayWithMe::Application.routes.draw do
     end
     member do
       get 'admin'
+      get 'pdf'
     end
   end
   resources :messages, only: :index
