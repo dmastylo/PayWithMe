@@ -38,6 +38,20 @@ GIT
     omniauth-paypal (0.1.1)
       omniauth-oauth2 (~> 1.1.0)
 
+GIT
+  remote: git://github.com/tenaciousflea/omniauth-wepay.git
+  revision: cddd6b1ce296048c0d1158c11b0adbb1bca75d8b
+  specs:
+    omniauth-wepay (0.1.0)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.1)
+
+GIT
+  remote: git://github.com/wepay/Ruby-SDK.git
+  revision: 62af8300ebb08dbf87954520ae098d0747d9b56d
+  specs:
+    wepay (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -398,6 +412,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-paypal!
   omniauth-twitter
+  omniauth-wepay!
   paperclip
   passenger
   rails (= 3.2.11)
@@ -412,4 +427,5 @@ DEPENDENCIES
   sqlite3
   thin
   uglifier (>= 1.0.3)
+  wepay!
   will_paginate
