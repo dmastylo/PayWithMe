@@ -29,13 +29,32 @@ class PaymentsController < ApplicationController
   end
 
   def ipn
-    notify = ActiveMerchant::Billing::Integrations::PaypalAdaptivePayment::Notification.new(request.raw_post)
-    event_user = Payment.find_by_id(params[:id])
-    if notify.acknowledge && payment.present?
-      if notify.complete?
-        @payment.event_user.pay!(@payment, transaction_id: params["transaction"]["1"][".id"])
-      else
-        # Nothing for now
+    @payment = Payment.find_by_id(params[:id])
+    return unless @payment.present?
+
+    if @payment.payment_method_id == PaymentMethod::MethodType::PAYPAL
+      notify = ActiveMerchant::Billing::Integrations::PaypalAdaptivePayment::Notification.new(request.raw_post)
+      event_user = Payment.find_by_id(params[:id])
+      if notify.acknowledge && payment.present?
+        if notify.complete?
+          @payment.event_user.pay!(@payment, transaction_id: params["transaction"]["1"][".id"])
+        else
+          # Nothing for now
+        end
+      end
+    elsif @payment.payment_method_id == PaymentMethod::MethodType::WEPAY
+      if @payment.transaction_id == params[:checkout_id]
+        gateway = Payment.wepay_gateway
+        response = gateway.call('/checkout', Payment.wepay_access_token,
+        {
+          checkout_id: @payment.transaction_id
+        })
+
+        if ["captured", "authorized"].include?(response["state"])
+          @payment.event_user.pay!(@payment, transaction_id: @payment.transaction_id)
+        else
+          @payment.event_user.unpay!(@payment)
+        end
       end
     end
   end
