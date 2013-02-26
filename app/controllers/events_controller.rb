@@ -109,6 +109,10 @@ private
     if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
       flash.now[:error] = "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
     end
+
+    if @event.accepts_wepay? && @event.organizer.wepay_account.nil?
+      flash.now[:error] = "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+    end
   end
 
   def check_event_past
