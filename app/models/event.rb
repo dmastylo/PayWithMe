@@ -29,9 +29,6 @@ class Event < ActiveRecord::Base
   attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
-  monetize :receive_amount_cents, allow_nil: true
-  monetize :send_amount_cents, allow_nil: true
-  monetize :our_fee_amount_cents, allow_nil: true
   monetize :money_collected_cents, allow_nil: true
   has_attached_file :image
 
@@ -51,12 +48,12 @@ class Event < ActiveRecord::Base
   # ========================================================
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :member
+  has_many :members, class_name: "User", through: :event_users, source: :user
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
   has_many :reminders, dependent: :destroy
-  has_many :payment_methods, dependent: :destroy
+  has_and_belongs_to_many :payment_methods
 
   # Callbacks
   # ========================================================
@@ -76,22 +73,6 @@ class Event < ActiveRecord::Base
 
   # Money definitions
   # ========================================================
-  def receive_amount_cents
-    if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || send_amount_cents.nil?
-      nil
-    else
-      split_amount_cents
-    end
-  end
-
-  def send_amount_cents
-    if division_type == DivisionType::FUNDRAISE || paying_members.size == 0 || split_amount_cents.nil?
-      nil
-    else
-      ((split_amount_cents + Figaro.env.fee_static.to_f * 100.0) / (1.0 - Figaro.env.fee_rate.to_f)).floor
-    end
-  end
-
   def total_amount_cents
     if division_type == DivisionType::TOTAL
       super
@@ -112,15 +93,6 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def our_fee_amount_cents
-    0
-    # if send_amount_cents.present?
-    #   (send_amount_cents * (Figaro.env.fee_rate.to_f - Figaro.env.paypal_fee_rate.to_f) - (Figaro.env.fee_static.to_f - Figaro.env.paypal_fee_static.to_f) * 100.0).floor
-    # else
-    #   nil
-    # end
-  end
-  
   def money_collected_cents
     if split_amount_cents.present?
       split_amount_cents * paid_members.count
@@ -155,11 +127,10 @@ class Event < ActiveRecord::Base
   # ========================================================
 
   def accepts_payment_method?(payment_method)
-    self.payment_methods.where(payment_method: payment_method).count > 0
+    self.payment_methods.where(id: payment_method).count > 0
   end
 
   def send_with_payment_method?(payment_method)
-    return true
     return false unless accepts_payment_method?(payment_method)
 
     if payment_method == PaymentMethod::MethodType::CASH
@@ -168,13 +139,15 @@ class Event < ActiveRecord::Base
       self.organizer.paypal_account.present?
     elsif payment_method == PaymentMethod::MethodType::DWOLLA
       self.organizer.dwolla_account.present?
+    elsif payment_method == PaymentMethod::MethodType::WEPAY
+      self.organizer.wepay_account.present?
     end
   end
 
   def accepts_cash?
     accepts_payment_method?(PaymentMethod::MethodType::CASH)
   end
-  alias_method :send_cash?, :accepts_cash?
+  alias_method :send_with_cash?, :accepts_cash?
 
   def accepts_paypal?
     accepts_payment_method?(PaymentMethod::MethodType::PAYPAL)
@@ -190,6 +163,14 @@ class Event < ActiveRecord::Base
 
   def send_with_dwolla?
     send_with_payment_method?(PaymentMethod::MethodType::DWOLLA)
+  end
+
+  def accepts_wepay?
+    accepts_payment_method?(PaymentMethod::MethodType::WEPAY)
+  end
+
+  def send_with_wepay?
+    send_with_payment_method?(PaymentMethod::MethodType::WEPAY)
   end
 
   # Constants
@@ -240,11 +221,7 @@ class Event < ActiveRecord::Base
     if @payment_methods_raw.present?
       @payment_methods_raw
     else
-      payment_methods_raw = []
-      payment_methods.each do |payment_method|
-        payment_methods_raw << payment_method.payment_method
-      end
-      payment_methods_raw
+      self.payment_method_ids
     end
   end
 
@@ -256,12 +233,12 @@ class Event < ActiveRecord::Base
 
   def paid_members
     paid_event_users = event_users.where("paid_at IS NOT NULL")
-    users = paid_event_users.collect { |event_user| event_user.member }
+    users = paid_event_users.collect { |event_user| event_user.user }
   end
 
   def unpaid_members
     unpaid_event_users = event_users.where("paid_at IS NULL")
-    users = unpaid_event_users.collect { |event_user| event_user.member }
+    users = unpaid_event_users.collect { |event_user| event_user.user }
   end
 
   def paid_percentage
@@ -293,7 +270,7 @@ class Event < ActiveRecord::Base
     end
 
     delay.send_invitation_emails
-    set_event_user_attributes(exclude_from_notifications)
+    # set_event_user_attributes(exclude_from_notifications)
   end
 
   # Adds members and deletes any not in the set
@@ -317,20 +294,10 @@ class Event < ActiveRecord::Base
     remove_members([member_to_remove])
   end
 
-  def set_event_user_attributes(exclude_from_notifications)
-    self.event_users.each do |event_user|
-      if event_user.member != exclude_from_notifications
-        event_user.due_at = self.due_at
-        event_user.amount_cents = self.send_amount_cents
-        event_user.save
-      end
-    end
-  end
-
   def send_invitation_emails
     self.event_users.each do |event_user|
-      if !event_user.invitation_sent? && event_user.member != self.organizer
-        UserMailer.event_notification(event_user.member, self).deliver
+      if !event_user.invitation_sent? && event_user.user != self.organizer
+        UserMailer.event_notification(event_user.user, self).deliver
         event_user.toggle(:invitation_sent).save
       end
     end
@@ -338,7 +305,7 @@ class Event < ActiveRecord::Base
 
   def send_message_notifications
     self.members.each do |member|
-      Notification.create_or_update_for_event_message(self, member)    
+      Notification.create_or_update_for_event_message(self, member)
     end
   end
 
@@ -366,7 +333,6 @@ class Event < ActiveRecord::Base
     self.remove_groups([group_to_remove])
   end
 
-  # This method is awesome
   def independent_members
     nfgdi_members = self.paying_members
 
@@ -388,7 +354,11 @@ class Event < ActiveRecord::Base
 
   def paid_with_cash?(user)
     event_user = event_user(user)
-    event_user.payment.payment_method == PaymentMethod::MethodType::CASH
+    paid_with_cash = true
+    event_user.payments.each do |payment|
+      paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH
+    end
+    paid_with_cash
   end
 
   def paid_at(user)
@@ -427,11 +397,16 @@ private
   end
 
   def create_payment_methods
-    self.payment_methods.destroy_all
+    tmp_payment_methods = []
 
-    self.payment_methods_raw.each do |payment_method|
-      self.payment_methods.create(payment_method: payment_method)
+    self.payment_methods_raw.each do |payment_method_id|
+      payment_method = PaymentMethod.find_by_id(payment_method_id)
+      unless tmp_payment_methods.include?(payment_method)
+        tmp_payment_methods << payment_method
+      end
     end
+
+    self.payment_methods = tmp_payment_methods
   end
 
   def clear_dates

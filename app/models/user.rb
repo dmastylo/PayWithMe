@@ -27,6 +27,8 @@
 #  last_seen                  :datetime
 #  time_zone                  :string(255)      default("Eastern Time (US & Canada)")
 #  slug                       :string(255)
+#  creator_id                 :integer
+#  completed_at               :datetime
 #
 
 class User < ActiveRecord::Base
@@ -269,6 +271,10 @@ class User < ActiveRecord::Base
 
   def dwolla_account
     self.linked_accounts.where(provider: :dwolla).first
+  end
+
+  def wepay_account
+    self.linked_accounts.where(provider: :wepay).first
   end
 
   def upcoming_invited_events

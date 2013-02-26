@@ -42,6 +42,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
         linked_account = user.linked_accounts.create(provider: request.env["omniauth.auth"].provider, uid: request.env["omniauth.auth"].uid)
         update = false
       end
+      linked_account.email = request.env["omniauth.auth"].info.email if request.env["omniauth.auth"].info.email
 
       if request.env["omniauth.auth"].provider == "dwolla"
         token = Payment.dwolla_gateway.request_token(params[:code], user_omniauth_callback_url(:dwolla, port: nil))
@@ -49,6 +50,9 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
           linked_account.token = token
           linked_account.save
         end
+      elsif request.env["omniauth.auth"].provider == "wepay"
+        linked_account.token = request.env["omniauth.auth"].credentials.token
+        linked_account.save
       end
 
       user.save
@@ -92,4 +96,5 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
   alias_method :facebook, :all
   alias_method :paypal, :all
   alias_method :dwolla, :all
+  alias_method :wepay, :all
 end
