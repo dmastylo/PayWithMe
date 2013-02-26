@@ -28,6 +28,13 @@ PaymentMethod.create(
       percent_fee: 0,
       minimum_fee_cents: 0,
       fee_threshold_cents: 1000
-    }
+    },
+    {
+      name: "WePay",
+      static_fee_cents: 30,
+      percent_fee: 2.9,
+      minimum_fee_cents: 0,
+      fee_threshold_cents: 0
+    },
   ]
 )

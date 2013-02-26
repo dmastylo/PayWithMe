@@ -60,6 +60,8 @@ class PaymentMethod < ActiveRecord::Base
         PaymentMethod.find_by_name("PayPal").id
       elsif :DWOLLA == const
         PaymentMethod.find_by_name("Dwolla").id
+      elsif :WEPAY == const
+        PaymentMethod.find_by_name("WePay").id
       else
         super(const)
       end

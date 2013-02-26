@@ -17,6 +17,7 @@ gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-paypal', git: 'git://github.com/datariot/omniauth-paypal.git'
 gem 'omniauth-dwolla'
+gem 'omniauth-wepay', git: 'git://github.com/tenaciousflea/omniauth-wepay.git'
 
 # User profiles
 gem 'gravatar_image_tag'
@@ -55,6 +56,7 @@ gem 'js-routes'
 # Payments
 gem 'active_paypal_adaptive_payment', git: 'git://github.com/austingulati/active_paypal_adaptive_payment.git'
 gem 'dwolla', git: 'git://github.com/austingulati/dwolla-ruby.git'
+gem 'wepay', git: 'git://github.com/wepay/Ruby-SDK.git'
 
 # Monitoring
 gem 'newrelic_rpm'
