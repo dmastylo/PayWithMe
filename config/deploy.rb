@@ -68,36 +68,36 @@ namespace :deploy do
   end
   before "deploy", "deploy:check_revision"
 
-  namespace :assets do
-    task :precompile, :roles => :web, :except => { :no_release => true } do
-      # Check if assets have changed. If not, don't run the precompile task - it takes a long time.
-      force_compile = true
-      changed_asset_count = 0
-      # begin
-      #   from = source.next_revision(current_revision)
-      #   asset_locations = 'app/assets/ lib/assets/ vendor/assets/'
-      #   changed_asset_count = capture("cd #{latest_release} && #{source.local.log(from)} #{asset_locations} | wc -l").to_i
-      # rescue Exception => e
-      #   logger.info "Error: #{e}, forcing precompile"
-      #   force_compile = true
-      # end
-      if changed_asset_count > 0 || force_compile
-        logger.info "#{changed_asset_count} assets have changed. Pre-compiling"
-        run_locally "rake assets:precompile"
+  # namespace :assets do
+  #   task :precompile, :roles => :web, :except => { :no_release => true } do
+  #     # Check if assets have changed. If not, don't run the precompile task - it takes a long time.
+  #     force_compile = false
+  #     changed_asset_count = 0
+  #     begin
+  #       from = source.next_revision(current_revision)
+  #       asset_locations = 'app/assets/ lib/assets/ vendor/assets/'
+  #       changed_asset_count = capture("cd #{latest_release} && #{source.local.log(from)} #{asset_locations} | wc -l").to_i
+  #     rescue Exception => e
+  #       logger.info "Error: #{e}, forcing precompile"
+  #       force_compile = true
+  #     end
+  #     if changed_asset_count > 0 || force_compile
+  #       logger.info "#{changed_asset_count} assets have changed. Pre-compiling"
+  #       run_locally "rake assets:precompile"
 
-        storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: Figaro.env.rackspace_key, rackspace_username: Figaro.env.rackspace_username, rackspace_storage_url: Figaro.env.rackspace_url)
+  #       storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: Figaro.env.rackspace_key, rackspace_username: Figaro.env.rackspace_username, rackspace_storage_url: Figaro.env.rackspace_url)
 
-        directory = storage.directories.get('static-assets')
-        Dir.glob(File.join("public", "assets", "*")).each do |file|
-          directory.files.create(key: File.join("assets", File.basename(file)), body: File.open(file)) unless File.directory?(file)
-        end
+  #       directory = storage.directories.get('static-assets')
+  #       Dir.glob(File.join("public", "assets", "*")).each do |file|
+  #         directory.files.create(key: File.join("assets", File.basename(file)), body: File.open(file)) unless File.directory?(file)
+  #       end
 
-        run_locally "rm -rf public/assets"
-      else
-        logger.info "#{changed_asset_count} assets have changed. Skipping asset pre-compilation"
-      end
-    end
-  end
+  #       run_locally "rm -rf public/assets"
+  #     else
+  #       logger.info "#{changed_asset_count} assets have changed. Skipping asset pre-compilation"
+  #     end
+  #   end
+  # end
 
   # Delayed job
   after "deploy:stop",    "delayed_job:stop"
