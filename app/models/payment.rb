@@ -153,7 +153,7 @@ class Payment < ActiveRecord::Base
 
   def self.wepay_gateway
     if Rails.env.production?
-      WePay.new(Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, _use_stage = false)
+      WePay.new(Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, _use_stage = true)
     else
       WePay.new(Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret, _use_stage = true)
     end
