@@ -38,6 +38,20 @@ GIT
     omniauth-paypal (0.1.1)
       omniauth-oauth2 (~> 1.1.0)
 
+GIT
+  remote: git://github.com/tenaciousflea/omniauth-wepay.git
+  revision: cddd6b1ce296048c0d1158c11b0adbb1bca75d8b
+  specs:
+    omniauth-wepay (0.1.0)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.1)
+
+GIT
+  remote: git://github.com/wepay/Ruby-SDK.git
+  revision: 62af8300ebb08dbf87954520ae098d0747d9b56d
+  specs:
+    wepay (0.0.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -137,7 +151,6 @@ GEM
     diff-lcs (1.2.1)
     erubis (2.7.0)
     eventmachine (1.0.0)
-    excon (0.6.6)
     execjs (1.4.0)
       multi_json (~> 1.0)
     factory_girl (4.2.0)
@@ -151,17 +164,6 @@ GEM
     ffi (1.4.0)
     figaro (0.6.0)
       rails (>= 3, < 5)
-    fog (0.9.0)
-      builder
-      excon (~> 0.6.1)
-      formatador (>= 0.1.3)
-      json
-      mime-types
-      net-scp (>= 1.0.4)
-      net-ssh (>= 2.1.4)
-      nokogiri (>= 1.4.4)
-      ruby-hmac
-    formatador (0.2.4)
     friendly_id (4.0.9)
     gravatar_image_tag (1.1.3)
     guard (1.6.2)
@@ -318,7 +320,6 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    ruby-hmac (0.4.0)
     rubyzip (0.9.9)
     rvm-capistrano (1.2.7)
       capistrano (>= 2.0.0)
@@ -385,7 +386,6 @@ DEPENDENCIES
   dwolla!
   factory_girl_rails
   figaro
-  fog
   friendly_id
   gravatar_image_tag
   guard-rspec
@@ -401,6 +401,7 @@ DEPENDENCIES
   omniauth-facebook
   omniauth-paypal!
   omniauth-twitter
+  omniauth-wepay!
   paperclip
   passenger
   rails (= 3.2.11)
@@ -415,4 +416,5 @@ DEPENDENCIES
   sqlite3
   thin
   uglifier (>= 1.0.3)
+  wepay!
   will_paginate

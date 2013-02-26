@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130221030650) do
+ActiveRecord::Schema.define(:version => 20130221031147) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -157,20 +157,22 @@ ActiveRecord::Schema.define(:version => 20130221030650) do
 
   create_table "notifications", :force => true do |t|
     t.integer  "user_id"
-    t.integer  "notification_type"
-    t.datetime "created_at",                           :null => false
-    t.datetime "updated_at",                           :null => false
-    t.boolean  "read",              :default => false
+    t.integer  "notification_type", :limit => 255
+    t.datetime "created_at",                                          :null => false
+    t.datetime "updated_at",                                          :null => false
+    t.boolean  "read",                             :default => false
     t.integer  "foreign_id"
     t.integer  "foreign_type"
     t.integer  "subject_id"
   end
 
+  add_index "notifications", ["user_id"], :name => "index_notifications_on_user_id"
+
   create_table "payment_methods", :force => true do |t|
-    t.datetime "created_at",                                         :null => false
-    t.datetime "updated_at",                                         :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
     t.integer  "static_fee_cents"
-    t.decimal  "percent_fee",         :precision => 10, :scale => 0
+    t.decimal  "percent_fee"
     t.integer  "minimum_fee_cents"
     t.integer  "fee_threshold_cents"
     t.string   "name"
