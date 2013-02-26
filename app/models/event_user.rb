@@ -91,6 +91,13 @@ class EventUser < ActiveRecord::Base
   def paid_with_cash?
     self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
   end
+  
+  def unpay!(payment)
+    payment.unpay!
+
+    self.paid_at = nil
+    save
+  end
 
 private
   def copy_event_attributes

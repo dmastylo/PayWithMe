@@ -210,6 +210,7 @@ Devise.setup do |config|
   config.omniauth :facebook, "141836152608292", "b34af2003a66f9e3a6b4c6a3ab6ad701"
   config.omniauth :paypal, "60dc7a2f05caeb96628b05a1e7dab426", "470fe49daba167b3"
   config.omniauth :dwolla, "XV7LXC7tu3NlVe8qFcwKVJCIp9AmEzIXHUC2P6QOwu06H3i3Om", "U34SfFeKCYWvJ/xJzOJDW1iDlAgeZ/FXqkUepevRFdDvAaT7XO", scope: "accountinfofull|transactions|send", provider_ignores_state: true
+  config.omniauth :wepay, "151353", "24ad3727dd"
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
