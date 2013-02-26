@@ -63,19 +63,14 @@ gem 'newrelic_rpm'
 gem 'friendly_id'
 
 group :development, :test do
+  gem 'sqlite3'
 end
 
 group :development do
-  gem 'mysql2'
   gem 'annotate'
-  # gem 'activerecord-mysql2-adapter'
-  # gem "query_reviewer", :git => "git://github.com/nesquena/query_reviewer.git"
-  gem 'ruby-prof'
-  gem 'rack-mini-profiler'
 end
 
 group :test do
-  gem 'sqlite3'
   gem 'factory_girl_rails'
   gem 'rspec-rails'
   gem 'capybara', '1.1.2'
