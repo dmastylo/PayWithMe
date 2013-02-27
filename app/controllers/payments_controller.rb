@@ -45,7 +45,7 @@ class PaymentsController < ApplicationController
     elsif @payment.payment_method_id == PaymentMethod::MethodType::WEPAY
       if @payment.transaction_id == params[:checkout_id]
         gateway = Payment.wepay_gateway
-        response = gateway.call('/checkout', Payment.wepay_access_token,
+        response = gateway.call('/checkout', @payment.payee.wepay_account.token_secret,
         {
           checkout_id: @payment.transaction_id
         })
