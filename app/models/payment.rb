@@ -113,15 +113,15 @@ class Payment < ActiveRecord::Base
       gateway.redirect_url_for(response["payKey"])
     elsif payment_method_id == PaymentMethod::MethodType::WEPAY
       gateway = Payment.wepay_gateway
-      response = gateway.call('/checkout/create', payee.wepay_account.token,
+      response = gateway.call('/checkout/create', payee.wepay_account.token_secret,
       {
-        account_id: payee.wepay_account.uid,
+        account_id: payee.wepay_account.token,
         amount: self.amount.to_s,
         app_fee: self.our_fee_amount.to_s,
         short_description: "Payment for #{self.event.title}",
         type: "EVENT",
         redirect_uri: Rails.application.routes.url_helpers.event_url(self.event, success: 1),
-        callback_uri: Rails.env.development?? nil: Rails.application.routes.url_helpers.ipn_payment_url(self)
+        callback_uri: Rails.env.development?? nil : Rails.application.routes.url_helpers.ipn_payment_url(self)
       })
 
       self.transaction_id = response["checkout_id"]
@@ -153,7 +153,7 @@ class Payment < ActiveRecord::Base
 
   def self.wepay_gateway
     if Rails.env.production?
-      WePay.new(Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, _use_stage = true)
+      WePay.new(Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, _use_stage = false)
     else
       WePay.new(Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret, _use_stage = true)
     end
