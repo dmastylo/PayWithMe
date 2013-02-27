@@ -132,7 +132,6 @@ class Event < ActiveRecord::Base
   end
 
   def send_with_payment_method?(payment_method)
-    return true
     return false unless accepts_payment_method?(payment_method)
 
     if payment_method == PaymentMethod::MethodType::CASH
@@ -141,6 +140,8 @@ class Event < ActiveRecord::Base
       self.organizer.paypal_account.present?
     elsif payment_method == PaymentMethod::MethodType::DWOLLA
       self.organizer.dwolla_account.present?
+    elsif payment_method == PaymentMethod::MethodType::WEPAY
+      self.organizer.wepay_account.present?
     end
   end
 
@@ -170,6 +171,14 @@ class Event < ActiveRecord::Base
     event_user = event_user(user)
     event_user.paid_at = Time.now
     event_user.save
+  end
+
+  def accepts_wepay?
+    accepts_payment_method?(PaymentMethod::MethodType::WEPAY)
+  end
+
+  def send_with_wepay?
+    send_with_payment_method?(PaymentMethod::MethodType::WEPAY)
   end
 
   # Constants

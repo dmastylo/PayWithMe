@@ -93,6 +93,13 @@ class EventUser < ActiveRecord::Base
     true
   end
 
+  def unpay!(payment)
+    payment.unpay!
+
+    self.paid_at = nil
+    save
+  end
+
 private
   def copy_event_attributes
     if self.event.present? && self.member?
