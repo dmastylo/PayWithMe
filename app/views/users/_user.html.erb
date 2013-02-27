@@ -1,5 +1,5 @@
 <li class="member" id="member-<%= user.id %>">
-  <div class="profile_image <%= "nudge\" rel=\"tooltip\" title=\"Nudge #{user_name(user)}\" data-placement=\"top".html_safe if signed_in? && @event.can_nudge?(current_user, user) %>" id="image-user-<%= user.id %>">
+  <div class="profile-image <%= "nudge\" rel=\"tooltip\" title=\"Nudge #{user_name(user)}\" data-placement=\"top".html_safe if signed_in? && @event.can_nudge?(current_user, user) %>" id="image-user-<%= user.id %>">
     <% if @event.can_nudge?(current_user, user) %>
       <%= nudge_image_tag user, :thumb %>
       <span id="link-user-<%= user.id %>"><%= link_to ' ', nudge_event_event_user_path(@event, @event.event_user(user)), class: "link", method: :put, remote: true %></span>
