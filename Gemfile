@@ -50,6 +50,9 @@ gem 'daemons'
 gem 'actionmailer-callbacks'
 gem 'mail_form'
 
+# Linking chat urls
+gem 'rinku'
+
 # Javascript
 gem 'js-routes'
 

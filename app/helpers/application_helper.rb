@@ -47,6 +47,6 @@ module ApplicationHelper
     #   text.sub! /( |^)http:\/\/#{name}( |$)/, " <a href='http://#{name}' >#{name}</a> "
     # end
 
-    text
+    Rinku.auto_link(text)
   end
 end
