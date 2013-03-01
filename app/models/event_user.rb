@@ -88,9 +88,9 @@ class EventUser < ActiveRecord::Base
     true
   end
 
-  def paid_with_cash?
-    self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
-  end
+  # def paid_with_cash?
+  #   self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
+  # end
   
   def unpay!(payment)
     payment.unpay!
