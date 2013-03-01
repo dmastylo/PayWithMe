@@ -2,15 +2,19 @@
 #
 # Table name: event_users
 #
-#  id              :integer          not null, primary key
-#  event_id        :integer
-#  user_id         :integer
-#  amount_cents    :integer          default(0)
-#  due_at          :datetime
-#  paid_at         :datetime
-#  invitation_sent :boolean          default(FALSE)
-#  payment_id      :integer
-#  visited_event   :boolean          default(FALSE)
+#  id                        :integer          not null, primary key
+#  event_id                  :integer
+#  user_id                   :integer
+#  amount_cents              :integer          default(0)
+#  due_at                    :datetime
+#  paid_at                   :datetime
+#  invitation_sent           :boolean          default(FALSE)
+#  payment_id                :integer
+#  visited_event             :boolean          default(FALSE)
+#  paid_with_cash            :boolean          default(TRUE)
+#  paid_total_cents_cents    :integer          default(0), not null
+#  paid_total_cents_currency :string(255)      default("USD"), not null
+#  paid_total_cents          :integer          default(0)
 #
 
 class EventUser < ActiveRecord::Base
@@ -57,9 +61,9 @@ class EventUser < ActiveRecord::Base
     self.event.present? && self.event.organizer == self.user
   end
 
-  def paid_total_cents
-    payments.where("paid_at IS NOT NULL").sum(&:amount_cents)
-  end
+  # def paid_total_cents
+  #   payments.where("paid_at IS NOT NULL").sum(&:amount_cents)
+  # end
 
   def create_payment(options={})
     current_cents = options[:amount_cents] || amount_cents

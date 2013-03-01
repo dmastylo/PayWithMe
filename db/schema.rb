@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130301210142) do
+ActiveRecord::Schema.define(:version => 20130301213313) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -44,13 +44,16 @@ ActiveRecord::Schema.define(:version => 20130301210142) do
   create_table "event_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
-    t.integer  "amount_cents",    :default => 0
+    t.integer  "amount_cents",              :default => 0
     t.datetime "due_at"
     t.datetime "paid_at"
-    t.boolean  "invitation_sent", :default => false
+    t.boolean  "invitation_sent",           :default => false
     t.integer  "payment_id"
-    t.boolean  "visited_event",   :default => false
-    t.boolean  "paid_with_cash",  :default => true
+    t.boolean  "visited_event",             :default => false
+    t.boolean  "paid_with_cash",            :default => true
+    t.integer  "paid_total_cents_cents",    :default => 0,     :null => false
+    t.string   "paid_total_cents_currency", :default => "USD", :null => false
+    t.integer  "paid_total_cents",          :default => 0
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -168,6 +171,15 @@ ActiveRecord::Schema.define(:version => 20130301210142) do
   end
 
   add_index "notifications", ["user_id"], :name => "index_notifications_on_user_id"
+
+  create_table "nudges", :force => true do |t|
+    t.integer  "nudgee_id"
+    t.integer  "nudger_id"
+    t.integer  "event_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.datetime "sent_at"
+  end
 
   create_table "payment_methods", :force => true do |t|
     t.datetime "created_at",          :null => false

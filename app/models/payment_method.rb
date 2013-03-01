@@ -15,7 +15,7 @@
 class PaymentMethod < ActiveRecord::Base
 
   # Accessible attributes
-  attr_accessible :name, :static_fee_cents, :percent_fee, :minimum_fee_cents, :fee_threshold_cents
+  attr_accessible :id, :name, :static_fee_cents, :percent_fee, :minimum_fee_cents, :fee_threshold_cents
 
   def processor_fee(amount)
     fee = 0
@@ -55,13 +55,13 @@ class PaymentMethod < ActiveRecord::Base
   class MethodType
     def self.const_missing(const)
       if :CASH == const
-        PaymentMethod.find_by_name("Cash").id
+        1 # PaymentMethod.find_by_name("Cash").id
       elsif :PAYPAL == const
-        PaymentMethod.find_by_name("PayPal").id
+        2 # PaymentMethod.find_by_name("PayPal").id
       elsif :DWOLLA == const
-        PaymentMethod.find_by_name("Dwolla").id
+        3 # PaymentMethod.find_by_name("Dwolla").id
       elsif :WEPAY == const
-        PaymentMethod.find_by_name("WePay").id
+        4 # PaymentMethod.find_by_name("WePay").id
       else
         super(const)
       end

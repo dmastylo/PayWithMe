@@ -83,6 +83,7 @@ class EventsController < ApplicationController
   end
 
   def admin
+    # @event = Event.find(params[:id], include: :event_users)
   end
 
 private
