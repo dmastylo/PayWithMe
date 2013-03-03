@@ -374,9 +374,7 @@ class Event < ActiveRecord::Base
   end
 
   def generatePDF
-    Prawn::Document.generate('hi.pdf') do |pdf|
-      pdf.text("Hi")
-    end
+    
   end
 
 private

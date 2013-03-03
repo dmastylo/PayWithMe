@@ -65,7 +65,8 @@ gem 'newrelic_rpm'
 gem 'friendly_id'
 
 # PDF Generation
-gem 'prawn'
+gem 'wicked_pdf'
+gem 'wkhtmltopdf'
 
 group :development, :test do
   gem 'sqlite3'

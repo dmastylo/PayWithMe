@@ -85,9 +85,13 @@ class EventsController < ApplicationController
   def admin
   end
 
-  def pdf
-    @event.generatePDF
-    redirect_to admin_event_path(@event)
+  def admin_pdf
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render :pdf => 'admin_pdf'
+      end
+    end
   end
 
 private
