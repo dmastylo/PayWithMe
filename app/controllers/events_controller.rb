@@ -86,8 +86,7 @@ class EventsController < ApplicationController
   end
 
   def pdf
-    # Run method to generate pdf now
-
+    @event.generatePDF
     redirect_to admin_event_path(@event)
   end
 

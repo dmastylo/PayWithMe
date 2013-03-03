@@ -373,6 +373,12 @@ class Event < ActiveRecord::Base
     Time.now > self.due_at
   end
 
+  def generatePDF
+    Prawn::Document.generate('hi.pdf') do |pdf|
+      pdf.text("Hi")
+    end
+  end
+
 private
   def clear_amounts
     if division_type != DivisionType::SPLIT
