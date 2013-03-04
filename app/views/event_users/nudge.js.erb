@@ -19,3 +19,4 @@ rumbleTimeout = setTimeout(function()
 
 $('#link-user-<%= @event_user.user_id %>').html('<%= link_to " ", @event_user.user %>');
 $profilePicture.removeClass('nudge');
+$profilePicture.unbind('mouseenter');
