@@ -6,7 +6,7 @@
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
 #  static_fee_cents    :integer
-#  percent_fee         :decimal(, )
+#  percent_fee         :decimal(8, 4)
 #  minimum_fee_cents   :integer
 #  fee_threshold_cents :integer
 #  name                :string(255)
@@ -25,7 +25,7 @@ class PaymentMethod < ActiveRecord::Base
     if fee < minimum_fee_cents
       fee = minimum_fee_cents
     end
-    return fee.ceil
+    return fee.round
   end
 
   def our_fee(amount)

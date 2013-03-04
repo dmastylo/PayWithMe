@@ -14,9 +14,9 @@
 #  amount_cents               :integer
 #  event_user_id              :integer
 #  transaction_id             :string(255)
-#  payment_method             :integer
 #  processor_fee_amount_cents :integer
 #  our_fee_amount_cents       :integer
+#  payment_method_id          :integer
 #
 
 class Payment < ActiveRecord::Base
