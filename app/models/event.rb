@@ -307,7 +307,6 @@ class Event < ActiveRecord::Base
     self.members.each do |member|
       event_user = member.event_users.find_by_event_id(self.id)
       Notification.create_or_update_for_event_message(self, member) unless event_user.on_page?
-      Notification.create_or_update_for_event_message(self, member)
     end
   end
 

@@ -33,7 +33,7 @@ class MessagesController < ApplicationController
     end
   end
 
-  private
+private
   def user_on_page
     current_user.event_users.find_by_event_id(@event.id).update_attribute(:last_seen, Time.now)
   end
