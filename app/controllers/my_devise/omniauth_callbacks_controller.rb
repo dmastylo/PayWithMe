@@ -59,6 +59,11 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
         linked_account.token = response.first["account_id"]
 
         linked_account.save
+      elsif request.env["omniauth.auth"].provider == "paypal"
+        linked_account.uid = request.env["omniauth.auth"].uid
+        linked_account.token = request.env["omniauth.auth"].credentials.token
+
+        linked_account.save
       end
 
       user.save
