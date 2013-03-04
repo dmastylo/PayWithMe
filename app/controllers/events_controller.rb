@@ -18,6 +18,8 @@ class EventsController < ApplicationController
       redirect_to event_path(@event), status: :moved_permanently
     end
 
+    @event = Event.find_by_id(@event.id, include: { event_users: :user } )
+
     if params[:success]
       flash.now[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
     elsif params[:cancel]
@@ -83,7 +85,7 @@ class EventsController < ApplicationController
   end
 
   def admin
-    # @event = Event.find(params[:id], include: :event_users)
+    @event = Event.find_by_id(@event.id, include: [{ event_users: :user }, :payment_methods] )
   end
 
 private

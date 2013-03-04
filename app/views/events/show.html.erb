@@ -58,7 +58,7 @@
       <h3>Organizer</h3>
       <div class="well">
         <ul class="members">
-          <%= render @event.organizer %>
+          <%= render @event.event_user(@event.organizer_id) %>
         </ul>
       </div>
 
@@ -66,7 +66,7 @@
       <div class="well">
         <% if @event.paying_members.any? %>
           <ul class="members">
-            <%= render partial: 'users/user', collection: @event.paying_members, as: :user %>
+            <%= render partial: 'event_users/event_user', collection: @event.paying_event_users %>
           </ul>
         <% else %>
           There are no members. Add some!

@@ -27,62 +27,61 @@ class Notification < ActiveRecord::Base
   belongs_to :user
 
   # Creation methods
-  def self.create_for_event(event, member)
-    member.notifications.create(
+  def self.create_for_event(event_id, user_id)
+    User.find_by_id(user_id).notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::EVENT,
-      foreign_id: event.id
-      # body: "#{event.organizer.first_name} has invited you to #{event.title}.",
+      foreign_id: event_id
     )
   end
 
-  def self.create_for_group(group, member)
-    member.notifications.create(
+  def self.create_for_group(group_id, user_id)
+    User.find_by_id(user_id).notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::GROUP,
-      foreign_id: group.id
-      # body: "You have been added to #{group.title}.",
+      foreign_id: group_id
     )
   end
 
-  def self.create_or_update_for_event_message(event, member)
-    last_message = member.messages.where(event_id: event.id).first
+  def self.create_or_update_for_event_message(event_id, user_id)
+    user = User.find_by_id(user_id)
+    last_message = user.messages.where(event_id: event_id).first
     message_after = (last_message.present?)? last_message.created_at : Time.now.midnight
     message_count = event.messages.where("created_at > ?", message_after).count
     return unless message_count > 0
 
-    notification = member.notifications.where(
-      foreign_id: event.id,
+    notification = user.notifications.where(
+      foreign_id: event_id,
       notification_type: NotificationType::MESSAGE,
       foreign_type: ForeignType::EVENT,
       created_at: (Time.now.midnight)..Time.now.midnight + 1.day
     ).first
     if notification.nil?
-      notification = member.notifications.new(
+      notification = user.notifications.new(
         notification_type: NotificationType::MESSAGE,
         foreign_type: ForeignType::EVENT,
-        foreign_id: event.id
+        foreign_id: event_id
       )
     end
 
-    # notification.body = "#{TextHelper.pluralize(message_count, 'new message has', 'new messages have')} been posted in #{event.title}."
     notification.subject_id = message_count
     notification.read = false
     notification.save
   end
 
-  def self.create_or_update_for_event_update(event, member)
-    notification = member.notifications.where(
-      foreign_id: event.id,
+  def self.create_or_update_for_event_update(event_id, user_id)
+    user = User.find_by_id(user_id)
+    notification = user.notifications.where(
+      foreign_id: event_id,
       notification_type: NotificationType::UPDATE,
       foreign_type: ForeignType::EVENT,
       created_at: (Time.now.midnight)..Time.now.midnight + 1.day
     ).first
     if notification.nil?
-      notification = member.notifications.new(
+      notification = user.notifications.new(
         notification_type: NotificationType::UPDATE,
         foreign_type: ForeignType::EVENT,
-        foreign_id: event.id
+        foreign_id: event_id
       )
     end
 

@@ -36,7 +36,7 @@ class EventUser < ActiveRecord::Base
 
   # Callbacks
   before_validation :copy_event_attributes
-  after_initialize :copy_event_attributes
+  # after_initialize :copy_event_attributes
   after_save :copy_event_attributes
 
   def paid?
@@ -85,10 +85,16 @@ class EventUser < ActiveRecord::Base
   def pay!(payment, options={})
     payment.pay!(options)
 
+    self.paid_total_cents = 0
+    self.payments.each do |payment|
+      self.paid_total_cents += payment.amount_cents
+    end
+
     if self.paid_total_cents >= self.amount_cents
       self.paid_at = Time.now
-      save
     end
+
+    self.save
     true
   end
 

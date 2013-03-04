@@ -124,8 +124,8 @@ class Event < ActiveRecord::Base
   # Payment methods
   # ========================================================
 
-  def accepts_payment_method?(payment_method)
-    self.payment_methods.where(id: payment_method).count > 0
+  def accepts_payment_method?(payment_method_id)
+    self.payment_methods.select { |payment_method| payment_method.id == payment_method_id }.count > 0
   end
 
   def send_with_payment_method?(payment_method)
@@ -225,8 +225,12 @@ class Event < ActiveRecord::Base
 
   # Member definitions
   # ========================================================
+  def paying_event_users
+    self.event_users.reject { |event_user| event_user.user_id == self.organizer_id }
+  end
+
   def paying_members
-    self.members - [self.organizer]
+    self.members.reject { |user| user.id == self.organizer_id }
   end
 
   def paying_member_count
@@ -268,12 +272,12 @@ class Event < ActiveRecord::Base
     members_to_add.each do |member|
       if member.valid?
         if self.members.include?(member)
-          Notification.create_or_update_for_event_update(self, member) if member != exclude_from_notifications
+          Notification.delay.create_or_update_for_event_update(self.id, member.id) if member != exclude_from_notifications
         else
           self.members << member 
-          Notification.create_for_event(self, member) if member != exclude_from_notifications
+          Notification.delay.create_for_event(self.id, member.id) if member != exclude_from_notifications
           if editing_event
-            NewsItem.delay.create_for_new_event_member(self, member)
+            NewsItem.delay.create_for_new_event_member(self.id, member.id)
           end
         end
       end
@@ -307,7 +311,7 @@ class Event < ActiveRecord::Base
   def send_invitation_emails
     self.event_users.each do |event_user|
       if !event_user.invitation_sent? && event_user.user != self.organizer
-        UserMailer.event_notification(event_user.user, self).deliver
+        UserMailer.delay.event_notification(event_user.user, self).deliver
         event_user.toggle(:invitation_sent).save
       end
     end
@@ -315,7 +319,7 @@ class Event < ActiveRecord::Base
 
   def send_message_notifications
     self.members.each do |member|
-      Notification.create_or_update_for_event_message(self, member)
+      Notification.delay.create_or_update_for_event_message(self, member)
     end
   end
 
