@@ -35,7 +35,7 @@ class PaymentsController < ApplicationController
     if @payment.payment_method_id == PaymentMethod::MethodType::PAYPAL
       notify = ActiveMerchant::Billing::Integrations::PaypalAdaptivePayment::Notification.new(request.raw_post)
       event_user = Payment.find_by_id(params[:id])
-      if notify.acknowledge && payment.present?
+      if notify.acknowledge && @payment.present?
         if notify.complete?
           @payment.event_user.pay!(@payment, transaction_id: params["transaction"]["1"][".id"])
         else
