@@ -171,21 +171,21 @@ class Payment < ActiveRecord::Base
 
 private
   def self.paypal_gateway
-    if Rails.env.production?
-      ActiveMerchant::Billing::PaypalAdaptivePayment.new(
-        login: Figaro.env.paypal_username,
-        password: Figaro.env.paypal_password,
-        signature: Figaro.env.paypal_signature,
-        appid: Figaro.env.paypal_appid
-      )
-    else
+    # if Rails.env.production?
+    #   ActiveMerchant::Billing::PaypalAdaptivePayment.new(
+    #     login: Figaro.env.paypal_username,
+    #     password: Figaro.env.paypal_password,
+    #     signature: Figaro.env.paypal_signature,
+    #     appid: Figaro.env.paypal_appid
+    #   )
+    # else
       ActiveMerchant::Billing::PaypalAdaptivePayment.new(
         login: Figaro.env.paypal_sandbox_username,
         password: Figaro.env.paypal_sandbox_password,
         signature: Figaro.env.paypal_sandbox_signature,
         appid: Figaro.env.paypal_sandbox_appid
       )
-    end
+    # end
   end
 
   def copy_event_attributes
