@@ -96,7 +96,7 @@ class Payment < ActiveRecord::Base
         # },
         {
           email: payee.paypal_account.email,
-          amount: self.amount.to_s
+          amount: self.total_amount.to_s
           # primary: true
         }
       ]
