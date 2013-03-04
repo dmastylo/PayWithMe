@@ -1,6 +1,6 @@
 // Show
 // =========================
-.event-show
+.event-show,.group-show
 {
     .image
     {
@@ -127,6 +127,7 @@
         background-size: 100%;
         background-position: center center;
         border-bottom: 1px solid $mediumGray;
+        border-width: 0 0 1px 0;
         background-color: #FFF;
     }
     .info
