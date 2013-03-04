@@ -95,7 +95,7 @@ class Payment < ActiveRecord::Base
         #   primary: false
         # },
         {
-          email: payee.email,
+          email: payee.paypal_account.email,
           amount: self.amount.to_s
           # primary: true
         }
@@ -109,6 +109,8 @@ class Payment < ActiveRecord::Base
         receiver_list: recipients,
         # fees_payer: "PRIMARYRECEIVER"
       )
+
+      # raise response.to_yaml
 
       gateway.redirect_url_for(response["payKey"])
     elsif payment_method_id == PaymentMethod::MethodType::WEPAY
@@ -169,7 +171,7 @@ class Payment < ActiveRecord::Base
 
 private
   def self.paypal_gateway
-    if Rails.env.production? 
+    if Rails.env.production?
       ActiveMerchant::Billing::PaypalAdaptivePayment.new(
         login: Figaro.env.paypal_username,
         password: Figaro.env.paypal_password,
