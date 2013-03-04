@@ -25,7 +25,7 @@ class PaymentMethod < ActiveRecord::Base
     if fee < minimum_fee_cents
       fee = minimum_fee_cents
     end
-    return fee.round
+    return fee.ceil
   end
 
   def our_fee(amount)
