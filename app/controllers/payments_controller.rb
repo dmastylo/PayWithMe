@@ -37,7 +37,7 @@ class PaymentsController < ApplicationController
       event_user = Payment.find_by_id(params[:id])
       if notify.acknowledge && @payment.present?
         if notify.complete?
-          @payment.event_user.pay!(@payment, transaction_id: params["transaction"]["1"][".id"])
+          @payment.event_user.pay!(@payment, transaction_id: params["transaction"]["0"][".id"])
         else
           # Nothing for now
         end
