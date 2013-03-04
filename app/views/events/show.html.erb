@@ -82,6 +82,9 @@
         <% if @event.send_with_dwolla? %>
           <%= event_user_pay_button(@event_user, "Dwolla") %>
         <% end %>
+        <% if @event.send_with_wepay? %>
+          <%= event_user_pay_button(@event_user, "WePay") %>
+        <% end %>
       <% end %>
     </div>
     <div class="span7">
@@ -110,6 +113,11 @@
       $('.message').autoSize({
         fixed: '.profile-image',
         fluid: '.body'
+      });
+      $('.member').autoSize({
+        fixed: '.profile-image',
+        fluid: '.body',
+        offset: 1
       });
     });
   </script>

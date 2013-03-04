@@ -1,6 +1,6 @@
 // Show
 // =========================
-.event-show
+.event-show,.group-show
 {
     .image
     {
@@ -20,7 +20,8 @@
     .members
     {
         max-height: 350px;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
         list-style: none;
         padding: 0;
         margin: 0;
@@ -30,7 +31,7 @@
             width: 50%;
             float: left;
             &:last-child { margin-bottom: 0; }
-            .profile_image
+            .profile-image
             {
                 margin-top: 3px;
                 float: left;
@@ -40,6 +41,7 @@
             {
                 padding-left: 10px;
                 float: left;
+                @include box-sizing(border-box);
                 .user a
                 {
                     color: $offBlack;
@@ -125,6 +127,7 @@
         background-size: 100%;
         background-position: center center;
         border-bottom: 1px solid $mediumGray;
+        border-width: 0 0 1px 0;
         background-color: #FFF;
     }
     .info

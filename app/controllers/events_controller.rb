@@ -6,6 +6,7 @@ class EventsController < ApplicationController
   before_filter :check_organizer_accounts, only: [:show, :admin]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
+  before_filter :check_event_past, only: [:edit, :update]
 
   def index
     @upcoming_events = current_user.upcoming_events
@@ -18,11 +19,9 @@ class EventsController < ApplicationController
     end
 
     if params[:success]
-      flash[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
-      redirect_to event_path(@event)
+      flash.now[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
     elsif params[:cancel]
-      flash[:error] = "Payment cancelled!"
-      redirect_to event_path(@event)
+      flash.now[:error] = "Payment cancelled!"
     end
 
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
@@ -65,8 +64,6 @@ class EventsController < ApplicationController
   def update
     members_from_users = User.from_params(params[:event].delete(:members), current_user)
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
-    # raise [members_from_users, '=====', members_from_groups].to_yaml
-    # @event = current_user.organized_events.new(params[:event])
 
     if @event.update_attributes(params[:event])
       flash[:success] = "Event updated!"
@@ -76,10 +73,6 @@ class EventsController < ApplicationController
 
       # For some reason, redirect_to @event doesn't work
       redirect_to admin_event_path(@event)
-    else
-      @member_emails = @event.members.collect { |member| member.email }
-      @group_ids = @event.groups.collect { |group| group.id }
-      render "edit"
     end
   end
 
@@ -110,11 +103,22 @@ private
   def check_organizer_accounts
     return unless current_user == @event.organizer
     if @event.accepts_paypal? && @event.organizer.paypal_account.nil?
-      flash[:error] = "Hey! You have to add a PayPal account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      flash.now[:error] = "Hey! You have to add a PayPal account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
     end
 
     if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
-      flash[:error] = "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      flash.now[:error] = "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+    end
+
+    if @event.accepts_wepay? && @event.organizer.wepay_account.nil?
+      flash.now[:error] = "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+    end
+  end
+
+  def check_event_past
+    if @event.is_past?
+      flash[:error] = "Can't edit an event that has already happened."
+      redirect_to event_path(@event)
     end
   end
 end

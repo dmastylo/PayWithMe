@@ -1,5 +1,5 @@
 <li class="member">
-  <div class="profile_image">
+  <div class="profile-image">
     <%= profile_image_tag user, :thumb %> 
   </div>
   <div class="body">
@@ -28,6 +28,6 @@
     </div>
   </div>
 </li>
-<% if user != @event.organizer && user_counter.odd? %>
+<% if ((@event.present? && user != @event.organizer) || (@group.present? && user != @group.organizer)) && user_counter.odd? %>
   <div class="clearfix"></div>
 <% end %>
