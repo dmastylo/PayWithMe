@@ -7,7 +7,7 @@ class EventsController < ApplicationController
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
   before_filter :check_event_past, only: [:edit, :update]
-  before_filter :clear_relevant_notifications, only: [:show] if: :current_user
+  before_filter :clear_relevant_notifications, only: [:show], if: :current_user
 
   def index
     @upcoming_events = current_user.upcoming_events
