@@ -1,4 +1,5 @@
 $('.tooltip').remove();
+$('.overlay').remove();
 
 // Shake profile picture
 var rumbleTimeout;
@@ -6,16 +7,19 @@ $profilePicture = $('#image-user-<%= @event_user.user_id %>');
 $profilePicture.jrumble();
 clearTimeout(rumbleTimeout);
 $profilePicture.trigger('startRumble');
+$profilePicture.attr('data-trigger', 'manual');
 $profilePicture.attr('data-original-title', "Nudge sent to <%= user_name(@event_user.user) %>!");
 rumbleTimeout = setTimeout(function()
 {
-	$profilePicture.tooltip('show');
   $profilePicture.trigger('stopRumble');
+  $profilePicture.off();
+  $profilePicture.tooltip('show');
   setTimeout(function()
   {
-		$profilePicture.tooltip('destroy');
+    $profilePicture.tooltip('destroy');
   }, 2500);
 }, 1000)
+
 
 $('#link-user-<%= @event_user.user_id %>').html('<%= link_to " ", @event_user.user, class: "link" %>');
 $profilePicture.removeClass('nudge');
