@@ -5,6 +5,7 @@ PayWithMe::Application.routes.draw do
   match '/team', to: "pages#team"
   match '/privacy_policy', to: "pages#privacy_policy"
   match '/faq', to: "pages#faq"
+  match '/jobs', to: "pages#jobs"
 
   resources :contact_forms
 
