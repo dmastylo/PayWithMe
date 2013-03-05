@@ -169,6 +169,15 @@ ActiveRecord::Schema.define(:version => 20130304220336) do
     t.integer  "subject_id"
   end
 
+  create_table "nudges", :force => true do |t|
+    t.integer  "nudgee_id"
+    t.integer  "nudger_id"
+    t.integer  "event_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.datetime "sent_at"
+  end
+
   create_table "payment_methods", :force => true do |t|
     t.datetime "created_at",                                        :null => false
     t.datetime "updated_at",                                        :null => false

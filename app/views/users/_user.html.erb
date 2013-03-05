@@ -1,12 +1,17 @@
-<li class="member">
-  <div class="profile-image">
-    <%= profile_image_tag user, :thumb %> 
+<li class="member" id="member-<%= user.id %>">
+  <div class="profile-image <%= "nudge\" rel=\"tooltip\" title=\"Nudge #{user_name(user)}\" data-placement=\"top".html_safe if signed_in? && @event.can_nudge?(current_user, user) %>" id="image-user-<%= user.id %>">
+    <% if @event.can_nudge?(current_user, user) %>
+      <%= nudge_image_tag user, :thumb %>
+      <span id="link-user-<%= user.id %>"><%= link_to ' ', nudge_event_event_user_path(@event, @event.event_user(user)), class: "link", method: :put, remote: true %></span>
+    <% else %>
+      <%= profile_image_tag user, :thumb %> 
+    <% end %>
   </div>
   <div class="body">
     <div class="user">
         <%= link_to user_name(user), user %>
         <% if user.online? %>
-            <div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div>
+          <div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div>
         <% end %>
     </div>
     <div class="status">
