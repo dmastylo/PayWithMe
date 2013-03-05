@@ -25,29 +25,72 @@
         list-style: none;
         padding: 0;
         margin: 0;
+
         .member
         {
             margin-bottom: 5px;
             width: 50%;
             float: left;
             &:last-child { margin-bottom: 0; }
+            
             .profile-image
             {
                 margin-top: 3px;
                 float: left;
-                img { border: 1px solid $mediumGray; }
-            }
-            .body
-            {
-                padding-left: 10px;
-                float: left;
-                @include box-sizing(border-box);
-                .user a
+                position: relative;
+
+                img
                 {
-                    color: $offBlack;
-                    font-weight: bold;
+                    border: 1px solid $mediumGray;
                 }
-                .status { color: $mediumGray; }
+
+                .overlay
+                {
+                    position: absolute;
+                    width: 34px;
+                    height: 34px;
+                    top: 0px;
+                    left: 0px;
+                    background-color: rgba(0, 0, 0, .8);
+                    z-index: 100;
+                    text-align: center;
+                    @include box-sizing(border-box);
+                    padding-top: 8px;
+                    cursor: pointer;
+                }
+
+                .link
+                {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 101;
+                }
+            }
+
+        }
+
+        .body
+        {
+            padding-left: 10px;
+            padding-right: 10px;
+            // padding-top: 5px;
+            float: left;
+            @include box-sizing(border-box);
+
+            .user a
+            {
+                color: $offBlack;
+                font-weight: bold;
+            }
+
+            .status
+            {
+                float: left;
+                color: $mediumGray;
             }
         }
     }

@@ -28,6 +28,14 @@ class UserMailer < ActionMailer::Base
     mail to: format_address_to(user), subject: "#{@reminder.event.title} Reminder: #{@reminder.title}"
   end
 
+  def nudge_notification(user, nudge)
+    @user = user
+    @nudge = nudge
+    @event = @nudge.event
+
+    mail to: format_address_to(user), subject: "#{@nudge.event.title}: #{@nudge.nudger.first_name} Nudged You"
+  end
+
 private
   def format_address_to(user)
     require 'mail'

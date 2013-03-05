@@ -17,17 +17,6 @@
         }
     }
 
-    .event-members
-    {
-        .member-list
-        {
-            .member
-            {
-                width: 100%;
-            }
-        }
-    }
-
     .events-third-list
     {
         .third
@@ -65,6 +54,17 @@
 
 @media (max-width: 1200px)
 {
+    .event-members
+    {
+        .member-list
+        {
+            .member
+            {
+                width: 100%;
+            }
+        }
+    }
+
     .btn-group
     {
         button.third,button.half

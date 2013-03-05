@@ -4,7 +4,9 @@ class EventUsersController < ApplicationController
   before_filter :user_owns_event_user, only: [:pay, :pin]
   before_filter :valid_payment_method, only: [:pay]
   before_filter :user_organizes_event, only: [:paid, :unpaid]
-  before_filter :event_owns_event_user, only: [:paid, :unpaid]
+  before_filter :user_in_event, only: [:nudge]
+  before_filter :event_owns_event_user, only: [:paid, :unpaid, :nudge]
+  before_filter :can_nudge_user, only: [:nudge]
   before_filter :event_user_paid_with_cash, only: [:unpaid]
   skip_before_filter :verify_authenticity_token, only: [:ipn]
 
@@ -58,6 +60,14 @@ class EventUsersController < ApplicationController
     end
   end
 
+  def nudge
+    @event.nudge!(current_user, @event_user.user)
+    respond_to do |format|
+      format.js
+      format.html { redirect_to event_path(@event) }
+    end
+  end
+
 private
   def user_owns_event_user
     @event_user = current_user.event_users.find_by_id(params[:id])
@@ -91,6 +101,13 @@ private
     if !@event_user.event.paid_with_cash?(@event_user.user)
       flash[:error] = "Can only mark users who paid with cash as unpaid."
       redirect_to admin_event_path(@event)
+    end
+  end
+
+  def can_nudge_user
+    unless @event.can_nudge?(current_user, @event_user.user)
+      flash[:error] = "You can't nudge this user!"
+      redirect_to event_path(@event)
     end
   end
 

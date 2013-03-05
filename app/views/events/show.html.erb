@@ -114,10 +114,24 @@
         fixed: '.profile-image',
         fluid: '.body'
       });
+
       $('.member').autoSize({
         fixed: '.profile-image',
         fluid: '.body',
         offset: 1
+      });
+
+      $('.nudge').mouseenter(function()
+      {
+        var $this = $(this);
+        var $overlay = $("<div></div>").addClass("overlay").html("<i class=\"icon-hand-up icon-white\"></i>");
+        $this.prepend($overlay);
+      });
+
+      $('.nudge').mouseleave(function()
+      {
+        var $this = $(this);
+        $this.find('.overlay').remove();
       });
     });
   </script>
