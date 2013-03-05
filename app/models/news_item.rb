@@ -55,7 +55,7 @@ class NewsItem < ActiveRecord::Base
     }
     event.includes(:members => [:event_users]).members.each do |member|
       event_user = member.event_users.find_by_event_id(event.id)
-      unless member == message_creator || event_user.on_page?
+      unless member == message_creator
         news_item = member.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
@@ -65,7 +65,12 @@ class NewsItem < ActiveRecord::Base
         if !news_item.subjects.include?(message_creator)
           news_item.subjects << message_creator
         end
-        news_item.unread!
+        
+        if event_user.on_page?
+          news_item.read!
+        else
+          news_item.unread!
+        end
       end
     end
   end
