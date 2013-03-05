@@ -31,12 +31,15 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
-    event.includes(:members).members.each do |member|
-      unless member == new_member || member == event.organizer
-        news_item = member.news_items.where(values).first
+
+    event = Event.find_by_id(event.id, include: {event_users: :user})
+    event.event_users.each do |event_user|
+      user = event_user.user
+      unless user == new_member || user == event.organizer
+        news_item = user.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(new_member)
@@ -53,13 +56,15 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
-    event.includes(:members => [:event_users]).members.each do |member|
-      event_user = member.event_users.find_by_event_id(event.id)
-      unless member == message_creator
-        news_item = member.news_items.where(values).first
+    
+    event = Event.find_by_id(event.id, include: {event_users: :user})
+    event.event_users.each do |event_user|
+      user = event_user.user
+      unless user == message_creator
+        news_item = user.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(message_creator)
@@ -81,12 +86,15 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::GROUP,
       foreign_id: group.id
     }
-    group.includes(:members).members.each do |member|
-      unless member == new_member || member == group.organizer
-        news_item = member.news_items.where(values).first
+
+    group = Group.find_by_id(group.id, include: {event_users: :user})
+    group.group_users.each do |group_user|
+      user = group_user.user
+      unless user == new_member || user == group.organizer
+        news_item = user.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(new_member)
