@@ -1,5 +1,7 @@
 class MessagesController < ApplicationController
   before_filter :user_in_event
+  before_filter :user_on_page
+  before_filter :clear_relevant_notifications
 
   def index
     if params[:event_id] && params[:after]
@@ -29,6 +31,21 @@ class MessagesController < ApplicationController
       end
     else
       render nothing: true
+    end
+  end
+
+private
+  def user_on_page
+    current_user.event_users.find_by_event_id(@event.id).update_attribute(:last_seen, Time.now)
+  end
+
+  def clear_relevant_notifications
+    current_user.notifications.where('foreign_id = ?', @event.id).each do |notification|
+      notification.read! if notification.message?
+    end
+
+    current_user.news_items.where('foreign_id = ?', @event.id).each do |news_item|
+      news_item.read! if news_item.message?
     end
   end
 end

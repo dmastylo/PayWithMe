@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
-  before_filter :user_activity
+  before_filter :user_activity, if: :current_user
   around_filter :user_time_zone, if: :current_user
 
   def default_url_options
@@ -84,7 +84,7 @@ private
   end
 
   def user_activity
-    current_user.update_attribute(:last_seen, Time.now) if user_signed_in?
+    current_user.update_attribute(:last_seen, Time.now)
   end
 
   def user_time_zone(&block)

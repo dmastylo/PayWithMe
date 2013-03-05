@@ -3,6 +3,7 @@ class GroupsController < ApplicationController
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_group, only: [:show]
   before_filter :user_organizes_group, only: [:edit, :update, :delete, :destroy]
+  before_filter :clear_relevant_notifications, if: :current_user
 
   def index
     @groups = current_user.member_groups
@@ -74,6 +75,17 @@ class GroupsController < ApplicationController
         @groups = @groups.collect { |result| {id: result.id, title: result.title } }
         render json: @groups
       end
+    end
+  end
+
+private
+  def clear_relevant_notifications
+    current_user.notifications.where('foreign_id = ?', @group.id).each do |notification|
+      notification.read!
+    end
+
+    current_user.news_items.where('foreign_id = ?', @group.id).each do |news_item|
+      news_item.read!
     end
   end
 end
