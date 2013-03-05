@@ -8,6 +8,7 @@
 #  event_id   :integer
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  sent_at    :datetime
 #
 
 class Nudge < ActiveRecord::Base

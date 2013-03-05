@@ -11,6 +11,7 @@
 #  invitation_sent :boolean          default(FALSE)
 #  payment_id      :integer
 #  visited_event   :boolean          default(FALSE)
+#  last_seen       :datetime
 #
 
 class EventUser < ActiveRecord::Base
@@ -42,6 +43,10 @@ class EventUser < ActiveRecord::Base
 
   def paid?
   	paid_at.present?
+  end
+
+  def on_page?
+    self.last_seen.present? && self.last_seen > 1.minute.ago
   end
 
   def visit_event!

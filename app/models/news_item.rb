@@ -31,7 +31,7 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
-    event.members.each do |member|
+    event.includes(:members).members.each do |member|
       unless member == new_member || member == event.organizer
         news_item = member.news_items.where(values).first
 
@@ -53,7 +53,8 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
-    event.members.each do |member|
+    event.includes(:members => [:event_users]).members.each do |member|
+      event_user = member.event_users.find_by_event_id(event.id)
       unless member == message_creator
         news_item = member.news_items.where(values).first
 
@@ -64,7 +65,12 @@ class NewsItem < ActiveRecord::Base
         if !news_item.subjects.include?(message_creator)
           news_item.subjects << message_creator
         end
-        news_item.unread!
+        
+        if event_user.on_page?
+          news_item.read!
+        else
+          news_item.unread!
+        end
       end
     end
   end
@@ -75,7 +81,7 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::GROUP,
       foreign_id: group.id
     }
-    group.members.each do |member|
+    group.includes(:members).members.each do |member|
       unless member == new_member || member == group.organizer
         news_item = member.news_items.where(values).first
 

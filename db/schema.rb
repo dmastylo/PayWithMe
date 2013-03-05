@@ -41,12 +41,6 @@ ActiveRecord::Schema.define(:version => 20130304220336) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "event_settings", :force => true do |t|
-    t.integer  "event_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "event_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
@@ -56,6 +50,7 @@ ActiveRecord::Schema.define(:version => 20130304220336) do
     t.boolean  "invitation_sent", :default => false
     t.integer  "payment_id"
     t.boolean  "visited_event",   :default => false
+    t.datetime "last_seen"
   end
 
   create_table "events", :force => true do |t|
