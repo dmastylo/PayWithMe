@@ -15,6 +15,7 @@ PayWithMe::Application.routes.draw do
       member do
         put 'paid'
         put 'unpaid'
+        put 'nudge'
       end
     end
     member do

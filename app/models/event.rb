@@ -54,6 +54,7 @@ class Event < ActiveRecord::Base
   has_many :groups, through: :event_groups, source: :group
   has_many :reminders, dependent: :destroy
   has_and_belongs_to_many :payment_methods
+  has_many :nudges
 
   # Callbacks
   # ========================================================
@@ -163,6 +164,13 @@ class Event < ActiveRecord::Base
 
   def send_with_dwolla?
     send_with_payment_method?(PaymentMethod::MethodType::DWOLLA)
+  end
+
+  # Mostly used in testing
+  def mark_paid(user)
+    event_user = event_user(user)
+    event_user.paid_at = Time.now
+    event_user.save
   end
 
   def accepts_wepay?
@@ -344,6 +352,10 @@ class Event < ActiveRecord::Base
     nfgdi_members
   end
 
+  def invited?(user)
+    members.include?(user)
+  end
+
   def event_user(user)
     event_users.find_by_user_id(user)
   end
@@ -370,6 +382,28 @@ class Event < ActiveRecord::Base
     paid_members.count > 0
   end
 
+  # Nudges
+  def can_nudge?(nudger, nudgee)
+    if !invited?(nudger) ||
+      !invited?(nudgee) ||
+      paid_at(nudger).nil? ||
+      paid_at(nudgee).present? ||
+      nudgee == self.organizer ||
+      nudger.stub? ||
+      nudger.sent_nudges.find_all_by_event_id(self.id).count >= Figaro.env.nudge_limit.to_i ||
+      self.nudges.where(nudgee_id: nudgee.id, nudger_id: nudger.id).count > 0
+      false
+    else
+      true
+    end
+  end
+
+  def nudge!(nudger, nudgee)
+    if can_nudge?(nudger, nudgee)
+      nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id, event_id: self.id)
+    end
+  end
+  
   def is_past?
     Time.now > self.due_at
   end

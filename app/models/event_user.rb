@@ -20,10 +20,16 @@ class EventUser < ActiveRecord::Base
   attr_accessible :event_id, :user_id
   monetize :amount_cents, allow_nil: true
 
+  # Validations
+  validates :event_id, presence: true
+  validates :user_id, presence: true
+  validates :amount_cents, presence: true
+
   # Relationships
   belongs_to :user, class_name: "User", foreign_key: "user_id"
   belongs_to :event
   has_many :payments
+  has_many :nudges
 
   # Validations
   validates :due_at, presence: true, if: :member?
