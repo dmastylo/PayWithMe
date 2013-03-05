@@ -83,5 +83,9 @@ private
     current_user.notifications.where('foreign_id = ?', @group.id).each do |notification|
       notification.read!
     end
+
+    current_user.news_items.where('foreign_id = ?', @group.id).each do |news_item|
+      news_item.read!
+    end
   end
 end

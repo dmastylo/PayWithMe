@@ -43,5 +43,9 @@ private
     current_user.notifications.where('foreign_id = ?', @event.id).each do |notification|
       notification.read! if notification.message?
     end
+
+    current_user.news_items.where('foreign_id = ?', @event.id).each do |news_item|
+      news_item.read! if news_item.message?
+    end
   end
 end

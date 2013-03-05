@@ -105,6 +105,10 @@ private
     current_user.notifications.where('foreign_id = ?', @event.id).each do |notification|
       notification.read!
     end
+
+    current_user.news_items.where('foreign_id = ?', @event.id).each do |news_item|
+      news_item.read!
+    end
   end
 
   def check_organizer_accounts
