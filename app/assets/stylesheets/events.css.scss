@@ -91,6 +91,17 @@
             {
                 float: left;
                 color: $mediumGray;
+                height: 16px;
+
+                .paid
+                {
+                    color: $mediumGreen;
+                }
+
+                .unpaid
+                {
+                    color: $mediumRed;
+                }
             }
         }
     }

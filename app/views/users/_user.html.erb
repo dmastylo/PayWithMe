@@ -19,9 +19,9 @@
         <% if user == @event.organizer %>
           Event Organizer
         <% elsif @event.event_user(user).paid_at.present? %>
-          <p style="color:#00C90D">Paid</p>
+          <span class="paid">Paid</p>
         <% else %>
-          <p style="color:#FF5240">Unpaid</p>
+          <span class="unpaid">Unpaid</p>
         <% end %>
       <% elsif @group.present? %>
         <% if @group.is_admin?(user) %>
