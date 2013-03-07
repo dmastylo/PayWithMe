@@ -31,6 +31,7 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
+
     event.members.each do |member|
       unless member == new_member || member == event.organizer
         news_item = member.news_items.where(values).first
@@ -53,6 +54,7 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
+
     event.members.each do |member|
       unless member == message_creator
         news_item = member.news_items.where(values).first
@@ -75,6 +77,7 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::GROUP,
       foreign_id: group.id
     }
+
     group.members.each do |member|
       unless member == new_member || member == group.organizer
         news_item = member.news_items.where(values).first

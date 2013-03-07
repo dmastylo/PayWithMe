@@ -27,31 +27,30 @@ class Notification < ActiveRecord::Base
   belongs_to :user
 
   # Creation methods
-  def self.create_for_event(event_id, user_id)
-    User.find_by_id(user_id).notifications.create(
+  def self.create_for_event(event, user)
+    user.notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::EVENT,
-      foreign_id: event_id
+      foreign_id: event.id
     )
   end
 
-  def self.create_for_group(group_id, user_id)
-    User.find_by_id(user_id).notifications.create(
+  def self.create_for_group(group, user)
+    user.notifications.create(
       notification_type: NotificationType::INVITE,
       foreign_type: ForeignType::GROUP,
-      foreign_id: group_id
+      foreign_id: group.id
     )
   end
 
-  def self.create_or_update_for_event_message(event_id, user_id)
-    user = User.find_by_id(user_id)
-    last_message = user.messages.where(event_id: event_id).first
+  def self.create_or_update_for_event_message(event, user)
+    last_message = user.messages.where(event_id: event.id).first
     message_after = (last_message.present?)? last_message.created_at : Time.now.midnight
     message_count = event.messages.where("created_at > ?", message_after).count
     return unless message_count > 0
 
     notification = user.notifications.where(
-      foreign_id: event_id,
+      foreign_id: event.id,
       notification_type: NotificationType::MESSAGE,
       foreign_type: ForeignType::EVENT,
       created_at: (Time.now.midnight)..Time.now.midnight + 1.day
@@ -60,7 +59,7 @@ class Notification < ActiveRecord::Base
       notification = user.notifications.new(
         notification_type: NotificationType::MESSAGE,
         foreign_type: ForeignType::EVENT,
-        foreign_id: event_id
+        foreign_id: event.id
       )
     end
 
@@ -69,10 +68,9 @@ class Notification < ActiveRecord::Base
     notification.save
   end
 
-  def self.create_or_update_for_event_update(event_id, user_id)
-    user = User.find_by_id(user_id)
+  def self.create_or_update_for_event_update(event, user)
     notification = user.notifications.where(
-      foreign_id: event_id,
+      foreign_id: event.id,
       notification_type: NotificationType::UPDATE,
       foreign_type: ForeignType::EVENT,
       created_at: (Time.now.midnight)..Time.now.midnight + 1.day
@@ -81,7 +79,7 @@ class Notification < ActiveRecord::Base
       notification = user.notifications.new(
         notification_type: NotificationType::UPDATE,
         foreign_type: ForeignType::EVENT,
-        foreign_id: event_id
+        foreign_id: event.id
       )
     end
 

@@ -272,18 +272,18 @@ class Event < ActiveRecord::Base
     members_to_add.each do |member|
       if member.valid?
         if self.members.include?(member)
-          Notification.delay.create_or_update_for_event_update(self.id, member.id) if member != exclude_from_notifications
+          Notification.create_or_update_for_event_update(self, member) if member != exclude_from_notifications
         else
           self.members << member 
-          Notification.delay.create_for_event(self.id, member.id) if member != exclude_from_notifications
+          Notification.create_for_event(self, member) if member != exclude_from_notifications
           if editing_event
-            NewsItem.delay.create_for_new_event_member(self.id, member.id)
+            NewsItem.create_for_new_event_member(self, member)
           end
         end
       end
     end
 
-    delay.send_invitation_emails
+    Event.delay.send_invitation_emails(self.id)
     # set_event_user_attributes(exclude_from_notifications)
   end
 
@@ -308,18 +308,20 @@ class Event < ActiveRecord::Base
     remove_members([member_to_remove])
   end
 
-  def send_invitation_emails
-    self.event_users.each do |event_user|
-      if !event_user.invitation_sent? && event_user.user != self.organizer
-        UserMailer.delay.event_notification(event_user.user, self).deliver
+  def self.send_invitation_emails(event_id)
+    event = Event.find_by_id(event_id, include: { event_users: :user })
+    event.event_users.each do |event_user|
+      if !event_user.invitation_sent? && event_user.user_id != event.organizer_id
+        UserMailer.event_notification(event_user.user, event).deliver
         event_user.toggle(:invitation_sent).save
       end
     end
   end
 
-  def send_message_notifications
-    self.members.each do |member|
-      Notification.delay.create_or_update_for_event_message(self, member)
+  def self.send_message_notifications(event_id)
+    event = Event.find_by_id(event_id, include: :members)
+    event.members.each do |member|
+      Notification.create_or_update_for_event_message(event, member)
     end
   end
 
