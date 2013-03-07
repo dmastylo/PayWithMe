@@ -3,7 +3,7 @@ class GroupsController < ApplicationController
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_group, only: [:show]
   before_filter :user_organizes_group, only: [:edit, :update, :delete, :destroy]
-  before_filter :clear_relevant_notifications, if: :current_user
+  before_filter :clear_relevant_notifications, only: [:show], if: :current_user
 
   def index
     @groups = current_user.member_groups
