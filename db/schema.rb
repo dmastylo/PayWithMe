@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130304220336) do
+ActiveRecord::Schema.define(:version => 20130307152723) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -37,6 +37,12 @@ ActiveRecord::Schema.define(:version => 20130304220336) do
   create_table "event_groups", :force => true do |t|
     t.integer  "event_id"
     t.integer  "group_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "event_settings", :force => true do |t|
+    t.integer  "event_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
@@ -244,6 +250,7 @@ ActiveRecord::Schema.define(:version => 20130304220336) do
     t.string   "slug"
     t.integer  "creator_id"
     t.datetime "completed_at"
+    t.boolean  "admin"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
