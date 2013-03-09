@@ -57,7 +57,7 @@ class Group < ActiveRecord::Base
         self.members << member
         Notification.create_for_group(self, member) if member != exclude_from_notifications
         if editing_group
-            NewsItem.delay.create_for_new_group_member(self, member)
+          NewsItem.delay.create_for_new_group_member(self, mepmber)
         end
       end
     end
