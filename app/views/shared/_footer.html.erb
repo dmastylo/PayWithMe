@@ -8,6 +8,9 @@
         <%= link_to "Contact Us", new_contact_form_path, class: "footer-link" %> | 
         <%= link_to "Jobs", jobs_path, class: "footer-link" %> |
         <%= link_to "Privacy Policy", privacy_policy_path, class: "footer-link" %>
+        <% if signed_in? && current_user.admin? %>
+          | <%= link_to "Administrator Panel", admin_index_path, class: "footer-link" %>
+        <% end %>
   	  </p>
     </ul>
   </small>

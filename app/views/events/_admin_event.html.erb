@@ -1,0 +1,14 @@
+<tr>
+  <td>
+    <%= link_to event.title, event %>
+  </td>
+  <td>
+    <%= link_to event.organizer.name, event.organizer %>
+  </td>
+  <td>
+    <%= event.event_users.count %>
+  </td>
+  <td>
+    <%= distance_of_time_in_words_to_now event.created_at %> ago
+  </td>
+</tr>

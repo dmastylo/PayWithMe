@@ -1,0 +1,57 @@
+<% provide(:title, "Administrator Panel") %>
+<div class="row">
+  <div class="span9">
+    <h2>Administrator Panel</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="span8">
+    <h3 class="pull-left">Recent Users</h3>
+    <%= link_to "View All Users", users_admin_index_path, class: "btn pull-right push-top-title" %>
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Registered</th>
+      </tr>
+      <%= render collection: @recent_users, partial: "users/admin_user", as: :user %>
+    </table>
+    <div class="clearfix"></div>
+
+    <h3 class="pull-left">Recent Events</h3>
+    <%= link_to "View All Events", events_admin_index_path, class: "btn pull-right push-top-title" %>
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>Name</th>
+        <th>Organizer</th>
+        <th>Members</th>
+        <th>Created</th>
+      </tr>
+      <%= render collection: @recent_events, partial: "events/admin_event", as: :event %>
+    </table>
+    <div class="clearfix"></div>
+
+    <h3 class="pull-left">Recent Groups</h3>
+    <%= link_to "View All Groups", groups_admin_index_path, class: "btn pull-right push-top-title" %>
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>Name</th>
+        <th>Organizer</th>
+        <th>Created</th>
+      </tr>
+      <%= render collection: @recent_groups, partial: "groups/admin_group", as: :group %>
+    </table>
+  </div>
+  <div class="span4">
+    <h3>Quick Statistics</h3>
+    <div class="large-statistic">
+      <span class="count"><%= @users_count %></span> users
+    </div>
+    <div class="large-statistic">
+      <span class="count"><%= @events_count %></span> events
+    </div>
+    <div class="large-statistic">
+      <span class="count"><%= @groups_count %></span> groups
+    </div>
+  </div>
+</div>

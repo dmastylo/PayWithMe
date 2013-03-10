@@ -16,7 +16,7 @@ protected
   def user_in_group
     @group = Group.find(params[:group_id] || params[:id])
 
-    if @group.members.include?(current_user) || current_user.is_admin?
+    if @group.members.include?(current_user) || current_user.admin?
       true
     else
       redirect_to_login_or_root
@@ -26,7 +26,7 @@ protected
   def user_organizes_group
     @group = current_user.member_groups.find(params[:group_id] || params[:id])
 
-    if @group.nil? || !@group.is_admin?(current_user)
+    if @group.nil? || !@group.admin?(current_user)
       redirect_to_login_or_root
     end
   end
@@ -34,7 +34,7 @@ protected
   def user_in_event
     @event ||= Event.find(params[:event_id] || params[:id])
 
-    if !signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.is_admin?)
+    if !signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.admin?)
       redirect_to_login_or_root
     end
   end
