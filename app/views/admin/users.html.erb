@@ -1,0 +1,26 @@
+<% provide(:title, "Users | Administrator Panel") %>
+<div class="row">
+  <div class="span8">
+    <h2>Administrator Panel: Users</h2>
+  </div>
+  <div class="span4">
+    <%= link_to "Return to Administration Panel", admin_index_path, class: "btn btn-primary pull-right push-top-title" %>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Registered</th>
+        <th><span rel="tooltip" title="Linked Accounts">LA</span></th>
+        <th><span rel="tooltip" title="Organized Events">OE</span></th>
+        <th><span rel="tooltip" title="Member Events">ME</span></th>
+      </tr>
+      <%= render collection: @users, partial: "users/admin_user", as: :user, locals: { full: true } %>
+    </table>
+
+    <%= will_paginate @users %>
+  </div>
+</div>
