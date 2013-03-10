@@ -1,11 +1,25 @@
 <tr>
   <td>
-    <%= link_to user.name, user %>
+    <%= link_to user.name || "n/a", user %>
   </td>
   <td>
-    <%= link_to user.email %>
+    <%= user.email %>
   </td>
   <td>
     <%= distance_of_time_in_words_to_now (user.completed_at || user.created_at) %> ago
   </td>
+  <% if full %>
+    <td>
+      <% user.linked_accounts.each do |linked_account| %>
+        <%= linked_account.provider %>
+      <% end %>
+      <%= "n/a" if user.linked_accounts.empty? %>
+    </td>
+    <td>
+      <%= user.organized_events.count %>
+    </td>
+    <td>
+      <%= user.member_events.count %>
+    </td>
+  <% end %>
 </tr>

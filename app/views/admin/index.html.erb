@@ -7,36 +7,37 @@
 <div class="row">
   <div class="span8">
     <h3 class="pull-left">Recent Users</h3>
-    <%= link_to "View All Users", users_admin_index_path, class: "btn pull-right push-top-title" %>
+    <%= link_to "View All Users", users_admin_index_path, class: "btn btn-primary pull-right push-top-title" %>
     <table class="table table-bordered table-striped">
       <tr>
         <th>Name</th>
         <th>Email</th>
         <th>Registered</th>
       </tr>
-      <%= render collection: @recent_users, partial: "users/admin_user", as: :user %>
+      <%= render collection: @recent_users, partial: "users/admin_user", as: :user, locals: { full: false } %>
     </table>
     <div class="clearfix"></div>
 
     <h3 class="pull-left">Recent Events</h3>
-    <%= link_to "View All Events", events_admin_index_path, class: "btn pull-right push-top-title" %>
+    <%= link_to "View All Events", events_admin_index_path, class: "btn btn-primary pull-right push-top-title" %>
     <table class="table table-bordered table-striped">
       <tr>
-        <th>Name</th>
+        <th>Title</th>
         <th>Organizer</th>
         <th>Members</th>
         <th>Created</th>
       </tr>
-      <%= render collection: @recent_events, partial: "events/admin_event", as: :event %>
+      <%= render collection: @recent_events, partial: "events/admin_event", as: :event, locals: { full: false } %>
     </table>
     <div class="clearfix"></div>
 
     <h3 class="pull-left">Recent Groups</h3>
-    <%= link_to "View All Groups", groups_admin_index_path, class: "btn pull-right push-top-title" %>
+    <%= link_to "View All Groups", groups_admin_index_path, class: "btn btn-primary pull-right push-top-title" %>
     <table class="table table-bordered table-striped">
       <tr>
-        <th>Name</th>
+        <th>Title</th>
         <th>Organizer</th>
+        <th>Members</th>
         <th>Created</th>
       </tr>
       <%= render collection: @recent_groups, partial: "groups/admin_group", as: :group %>

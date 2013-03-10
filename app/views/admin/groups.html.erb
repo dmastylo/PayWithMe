@@ -1,0 +1,24 @@
+<% provide(:title, "Groups | Administrator Panel") %>
+<div class="row">
+  <div class="span8">
+    <h2>Administrator Panel: Groups</h2>
+  </div>
+  <div class="span4">
+    <%= link_to "Return to Administration Panel", admin_index_path, class: "btn btn-primary pull-right push-top-title" %>
+  </div>
+</div>
+<div class="row">
+  <div class="span12">
+    <table class="table table-bordered table-striped">
+      <tr>
+        <th>Title</th>
+        <th>Organizer</th>
+        <th>Members</th>
+        <th>Created</th>
+      </tr>
+      <%= render collection: @groups, partial: "groups/admin_group", as: :group, locals: { full: true } %>
+    </table>
+
+    <%= will_paginate @groups %>
+  </div>
+</div>

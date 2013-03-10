@@ -4,13 +4,25 @@ class AdminController < ApplicationController
 
   def index
     @users_count = User.count
-    @recent_users = User.where(stub: false).order('completed_at DESC').limit(10)
+    @recent_users = User.where(stub: false).order('created_at DESC').limit(10)
 
     @events_count = Event.count
     @recent_events = Event.find(:all, order: 'created_at DESC', limit: 10)
 
     @groups_count = Group.count
     @recent_groups = Group.find(:all, order: 'created_at DESC', limit: 10)
+  end
+
+  def users
+    @users = User.paginate(page: params[:page], order: 'created_at DESC')
+  end
+
+  def events
+    @events = Event.paginate(page: params[:page], order: 'created_at DESC', include: [:payment_methods, :organizer])
+  end
+
+  def groups
+    @groups = Group.paginate(page: params[:page], order: 'created_at DESC', include: [:group_users, :organizer])
   end
 
 private
