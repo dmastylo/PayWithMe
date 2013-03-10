@@ -8,7 +8,6 @@
       <% end %>
     </span>
      <a href="#" class="event-to-invite"><%= event.title %></a>
-    <%= f.hidden_field :event_id, :value => event.id %>
     <%= f.hidden_field :user_id, :value => @user.id %>
   <% end %>
 </li>

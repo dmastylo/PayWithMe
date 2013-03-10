@@ -14,21 +14,12 @@ class EventUsersController < ApplicationController
     @member = User.find(params[:event_user][:user_id])
     unless @event.members.include?(@member)
       @event.add_member(@member)
-      # @event_user = EventUser.create(params[:event_user])
-      # if @event_user.save
-        # NewsItem.create_for_new_event_member(@event, @event_user.user)
-        # @event.set_event_user_attributes(current_user)
 
       respond_to do |format|
-        format.html { redirect_to event_path(@event) } if @event_organizer.nil? # Joining public event
+        format.html { redirect_to event_path(@event) } if @event.organizer != current_user # Joining public event
         format.html { redirect_to user_path(@user) }  # Being invited directly
         format.js
       end
-      # else
-      #   flash[:error] = "Adding user failed!"
-      #   redirect_to event_path(@event) if @event_organizer.nil? # Joining public event
-      #   redirect_to user_path(@user) # Being invited directly
-      # end
     end
   end
 
@@ -77,6 +68,7 @@ private
 
   def event_public_or_user_organizes_event
     @event = Event.find(params[:event_id] || params[:id])
+    @user = User.find(params[:event_user][:user_id])
     
     if @event.organizer != current_user
       # If user doesn't organize event, it must be public and the user_id must be equal to current_user
