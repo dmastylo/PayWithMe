@@ -257,7 +257,7 @@ class Event < ActiveRecord::Base
     end
   end
   
-  def add_member(member)
+  def add_member(member, exclude_from_notifications=nil)
     add_members([member])
   end
 
