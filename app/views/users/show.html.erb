@@ -22,8 +22,8 @@
       <div class="invite-to-event-button">
         <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
         <ul class="events-to-invite">
-          <% unless @your_organized_events.empty? %>
-            <%= render partial: 'events/invite_events', collection: @your_organized_events, as: :event %>
+          <% unless @your_organized_and_public_events.empty? %>
+            <%= render partial: 'events/invite_events', collection: @your_organized_and_public_events, as: :event %>
           <% else %>
             <li>You don't have any events!</li>
           <% end %>
