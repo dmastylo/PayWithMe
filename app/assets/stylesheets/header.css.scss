@@ -1,0 +1,107 @@
+body
+{
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-image: url(asset_path('layout/bg.png', image));
+}
+
+.navbar
+{
+  margin-bottom: $margin;
+  height: 75px;
+  background-image: url(asset_path('layout/header_bg.png', image));
+  .navbar-inner
+  {
+    height: 75px;
+    background: transparent;
+    border: 0;
+    @include box-sizing(border-box);
+    .container
+    {
+      width: 1170px;
+      #logo
+      {
+        width: 141px;
+        height: 32px;
+        background-image: url(asset_path('layout/logo.png', image));
+        margin-top: 21px;
+        float: left;
+      }
+      .nav
+      {
+        float: right;
+        a
+        {
+          @include box-sizing(border-box);
+          color: $white;
+          text-shadow: 1px 1px 0 $darkBlue;
+          font-size: 18px;
+          text-transform: uppercase;
+          font-weight: bold;
+          letter-spacing: -1px;
+          height: 75px;
+          line-height: 55px;
+          &:hover
+          {
+            color: $white;
+            background-color: rgba(255, 255, 255, 0.1);
+          }
+        }
+      }
+    }
+  }
+}
+
+// START MOBILE FIXES
+@media (min-width: 1200px)
+{
+  .navbar .navbar-inner .container
+  {
+    width: 1170px;
+  }
+}
+
+@media (max-width: 1159px) and (min-width: 980px)
+{
+  .navbar .navbar-inner .container
+  {
+    width: 940px;
+  }
+}
+
+@media (max-width: 979px) and (min-width: 768px)
+{
+  .navbar .navbar-inner .container
+  {
+    width: 724px;
+  }
+}
+
+@media (max-width: 767px)
+{
+  .navbar
+  {
+    margin-bottom: $smallMargin;
+    .navbar-inner .container
+    {
+      width: auto;
+      margin: 0;
+      #logo
+      {
+        width: 66px;
+        background-image: url(asset_path('layout/logo_mobile.png', image));
+      }
+    }
+  }
+  #home-cta
+  {
+    margin-bottom: $smallMargin;
+    h2
+    {
+      margin-top: 0;
+    }
+  }
+  .img-polaroid
+  {
+    width: 100%;
+  }
+}

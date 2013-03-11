@@ -1,0 +1,84 @@
+.img-polaroid
+{
+  padding: 5px;
+  border-color: $grey;
+}
+
+h1,h2,h3,h4
+{
+  font-weight: bold;
+}
+
+h2
+{
+  font-size: 25px;
+  letter-spacing: -1px;
+  color: $black;
+}
+
+h3
+{
+  font-size: 20px;
+  letter-spacing: -1px;
+  color: $black;
+}
+
+em
+{
+  color: $gray;
+  font-size: 20px;
+  letter-spacing: -1px;
+
+  small
+  {
+    font-size: 16px;
+    letter-spacing: -0.5px;
+  }
+}
+
+.btn
+{
+  color: $white;
+  &:hover
+  {
+  }
+  &.btn-large
+  {
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    @include border-radius(10px);
+  }
+
+  &.btn-primary
+  {
+    background-image: url(asset_path('layout/btn_bg.png', image));
+    background-color: transparent;
+    border: 0;
+  }
+}
+
+.wrapper-bordered
+{
+  margin-top: $margin;
+  border: 5px solid $darkBlue;
+  border-width: 5px 0;
+  background-color: $white;
+  margin-bottom: $margin;
+}
+
+.push-bottom { margin-bottom: $margin; }
+.push-top { margin-top: $margin; }
+
+// START MOBILE FIXES
+@media (max-width: 767px)
+{
+  body
+  {
+    padding: 0;
+  }
+  .container
+  {
+    margin: 0 $margin;
+  }
+}

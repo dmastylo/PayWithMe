@@ -6,7 +6,7 @@
 
     <title><%= raw full_title(yield(:title)) %></title>
     <%= stylesheet_link_tag "application", :media => "all" %>
-    <link href='https://fonts.googleapis.com/css?family=Crete+Round:400,400italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic' rel='stylesheet' type='text/css'>
     <%= csrf_meta_tags %>
 
     <%= render 'shared/shim' %>
@@ -16,7 +16,6 @@
     <%= render 'shared/nav_bar' %>
 
     <div class="container">
-      <div class="content">
         <div class="row">
            <div class="span12">
               <%= content_tag(:div, flash[:error], :class => 'alert alert-error',) if flash[:error] %>
@@ -24,19 +23,21 @@
               <%= content_tag(:div, flash[:alert], :class => 'alert alert-info') if flash[:alert] %>
               <%= content_tag(:div, flash[:success], :class => 'alert alert-success') if flash[:success] %>
             </div>
-        </div><!--/row-->
-        <%= yield %>
-      </div><!--/content-->
+        </div>
+    </div>
+    
+    <%= yield %>
 
-      <%= render 'shared/footer' %>
-            
-      <% if Rails.env.development? %>
+    <% if Rails.env.development? %>
+      <div class="container">
         <div class="debug">
           <%= debug(params) %>
           <!-- <%= debug(session) %> -->
         </div>
-      <% end %>
-    </div><!--/container-->
+      </div>
+    <% end %>
+
+    <%= render 'shared/footer' %>
 
     <%= javascript_include_tag "application" %>
     <% if content_for?(:before_body_end) %>
