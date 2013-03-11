@@ -63,8 +63,7 @@ class Group < ActiveRecord::Base
         NewsItem.delay.create_for_new_group_member(self, member) if editing_group
 
         # Add the new member to the upcoming group events
-        # TODO
-        self.events.each do |event|
+        self.events.where('events.due_at > ?', Time.now).each do |event|
           event.add_member(member, member)
         end
       end
