@@ -33,9 +33,9 @@ class EventUser < ActiveRecord::Base
   validates :event_id, presence: true
 
   # Callbacks
-  before_validation :copy_event_attributes
+  # before_validation :copy_event_attributes
   # after_initialize :copy_event_attributes
-  after_save :copy_event_attributes
+  # after_save :copy_event_attributes
 
   def paid?
   	paid_at.present?
@@ -64,6 +64,7 @@ class EventUser < ActiveRecord::Base
   # end
 
   def create_payment(options={})
+    copy_event_attributes
     current_cents = options[:amount_cents] || amount_cents
     payment_method = PaymentMethod.find_by_id(options[:payment_method] || PaymentMethod::MethodType::CASH)
     if current_cents > amount_cents
@@ -81,17 +82,11 @@ class EventUser < ActiveRecord::Base
   end
 
   def pay!(payment, options={})
+    copy_event_attributes
     payment.pay!(options)
 
-    self.paid_total_cents = 0
-    self.payments.each do |payment|
-      self.paid_total_cents += payment.amount_cents
-    end
-
-    if self.paid_total_cents >= self.amount_cents
-      self.paid_at = Time.now
-    end
-
+    update_paid_total_cents
+    update_paid_with_cash
     self.save
     true
   end
@@ -100,11 +95,22 @@ class EventUser < ActiveRecord::Base
   #   self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
   # end
   
+  def unpay_cash_payments!
+    copy_event_attributes
+    self.payments.where(payment_method_id: PaymentMethod::MethodType::CASH).destroy_all
+
+    update_paid_total_cents
+    update_paid_with_cash
+    self.save
+  end
+
   def unpay!(payment)
+    copy_event_attributes
     payment.unpay!
 
-    self.paid_at = nil
-    save
+    update_paid_total_cents
+    update_paid_with_cash
+    self.save
   end
 
 private
@@ -114,5 +120,25 @@ private
       self.amount_cents = self.event.split_amount_cents
     end
   end
-  
+
+  def update_paid_with_cash
+    self.paid_with_cash = true
+    self.payments.each do |payment|
+      self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH
+    end
+  end
+
+  def update_paid_total_cents
+    self.paid_total_cents = 0
+    self.payments.each do |payment|
+      self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
+    end
+
+    if self.paid_total_cents >= self.amount_cents
+      self.paid_at = Time.now
+    else
+      self.paid_at = nil
+    end
+  end
+
 end

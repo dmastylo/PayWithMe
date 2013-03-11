@@ -45,7 +45,7 @@ class EventUsersController < ApplicationController
           @event_user.payments.destroy_all
           paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
         end
-      elsif paid_total_cents > @event.split_amount_cents
+      elsif (params[:event_user][:paid_total].to_f * 100.0) > @event.split_amount_cents
         @error_message = "Enter an amount less than the required event amount."
       end
     else
@@ -65,13 +65,8 @@ class EventUsersController < ApplicationController
 
   # Mark user as unpaid if he/she paid with cash
   def unpaid
-    @event_user.payments.each do |payment|
-      if payment.payment_method_id == PaymentMethod::MethodType::CASH
-        payment.destroy
-      end
-    end
-    @event_user.paid_at = nil
-    @event_user.save
+    @event_user.unpay_cash_payments!
+
     respond_to do |format|
       format.js
       format.html { redirect_to admin_event_path(@event) }

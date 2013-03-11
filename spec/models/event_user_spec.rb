@@ -25,6 +25,7 @@ describe EventUser do
     @event.add_member(@user)
     @event_user = @event.event_user(@user)
   end
+
   subject { @event_user }
   it { should be_valid }
   it { should be_member }
@@ -91,7 +92,7 @@ describe EventUser do
     end
 
     describe "specific amount" do
-      before { @payment = @event_user.create_payment(amount_cents: @event_user.amount_cents / 2) }
+      before { @payment = @event_user.create_payment(amount_cents: @event.split_amount_cents / 2) }
       it "should use that amount" do
         @payment.amount_cents.should == (@event_user.amount_cents / 2)
       end
@@ -103,6 +104,24 @@ describe EventUser do
           @event_user.paid?.should_not be_true
           @event_user.paid_at.should be_nil
         end
+      end
+    end
+
+    describe "paid with cash" do
+      before { @payment = @event_user.create_payment(amount_cents: @event.split_amount_cents / 2) }
+
+      it "should initially be true" do
+        @event_user.paid_with_cash.should be_true
+      end
+
+      describe "when using cash" do
+        before { @event_user.pay!(@payment, payment_method: PaymentMethod::MethodType::CASH) }
+        it { @event_user.paid_with_cash.should be_true }
+      end
+
+      describe "when not using cash" do
+        before { @event_user.pay!(@payment, payment_method: PaymentMethod::MethodType::PAYPAL) }
+        it { @event_user.paid_with_cash.should_not be_true }
       end
     end
   end

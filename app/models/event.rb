@@ -86,7 +86,7 @@ class Event < ActiveRecord::Base
   def split_amount_cents
     if division_type == DivisionType::SPLIT
       super
-    elsif paying_members.size == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE
+    elsif paying_member_count == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE
       nil
     else
       total_amount_cents / paying_member_count
@@ -256,8 +256,8 @@ class Event < ActiveRecord::Base
   end
 
   def paid_percentage
-    if paying_member_count > 0
-      (paid_member_count * 100.0) / paying_member_count 
+    if self.money_collected > 0
+      self.money_collected * 100.0 / self.total_amount
     else
       0
     end
