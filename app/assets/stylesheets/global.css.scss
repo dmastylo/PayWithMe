@@ -18,6 +18,7 @@ h2
 
 h3
 {
+  margin-top: 0;
   font-size: 20px;
   letter-spacing: -1px;
   color: $black;
@@ -68,7 +69,35 @@ em
 }
 
 .push-bottom { margin-bottom: $margin; }
+.push-bottom-small { margin-bottom: $smallMargin; }
 .push-top { margin-top: $margin; }
+.push-top-small { margin-top: $smallMargin; }
+
+.page-header
+{
+  margin-top: 0;
+  padding-bottom: 0;
+  margin-bottom: $smallMargin;
+  h2 { margin: 0; }
+}
+
+.form-actions
+{
+  padding: 0;
+  border: 0;
+  margin: $smallMargin 0 0 0;
+}
+
+form
+{
+  margin: 0;
+}
+
+ul.error-messages
+{
+  list-style-type: none;
+  margin: 0;
+}
 
 // START MOBILE FIXES
 @media (max-width: 767px)
