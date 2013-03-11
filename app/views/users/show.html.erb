@@ -40,7 +40,7 @@
       <% end %>
       <div id="upcoming-events" <%= "class=\"empty\"" if @upcoming_public_and_shared_events.empty? %>>
         <% if @upcoming_public_and_shared_events.empty? %>
-          No upcoming events!
+          <span id="no-upcoming-events">No upcoming events!</span>
         <% else %>
           <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
         <% end %>
