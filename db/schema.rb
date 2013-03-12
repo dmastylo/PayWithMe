@@ -114,6 +114,11 @@ ActiveRecord::Schema.define(:version => 20130307152723) do
 
   add_index "groups", ["slug"], :name => "index_groups_on_slug"
 
+  create_table "guest_checklists", :force => true do |t|
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "linked_accounts", :force => true do |t|
     t.string   "provider"
     t.string   "token"

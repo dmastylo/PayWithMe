@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   before_filter :authenticate_user!, except: [:show]
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event_or_public, only: [:show]
-  before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin]
+  before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin, :pdf]
   before_filter :check_organizer_accounts, only: [:show, :admin]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
@@ -84,6 +84,15 @@ class EventsController < ApplicationController
   end
 
   def admin
+  end
+
+  def admin_pdf
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render :pdf => 'admin_pdf'
+      end
+    end
   end
 
 private
