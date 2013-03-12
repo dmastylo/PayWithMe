@@ -1,130 +1,137 @@
 <% provide(:title, "Account Settings") %>
-<div class="page-header">
-  <h2>Account Settings</h2>
-</div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= devise_error_messages! %>
-  <div class="row">
-    <div class="span6">
-      <h3>Contact Information</h3>
-      <div class="well">
-        <div class="control-group">
-          <%= f.label :email, class: 'control-label' %>
-          <div class="controls">
-            <%= f.email_field :email, class: 'input-block-level' %>
-          </div>
-        </div>
-
-        <% if f.object.encrypted_password.present? %>
-          <div class="control-group">
-            <%= f.label :current_password, class: 'control-label' %>
-            <div class="controls">
-              <%= f.password_field :current_password, class: 'input-block-level' %>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <%= f.label :password, "New password (optional)", class: 'control-label' %>
-            <div class="controls",>
-              <%= f.password_field :password, class: 'input-block-level' %>
-            </div>
-          </div>
-
-          <div class="control-group">
-            <%= f.label :password_confirmation, "Confirm new password (optional)", class: 'control-label' %>
-            <div class="controls">
-              <%= f.password_field :password_confirmation, class: 'input-block-level' %>
-            </div>
-          </div>
-        <% end %>
-      </div>
-      <h3>Synced Accounts</h3>
-      <div class="well">
-        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "facebook" } %>
-        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "twitter" } %>
-        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "paypal" } %>
-        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "dwolla" } %>
-        <%= render partial: "linked_accounts/linked_account", locals: { account_type: "wepay" } %>
-      </div>
-    </div>
-    <div class="span6">
-      <h3>Profile Information</h3>
-      <div class="well">
-        <div class="control-group">
-          <%= f.label :name, class: 'control-label' %>
-          <div class="controls">
-            <%= f.text_field :name, class: 'input-block-level' %>
-          </div>
-        </div>
-        <div class="control-group">
-          <%= f.label :profile_image, class: 'control-label' %>
-          <div class="controls">
-            <%= f.hidden_field :profile_image_type %>
-            <div class="btn-group input-block-level" id="user_profile_image_type_btn_group" data-toggle="buttons-radio">
-              <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :gravatar %>" data-value="gravatar" data-name="gravatar">Gravatar</button>
-              <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :url %>" data-value="url" data-name="url">URL</button>
-              <button type="button" class="btn third last <%= "active" if current_user.profile_image_type == :upload %>" data-value="upload" data-name="upload">Image Upload</button>
-            </div>
-
-            <div class="user_profile_image_type_option btn_group_option push-top" id="user_profile_image_type_gravatar">
-              Your gravatar:<br />
-              <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top" %><br />
-              <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top input-block-level" %>
-            </div>
-
-            <div class="user_profile_image_type_option btn_group_option push-top" id="user_profile_image_type_url">
-              <% if current_user.profile_image_url.present? %>
-                <div class="push-bottom">
-                  Current URL:
-                </div>
-                <div class="push-bottom">
-                  <%= profile_image_tag(current_user, :small) %>
-                </div>
-              <% end %>
-              <div class="control-group">
-                <%= f.label :profile_image_url, "Profile Image URL", class: 'control-label' %>
-                <div class="controls">
-                  <%= f.text_field :profile_image_url, placeholder: "http://example.com/image.png", class: 'input-block-level'  %>
-                </div>
-              </div>
-            </div>
-            
-            <div class="user_profile_image_type_option btn_group_option push-top" id="user_profile_image_type_upload">
-              <% if current_user.profile_image.present? %>
-                <div class="push-bottom">
-                  Current uploaded image:
-                </div>
-                <div class="push-bottom">
-                  <%= profile_image_tag(current_user, :small) %>
-                </div>
-              <% end %>
-              <div class="control-group">
-                <%= f.label :profile_image, "Profile Image File", class: 'control-label' %>
-                <div class="controls">
-                  <%= f.file_field :profile_image, accept: 'image' %>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="control-group">
-          <%= f.label :time_zone, "Preferred Time Zone", class: 'control-label' %>
-          <div class="controls">
-            <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, {:class => 'input-block-level'} %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="form-actions">
-    <div class="row">
-      <div class="span12">
-        <%= f.submit "Update Info", class: 'btn btn-block btn-primary' %>
-      </div>
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="page-header">
+      <h2>Account Settings</h2>
     </div>
   </div>
 <% end %>
+
+<div class="container">
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+    <%= devise_error_messages! %>
+    <div class="row">
+      <div class="span6">
+        <h3>Contact Information</h3>
+        <div class="well">
+          <div class="control-group">
+            <%= f.label :email, class: 'control-label' %>
+            <div class="controls">
+              <%= f.email_field :email, class: 'input-block-level' %>
+            </div>
+          </div>
+
+          <% if f.object.encrypted_password.present? %>
+            <div class="control-group">
+              <%= f.label :current_password, class: 'control-label' %>
+              <div class="controls">
+                <%= f.password_field :current_password, class: 'input-block-level' %>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <%= f.label :password, "New password (optional)", class: 'control-label' %>
+              <div class="controls",>
+                <%= f.password_field :password, class: 'input-block-level' %>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <%= f.label :password_confirmation, "Confirm new password (optional)", class: 'control-label' %>
+              <div class="controls">
+                <%= f.password_field :password_confirmation, class: 'input-block-level' %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <h3>Synced Accounts</h3>
+        <div class="well">
+          <%= render partial: "linked_accounts/linked_account", locals: { account_type: "facebook" } %>
+          <%= render partial: "linked_accounts/linked_account", locals: { account_type: "twitter" } %>
+          <%= render partial: "linked_accounts/linked_account", locals: { account_type: "paypal" } %>
+          <%= render partial: "linked_accounts/linked_account", locals: { account_type: "dwolla" } %>
+          <%= render partial: "linked_accounts/linked_account", locals: { account_type: "wepay" } %>
+        </div>
+      </div>
+      <div class="span6">
+        <h3>Profile Information</h3>
+        <div class="well">
+          <div class="control-group">
+            <%= f.label :name, class: 'control-label' %>
+            <div class="controls">
+              <%= f.text_field :name, class: 'input-block-level' %>
+            </div>
+          </div>
+          <div class="control-group">
+            <%= f.label :profile_image, class: 'control-label' %>
+            <div class="controls">
+              <%= f.hidden_field :profile_image_type %>
+              <div class="btn-group input-block-level" id="user_profile_image_type_btn_group" data-toggle="buttons-radio">
+                <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :gravatar %>" data-value="gravatar" data-name="gravatar">Gravatar</button>
+                <button type="button" class="btn third <%= "active" if current_user.profile_image_type == :url %>" data-value="url" data-name="url">URL</button>
+                <button type="button" class="btn third last <%= "active" if current_user.profile_image_type == :upload %>" data-value="upload" data-name="upload">Image Upload</button>
+              </div>
+
+              <div class="user_profile_image_type_option btn_group_option push-top-small" id="user_profile_image_type_gravatar">
+                Your gravatar:<br />
+                <%= gravatar_image_tag current_user.email, alt: current_user.name, class: "push-top-small" %><br />
+                <%= link_to "Change Gravatar Image", "http://en.gravatar.com/emails/", class: "btn push-top-small input-block-level" %>
+              </div>
+
+              <div class="user_profile_image_type_option btn_group_option push-top-small" id="user_profile_image_type_url">
+                <% if current_user.profile_image_url.present? %>
+                  <div class="push-bottom">
+                    Current URL:
+                  </div>
+                  <div class="push-bottom">
+                    <%= profile_image_tag(current_user, :small) %>
+                  </div>
+                <% end %>
+                <div class="control-group">
+                  <%= f.label :profile_image_url, "Profile Image URL", class: 'control-label' %>
+                  <div class="controls">
+                    <%= f.text_field :profile_image_url, placeholder: "http://example.com/image.png", class: 'input-block-level'  %>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="user_profile_image_type_option btn_group_option push-top-small" id="user_profile_image_type_upload">
+                <% if current_user.profile_image.present? %>
+                  <div class="push-bottom">
+                    Current uploaded image:
+                  </div>
+                  <div class="push-bottom">
+                    <%= profile_image_tag(current_user, :small) %>
+                  </div>
+                <% end %>
+                <div class="control-group">
+                  <%= f.label :profile_image, "Profile Image File", class: 'control-label' %>
+                  <div class="controls">
+                    <%= f.file_field :profile_image, accept: 'image' %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="control-group">
+            <%= f.label :time_zone, "Preferred Time Zone", class: 'control-label' %>
+            <div class="controls">
+              <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, {:class => 'input-block-level'} %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-actions">
+      <div class="row">
+        <div class="span12">
+          <%= f.submit "Update Info", class: 'btn btn-block btn-primary push-bottom' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
 
 <% content_for(:before_body_end) do %>
   <script type="text/javascript">

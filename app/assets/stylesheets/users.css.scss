@@ -1,0 +1,42 @@
+.user-online, .user-offline {
+  display: inline-block;
+  border-radius: 4px;
+  margin-bottom: 1px;
+  width: 8px;
+  height: 8px;
+  background-color: $green;
+
+  &.block
+  {
+    border-radius: 5px;
+    padding: 2px 5px;
+    width: auto;
+    height: auto;
+    color: $white;
+    font-weight: bold;
+  }
+
+  &.user-offline
+  {
+    background-color: $red;
+  }
+}
+
+#user-right
+{
+  .half
+  {
+    width: 50%;
+    float: left;
+  }
+}
+
+.invite-to-event-button
+{
+  position: relative;
+  .events-to-invite
+  {
+    position: absolute;
+    width: 100%;
+  }
+}

@@ -26,7 +26,7 @@ protected
   def user_organizes_group
     @group = current_user.member_groups.find(params[:group_id] || params[:id])
 
-    if @group.nil? || !@group.admin?(current_user)
+    if @group.nil? || !@group.is_admin?(current_user)
       redirect_to_login_or_root
     end
   end

@@ -2,20 +2,37 @@
 
 <% content_for(:wrapper_top) do %>
   <div class="container">
-    <div class="page-header">
-      <h2>
-        <%= @event.title %>
-      </h2>
-      <em>
-        <small>
-          <% if @event.public? %>
-            Public event
-          <% else %>
-            Private event
+    <div class="row">
+      <div class="span9">
+        <div class="page-header">
+          <h2>
+            <%= @event.title %>
+          </h2>
+          <em>
+            <small>
+              <% if @event.public? %>
+                Public event
+              <% else %>
+                Private event
+              <% end %>
+              - Organized by <%= @event.organizer.name %>
+            </small>
+          </em>
+        </div>
+      </div>
+      <div class="span3">
+        <% if !signed_in? %>
+          <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top-title-multiline" %>
+        <% elsif current_user == @event.organizer %>
+          <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title-multiline", rel: "tooltip", title: "Manage your event and view statistics" %>
+        <% elsif @event.public? && !@event.members.include?(current_user) %>
+          <%= form_for [@event, @event_user] do |f| %>
+              <%= f.hidden_field :event_id, :value => @event.id %>
+              <%= f.hidden_field :user_id, :value => current_user.id %>
+              <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block push-top-title-multiline" %>
           <% end %>
-          - Organized by <%= @event.organizer.name %>
-        </small>
-      </em>
+        <% end %>
+      </div>
     </div>
   </div>
 <% end %>
@@ -140,18 +157,18 @@
         offset: 1
       });
 
-      $('.nudge').mouseenter(function()
-      {
-        var $this = $(this);
-        var $overlay = $("<div></div>").addClass("overlay").html("<i class=\"icon-hand-up icon-white\"></i>");
-        $this.prepend($overlay);
-      });
+      // $('.nudge').mouseenter(function()
+      // {
+      //   var $this = $(this);
+      //   var $overlay = $("<div></div>").addClass("overlay").html("<i class=\"icon-hand-up icon-white\"></i>");
+      //   $this.prepend($overlay);
+      // });
 
-      $('.nudge').mouseleave(function()
-      {
-        var $this = $(this);
-        $this.find('.overlay').remove();
-      });
+      // $('.nudge').mouseleave(function()
+      // {
+      //   var $this = $(this);
+      //   $this.find('.overlay').remove();
+      // });
     });
   </script>
 <% end %>

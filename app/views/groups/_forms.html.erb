@@ -1,5 +1,5 @@
 <%= render 'shared/error_messages', object: f.object %>
-<div class="row push-top">
+<div class="row push-top-small">
   <div class="span6">
     <h3>Group Information</h3>
     <div class="well">
@@ -9,7 +9,7 @@
       <%= f.text_area :description, class: "input-block-level", rows: 5 %>
 
 
-      <div class="control-group">
+      <!-- <div class="control-group"> -->
         <%= f.label :image, "Group Image", class: 'control-label' %>
         <div class="controls">
           <%=f.hidden_field :image_type %>
@@ -19,45 +19,39 @@
             <button type="button" class="btn third last <%= "active" if @group.image_type == :default_image %>" data-value="default_image" data-name="default_image">None</button>
           </div>
 
-          <div class="group_image_type_option push-top" id="group_image_type_default_image">
-            <div class="push-bottom">The default</div>
-            <div class="push-bottom">
-              <%= image_tag "default_group_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
-            </div>
+          <div class="group_image_type_option push-top-small" id="group_image_type_default_image">
+            <div class="push-bottom-small">The default:</div>
+            <%= image_tag "default_group_image.png", width: Figaro.env.send(:medium.to_s+"_size") %>
           </div>
 
-          <div class="group_image_type_option push-top" id="group_image_type_url">
+          <div class="group_image_type_option push-top-small" id="group_image_type_url">
             <% if @group.image_url.present? %>
-              <div class="push-bottom">Current URL:</div>
-              <div class="push-bottom">
-                <%= group_image_tag(@group, :medium) %>
-              </div>
+              <div class="push-bottom-small">Current URL:</div>
+              <%= group_image_tag(@group, :medium) %>
             <% end %>
-            <div class="control-group">
+            <!-- <div class="control-group"> -->
               <%= f.label :image_url, "Group Image URL", class: 'control-label' %>
               <div class="controls">
-                <%= f.text_field :image_url, placeholder: "http://example.com/image.png", class: 'input-block-level' %>
+                <%= f.text_field :image_url, placeholder: "http://example.com/image.png", class: 'input-block-level', style: 'margin-bottom: 0;' %>
               </div>
-            </div>
+            <!-- </div> -->
           </div>
 
-          <div class="group_image_type_option push-top" id="group_image_type_upload">
+          <div class="group_image_type_option push-top-small" id="group_image_type_upload">
             <% if @group.image.present? %>
-              <div class="push-bottom">Current uploaded image:</div>
-              <div class="push-bottom">
-                <%= group_image_tag(@group, :medium) %>
-              </div>
+              <div class="push-bottom-small">Current uploaded image:</div>
+              <%= group_image_tag(@group, :medium) %>
             <% end %>
-            <div class="control-group">
+            <!-- <div class="control-group"> -->
               <%= f.label :image, "Image File", class: 'control-label' %>
               <div class="controls">
                 <%= f.file_field :image, accept: 'image' %>
               </div>
-            </div>
+            <!-- </div> -->
           </div>
 
         </div>
-      </div>
+      <!-- </div> -->
     </div>
   </div>
   <div class="span6">
@@ -98,7 +92,7 @@
 </div>
 <div class="row">
   <div class="span12">
-    <%= f.submit "#{submit_text(@group)} group", class: "btn btn-block btn-primary" %>
+    <%= f.submit "#{submit_text(@group)} group", class: "btn btn-block btn-primary push-bottom" %>
   </div>
 </div>
 

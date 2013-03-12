@@ -2,9 +2,9 @@
   <%= form_for [event, @event_user], remote: true do |f| %>
     <span id="event-<%= event.id %>">
       <% if event.members.include?(@user) %>
-        <i class="icon-check icon-white"></i>
+        <i class="icon-check icon-black"></i>
       <% else %>
-        <i class="icon-plus icon-white"></i>
+        <i class="icon-plus icon-black"></i>
       <% end %>
     </span>
      <a href="#" class="event-to-invite"><%= event.title %></a>
