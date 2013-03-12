@@ -120,7 +120,7 @@ class NewsItem < ActiveRecord::Base
         name = "name"
         "#{name} is now attending #{event.title}."
       elsif message?
-        "Check out #{event.title} to see the ongoing discussion."
+        "Check out #{event.title} to see the ongoing discussion. New messages from:"
       end
     elsif group?
       if invite?

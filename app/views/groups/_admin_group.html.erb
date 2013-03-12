@@ -1,0 +1,14 @@
+<tr>
+  <td>
+    <%= link_to group.title, group %>
+  </td>
+  <td>
+    <%= link_to group.organizer.name, group.organizer %>
+  </td>
+  <td>
+    <%= group.group_users.count %>
+  </td>
+  <td>
+    <%= distance_of_time_in_words_to_now group.created_at %> ago
+  </td>
+</tr>

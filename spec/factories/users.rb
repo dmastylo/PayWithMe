@@ -20,5 +20,9 @@ FactoryGirl.define do
       using_oauth true
       after(:create) { |user| user.linked_accounts << FactoryGirl.create(:linked_account, user: user) }
     end
+
+    factory :admin_user do
+      admin true
+    end
   end
 end

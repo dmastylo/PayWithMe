@@ -59,13 +59,23 @@ em
   }
 }
 
-.wrapper-bordered
+.wrapper
 {
   margin-top: $margin;
   border: 5px solid $darkBlue;
-  border-width: 5px 0;
   background-color: $white;
   margin-bottom: $margin;
+  &.wrapper-bordered
+  {
+    border-width: 5px 0;
+  }
+  &.wrapper-top
+  {
+    margin-top: -1 * $margin;
+    margin-bottom: $smallMargin;
+    border-width: 0 0 5px 0;
+    .page-header { margin-top: $smallMargin; }
+  }
 }
 
 .push-bottom { margin-bottom: $margin; }
@@ -78,6 +88,7 @@ em
   margin-top: 0;
   padding-bottom: 0;
   margin-bottom: $smallMargin;
+  border: 0;
   h2 { margin: 0; }
 }
 

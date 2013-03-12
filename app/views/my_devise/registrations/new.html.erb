@@ -1,15 +1,20 @@
 <% provide(:title, "Register") %>
-<div class="container">
-  <div class="page-header">
-    <% if session["devise.account_attributes"] && session["devise.account_attributes"][:provider] %>
-      <h2>Finish <%= session["devise.account_attributes"][:provider].capitalize %> Registration</h2>
-    <% elsif params[:guest] %>
-      <h2>Complete Account Registration</h2>
-    <% else %>
-      <h2>Register New Account</h2>
-    <% end %>
-  </div>
 
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="page-header">
+      <% if session["devise.account_attributes"] && session["devise.account_attributes"][:provider] %>
+        <h2>Finish <%= session["devise.account_attributes"][:provider].capitalize %> Registration</h2>
+      <% elsif params[:guest] %>
+        <h2>Complete Account Registration</h2>
+      <% else %>
+        <h2>Register New Account</h2>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
   <div class="row">
     <% if params[:guest] %>
       <div class="span12">

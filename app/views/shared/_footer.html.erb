@@ -18,6 +18,15 @@
         </ul>
       </div>
       <div class="span3">
+        <% if signed_in? && current_user.admin? %>
+          <strong>Administration</strong>
+          <ul class="unstyled">
+            <li><%= link_to "Home", admin_index_path %></li>
+            <li><%= link_to "Users", users_admin_index_path %></li>
+            <li><%= link_to "Events", events_admin_index_path %></li>
+            <li><%= link_to "Groups", groups_admin_index_path %></li>
+          </ul>
+        <% end %>
       </div>
       <div class="span3">
         <div class="pull-right">

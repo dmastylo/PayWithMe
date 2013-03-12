@@ -7,6 +7,14 @@ PayWithMe::Application.routes.draw do
   match '/faq', to: "pages#faq"
   match '/jobs', to: "pages#jobs"
 
+  resources :admin, only: :index do
+    collection do
+      get 'users'
+      get 'events'
+      get 'groups'
+    end
+  end
+
   resources :contact_forms
 
   resources :events do

@@ -29,21 +29,50 @@ body
       .nav
       {
         float: right;
-        a
+        li
         {
-          @include box-sizing(border-box);
-          color: $white;
-          text-shadow: 1px 1px 0 $darkBlue;
-          font-size: 18px;
-          text-transform: uppercase;
-          font-weight: bold;
-          letter-spacing: -1px;
-          height: 75px;
-          line-height: 55px;
-          &:hover
+          a
           {
+            @include box-sizing(border-box);
             color: $white;
-            background-color: rgba(255, 255, 255, 0.1);
+            text-shadow: 1px 1px 0 $darkBlue;
+            font-size: 18px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: -1px;
+            height: 75px;
+            line-height: 55px;
+            &:hover
+            {
+              color: $white;
+              background-color: rgba(255, 255, 255, 0.1);
+            }
+          }
+          &.dropdown.open
+          {
+            a { background-color: $darkBlue; }
+            .dropdown-menu
+            {
+              li
+              {
+                a
+                {
+                  background-color: $white;
+                  color: $darkBlue;
+                  text-transform: none;
+                  font-size: 16px;
+                  text-shadow: none;
+                  line-height: 20px;
+                  height: auto;
+                  &:hover
+                  {
+                    color: $white;
+                    background-color: $darkBlue;
+                    background-image: none;
+                  }
+                }
+              }
+            }
           }
         }
       }

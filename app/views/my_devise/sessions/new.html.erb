@@ -1,9 +1,14 @@
 <% provide(:title, "Sign In") %>
-<div class="container">
-  <div class="page-header">
-    <h2>Sign in</h2>
-  </div>
 
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="page-header">
+      <h2>Sign In</h2>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
   <div class="row">
     <div class="span7">
       <h3>Login With Email</h3>
@@ -47,5 +52,6 @@
         <%= link_to "Login With Facebook", user_omniauth_authorize_path(:facebook), class: "btn btn-primary input-block-level push-bottom-small" %>
         <%= link_to "Login With Twitter", user_omniauth_authorize_path(:twitter), class: "btn btn-primary input-block-level" %>
       </div>
+    </div>
   </div>
 </div>
