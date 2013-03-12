@@ -11,22 +11,14 @@ class EventUsersController < ApplicationController
   skip_before_filter :verify_authenticity_token, only: [:ipn]
 
   def create
-    # for some reason member_ids.include? does not work
-    unless @event.members.include?(User.find(params[:event_user][:user_id]))
-      @event_user = EventUser.create(params[:event_user])
-      NewsItem.create_for_new_event_member(@event, @event_user.user)
-      if @event_user.save
-        @event.set_event_user_attributes(current_user)
+    @member = User.find(params[:event_user][:user_id])
+    unless @event.members.include?(@member)
+      @event.add_member(@member)
 
-        respond_to do |format|
-          format.html { redirect_to event_path(@event) } if @event_organizer.nil? # Joining public event
-          format.html { redirect_to user_path(@user) }  # Being invited directly
-          format.js
-        end
-      else
-        flash[:error] = "Adding user failed!"
-        redirect_to event_path(@event) if @event_organizer.nil? # Joining public event
-        redirect_to user_path(@user) # Being invited directly
+      respond_to do |format|
+        format.html { redirect_to event_path(@event) } if @event.organizer != current_user # Joining public event
+        format.html { redirect_to user_path(@user) }  # Being invited directly
+        format.js
       end
     end
   end
@@ -75,10 +67,10 @@ private
   end
 
   def event_public_or_user_organizes_event
-    @event_organizer = current_user.organized_events.find_by_id(params[:event_id] || params[:id])
     @event = Event.find(params[:event_id] || params[:id])
-  
-    if @event_organizer.nil?
+    @user = User.find(params[:event_user][:user_id])
+    
+    if @event.organizer != current_user
       # If user doesn't organize event, it must be public and the user_id must be equal to current_user
       if @event.public?
         if params[:event_user][:user_id].to_i != current_user.id

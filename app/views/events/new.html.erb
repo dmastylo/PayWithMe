@@ -1,7 +1,15 @@
 <% provide(:title, "New Event") %>
-<div class="page-header">
-  <h2>New Event</h2>
-</div>
-<%= form_for @event, html: { multipart: true } do |f| %>
-  <% render "forms", f: f %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="page-header">
+      <h2>New Event</h2>
+    </div>
+  </div>
 <% end %>
+
+<div class="container">
+  <%= form_for @event, html: { multipart: true } do |f| %>
+    <% render "forms", f: f %>
+  <% end %>
+</div>

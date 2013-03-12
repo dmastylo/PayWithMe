@@ -1,0 +1,21 @@
+.team-member
+{
+  h4 { margin-top: 0; }
+  img
+  {
+    border: 1px solid $lightGray;
+    width: 125px;
+    float: left;
+    margin-right: $smallMargin;
+  }
+  p { line-height: 18px; }
+}
+
+@media (max-width: 979px) and (min-width: 768px)
+{
+  .team-member img
+  {
+    float: none;
+    margin-bottom: $smallMargin;
+  }
+}
