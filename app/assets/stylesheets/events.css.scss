@@ -1,0 +1,24 @@
+.underlayed-image
+{
+  width: 72px;
+  height: 72px;
+  background-size: 150%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border: 1px solid $lightGray;
+  background-color: #FFF;
+  float: left;
+  margin-right: $smallMargin;
+}
+
+.event
+{
+  h4
+  {
+    margin-top: 0;
+  }
+  .icons
+  {
+    float: right;
+  }
+}
