@@ -19,6 +19,7 @@
   <div class="row" id="user-wrapper">
     <div class="span3" id="user-left">
       <%= profile_image_tag @user, :large %>
+
       <div class="large-statistic push-top">
         <span class="count"><%= @user.organized_events.count %></span> organized <%= @user.organized_events.count == 1 ? 'event' : 'event'.pluralize %>
       </div>
@@ -30,8 +31,8 @@
         <div class="invite-to-event-button push-top push-bottom">
           <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
           <ul class="events-to-invite dropdown-menu">
-            <% unless @your_organized_events.empty? %>
-              <%= render partial: 'events/invite_events', collection: @your_organized_events, as: :event %>
+            <% unless @your_organized_and_public_events.empty? %>
+              <%= render partial: 'events/invite_events', collection: @your_organized_and_public_events, as: :event %>
             <% else %>
               <li>You don't have any events!</li>
             <% end %>
@@ -48,7 +49,7 @@
       <% end %>
       <div id="upcoming-events" <%= "class=\"empty\"" if @upcoming_public_and_shared_events.empty? %>>
         <% if @upcoming_public_and_shared_events.empty? %>
-          No upcoming events!
+          <span id="no-upcoming-events">No upcoming events!</span>
         <% else %>
           <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
         <% end %>
