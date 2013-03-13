@@ -1,0 +1,26 @@
+.footer
+{
+  background-color: $darkBlue;
+  width: 100%;
+  padding: $margin 0;
+  color: $grey;
+  strong { color: $white; }
+  ul
+  {
+    margin-top: $smallMargin;
+    a
+    {
+      color: $grey;
+      &:hover
+      {
+        color: $white;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.debug
+{
+  display: none;
+}

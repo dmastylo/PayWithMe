@@ -1,16 +1,21 @@
 <li class="news-item <%= "unread" if !news_item.read? %>">
-  <a href="<%= news_item.path %>">
-    <div class="image" style="background-image: url('<%= news_item_image_path(news_item, :medium) %>');"></div>
-  </a>
-  
-  <strong><%= link_to news_item.title, news_item.path %></strong>
-  <span class="timestamp"><small><%= time_ago_in_words(news_item.updated_at) %> ago</small></span><br />
+  <div class="well">
+    <a href="<%= news_item.path %>">
+      <div class="underlayed-image" style="background-image: url('<%= news_item_image_path(news_item, :medium) %>');"></div>
+    </a>
+    
+    <strong><%= link_to news_item.title, news_item.path %></strong>
+    <span class="timestamp"><%= time_ago_in_words(news_item.updated_at) %> ago</span><br />
+    <div class="body"><%= news_item.body %></div>
 
-  <% news_item.subjects.each do |subject| %>
-    <div class="subject" rel="tooltip" title="<%= user_name(subject) %>" data-placement="top">
-      <%= profile_image_tag(subject, :small) %>
+    <div class="subjects">
+      <% news_item.subjects.each do |subject| %>
+        <div class="subject" rel="tooltip" title="<%= user_name(subject) %>" data-placement="top">
+          <%= profile_image_tag(subject, :thumb) %>
+        </div>
+      <% end %>
     </div>
-  <% end %>
 
-  <div class="clearfix"></div>
+    <div class="clearfix"></div>
+  </div>
 </li>

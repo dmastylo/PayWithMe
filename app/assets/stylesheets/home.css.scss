@@ -1,0 +1,87 @@
+iframe { border: 0; }
+.btn-cta { margin-top: $smallMargin; }
+.span5.static-width
+{
+  width: 362px;
+  @include box-sizing(border-box);
+}
+.feature-with-icon
+{
+  padding: $margin;
+  padding-left: 0;
+  &.second-row { padding-top: 0; }
+  .icon
+  {
+    float: left;
+    margin-top: 2px;
+    width: 32px;
+  }
+  .feature
+  {
+    float: left;
+    margin-left: $smallMargin;
+    @include box-sizing(border-box);
+    h3
+    {
+      line-height: 20px;
+      margin: 0;
+    }
+  }
+}
+
+// START MOBILE FIXES
+@media (min-width: 1200px)
+{
+  #home-cta
+  {
+    margin-top: 50px;
+  }
+
+  .home-feature-description
+  {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 1159px) and (min-width: 980px)
+{
+  #home-cta
+  {
+    margin-top: 45px;
+  }
+
+  .home-feature-description
+  {
+    margin-top: 50px;
+  }
+}
+
+@media (max-width: 979px) and (min-width: 768px)
+{
+  #home-cta
+  {
+    margin-top: 0px;
+  }
+
+  .home-feature-description
+  {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 767px)
+{
+  .span5.static-width { width: auto; }
+  .span6
+  {
+    &:first-child
+    {
+      .feature-with-icon { padding-top: $smallMargin; }
+    }
+    .feature-with-icon
+    {
+      padding-top: 0;
+      padding-bottom: $smallMargin;
+    }
+  }
+}

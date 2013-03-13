@@ -1,59 +1,56 @@
 <% provide(:title, "Our Team") %>
 
-<div class="team-page">
-	<div class="page-header">
-		<h2>Our Team</h2>
+<% content_for(:wrapper_top) do %>
+	<div class="container">
+		<div class="page-header">
+			<h2>Our Team</h2>
+		</div>
 	</div>
-</div>
+<% end %>
 
 <div class="container">
-	<div class="team-page">
-
-		<!-- Row 1 -->
-		<div class="team-row span12">
-			<center>
-				<%= render :partial => "team_template", 
-						   :locals => { :name => "Jake Schonberger", 
-										:picture => "Jake.png",
-										:rollover => "twister.png", 
-										:description => "Jake is a Product Design and Business student at RPI, a skier, lacrosse player and an awesome chef. He enjoys making sandwiches, building things and spending time with his most beautiful girlfriend, Gwen."
-									  } %>
-				<div class="span1"></div>
-				<%= render :partial => "team_template", 
-						   :locals => { :name => "Austin Gulati", 
-										:picture => "Austin.png",
-										:rollover => "bender.png", 
-										:description => "Austin is a Computer Science student at RPI. Before PayWithMe, he worked on Amazon affiliate software. He has a passion for making great software and enjoys playing guitar in his free time.",
-									  } %>
-				<div class="span1"></div>
-				<%= render :partial => "team_template", 
-						   :locals => { :name => "Damian Mastylo", 
-										:picture => "Damian.png",
-										:rollover => "johnny-bravo.jpg", 
-										:description => "The most fashionable, handsome, and \"bro\" of the team, Damian brings an extraordinary level of intelligence and style to the development team. He also captains a soccer team with Chris Celi."
-									  } %>
-			</center>
-		</div>
-
-		<!-- Row 2 -->
-		<div class="team-row span12">
-			<center>
-				<%= render :partial => "team_template", 
-						   :locals => { :name => "Chris Celi", 
-										:picture => "Chris.png",
-										:rollover => "spongebob.png", 
-										:description => "A Computer Science major from RPI, Chris loves hockey, and will try
-											any sport once. He curls (yes, the one on ice with the brooms) and has played soccer
-											all his life. Chris helped on the development of the front-end of the site."
-									  } %>
-				<div class="span1"></div>
-				<%= render :partial => "team_template", 
-						   :locals => { :name => "Kyle Brody", 
-										:picture => "Kyle.png",
-										:rollover => "quailman.png", 
-										:description => "Waking up at 6:30am is the norm. Kyle loves competition and is an avid Liverpool FC fan. Soccer, investing, tennis and eating are some of his favorite activities. Kyle brings his business acumen to the development of this group."
-									  } %>
-			</center>
-		</div>
+	<div class="row">
+		<%= render partial: "team_member", 
+			locals: {
+				name: "Jake Schonberger", 
+				picture: "jake.png",
+				rollover: "twister.png", 
+				description: "Jake is a Product Design and Business student at RPI, a skier, lacrosse player and an awesome chef. He enjoys making sandwiches, building things and spending time with his most beautiful girlfriend, Gwen."
+			}
+		%>
+		<%= render partial: "team_member", 
+			locals: {
+				name: "Austin Gulati", 
+				picture: "austin.png",
+				rollover: "bender.png", 
+				description: "Austin is a Computer Science student at RPI. Before PayWithMe, he worked on Amazon affiliate software. He has a passion for making great software and enjoys playing guitar in his free time.",
+				}
+		%>
+		<%= render partial: "team_member", 
+			locals: {
+				name: "Kyle Brody", 
+				picture: "kyle.png",
+				rollover: "quailman.png", 
+				description: "Waking up at 6:30am is the norm. Kyle loves competition and is an avid Liverpool FC fan. Soccer, investing, tennis and eating are some of his favorite activities. Kyle brings his business acumen to the development of this group."
+			}
+		%>
+	</div>
+	<div class="row">
+		<%= render partial: "team_member", 
+			locals: {
+				name: "Damian Mastylo", 
+				picture: "damian.png",
+				rollover: "johnny-bravo.jpg", 
+				description: "The most fashionable, handsome, and \"bro\" of the team, Damian brings an extraordinary level of intelligence and style to the development team. He also captains a soccer team with Chris Celi."
+				}
+			%>
+		<%= render partial: "team_member", 
+			locals: {
+				name: "Chris Celi", 
+				picture: "chris.png",
+				rollover: "spongebob.png", 
+				description: "A Computer Science major from RPI, Chris loves hockey, and will try any sport once. He curls (yes, the one on ice with the brooms) and has played soccer all his life. Chris helped on the development of the front-end of the site."
+			}
+		%>
 	</div>
 </div>

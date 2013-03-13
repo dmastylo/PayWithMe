@@ -118,13 +118,13 @@ class NewsItem < ActiveRecord::Base
     if event?
       if invite?
         name = "name"
-        "#{name} is now attending #{event.title}."
+        "The following #{TextHelper.pluralize(self.subjects.count, "member is", "members are").sub(/\d/, '')} now attending #{event.title}:"
       elsif message?
-        "Check out #{event.title} to see the ongoing discussion."
+        "Check out #{event.title} to see the ongoing discussion. New messages from:"
       end
     elsif group?
       if invite?
-        "#{subject.first_name} is now a member of #{group.title}."
+        "The following #{TextHelper.pluralize(self.subjects.count, "member is", "members are").sub(/\d/, '')} a member of #{group.title}:"
       end
     end
   end

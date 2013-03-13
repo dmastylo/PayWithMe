@@ -1,7 +1,7 @@
 <div class="navbar">
   <div class="navbar-inner">
     <div class="container">
-      <%= link_to content_tag("div", "", id: "logo"), root_path %>
+      <%= link_to content_tag("h1", "", id: "logo"), root_path %>
       <ul class="nav pull-right">
         <% if current_user %>
           <%= render 'shared/nav_user' %>

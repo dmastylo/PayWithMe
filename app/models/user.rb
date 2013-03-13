@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
 
   # Scopes
   # ========================================================
-  scope :online, lambda{ where("last_seen > ?", 3.minutes.ago) }
+  scope :online, lambda { where("last_seen > ?", 3.minutes.ago) }
 
   # Pretty URLs
   # ========================================================
@@ -168,17 +168,6 @@ class User < ActiveRecord::Base
       end
     else
       User.search(name_or_email_cont: query).result
-    end
-  end
-
-  # Is this a duplicate?
-  def profile_image_type
-    if profile_image.present?
-      :upload
-    elsif profile_image_url.present?
-      :url
-    else
-      :gravatar
     end
   end
 
