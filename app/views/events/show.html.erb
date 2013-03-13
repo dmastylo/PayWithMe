@@ -1,6 +1,45 @@
 <% provide(:title, @event.title) %>
-<div class="event-show">
-  <div class="row">
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span9">
+        <div class="page-header">
+          <h2>
+            <%= @event.title %>
+          </h2>
+          <em>
+            <small>
+              <% if @event.public? %>
+                Public event
+              <% else %>
+                Private event
+              <% end %>
+              - Organized by <%= @event.organizer.name %>
+            </small>
+          </em>
+        </div>
+      </div>
+      <div class="span3">
+        <% if !signed_in? %>
+          <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top-title-multiline" %>
+        <% elsif current_user == @event.organizer %>
+          <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title-multiline", rel: "tooltip", title: "Manage your event and view statistics" %>
+        <% elsif @event.public? && !@event.members.include?(current_user) %>
+          <%= form_for [@event, @event_user] do |f| %>
+              <%= f.hidden_field :event_id, :value => @event.id %>
+              <%= f.hidden_field :user_id, :value => current_user.id %>
+              <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block push-top-title-multiline" %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+
+<div class="container">
+  <!-- <div class="row">
     <div class="span9">
       <div class="page-header">
         <h2>
@@ -30,7 +69,7 @@
         <% end %>
       </div>
     <% end %>
-  </div>
+  </div> -->
   <div class="row">
     <div class="span5">
       <h3>Event Details</h3>
@@ -42,15 +81,12 @@
           <div class="clearfix"></div>
         <% end %>
         <% unless @event.fundraiser? %>
-          <% if @event.divide_total? %>
-            <div class="quarter"><strong>Total Goal</strong></div>
-            <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
-          <% elsif @event.divide_per_person? %>
-            <div class="quarter"><strong>Per User Goal</strong></div>
-            <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
-          <% end %>
+          <div class="quarter"><strong>Total Goal</strong></div>
+          <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+          <div class="quarter"><strong>Per User Goal</strong></div>
+          <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
         <% end %>
-        <div class="quarter"><strong>Money Due at</strong></div>
+        <div class="quarter"><strong>Money Due</strong></div>
         <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
         <div class="clearfix"></div>
       </div>
@@ -121,18 +157,18 @@
         offset: 1
       });
 
-      $('.nudge').mouseenter(function()
-      {
-        var $this = $(this);
-        var $overlay = $("<div></div>").addClass("overlay").html("<i class=\"icon-hand-up icon-white\"></i>");
-        $this.prepend($overlay);
-      });
+      // $('.nudge').mouseenter(function()
+      // {
+      //   var $this = $(this);
+      //   var $overlay = $("<div></div>").addClass("overlay").html("<i class=\"icon-hand-up icon-white\"></i>");
+      //   $this.prepend($overlay);
+      // });
 
-      $('.nudge').mouseleave(function()
-      {
-        var $this = $(this);
-        $this.find('.overlay').remove();
-      });
+      // $('.nudge').mouseleave(function()
+      // {
+      //   var $this = $(this);
+      //   $this.find('.overlay').remove();
+      // });
     });
   </script>
 <% end %>

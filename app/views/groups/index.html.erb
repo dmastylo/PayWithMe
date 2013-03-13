@@ -1,22 +1,30 @@
-<% provide(:title, "Your Groups") %>
-<div class="row">
-  <div class="span9">
-    <div class="page-header">
-      <h2>Your Groups</h2>
+<% provide(:title, "My Groups") %>
+
+<% content_for(:wrapper_top) do %>
+<div class="container">
+  <div class="row">
+    <div class="span9">
+      <div class="page-header">
+        <h2>My Groups</h2>
+      </div>
     </div>
-  </div>
-  <div class="span3">
-    <% if !current_user.stub? %>
-      <%= link_to "Create group", new_group_path, class: "btn btn-primary btn-block push-top-title" %>
-    <% end %>
+    <div class="span3">
+      <% unless current_user.stub? %>
+        <%= link_to "Create group", new_group_path, class: "btn btn-primary btn-block push-top-title" %>
+      <% end %>
+    </div>
   </div>
 </div>
-<div class="index-partials row">
-  <% if @groups.empty? %>
-    <div class="span12">
-      You are not in any groups! Maybe you should <%= link_to "create a group?", new_group_path %>
-    </div>
-  <% else %>
-    <%= render @groups %>
-  <% end %>
+<% end %>
+
+<div class="container">
+  <div class="index-partials row push-bottom push-top-small">
+    <% if @groups.empty? %>
+      <div class="span12">
+        You are not in any groups! Maybe you should <%= link_to "create a group?", new_group_path %>
+      </div>
+    <% else %>
+      <%= render @groups %>
+    <% end %>
+  </div>
 </div>
