@@ -1,3 +1,4 @@
+$('#no-upcoming-events').remove();
 $('#event-<%= @event.id %>').html('<i class="icon-check icon-white"></i>');
 $('#upcoming-events').append('<%= j render(partial: "events/profile_event", object: @event, as: :event) %>');
 $('#member-event-count').html('<%= @user.member_events.count %>');

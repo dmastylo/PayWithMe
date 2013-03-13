@@ -6,7 +6,8 @@ class UsersController < ApplicationController
     if request.path != user_path(@user)
       redirect_to user_path(@user), status: :moved_permanently
     end
-    @your_organized_events = current_user.upcoming_organized_events
+
+    @your_organized_and_public_events = current_user.upcoming_organized_events.where(privacy_type: Event::PrivacyType::PRIVATE) + current_user.upcoming_events.where(privacy_type: Event::PrivacyType::PUBLIC)
 
     if @user == current_user
         @upcoming_public_and_shared_events = current_user.upcoming_events
