@@ -56,15 +56,20 @@ class Group < ActiveRecord::Base
       unless self.members.include?(member)
         self.members << member
         Notification.create_for_group(self, member) if member != exclude_from_notifications
-        if editing_group
-          NewsItem.delay.create_for_new_group_member(self, mepmber)
+
+        # Only fire this if it's NOT a new group
+        # We don't want to notify all the members of all the other members
+        # when it's first being made
+        NewsItem.delay.create_for_new_group_member(self, member) if editing_group
+
+        # Add the new member to the upcoming group events
+        self.events.where('events.due_at > ?', Time.now).each do |event|
+          event.add_member(member, member)
         end
       end
     end
 
     delay.send_invitation_emails
-    # Later, add them to open events as of
-    # right now if they are added to the group
   end
 
   def add_member(member_to_add)

@@ -257,8 +257,8 @@ class Event < ActiveRecord::Base
     end
   end
   
-  def add_member(member)
-    add_members([member])
+  def add_member(member, exclude_from_notifications=nil)
+    add_members([member], exclude_from_notifications)
   end
 
   def add_members(members_to_add, exclude_from_notifications=nil)
@@ -270,9 +270,11 @@ class Event < ActiveRecord::Base
         else
           self.members << member
           Notification.create_for_event(self, member) if member != exclude_from_notifications
-          if editing_event
-            NewsItem.delay.create_for_new_event_member(self, member)
-          end
+
+          # Only fire this if it's NOT a new event
+          # We don't want to notify all the members of all the other members
+          # when it's first being made
+          NewsItem.delay.create_for_new_event_member(self, member) if editing_event
         end
       end
     end
