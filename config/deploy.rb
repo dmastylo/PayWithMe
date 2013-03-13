@@ -86,8 +86,12 @@ namespace :deploy do
         run_locally "rake assets:precompile"
 
         storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: Figaro.env.rackspace_key, rackspace_username: Figaro.env.rackspace_username, rackspace_storage_url: Figaro.env.rackspace_url)
-
         directory = storage.directories.get('static-assets')
+
+        logger.info "Removing old assets"
+        directory.files.each do |file| file.destroy end
+          
+        logger.info "Uploading new assets"
         Dir.glob(File.join("public", "assets", "*")).each do |file|
           directory.files.create(key: File.join("assets", File.basename(file)), body: File.open(file)) unless File.directory?(file)
         end
