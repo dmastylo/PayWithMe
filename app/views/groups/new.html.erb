@@ -1,7 +1,15 @@
 <% provide(:title, "New Group") %>
-<div class="page-header">
-  <h2>New Group</h2>
-</div>
-<%= form_for @group do |f| %>
-  <%= render 'forms', f: f %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="page-header">
+      <h2>New Group</h2>
+    </div>
+  </div>
 <% end %>
+
+<div class="container">
+  <%= form_for @group do |f| %>
+    <%= render 'forms', f: f %>
+  <% end %>
+</div>

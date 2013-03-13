@@ -1,34 +1,45 @@
-<% provide(:title, "Your Events") %>
-<div class="row">
-  <div class="span9">
-    <h2>Upcoming Events</h2>
+<% provide(:title, "My Events") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+     <div class="row"> 
+      <div class="span9">
+        <div class="page-header">
+          <h2>My Events</h2>
+        </div>
+      </div>
+      <div class="span3">
+        <% unless current_user.stub? %>
+          <%= link_to "Create event", new_event_path, class: "btn btn-primary btn-block push-top-title" %>
+        <% end %>
+      </div>
+    </div>
   </div>
-  <div class="span3">
-    <% unless current_user.stub? %>
-      <%= link_to "Create event", new_event_path, class: "btn btn-primary btn-block push-top-title" %>
+<% end %>
+
+<div class="container">
+  <h3>Upcoming Events</h3>
+  <div class="index-partials row">
+    <% if @upcoming_events.empty? %>
+      <div class="span12">
+        You currently don't have any upcoming events! <%= render "shared/maybe_create_event" %>
+      </div>
+    <% else %>
+      <%= render @upcoming_events %>
     <% end %>
   </div>
-</div>
-<div class="index-partials row">
-  <% if @upcoming_events.empty? %>
+  <div class="row">
     <div class="span12">
-      You currently don't have any upcoming events! <%= render "shared/maybe_create_event" %>
+      <h3>Past Events</h3>
     </div>
-  <% else %>
-    <%= render @upcoming_events %>
-  <% end %>
-</div>
-<div class="row">
-  <div class="span12">
-    <h2>Past Events</h2>
   </div>
-</div>
-<div class="row">
-  <% if @past_events.empty? %>
-    <div class="span12">
-      You have not attended any events!
-    </div>
-  <% else %>
-    <%= render @past_events, locals: { past_event: true } %>
-  <% end %>
+  <div class="row push-bottom">
+    <% if @past_events.empty? %>
+      <div class="span12">
+        You have not attended any events!
+      </div>
+    <% else %>
+      <%= render @past_events, locals: { past_event: true } %>
+    <% end %>
+  </div>
 </div>

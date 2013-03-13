@@ -29,6 +29,7 @@
 #  slug                       :string(255)
 #  creator_id                 :integer
 #  completed_at               :datetime
+#  admin                      :boolean
 #
 
 require 'spec_helper'
@@ -53,7 +54,8 @@ describe User do
      :last_seen,
      :using_oauth,
      :guest_token,
-     :slug].each do |attribute|
+     :slug,
+     :admin].each do |attribute|
       it { should respond_to(attribute) }
     end
   end
@@ -86,6 +88,8 @@ describe User do
     it { should have_many(:news_items).dependent(:destroy) }
     it { should have_many(:received_payments).class_name("Payment") }
     it { should have_many(:sent_payments).class_name("Payment") }
+    it { should have_many(:received_nudges).class_name("Nudge") }
+    it { should have_many(:sent_nudges).class_name("Nudge") }
     it { should belong_to(:creator).class_name("User") }
   end
 
@@ -107,7 +111,8 @@ describe User do
      :profile_image_updated_at,
      :stub,
      :guest_token,
-     :last_seen].each do |attribute|
+     :last_seen,
+     :admin].each do |attribute|
       it { should_not allow_mass_assignment_of(attribute) }
     end
   end

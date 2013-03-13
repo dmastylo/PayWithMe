@@ -37,7 +37,7 @@ class NewsItem < ActiveRecord::Base
         news_item = member.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(new_member)
@@ -60,13 +60,18 @@ class NewsItem < ActiveRecord::Base
         news_item = member.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(message_creator)
           news_item.subjects << message_creator
         end
-        news_item.unread!
+        
+        if event_user.on_page?
+          news_item.read!
+        else
+          news_item.unread!
+        end
       end
     end
   end
@@ -83,7 +88,7 @@ class NewsItem < ActiveRecord::Base
         news_item = member.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(new_member)
@@ -107,13 +112,13 @@ class NewsItem < ActiveRecord::Base
     if event?
       if invite?
         name = "name"
-        "#{name} is now attending #{event.title}."
+        "The following #{TextHelper.pluralize(self.subjects.count, "member is", "members are").sub(/\d/, '')} now attending #{event.title}:"
       elsif message?
-        "Check out #{event.title} to see the ongoing discussion."
+        "Check out #{event.title} to see the ongoing discussion. New messages from:"
       end
     elsif group?
       if invite?
-        "#{subject.first_name} is now a member of #{group.title}."
+        "The following #{TextHelper.pluralize(self.subjects.count, "member is", "members are").sub(/\d/, '')} a member of #{group.title}:"
       end
     end
   end

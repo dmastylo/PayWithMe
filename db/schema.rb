@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130304234616) do
+ActiveRecord::Schema.define(:version => 20130307152723) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -41,23 +41,17 @@ ActiveRecord::Schema.define(:version => 20130304234616) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "event_settings", :force => true do |t|
-    t.integer  "event_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "event_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
-    t.integer  "amount_cents",     :default => 0
+    t.integer  "amount_cents",    :default => 0
     t.datetime "due_at"
     t.datetime "paid_at"
-    t.boolean  "invitation_sent",  :default => false
+    t.boolean  "invitation_sent", :default => false
     t.integer  "payment_id"
-    t.boolean  "visited_event",    :default => false
-    t.boolean  "paid_with_cash",   :default => true
-    t.integer  "paid_total_cents", :default => 0
+    t.boolean  "visited_event",   :default => false
+    t.datetime "last_seen"
+    t.boolean  "paid_with_cash",  :default => true
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -260,6 +254,7 @@ ActiveRecord::Schema.define(:version => 20130304234616) do
     t.string   "slug"
     t.integer  "creator_id"
     t.datetime "completed_at"
+    t.boolean  "admin"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

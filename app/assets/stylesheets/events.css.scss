@@ -1,182 +1,158 @@
-// Show
-// =========================
-.event-show,.group-show
+.underlayed-image
 {
-    .image
-    {
-        border: 1px solid $mediumGray;
-        border-bottom: 0;
-        width: 100%;
-        height: 250px;
-        background-size: 100%;
-        background-position: center center;
-        background-repeat: no-repeat;
-        @include box-sizing(border-box);
-        &.default
-        {
-            height: 100px;
-        }
-    }
-    .members
-    {
-        max-height: 350px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        .member
-        {
-            margin-bottom: 5px;
-            width: 50%;
-            float: left;
-            &:last-child { margin-bottom: 0; }
-            .profile-image
-            {
-                margin-top: 3px;
-                float: left;
-                img { border: 1px solid $mediumGray; }
-            }
-            .body
-            {
-                padding-left: 10px;
-                float: left;
-                @include box-sizing(border-box);
-                .user a
-                {
-                    color: $offBlack;
-                    font-weight: bold;
-                }
-                .status { color: $mediumGray; }
-            }
-        }
-    }
-
-    .messages
-    {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-        height: 380px;
-        overflow-y: scroll;
-        .message
-        {
-            margin-bottom: 10px;
-            .profile-image
-            {
-                float: left;
-                img { border: 1px solid $mediumGray; }
-            }
-            &.current
-            {
-                .profile-image
-                {
-                    float: right;
-                    padding-right: 15px;
-                }
-                .body
-                {
-                    padding-right: 10px;
-                    text-align: right;
-                }
-            }
-            .body
-            {
-                padding-left: 10px;
-                float: left;
-                @include box-sizing(border-box);
-                margin-top: 3px;
-                .content
-                {
-                    word-break: normal;
-                    word-wrap: break-word;
-                }
-                .user a
-                {
-                    color: $offBlack;
-                    font-weight: bold;
-                }
-                .timestamp
-                {
-                    color: $mediumGray;
-                }
-            }
-        }
-        .new-messages
-        {
-            display: none;
-        }
-    }
-
-    .new-message
-    {
-        margin-top: -10px;
-        margin-bottom: 20px;
-    }
+  width: 72px;
+  height: 72px;
+  background-size: 150%;
+  background-position: center center;
+  background-repeat: no-repeat;
+  border: 1px solid $lightGray;
+  background-color: #FFF;
+  float: left;
+  margin-right: $smallMargin;
 }
 
-// Partial
-// =========================
 .event
 {
-    padding: 0;
-    .image
+  h4
+  {
+    margin-top: 0;
+  }
+  .icons
+  {
+    float: right;
+  }
+}
+
+.members
+{
+  list-style-type: none;
+  margin: 0;
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  .member
+  {
+    margin-top: $tinyMargin;
+    &:first-child { margin-top: 0; }
+    .profile-image
     {
-        width: 100%;
-        height: 100px;
-        background-size: 100%;
-        background-position: center center;
-        border-bottom: 1px solid $mediumGray;
-        border-width: 0 0 1px 0;
-        background-color: #FFF;
+      float: left;
+      margin-right: $tinyMargin;
+      border: 1px solid $lightGray;
+    }
+    .user
+    {
+      width: 130px;
+    }
+    .user,.status
+    {
+      float: left;
+      margin-right: $smallMargin;
+      line-height: 34px;
+    }
+    .status
+    {
+      color: $gray;
+      font-style: italic;
+      .paid { color: $green; }
+      .unpaid { color: $red; }
+    }
+    .nudge
+    {
+      float: right;
+      line-height: 34px;
+    }
+  }
+}
+
+.new-message { margin-bottom: $smallMargin; }
+.messages
+{
+  list-style-type: none;
+  margin: 0;
+  height: 380px;
+  overflow-y: scroll;
+  .new-messages { display: none; }
+  .message
+  {
+    margin-bottom: $smallMargin;
+    .profile-image
+    {
+      float: left;
+      margin-right: $smallMargin;
+      img { border: 1px solid $lightGray; }
+    }
+    .body
+    {
+      float: left;
+      @include box-sizing(border-box);
+      .content
+      {
+        word-break: normal;
+        word-wrap: break-word;
+      }
+      .timestamp
+      {
+        color: $gray;
+        font-style: italic;
+      }
+    }
+    &.current
+    {
+      .profile-image
+      {
+        float: right;
+        margin-right: 0;
+        margin-left: $smallMargin;
+      }
+      .body
+      {
+        text-align: right;
+      }
+    }
+  }
+}
+
+#invited_members, #invited_groups
+{
+  .member
+  {
+    margin-top: 10px;
+    .profile_image
+    {
+      float: left;
     }
     .info
     {
-        padding: $mediumMargin;
-        h4 { margin-top: 0; }
+      float: left;
+      margin-left: 5px;
+      line-height: 17px;
     }
-    .icons
+    .name { font-weight: bold; }
+    .email
     {
-        float: right;
-        margin-top: -2px;
+      color: $gray;
+      font-style: italic;
     }
+    .delete
+    {
+      float: right;
+      line-height: 34px;
+      cursor: pointer;
+    }
+    &.member_with_email
+    {
+      height: 34px;
+      line-height: 34px;
+      .email
+      {
+        font-weight: bold;
+        color: $black;
+      }
+      .info { line-height: 34px; }
+    }
+  }
 }
 
-// Forms
-// =========================
-#invited_members, #invited_groups
-{
-    .member
-    {
-        margin-top: 10px;
-        .profile_image
-        {
-            float: left;
-        }
-        .info
-        {
-            float: left;
-            margin-left: 5px;
-            line-height: 17px;
-        }
-        .name { font-weight: bold; }
-        .email { color: $mediumGray; }
-        .delete
-        {
-            float: right;
-            line-height: 34px;
-            cursor: pointer;
-        }
-        &.member_with_email
-        {
-            height: 34px;
-            line-height: 34px;
-            .email
-            {
-                font-weight: bold;
-                color: $offBlack;
-            }
-            .info { line-height: 34px; }
-        }
-    }
-}
+#btn-bulk-invite { margin-top: $tinyMargin; }
+.btn_group_option { display: none; }

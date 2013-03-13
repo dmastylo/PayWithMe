@@ -29,6 +29,7 @@
 #  slug                       :string(255)
 #  creator_id                 :integer
 #  completed_at               :datetime
+#  admin                      :boolean
 #
 
 class User < ActiveRecord::Base
@@ -70,13 +71,15 @@ class User < ActiveRecord::Base
   has_many :news_items, dependent: :destroy
   has_many :received_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
   has_many :sent_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
+  has_many :received_nudges, class_name: "Nudge", foreign_key: "nudgee_id"
+  has_many :sent_nudges, class_name: "Nudge", foreign_key: "nudger_id"
   has_and_belongs_to_many :subject_news_items, class_name: "NewsItem"
   belongs_to :creator, class_name: "User"
   has_many :created_users, class_name: "User", foreign_key: "creator_id"
 
   # Scopes
   # ========================================================
-  scope :online, lambda{ where("last_seen > ?", 3.minutes.ago) }
+  scope :online, lambda { where("last_seen > ?", 3.minutes.ago) }
 
   # Pretty URLs
   # ========================================================
@@ -169,17 +172,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Is this a duplicate?
-  def profile_image_type
-    if profile_image.present?
-      :upload
-    elsif profile_image_url.present?
-      :url
-    else
-      :gravatar
-    end
-  end
-
   # Instance methods
   # ========================================================
   def password_required?
@@ -224,10 +216,6 @@ class User < ActiveRecord::Base
 
   def unread_notifications
     self.notifications.where(read: false)
-  end
-
-  def is_admin?
-    %w{ dmastylo@gmail.com celic@rpi.edu agulati@codequarry.net kyle.brody12@gmail.com jaschonberger@gmail.com rozele@rpi.edu }.include? self.email
   end
 
   # Event Definitions

@@ -1,24 +1,26 @@
 $('.tooltip').remove();
-$('#image-user-<%= @event_user.member.id %>').remove();
-$('#member-<%= @event_user.member.id %>').prepend('<div class="profile_image" id="profile_image-<%= @event_user.member.id %>" rel="tooltip" title="Nudge sent!" data-trigger="manual"><%= profile_image_tag @event_user.member, :thumb %></div>');
-$("[rel='tooltip']").tooltip();
+$('.overlay').remove();
 
 // Shake profile picture
 var rumbleTimeout;
-$profilePicture = $('#profile_image-<%= @event_user.member.id %>');
+$profilePicture = $('#image-user-<%= @event_user.user_id %>');
 $profilePicture.jrumble();
 clearTimeout(rumbleTimeout);
 $profilePicture.trigger('startRumble');
+$profilePicture.attr('data-trigger', 'manual');
+$profilePicture.attr('data-original-title', "Nudge sent to <%= user_name(@event_user.user) %>!");
 rumbleTimeout = setTimeout(function()
 {
   $profilePicture.trigger('stopRumble');
+  $profilePicture.off();
+  $profilePicture.tooltip('show');
+  setTimeout(function()
+  {
+    $profilePicture.tooltip('destroy');
+  }, 2500);
 }, 1000)
 
-// "Nudge sent" tooltip
-$profilePicture.tooltip('show');
-setTimeout(function()
-{
-  $profilePicture.tooltip('destroy')
-}, 1000);
 
-$('#link-user-<%= @event_user.member.id %>').html('<%= link_to " ", @event_user.member %>');
+$('#link-user-<%= @event_user.user_id %>').html('<%= link_to " ", @event_user.user, class: "link" %>');
+$profilePicture.removeClass('nudge');
+$profilePicture.unbind('mouseenter');

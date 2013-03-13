@@ -105,7 +105,7 @@ class Notification < ActiveRecord::Base
   def body
     if event?
       if invite?
-        "#{event.organizer.first_name} has invited you to #{event.title}"
+        "#{event.organizer.first_name} has invited you to #{event.title}."
       elsif message?
         "#{TextHelper.pluralize(subject_id, 'new message has', 'new messages have')} been posted in #{event.title}."
       elsif update?

@@ -12,7 +12,7 @@
 
 class Message < ActiveRecord::Base
   # Callbacks
-  after_save :notify_news_feed
+  after_create :notify_news_feed
 
   # Accessible attributes
   attr_accessible :message

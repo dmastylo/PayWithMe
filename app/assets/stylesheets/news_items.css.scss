@@ -1,40 +1,17 @@
 .news-item
 {
-  .image
-  {
-    width: 64px;
-    height: 64px;
-    background-size: 150%;
-    background-position: center center;
-    background-repeat: no-repeat;
-    border: 1px solid $mediumGray;
-    background-color: #FFF;
-    float: left;
-    margin-right: $mediumMargin;
-  }
-
-  .subject
-  {
-    border: 1px solid $mediumGray;
-    float: left;
-    margin-top: 5px;
-    margin-right: 5px;
-
-    img
-    {
-      width: 38px;
-      height: 38px;
-    }
-  }
-
   .timestamp
   {
-    color: $mediumGray;
+    font-style: italic;
+    color: $gray;
+    font-size: 12px;
   }
-
-  &.unread
+  .subjects
   {
-    background: $lightGray;
-    padding: 10px 10px;
+    .subject
+    {
+      border: 1px solid $lightGray;
+      float: left;
+    }
   }
 }

@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
-  before_filter :user_activity
+  before_filter :user_activity, if: :current_user
   around_filter :user_time_zone, if: :current_user
 
   def default_url_options
@@ -16,7 +16,7 @@ protected
   def user_in_group
     @group = Group.find(params[:group_id] || params[:id])
 
-    if @group.members.include?(current_user) || current_user.is_admin?
+    if @group.members.include?(current_user) || current_user.admin?
       true
     else
       redirect_to_login_or_root
@@ -34,7 +34,7 @@ protected
   def user_in_event
     @event ||= Event.find(params[:event_id] || params[:id])
 
-    if !signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.is_admin?)
+    if !signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.admin?)
       redirect_to_login_or_root
     end
   end
@@ -84,7 +84,7 @@ private
   end
 
   def user_activity
-    current_user.update_attribute(:last_seen, Time.now) if user_signed_in?
+    current_user.update_attribute(:last_seen, Time.now)
   end
 
   def user_time_zone(&block)
