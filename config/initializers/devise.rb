@@ -210,7 +210,11 @@ Devise.setup do |config|
   config.omniauth :facebook, "141836152608292", "b34af2003a66f9e3a6b4c6a3ab6ad701"
   config.omniauth :paypal, "60dc7a2f05caeb96628b05a1e7dab426", "470fe49daba167b3"
   config.omniauth :dwolla, "XV7LXC7tu3NlVe8qFcwKVJCIp9AmEzIXHUC2P6QOwu06H3i3Om", "U34SfFeKCYWvJ/xJzOJDW1iDlAgeZ/FXqkUepevRFdDvAaT7XO", scope: "accountinfofull|transactions|send", provider_ignores_state: true
-  config.omniauth :wepay, "151353", "24ad3727dd"
+  if Rails.env.production?
+    config.omniauth :wepay, Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, client_options: { authorize_url: "https://www.wepay.com/v2/oauth2/authorize", token_url: "https://wepayapi.com/v2/oauth2/token", site: "https://www.wepayapi.com/v2" }
+  else
+    config.omniauth :wepay, Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret
+  end
 
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or

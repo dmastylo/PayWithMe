@@ -1,5 +1,4 @@
-<% unless @event_user.nil? %>
-    $('#event-<%= @event_user.event.id %>').html('<i class="icon-check icon-white"></i>');
-    $('#upcoming-events').append('<%= j render(partial: "events/profile_event", object: @event_user.event, as: :event) %>');
-    $('#member-event-count').html('<%= @event_user.user.member_events.count %>');
-<% end %>
+$('#no-upcoming-events').remove();
+$('#event-<%= @event.id %>').html('<i class="icon-check icon-white"></i>');
+$('#upcoming-events').append('<%= j render(partial: "events/profile_event", object: @event, as: :event) %>');
+$('#member-event-count').html('<%= @user.member_events.count %>');

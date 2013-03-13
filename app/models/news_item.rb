@@ -31,12 +31,15 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
-    event.members.each do |member|
-      unless member == new_member || member == event.organizer
-        news_item = member.news_items.where(values).first
+
+    event = Event.find_by_id(event.id, include: {event_users: :user})
+    event.event_users.each do |event_user|
+      user = event_user.user
+      unless user == new_member || user == event.organizer
+        news_item = user.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(new_member)
@@ -53,18 +56,26 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::EVENT,
       foreign_id: event.id
     }
-    event.members.each do |member|
-      unless member == message_creator
-        news_item = member.news_items.where(values).first
+    
+    event = Event.find_by_id(event.id, include: {event_users: :user})
+    event.event_users.each do |event_user|
+      user = event_user.user
+      unless user == message_creator
+        news_item = user.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(message_creator)
           news_item.subjects << message_creator
         end
-        news_item.unread!
+        
+        if event_user.on_page?
+          news_item.read!
+        else
+          news_item.unread!
+        end
       end
     end
   end
@@ -75,12 +86,15 @@ class NewsItem < ActiveRecord::Base
       foreign_type: ForeignType::GROUP,
       foreign_id: group.id
     }
-    group.members.each do |member|
-      unless member == new_member || member == group.organizer
-        news_item = member.news_items.where(values).first
+
+    group = Group.find_by_id(group.id, include: {event_users: :user})
+    group.group_users.each do |group_user|
+      user = group_user.user
+      unless user == new_member || user == group.organizer
+        news_item = user.news_items.where(values).first
 
         if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = member.news_items.create(values)
+          news_item = user.news_items.create(values)
         end
 
         if !news_item.subjects.include?(new_member)
@@ -104,13 +118,13 @@ class NewsItem < ActiveRecord::Base
     if event?
       if invite?
         name = "name"
-        "#{name} is now attending #{event.title}."
+        "The following #{TextHelper.pluralize(self.subjects.count, "member is", "members are").sub(/\d/, '')} now attending #{event.title}:"
       elsif message?
-        "Check out #{event.title} to see the ongoing discussion."
+        "Check out #{event.title} to see the ongoing discussion. New messages from:"
       end
     elsif group?
       if invite?
-        "#{subject.first_name} is now a member of #{group.title}."
+        "The following #{TextHelper.pluralize(self.subjects.count, "member is", "members are").sub(/\d/, '')} a member of #{group.title}:"
       end
     end
   end

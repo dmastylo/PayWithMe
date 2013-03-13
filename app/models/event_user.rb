@@ -11,6 +11,7 @@
 #  invitation_sent :boolean          default(FALSE)
 #  payment_id      :integer
 #  visited_event   :boolean          default(FALSE)
+#  last_seen       :datetime
 #
 
 class EventUser < ActiveRecord::Base
@@ -19,15 +20,16 @@ class EventUser < ActiveRecord::Base
   attr_accessible :event_id, :user_id
   monetize :amount_cents, allow_nil: true
 
+  # Validations
+  validates :event_id, presence: true
+  validates :user_id, presence: true
+  # validates :amount_cents, presence: true
+
   # Relationships
   belongs_to :user, class_name: "User", foreign_key: "user_id"
   belongs_to :event
   has_many :payments
-
-  # Validations
-  validates :due_at, presence: true, if: :member?
-  validates :user_id, presence: true
-  validates :event_id, presence: true
+  has_many :nudges
 
   # Callbacks
   before_validation :copy_event_attributes
@@ -36,6 +38,10 @@ class EventUser < ActiveRecord::Base
 
   def paid?
   	paid_at.present?
+  end
+
+  def on_page?
+    self.last_seen.present? && self.last_seen > 1.minute.ago
   end
 
   def visit_event!

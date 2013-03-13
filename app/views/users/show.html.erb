@@ -1,35 +1,44 @@
 <% provide(:title, user_name(@user)) %>
-<div class="user-show <%= "stub" if @user.stub? %>">
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span9">
+        <h2 class="pull-left"><%= user_name(@user) %></h2>
+        <% if @user.online? %>
+          <div class="user-online block pull-left push-top-title push-left-small">ONLINE</div>
+        <% else %>
+          <div class="user-offline block pull-left push-top-title push-left-small">OFFLINE</div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
   <div class="row" id="user-wrapper">
     <div class="span3" id="user-left">
       <%= profile_image_tag @user, :large %>
-      <h2><%= user_name(@user) %></h2>
-      <% if @user.online? %>
-        <div class="user-online block">ONLINE</div>
-      <% else %>
-        <div class="user-offline block">OFFLINE</div>
-      <% end %>
-    <div class="spacer"></div>
-    <div class="large-statistic">
-      <span class="count"><%= @user.organized_events.count %></span> organized <%= @user.organized_events.count == 1 ? 'event' : 'event'.pluralize %>
-    </div>
-    <div class="large-statistic">
-      <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member <%= @user.member_events.count == 1 ? 'event' : 'event'.pluralize %>
-    </div>
 
-    <% unless @user == current_user %>
-      <div class="spacer"></div>
-      <div class="invite-to-event-button">
-        <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
-        <ul class="events-to-invite">
-          <% unless @your_organized_events.empty? %>
-            <%= render partial: 'events/invite_events', collection: @your_organized_events, as: :event %>
-          <% else %>
-            <li>You don't have any events!</li>
-          <% end %>
-        </ul>
+      <div class="large-statistic push-top">
+        <span class="count"><%= @user.organized_events.count %></span> organized <%= @user.organized_events.count == 1 ? 'event' : 'event'.pluralize %>
       </div>
-    <% end %>
+      <div class="large-statistic">
+        <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member <%= @user.member_events.count == 1 ? 'event' : 'event'.pluralize %>
+      </div>
+
+      <% unless @user == current_user %>
+        <div class="invite-to-event-button push-top push-bottom">
+          <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
+          <ul class="events-to-invite dropdown-menu">
+            <% unless @your_organized_and_public_events.empty? %>
+              <%= render partial: 'events/invite_events', collection: @your_organized_and_public_events, as: :event %>
+            <% else %>
+              <li>You don't have any events!</li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
     </div>
 
     <div class="span9" id="user-right">
@@ -40,7 +49,7 @@
       <% end %>
       <div id="upcoming-events" <%= "class=\"empty\"" if @upcoming_public_and_shared_events.empty? %>>
         <% if @upcoming_public_and_shared_events.empty? %>
-          No upcoming events!
+          <span id="no-upcoming-events">No upcoming events!</span>
         <% else %>
           <%= render partial: "events/profile_event", collection: @upcoming_public_and_shared_events, as: :event %>
         <% end %>

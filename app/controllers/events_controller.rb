@@ -7,6 +7,7 @@ class EventsController < ApplicationController
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
   before_filter :check_event_past, only: [:edit, :update]
+  before_filter :clear_relevant_notifications, only: [:show], if: :current_user
 
   def index
     @upcoming_events = current_user.upcoming_events
@@ -104,6 +105,16 @@ private
     end
   end
 
+  def clear_relevant_notifications
+    current_user.notifications.where('foreign_id = ?', @event.id).each do |notification|
+      notification.read!
+    end
+
+    current_user.news_items.where('foreign_id = ?', @event.id).each do |news_item|
+      news_item.read!
+    end
+  end
+
   def check_organizer_accounts
     return unless current_user == @event.organizer
     if @event.accepts_paypal? && @event.organizer.paypal_account.nil?
@@ -112,6 +123,10 @@ private
 
     if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
       flash.now[:error] = "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+    end
+
+    if @event.accepts_wepay? && @event.organizer.wepay_account.nil?
+      flash.now[:error] = "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
     end
   end
 

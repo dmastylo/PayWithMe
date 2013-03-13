@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130207191332) do
+ActiveRecord::Schema.define(:version => 20130307152723) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(:version => 20130207191332) do
     t.boolean  "invitation_sent", :default => false
     t.integer  "payment_id"
     t.boolean  "visited_event",   :default => false
+    t.datetime "last_seen"
   end
 
   create_table "events", :force => true do |t|
@@ -163,11 +164,20 @@ ActiveRecord::Schema.define(:version => 20130207191332) do
     t.integer  "subject_id"
   end
 
+  create_table "nudges", :force => true do |t|
+    t.integer  "nudgee_id"
+    t.integer  "nudger_id"
+    t.integer  "event_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.datetime "sent_at"
+  end
+
   create_table "payment_methods", :force => true do |t|
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                                        :null => false
+    t.datetime "updated_at",                                        :null => false
     t.integer  "static_fee_cents"
-    t.decimal  "percent_fee"
+    t.decimal  "percent_fee",         :precision => 8, :scale => 4
     t.integer  "minimum_fee_cents"
     t.integer  "fee_threshold_cents"
     t.string   "name"
@@ -234,6 +244,7 @@ ActiveRecord::Schema.define(:version => 20130207191332) do
     t.string   "slug"
     t.integer  "creator_id"
     t.datetime "completed_at"
+    t.boolean  "admin"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -1,5 +1,6 @@
 class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def all
+
     # Used for flash messages
     provider = request.env["omniauth.auth"].provider.humanize
 
@@ -51,7 +52,17 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
           linked_account.save
         end
       elsif request.env["omniauth.auth"].provider == "wepay"
+        linked_account.token_secret = request.env["omniauth.auth"].credentials.token
+
+        gateway = Payment.wepay_gateway
+        response = gateway.call('/account/find', linked_account.token_secret)
+        linked_account.token = response.first["account_id"]
+
+        linked_account.save
+      elsif request.env["omniauth.auth"].provider == "paypal"
+        linked_account.uid = request.env["omniauth.auth"].uid
         linked_account.token = request.env["omniauth.auth"].credentials.token
+
         linked_account.save
       end
 

@@ -5,6 +5,15 @@ PayWithMe::Application.routes.draw do
   match '/team', to: "pages#team"
   match '/privacy_policy', to: "pages#privacy_policy"
   match '/faq', to: "pages#faq"
+  match '/jobs', to: "pages#jobs"
+
+  resources :admin, only: :index do
+    collection do
+      get 'users'
+      get 'events'
+      get 'groups'
+    end
+  end
 
   resources :contact_forms, only: [:new, :create]
 
@@ -15,6 +24,7 @@ PayWithMe::Application.routes.draw do
       member do
         put 'paid'
         put 'unpaid'
+        put 'nudge'
       end
     end
     member do

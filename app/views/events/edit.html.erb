@@ -1,7 +1,34 @@
 <% provide(:title, "Edit Event") %>
-<div class="page-header">
-  <h2>Edit Event</h2>
-</div>
-<%= form_for @event, html: { multipart: true } do |f| %>
-  <% render "forms", f: f %>
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span9">
+        <div class="page-header">
+          <h2>
+            Edit <%= @event.title %>
+          </h2>
+          <em>
+            <small>
+              <% if @event.public? %>
+                Public event
+              <% else %>
+                Private event
+              <% end %>
+              - Organized by <%= @event.organizer.name %>
+            </small>
+          </em>
+        </div>
+      </div>
+      <div class="span3">
+        <%= link_to "Return to event", event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
+        <%= link_to "Return to dashboard", admin_event_path(@event), class: "btn btn-primary btn-block" %>
+      </div>
+    </div>
+  </div>
 <% end %>
+
+<div class="container">
+  <%= form_for @event, html: { multipart: true } do |f| %>
+    <% render "forms", f: f %>
+  <% end %>
+</div>

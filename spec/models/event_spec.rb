@@ -84,6 +84,7 @@ describe Event do
     it { should have_many(:groups).through(:event_groups) }
     it { should have_many(:reminders).dependent(:destroy) }
     it { should have_and_belong_to_many(:payment_methods) }
+    it { should have_many(:nudges) }
   end
 
   describe "mass assignment" do
@@ -210,4 +211,251 @@ describe Event do
       end
     end
   end
+
+  describe "nudging" do
+    before do
+      @nudger = FactoryGirl.create(:user)
+      @nudgee = FactoryGirl.create(:user)
+    end
+
+    describe "nudger uninvited" do
+      before do
+        @event.add_member(@nudgee)
+      end
+      specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+    end
+
+    describe "nudgee uninvited" do
+      before do
+        @event.add_member(@nudger)
+      end
+      specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+    end
+
+    describe "both invited" do
+      before do
+        @event.add_member(@nudger)
+        @event.add_member(@nudgee)
+      end
+
+      describe "unpaid" do
+        specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+      end
+
+      describe "both paid" do
+        before do
+          [@nudgee, @nudger].each do |user|
+            @event.mark_paid(user)
+          end
+        end
+
+        specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+      end
+
+      describe "nudger paid and nudgee unpaid" do
+        before do
+          event_user = @event.event_user(@nudger)
+          event_user.paid_at = Time.now
+          event_user.save
+        end
+
+        describe "with nudges left" do
+          specify { @event.can_nudge?(@nudger, @nudgee).should be_true }
+        end
+
+        describe "already nudged" do
+          before do
+            FactoryGirl.create(:nudge, nudgee: @nudgee, nudger: @nudger, event: @event)
+          end
+
+          specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+        end
+
+        describe "without nudges left" do
+          before do
+            users = FactoryGirl.create_list(:user, Figaro.env.nudge_limit.to_i + 5)
+            @event.add_members(users)
+            users.each do |user|
+              FactoryGirl.create(:nudge, nudgee: user, nudger: @nudger, event: @event)
+            end
+          end
+
+          specify { @event.can_nudge?(@nudger, @nudgee).should_not be_true }
+        end
+
+        describe "nudging the event organizer" do
+          specify { @event.can_nudge?(@nudger, @event.organizer).should_not be_true }
+        end
+
+        describe "nudging themselves" do
+          specify { @event.can_nudge?(@nudger, @nudger).should_not be_true }
+        end
+
+        describe "nudger is a stub" do
+          before do
+            @stub_nudger = User.create_stub("test@example.com")
+            @event.add_member(@stub_nudger)
+            @event.mark_paid(@stub_nudger)
+          end
+
+          specify { @event.can_nudge?(@stub_nudger, @nudgee).should_not be_true }
+        end
+      end
+    end
+  end
+
+  describe "amounts" do
+    let(:amount) { 100.00 }
+
+    describe "when setting amount per person" do
+      before do
+        @event = FactoryGirl.create(:event, division_type: Event::DivisionType::SPLIT, split_amount: amount)
+        @event.add_members FactoryGirl.create_list(:user, 10)
+      end
+
+      # Sometimes off by one penny
+      it "should have the correct send_amount" do
+        receive_amount = ((@event.send_amount_cents - Figaro.env.fee_static.to_f * 100.0) * (1.0 - Figaro.env.fee_rate.to_f)).round / 100.0
+        receive_amount.should == amount
+      end
+    end
+  end
+
+  # describe "validations" do
+
+  #   describe "due_at the past" do
+  #     describe "on initial creation" do
+  #       before { @event.due_at = Time.now - 86400 }
+  #       it { should_not be_valid }
+  #     end
+
+  #     describe "on update" do
+  #       before do
+  #         @event.due_at = Time.now
+  #         @event.save
+  #         Delorean.time_travel_to "1 month from now"
+  #       end
+  #       after { Delorean.back_to_the_present }
+
+  #       describe "without change" do
+  #         it { should be_valid }
+  #       end
+
+  #       describe "with past change" do
+  #         before { @event.due_at = Time.now + 3600 }
+  #         it { should_not be_valid }
+  #       end
+
+  #       describe "with future change" do
+  #         before { @event.due_at = Time.now + 86400 + 3600 }
+  #         it { should be_valid }
+  #       end
+  #     end
+  #   end
+  # end
+
+  # describe "relationships" do
+  #   it { should respond_to(:organizer_id) }
+  #   it { should respond_to(:organizer) }
+  #   it { should respond_to(:members) }
+  # end
+
+  # describe "payment division" do
+  #   it { should respond_to(:division_type) }
+  #   it { should respond_to(:fee_type) }
+  #   it { should respond_to(:total_amount) }
+  #   it { should respond_to(:total_amount_cents) }
+  #   it { should respond_to(:split_amount) }
+  #   it { should respond_to(:split_amount_cents) }
+
+  #   describe "without modifications" do
+  #     before do
+  #       10.times do
+  #         @event.members << FactoryGirl.create(:user)
+  #       end
+  #     end
+
+  #     share_examples_for "division_type calculations" do
+  #       describe "with organizer paying fees" do
+  #         before do
+  #           @event.fee_type = Event::FeeType::OrganizerPays
+  #           @event.save
+  #         end
+
+  #         it "should have nonzero entries" do
+  #           @event.split_amount_cents.should_not be_nil
+  #           @event.split_amount_cents.should_not == 0
+  #           @event.total_amount_cents.should_not be_nil
+  #           @event.total_amount_cents.should_not == 0
+  #           @event.receive_amount_cents.should_not be_nil
+  #           @event.receive_amount_cents.should_not == 0
+  #           @event.send_amount_cents.should_not be_nil
+  #           @event.send_amount_cents.should_not == 0
+  #         end
+
+  #         it "should have correct split_amount" do
+  #           @event.split_amount_cents.should == @event.total_amount_cents / @event.paying_members.count
+  #         end
+
+  #         it "should have equal split_amount and send_amount" do
+  #           @event.split_amount.should == @event.send_amount
+  #           @event.split_amount_cents.should == @event.send_amount_cents
+  #         end
+
+  #         it "should have correct receive_amount" do
+  #           total = @event.total_amount_cents * (1 - Figaro.env.fee_rate.to_f) - @event.paying_members.count * (Figaro.env.fee_static.to_f * 100.0)
+
+  #           @event.receive_amount_cents.should == total.floor
+  #         end
+  #       end
+
+  #       describe "with members paying fees" do
+  #         before do
+  #           @event.fee_type = Event::FeeType::MembersPay
+  #           @event.save
+  #         end
+
+  #         it "should have correct split_amount" do
+  #           @event.split_amount_cents.should == @event.total_amount_cents / @event.paying_members.count
+  #         end
+
+  #         it "should have correct send_amount" do
+  #           send = (@event.total_amount_cents / @event.members.count + Figaro.env.fee_static.to_f * 100.0) / (1 - Figaro.env.fee_rate.to_f)
+
+  #           @event.send_amount_cents.should == send.ceil
+  #         end
+
+  #         it "should have equal total_amount and receive_amount" do
+  #           @event.total_amount.should == @event.receive_amount
+  #           @event.total_amount_cents.should == @event.receive_amount_cents
+  #         end
+
+  #         # it "should have equal total calculated from send_amount and receive_amount" do
+  #         #   split = @event.members.count * @event.send_amount_cents
+  #         #   total = @event.receive_amount_cents
+            
+  #         #   split.should == total
+  #         # end
+  #       end
+  #     end
+
+  #     describe "with total amount set" do
+  #       before do
+  #         @event.total_amount = "$100.00"
+  #         @event.division_type = Event::DivisionType::Total
+  #       end
+
+  #       it_behaves_like "division_type calculations"
+  #     end
+
+  #     describe "with split amount set" do
+  #       before do
+  #         @event.split_amount = "$10.00"
+  #         @event.division_type = Event::DivisionType::Split
+  #       end
+
+  #       it_behaves_like "division_type calculations"
+  #     end
+  #   end
+  # end
 end
