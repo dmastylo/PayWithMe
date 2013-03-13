@@ -5,6 +5,7 @@ require "bundler/capistrano"
 require "rvm/capistrano"
 require "delayed/recipes"
 require 'new_relic/recipes'
+require "fog"
 
 server "198.61.239.149", :web, :app, :db, primary: true
 
@@ -85,7 +86,7 @@ namespace :deploy do
         logger.info "#{changed_asset_count} assets have changed. Pre-compiling"
         run_locally "rake assets:precompile"
 
-        storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: Figaro.env.rackspace_key, rackspace_username: Figaro.env.rackspace_username, rackspace_storage_url: Figaro.env.rackspace_url)
+        storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: "441e6ae0fb2aa44eb6c81af9cfc8a7bb", rackspace_username: "paywithme", rackspace_region: :ord)
         directory = storage.directories.get('static-assets')
 
         logger.info "Removing old assets"
@@ -96,6 +97,7 @@ namespace :deploy do
           directory.files.create(key: File.join("assets", File.basename(file)), body: File.open(file)) unless File.directory?(file)
         end
 
+        logger.info "Removing local assets"
         run_locally "rm -rf public/assets"
       else
         logger.info "#{changed_asset_count} assets have changed. Skipping asset pre-compilation"
