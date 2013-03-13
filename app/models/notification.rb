@@ -16,7 +16,7 @@
 class Notification < ActiveRecord::Base
 
   # Accessible attributes
-  attr_accessible :notification_type, :foreign_id, :foreign_type, :subject_id
+  attr_accessible :notification_type, :foreign_id, :foreign_type, :subject_id, :user_id
 
   # Validations
   validates :notification_type, presence: true
@@ -27,65 +27,85 @@ class Notification < ActiveRecord::Base
   belongs_to :user
 
   # Creation methods
-  def self.create_for_event(event, user)
-    user.notifications.create(
-      notification_type: NotificationType::INVITE,
-      foreign_type: ForeignType::EVENT,
-      foreign_id: event.id
-    )
+  def self.create_for_event(event_id, user_ids)
+    notifications = []
+    user_ids.each do |user_id|
+      notifications.push Notification.new(
+        notification_type: NotificationType::INVITE,
+        foreign_type: ForeignType::EVENT,
+        foreign_id: event_id,
+        user_id: user_id
+      )
+    end
+    Notification.import notifications
   end
 
-  def self.create_for_group(group, user)
-    user.notifications.create(
-      notification_type: NotificationType::INVITE,
-      foreign_type: ForeignType::GROUP,
-      foreign_id: group.id
-    )
+  def self.create_for_group(group_id, user_ids)
+    notifications = []
+    user_ids.each do |user_id|
+      notifications.push Notification.new(
+        notification_type: NotificationType::INVITE,
+        foreign_type: ForeignType::GROUP,
+        foreign_id: group.id,
+        user_id: user_id
+      )
+    end
+    Notification.import notifications
   end
 
-  def self.create_or_update_for_event_message(event, user)
-    last_message = user.messages.where(event_id: event.id).first
-    message_after = (last_message.present?)? last_message.created_at : Time.now.midnight
-    message_count = event.messages.where("created_at > ?", message_after).count
-    return unless message_count > 0
+  def self.create_or_update_for_event_message(event, user_ids)
+    event_id = event.id
+    
+    user_ids.each do |user_id|
+      user = User.find_by_id(user_id)
 
-    notification = user.notifications.where(
-      foreign_id: event.id,
-      notification_type: NotificationType::MESSAGE,
-      foreign_type: ForeignType::EVENT,
-      created_at: (Time.now.midnight)..Time.now.midnight + 1.day
-    ).first
-    if notification.nil?
-      notification = user.notifications.new(
+      last_message = user.messages.where(event_id: event_id).first
+      message_after = (last_message.present?) ? last_message.created_at : Time.now.midnight
+      message_count = event.messages.where("created_at > ?", message_after).count
+      next unless message_count > 0
+
+      notification = user.notifications.where(
+        foreign_id: event_id,
         notification_type: NotificationType::MESSAGE,
         foreign_type: ForeignType::EVENT,
-        foreign_id: event.id
-      )
-    end
+        created_at: (Time.now.midnight)..Time.now.midnight + 1.day
+      ).first
+      if notification.nil?
+        notification = user.notifications.new(
+          notification_type: NotificationType::MESSAGE,
+          foreign_type: ForeignType::EVENT,
+          foreign_id: event_id
+        )
+      end
 
-    notification.subject_id = message_count
-    notification.read = false
-    notification.save
+      notification.subject_id = message_count
+      notification.read = false
+      notification.save
+    end
   end
 
-  def self.create_or_update_for_event_update(event, user)
-    notification = user.notifications.where(
-      foreign_id: event.id,
-      notification_type: NotificationType::UPDATE,
-      foreign_type: ForeignType::EVENT,
-      created_at: (Time.now.midnight)..Time.now.midnight + 1.day
-    ).first
-    if notification.nil?
-      notification = user.notifications.new(
+  def self.create_or_update_for_event_update(event_id, user_ids)
+    user_ids.each do |user_id|
+      user = User.find_by_id(user_id)
+      
+      notification = user.notifications.where(
+        foreign_id: event_id,
         notification_type: NotificationType::UPDATE,
         foreign_type: ForeignType::EVENT,
-        foreign_id: event.id
-      )
-    end
+        created_at: (Time.now.midnight)..Time.now.midnight + 1.day
+      ).first
+      if notification.nil?
+        notification = user.notifications.new(
+          notification_type: NotificationType::UPDATE,
+          foreign_type: ForeignType::EVENT,
+          foreign_id: event_id
+        )
+      end
 
-    # notification.body = "The details of #{event.title} have been updated."
-    notification.read = false
-    notification.save
+      # notification.body = "The details of #{event.title} have been updated."
+      notification.read = false
+      notification.save
+    end
   end
 
   def read!

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130307152723) do
+ActiveRecord::Schema.define(:version => 20130313175133) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -44,14 +44,15 @@ ActiveRecord::Schema.define(:version => 20130307152723) do
   create_table "event_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
-    t.integer  "amount_cents",    :default => 0
+    t.integer  "amount_cents",     :default => 0
     t.datetime "due_at"
     t.datetime "paid_at"
-    t.boolean  "invitation_sent", :default => false
+    t.boolean  "invitation_sent",  :default => false
     t.integer  "payment_id"
-    t.boolean  "visited_event",   :default => false
+    t.boolean  "visited_event",    :default => false
     t.datetime "last_seen"
-    t.boolean  "paid_with_cash",  :default => true
+    t.boolean  "paid_with_cash",   :default => true
+    t.integer  "paid_total_cents", :default => 0
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"

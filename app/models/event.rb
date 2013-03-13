@@ -277,22 +277,30 @@ class Event < ActiveRecord::Base
 
   def add_members(members_to_add, exclude_from_notifications=nil)
     editing_event = true if self.members.length != 0
+    event_users = []
+    event_update_notifications = []
+    event_invite_notifications = []
+    event_new_member_news = []
+
     members_to_add.each do |member|
       if member.valid?
         if self.members.include?(member)
-          Notification.create_or_update_for_event_update(self, member) if member != exclude_from_notifications
+          event_update_notifications.push(member.id) unless member == exclude_from_notifications
         else
-          self.members << member
-          Notification.create_for_event(self, member) if member != exclude_from_notifications
+          event_users.push EventUser.new(user_id: member.id, event_id: self.id)
+          event_invite_notifications.push member.id unless member == exclude_from_notifications
           if editing_event
-            NewsItem.create_for_new_event_member(self, member)
+            event_new_member_news.push member.id unless member == exclude_from_notifications
           end
         end
       end
     end
 
-    Event.delay.send_invitation_emails(self.id)
-    # set_event_user_attributes(exclude_from_notifications)
+    EventUser.import event_users, validate: false unless event_users.empty?
+    Event.delay.send_invitation_emails(self.id) unless event_users.empty?
+    Notification.delay.create_or_update_for_event_update(self.id, event_update_notifications) unless event_update_notifications.empty?
+    Notification.delay.create_for_event(self.id, event_invite_notifications) unless event_invite_notifications.empty?
+    NewsItem.delay.create_for_new_event_member(self.id, event_new_member_news) unless event_new_member_news.empty?
   end
 
   # Adds members and deletes any not in the set
@@ -320,6 +328,9 @@ class Event < ActiveRecord::Base
     event = Event.find_by_id(event_id, include: { event_users: :user })
     event.event_users.each do |event_user|
       if !event_user.invitation_sent? && event_user.user_id != event.organizer_id
+        if event_user.user.stub?
+          event_user.user.create_guest_token
+        end
         UserMailer.event_notification(event_user.user, event).deliver
         event_user.toggle(:invitation_sent).save
       end
@@ -328,9 +339,7 @@ class Event < ActiveRecord::Base
 
   def self.send_message_notifications(event_id)
     event = Event.find_by_id(event_id, include: :members)
-    event.members.each do |member|
-      Notification.create_or_update_for_event_message(event, member)
-    end
+    Notification.create_or_update_for_event_message(event, event.member_ids)
   end
 
   def add_groups(groups_to_add)

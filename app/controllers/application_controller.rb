@@ -62,7 +62,7 @@ protected
 
 private
   def check_for_stub_token
-    if params[:token]
+    if params[:token] && params[:token] != nil
       user = User.find_by_guest_token(params[:token])
       if user.present?
         session[:user_return_to] = url_for(port: false)

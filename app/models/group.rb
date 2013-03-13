@@ -52,19 +52,24 @@ class Group < ActiveRecord::Base
   # ========================================================
   def add_members(members_to_add, exclude_from_notifications=nil)
     editing_group = true if self.members.length != 0
+    group_users = []
+    group_invite_notifications = []
+    group_new_member_news = []
+
     members_to_add.each do |member|
       unless self.members.include?(member)
-        self.members << member
-        Notification.delay.create_for_group(self.id, member.id) if member != exclude_from_notifications
+        group_users.push GroupUser.new(user_id: member.id, group_id: self.id)
+        group_invite_notifications.push member.id
         if editing_group
-          NewsItem.delay.create_for_new_group_member(self, member)
+          group_new_member_news.push member.id
         end
       end
     end
 
-    delay.send_invitation_emails
-    # Later, add them to open events as of
-    # right now if they are added to the group
+    GroupUser.import group_users unless group_users.empty?
+    Group.delay.send_invitation_emails(self.id) unless group_users.empty?
+    Notification.delay.create_for_group(self.id, group_invite_notifications) unless group_invite_notifications.empty?
+    NewsItem.delay.create_for_new_group_member(self.id, group_new_member_news) unless group_new_member_news.empty?
   end
 
   def add_member(member_to_add)
