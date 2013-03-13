@@ -70,6 +70,7 @@ gem 'friendly_id'
 # PDF Generation
 gem 'wicked_pdf'
 gem 'wkhtmltopdf'
+gem 'wkhtmltopdf-binary'
 
 group :development, :test do
   gem 'sqlite3'

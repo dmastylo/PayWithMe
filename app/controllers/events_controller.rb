@@ -88,9 +88,9 @@ class EventsController < ApplicationController
 
   def admin_pdf
     respond_to do |format|
-      format.html
+      format.html {}
       format.pdf do
-        render :pdf => 'admin_pdf'
+        render :pdf => 'admin_pdf', :show_as_html => params[:debug].present?
       end
     end
   end
