@@ -13,8 +13,7 @@ describe "PageContents" do
 		it "should have proper links on the home page" do
 
 			click_link "Register"
-			# response.should have_selector('title', text: 'Register | PayWithMe')
-			response.should have_selector('h2', content: 'Register')
+			response.should have_selector('h2', text: 'Register New Account')
 
 			click_link "Login With Facebook"
 			response.should have_selector('title', content: 'Facebook')

@@ -81,7 +81,7 @@ describe "Event pages" do
       describe "private event" do
         before { visit event_path(@private_event) }
 
-        it { should have_selector("h2", text: "Sign in") }
+        it { should have_selector("h2", text: "Sign In") }
         it { should have_selector("title", text: "Sign In") }
       end
     end

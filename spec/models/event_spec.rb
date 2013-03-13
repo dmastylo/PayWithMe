@@ -48,9 +48,9 @@ describe Event do
   end
 
   describe "validations" do
-    it { should ensure_length_of(:title).is_at_least(2).is_at_most(120).with_short_message(/has to be between/).with_long_message(/has to be between/) }
     it { should validate_presence_of(:organizer_id) }
     it { should validate_presence_of(:division_type) }
+    it { should ensure_length_of(:title).is_at_least(2).is_at_most(120).with_short_message(/has to be between/).with_long_message(/has to be between/) }
 
     describe "using total division_type" do
       it { should allow_value("$1234").for(:total_amount) }
@@ -75,7 +75,7 @@ describe Event do
     end
   end
 
-  describe "associations" do
+  describe "relationships" do
     it { should belong_to(:organizer).class_name("User") }
     it { should have_many(:event_users).dependent(:destroy) }
     it { should have_many(:members).through(:event_users).class_name("User") }
@@ -84,7 +84,7 @@ describe Event do
     it { should have_many(:groups).through(:event_groups) }
     it { should have_many(:reminders).dependent(:destroy) }
     it { should have_and_belong_to_many(:payment_methods) }
-    it { should have_many(:nudges) }
+    it { should have_many(:nudges).dependent(:destroy) }
   end
 
   describe "mass assignment" do
