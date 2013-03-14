@@ -8,6 +8,7 @@ require 'new_relic/recipes'
 require "fog"
 
 server "198.61.239.149", :web, :app, :db, primary: true
+server "166.78.100.243", :web, :app
 
 set :application, "PayWithMe"
 set :user, "deployer"
