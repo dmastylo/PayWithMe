@@ -60,7 +60,7 @@ describe "Event pages" do
     describe "with valid information" do
       before { click_button "Update event and send invitations" }
 
-      it { should have_selector("title", text: full_title("Test Event Dashboard")) }
+      it { should have_selector("title", text: full_title("#{@event.title} Dashboard")) }
     end
   end
 

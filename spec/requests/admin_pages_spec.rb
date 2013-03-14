@@ -11,8 +11,8 @@ describe "Admin" do
     pages.each do |page|
       before { visit send("#{page}_admin_index_path") }
       it "should redirect to login page" do
-        should have_selector("h2", text: "Sign in")
-        should have_selector("title", text: "Sign in")
+        should have_selector("h2", text: "Sign In")
+        should have_selector("title", text: "Sign In")
       end
     end
   end

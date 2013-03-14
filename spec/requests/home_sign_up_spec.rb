@@ -11,25 +11,24 @@ describe "Home and Sign up pages" do
 		it{ should_not have_selector('title', text: 'PayWithMe |')}
 
 		it "should have proper links on the home page" do
-
 			click_link "Register"
-			response.should have_selector('h2', text: 'Register New Account')
+			response.should have_selector('title', text: full_title("Register"))
 
-			click_link "Login With Facebook"
-			response.should have_selector('title', content: 'Facebook')
+			click_link "Register With Facebook"
+			response.should have_selector('title', text: 'Facebook')
 
-			click_link "Login With Twitter"
-			response.should have_selector('title', content: 'Twitter')
+			click_link "Register With Twitter"
+			response.should have_selector('title', text: 'Twitter')
 
-			click_link "Login"
-			response.should have_selector('h3', content: 'Welcome!')
+			click_link "Sign In"
+			response.should have_selector('h3', text: 'Sign In')
 		end
 	end
 
 	describe "Sign up" do
 		before{ visit new_user_registration_path }
 
-		it{ should have_selector('h2', text: 'Register') }
+		it{ should have_selector('h2', text: 'Register New Account') }
 
 		let(:submit){ "Sign up" }
 
@@ -94,9 +93,9 @@ describe "Home and Sign up pages" do
 
 			describe "when it doesn't meet minimum password length" do
 				before{ 
-					fill_in "Name", 			with: "John Q Sample"
-					fill_in "Email", 			with: "test@example.com"
-					fill_in "Password", 		with: "x" * 7
+					fill_in "Name", with: "John Q Sample"
+					fill_in "Email", with: "test@example.com"
+					fill_in "Password", with: "x" * 7
 					fill_in "Confirm Password", with: "x" * 7
 				}
 

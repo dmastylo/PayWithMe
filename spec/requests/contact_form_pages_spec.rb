@@ -25,6 +25,7 @@ describe "Contact Form pages" do
 
       it { current_path.should == root_path }
       it { should have_selector("title", text: full_title("")) }
+      it { should have_selector("div.alert.alert-warning", text: "Thank you for your message!") }
     end
   end
 end
