@@ -23,12 +23,12 @@
       <div class="large-statistic push-top">
         <span class="count"><%= @user.organized_events.count %></span> organized <%= @user.organized_events.count == 1 ? 'event' : 'event'.pluralize %>
       </div>
-      <div class="large-statistic">
+      <div class="large-statistic push-bottom">
         <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member <%= @user.member_events.count == 1 ? 'event' : 'event'.pluralize %>
       </div>
 
       <% unless @user == current_user %>
-        <div class="invite-to-event-button push-top push-bottom">
+        <div class="invite-to-event-button push-bottom">
           <a href="#" class="invite-to-events btn btn-block btn-primary">Invite To Events</a>
           <ul class="events-to-invite dropdown-menu">
             <% unless @your_organized_and_public_events.empty? %>

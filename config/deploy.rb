@@ -1,12 +1,13 @@
 set :rvm_ruby_string, '1.9.3@paywithme'
-set :rvm_type, :system
+set :rvm_type, :user
 
 require "bundler/capistrano"
 require "rvm/capistrano"
 require "delayed/recipes"
 require 'new_relic/recipes'
+require "fog"
 
-server "198.61.183.12", :web, :app, :db, primary: true
+server "198.61.239.149", :web, :app, :db, primary: true
 
 set :application, "PayWithMe"
 set :user, "deployer"
@@ -16,7 +17,7 @@ set :use_sudo, :false
 set :rails_env, "production" # Added for delayed job  
 
 set :scm, :git
-set :repository,  "git@github.com:austingulati/PayWithMe.git"
+set :repository, "git@github.com:austingulati/PayWithMe.git"
 set :branch, :master
 
 default_run_options[:pty] = true
@@ -68,36 +69,47 @@ namespace :deploy do
   end
   before "deploy", "deploy:check_revision"
 
-  # namespace :assets do
-  #   task :precompile, :roles => :web, :except => { :no_release => true } do
-  #     # Check if assets have changed. If not, don't run the precompile task - it takes a long time.
-  #     force_compile = false
-  #     changed_asset_count = 0
-  #     begin
-  #       from = source.next_revision(current_revision)
-  #       asset_locations = 'app/assets/ lib/assets/ vendor/assets/'
-  #       changed_asset_count = capture("cd #{latest_release} && #{source.local.log(from)} #{asset_locations} | wc -l").to_i
-  #     rescue Exception => e
-  #       logger.info "Error: #{e}, forcing precompile"
-  #       force_compile = true
-  #     end
-  #     if changed_asset_count > 0 || force_compile
-  #       logger.info "#{changed_asset_count} assets have changed. Pre-compiling"
-  #       run_locally "rake assets:precompile"
+  namespace :assets do
+    task :precompile, :roles => :web, :except => { :no_release => true } do
+      # Check if assets have changed. If not, don't run the precompile task - it takes a long time.
+      force_compile = true
+      changed_asset_count = 0
+      begin
+        from = source.next_revision(current_revision)
+        asset_locations = 'app/assets/ lib/assets/ vendor/assets/'
+        changed_asset_count = capture("cd #{latest_release} && #{source.local.log(from)} #{asset_locations} | wc -l").to_i
+      rescue Exception => e
+        logger.info "Error: #{e}, forcing precompile"
+        force_compile = true
+      end
+      if changed_asset_count > 0 || force_compile
+        logger.info "#{changed_asset_count} assets have changed. Pre-compiling"
+        run_locally "rake assets:precompile"
 
-  #       storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: Figaro.env.rackspace_key, rackspace_username: Figaro.env.rackspace_username, rackspace_storage_url: Figaro.env.rackspace_url)
+        storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: "441e6ae0fb2aa44eb6c81af9cfc8a7bb", rackspace_username: "paywithme", rackspace_region: :ord)
+        directory = storage.directories.get('static-assets')
 
-  #       directory = storage.directories.get('static-assets')
-  #       Dir.glob(File.join("public", "assets", "*")).each do |file|
-  #         directory.files.create(key: File.join("assets", File.basename(file)), body: File.open(file)) unless File.directory?(file)
-  #       end
+        logger.info "Removing old assets"
+        directory.files.each do |file| file.destroy end
+          
+        logger.info "Uploading new assets"
+        Dir.glob(File.join("public", "assets", "*")).each do |file|
+          directory.files.create(key: File.join("assets", File.basename(file)), body: File.open(file)) unless File.directory?(file)
+        end
+        Dir.glob(File.join("public", "assets", "layout", "*")).each do |file|
+          directory.files.create(key: File.join("assets", "layout", File.basename(file)), body: File.open(file)) unless File.directory?(file)
+        end
+        Dir.glob(File.join("public", "assets", "icons", "*")).each do |file|
+          directory.files.create(key: File.join("assets", "icons", File.basename(file)), body: File.open(file)) unless File.directory?(file)
+        end
 
-  #       run_locally "rm -rf public/assets"
-  #     else
-  #       logger.info "#{changed_asset_count} assets have changed. Skipping asset pre-compilation"
-  #     end
-  #   end
-  # end
+        logger.info "Removing local assets"
+        run_locally "rm -rf public/assets"
+      else
+        logger.info "#{changed_asset_count} assets have changed. Skipping asset pre-compilation"
+      end
+    end
+  end
 
   # Delayed job
   after "deploy:stop",    "delayed_job:stop"
