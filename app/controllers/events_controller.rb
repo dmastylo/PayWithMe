@@ -69,6 +69,7 @@ class EventsController < ApplicationController
   def update
     members_from_users = User.from_params(params[:event].delete(:members), current_user)
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
+    # @event.payment_methods = []
 
     if @event.update_attributes(params[:event])
       flash[:success] = "Event updated!"
@@ -122,11 +123,25 @@ private
     end
 
     if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
-      flash.now[:error] = "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      if flash.now[:error].present?
+        flash.now[:error] << "<br>".html_safe 
+      else
+        flash.now[:error] = ""
+      end
+      flash.now[:error] << "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
     end
 
     if @event.accepts_wepay? && @event.organizer.wepay_account.nil?
-      flash.now[:error] = "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      if flash.now[:error].present?
+        flash.now[:error] << "<br>".html_safe 
+      else
+        flash.now[:error] = ""
+      end
+      flash.now[:error] << "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+    end
+
+    if @event.payment_methods.empty?
+      flash.now[:error] = "Hey! You haven't set any payment methods so no one can pay for this event. You can do that by <a href=\"#{url_for edit_event_path(@event)}\">editing the event</a>.".html_safe
     end
   end
 
