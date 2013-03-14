@@ -37,7 +37,6 @@ describe "Group pages" do
   describe "editing/updating" do
     before do
       @group = FactoryGirl.create(:group)
-      @group.add_members(FactoryGirl.create_list(:user, 2))
       @user = @group.organizer
       sign_in @user
       visit edit_group_path(@group)
