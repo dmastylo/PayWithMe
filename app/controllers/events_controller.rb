@@ -119,30 +119,31 @@ private
   def check_organizer_accounts
     return unless current_user == @event.organizer
     if @event.accepts_paypal? && @event.organizer.paypal_account.nil?
-      flash.now[:error] = "Hey! You have to add a PayPal account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      flash.now[:error] = "Hey! You have to add a PayPal account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
     end
 
     if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
       if flash.now[:error].present?
-        flash.now[:error] << "<br>".html_safe 
+        flash.now[:error] << "<br>"
       else
         flash.now[:error] = ""
       end
-      flash.now[:error] << "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      flash.now[:error] << "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
     end
 
     if @event.accepts_wepay? && @event.organizer.wepay_account.nil?
       if flash.now[:error].present?
-        flash.now[:error] << "<br>".html_safe 
+        flash.now[:error] << "<br>"
       else
         flash.now[:error] = ""
       end
-      flash.now[:error] << "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      flash.now[:error] << "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
     end
 
     if @event.payment_methods.empty?
-      flash.now[:error] = "Hey! You haven't set any payment methods so no one can pay for this event. You can do that by <a href=\"#{url_for edit_event_path(@event)}\">editing the event</a>.".html_safe
+      flash.now[:error] = "Hey! You haven't set any payment methods so no one can pay for this event. You can do that by <a href=\"#{url_for edit_event_path(@event)}\">editing the event</a>."
     end
+    flash.now[:error] = flash.now[:error].html_safe unless flash.now[:error].nil?
   end
 
   def check_event_past
