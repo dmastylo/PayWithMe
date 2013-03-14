@@ -118,7 +118,7 @@
         <%= link_to "Add", "#", class: "btn", id: "add_member" %>
       </div>
       <div id="bulk-invite" class="hidden">
-         <%= text_area :member, :names, placeholder: "Enter email addresses separated by commas", class: "input-block-level", rows: 3 %>
+         <%= text_area :member, :names, placeholder: "Enter email addresses separated by commas, spaces, or new lines", class: "input-block-level", rows: 3 %>
         <%= link_to "Add", "#", class: "btn btn-block", id: "add_members" %>
       </div>
       <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
