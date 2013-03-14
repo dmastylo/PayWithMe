@@ -28,7 +28,10 @@ describe "Event pages" do
         click_button "Create group"
       end
 
-      it { should have_selector("title", text: full_title("Test Group")) }
+      it "should create the group and group_users" do
+        should have_selector("title", text: full_title("Test Group"))
+        expect{ click_button submit }.to change(GroupUser, :count).by(3)
+      end
     end
   end
 
