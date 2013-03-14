@@ -25,6 +25,10 @@ class EventsController < ApplicationController
       flash.now[:error] = "Payment cancelled!"
     end
 
+    if !signed_in?
+      session["user_return_to"] = event_path(@event)
+    end
+
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.size
     @message = Message.new
