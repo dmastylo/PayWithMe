@@ -120,7 +120,7 @@ gem 'jquery-rails'
 # Deploy with Capistrano
 gem 'capistrano'
 gem 'rvm-capistrano'
-# gem 'fog'
+gem 'fog', git: 'git://github.com/fog/fog.git'
 
 # To use debugger
 # gem 'debugger'

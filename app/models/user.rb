@@ -315,7 +315,7 @@ class User < ActiveRecord::Base
 private
   def set_profile_image
     return unless self.profile_image_type.present?
-    
+
     if self.profile_image_type != "url"
       self.profile_image_url = nil
     end
@@ -323,7 +323,7 @@ private
       self.profile_image = nil
     end
 
-    profile_image_type = nil
+    self.profile_image_type = nil
   end
 
   def set_stub

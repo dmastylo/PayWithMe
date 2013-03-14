@@ -53,23 +53,30 @@ class Group < ActiveRecord::Base
   def add_members(members_to_add, exclude_from_notifications=nil)
     editing_group = true if self.members.length != 0
     group_users = []
+    event_users = []
     group_invite_notifications = []
     group_new_member_news = []
 
     members_to_add.each do |member|
       unless self.members.include?(member)
         group_users.push GroupUser.new(user_id: member.id, group_id: self.id)
-        group_invite_notifications.push member.id
+        group_invite_notifications.push member.id unless member == exclude_from_notifications
         if editing_group
           group_new_member_news.push member.id
+        end
+
+        # Add the new member to the upcoming group events
+        self.events.where('events.due_at > ?', Time.now).each do |event|
+          event_users.push EventUser.new(user_id: member.id, event_id: event.id)
         end
       end
     end
 
     GroupUser.import group_users unless group_users.empty?
+    EventUser.import event_users unless event_users.empty?
     Group.delay.send_invitation_emails(self.id) unless group_users.empty?
     Notification.delay.create_for_group(self.id, group_invite_notifications) unless group_invite_notifications.empty?
-    NewsItem.delay.create_for_new_group_member(self.id, group_new_member_news) unless group_new_member_news.empty?
+    NewsItem.delay.create_for_new_group_member(self.id, group_new_member_news) unless group_new_member_news.empty? || !editing_group
   end
 
   def add_member(member_to_add)

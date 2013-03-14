@@ -271,8 +271,8 @@ class Event < ActiveRecord::Base
     end
   end
   
-  def add_member(member)
-    add_members([member])
+  def add_member(member, exclude_from_notifications=nil)
+    add_members([member], exclude_from_notifications)
   end
 
   def add_members(members_to_add, exclude_from_notifications=nil)
@@ -300,7 +300,7 @@ class Event < ActiveRecord::Base
     Event.delay.send_invitation_emails(self.id) unless event_users.empty?
     Notification.delay.create_or_update_for_event_update(self.id, event_update_notifications) unless event_update_notifications.empty?
     Notification.delay.create_for_event(self.id, event_invite_notifications) unless event_invite_notifications.empty?
-    NewsItem.delay.create_for_new_event_member(self.id, event_new_member_news) unless event_new_member_news.empty?
+    NewsItem.delay.create_for_new_event_member(self.id, event_new_member_news) unless event_new_member_news.empty? || !editing_event
   end
 
   # Adds members and deletes any not in the set
