@@ -408,10 +408,6 @@ class Event < ActiveRecord::Base
     Time.now > self.due_at
   end
 
-  def generatePDF
-    
-  end
-
 private
   def clear_amounts
     if division_type != DivisionType::SPLIT

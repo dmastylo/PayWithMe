@@ -1,6 +1,31 @@
 <% provide(:title, @group.title) %>
-<div class="group-show">
-  <div class="row">
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span9">
+        <div class="page-header">
+          <h2>
+            <%= @group.title %>
+          </h2>
+          <em>
+            <small>
+              Organized by <%= @group.organizer.name %>
+            </small>
+          </em>
+        </div>
+      </div>
+      <div class="span3">
+        <% if @group.is_admin?(current_user) %>
+          <%= link_to "Edit group", edit_group_path(@group), class: "btn btn-primary btn-block pull-right push-top-title-multiline" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <!-- <div class="row">
     <div class="span9">
       <div class="page-header">
         <h2><%= @group.title %></h2>
@@ -11,7 +36,7 @@
         <%= link_to "Edit group", edit_group_path(@group), class: "btn btn-primary btn-block pull-right push-top", rel: "tooltip", title: "Manage the group attributes and members" %>
       </div>
     <% end %>
-  </div>
+  </div> -->
   <div class="row">
     <div class="span5">
       <h3>Group Details</h3>
@@ -40,7 +65,7 @@
       </div>
     </div>
   </div>
-  <div class="row">
+  <div class="row push-bottom">
     <div class="span12">
       <h3>Group Events</h3>
       <% if @group.events.empty? %>
