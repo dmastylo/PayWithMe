@@ -4,7 +4,7 @@ describe "Event pages" do
   
   subject { page }
 
-  describe "submission" do
+  describe "creation" do
     before do
       sign_in FactoryGirl.create(:user)
       visit new_event_path
@@ -38,7 +38,7 @@ describe "Event pages" do
     end
   end
 
-  describe "updating" do
+  describe "editing/updating" do
     before do
       @event = FactoryGirl.create(:event)
       @event.add_members(FactoryGirl.create_list(:user, 2))
@@ -83,6 +83,7 @@ describe "Event pages" do
 
         it { should have_selector("h2", text: "Sign In") }
         it { should have_selector("title", text: "Sign In") }
+        it { should have_selector("div.alert.alert-error", text: "Please login or register to view that page.") }
       end
     end
 
