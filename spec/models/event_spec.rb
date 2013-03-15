@@ -48,9 +48,9 @@ describe Event do
   end
 
   describe "validations" do
-    it { should ensure_length_of(:title).is_at_least(2).is_at_most(120).with_short_message(/has to be between/).with_long_message(/has to be between/) }
     it { should validate_presence_of(:organizer_id) }
     it { should validate_presence_of(:division_type) }
+    it { should ensure_length_of(:title).is_at_least(2).is_at_most(120).with_short_message(/has to be between/).with_long_message(/has to be between/) }
 
     describe "using total division_type" do
       it { should allow_value("$1234").for(:total_amount) }
@@ -75,7 +75,7 @@ describe Event do
     end
   end
 
-  describe "associations" do
+  describe "relationships" do
     it { should belong_to(:organizer).class_name("User") }
     it { should have_many(:event_users).dependent(:destroy) }
     it { should have_many(:members).through(:event_users).class_name("User") }
@@ -84,7 +84,7 @@ describe Event do
     it { should have_many(:groups).through(:event_groups) }
     it { should have_many(:reminders).dependent(:destroy) }
     it { should have_and_belong_to_many(:payment_methods) }
-    it { should have_many(:nudges) }
+    it { should have_many(:nudges).dependent(:destroy) }
   end
 
   describe "mass assignment" do
@@ -313,9 +313,10 @@ describe Event do
         @event.add_members FactoryGirl.create_list(:user, 10)
       end
 
-      # Sometimes off by one penny
-      it "should have the correct send_amount" do
-        receive_amount = ((@event.send_amount_cents - Figaro.env.fee_static.to_f * 100.0) * (1.0 - Figaro.env.fee_rate.to_f)).round / 100.0
+      # @Austin Gulati could you look at this?
+      # Off by like 6 bucks
+      it "should have the correct split_amount_cents" do
+        receive_amount = ((@event.split_amount_cents - Figaro.env.fee_static.to_f * 100.0) * (1.0 - Figaro.env.fee_rate.to_f)).round / 100.0
         receive_amount.should == amount
       end
     end
