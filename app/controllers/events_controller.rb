@@ -79,6 +79,10 @@ class EventsController < ApplicationController
 
       # For some reason, redirect_to @event doesn't work
       redirect_to admin_event_path(@event)
+    else
+      @member_emails = @event.independent_members.collect { |member| member.email }
+      @group_ids = @event.groups.collect { |group| group.id }
+      render "edit"
     end
   end
 

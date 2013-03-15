@@ -87,7 +87,7 @@ class NewsItem < ActiveRecord::Base
       foreign_id: group.id
     }
 
-    group = Group.find_by_id(group.id, include: {event_users: :user})
+    group = Group.find_by_id(group.id, include: {group_users: :user})
     group.group_users.each do |group_user|
       user = group_user.user
       unless user == new_member || user == group.organizer
