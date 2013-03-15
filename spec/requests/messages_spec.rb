@@ -53,7 +53,7 @@ describe "Event pages" do
           old_count = @event.messages.count
 
           2.times do
-            find(:xpath, "//textarea[@id='message_message']").set "test message2"
+            find(:xpath, "//textarea[@id='message_message']").set "quickmessage"
             click_button "Post Message"
           end
 
