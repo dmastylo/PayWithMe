@@ -55,7 +55,7 @@ describe "Group pages" do
     describe "with valid information" do
       before { click_button "Update group" }
 
-      it { should have_selector("title", text: full_title("#{@group.title} Dashboard")) }
+      it { should have_selector("title", text: full_title("#{@group.title}")) }
     end
   end
 
