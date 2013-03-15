@@ -114,7 +114,7 @@
     {
       var emails = this.$somethingsMultipleTextarea.val();
       var that = this;
-      emails = emails.replace(/,\s*/gm, ",").split(",");
+      emails = emails.replace(/\s+/gm,",").replace(/\s*,+\s*/gm, ",").split(",");
       $.each(emails, function(index, email)
       {
         var something = {};

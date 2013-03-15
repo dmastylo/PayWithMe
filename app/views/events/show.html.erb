@@ -89,6 +89,9 @@
         <div class="quarter"><strong>Money Due</strong></div>
         <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
         <div class="clearfix"></div>
+        <div class="quarter"><strong>Accepted Payment Methods</strong></div>
+        <div class="three-quarters"><%= @event.payment_methods.collect(&:name).join(", ") %></div>
+        <div class="clearfix"></div>
       </div>
 
       <h3>Organizer</h3>
@@ -126,7 +129,7 @@
     <div class="span7">
       <h3>Chat Board</h3>
       <div class="well">
-        <%= render 'messages/form', event: @event, message: @message if signed_in? %>
+        <%= render 'messages/form', event: @event, message: @message if signed_in? && @event.members.include?(current_user) %>
         <ul class="messages" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
           <% if @messages.any? %>
             <%= render @messages %>

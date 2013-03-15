@@ -80,7 +80,7 @@ class Group < ActiveRecord::Base
   end
 
   def add_member(member_to_add)
-    self.add_members( [ member_to_add ] )
+    self.add_members([member_to_add])
   end
 
   # Adds members and deletes any not in the set

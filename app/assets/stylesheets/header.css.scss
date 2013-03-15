@@ -3,6 +3,7 @@
   margin-bottom: $margin;
   height: 75px;
   background-image: url(asset_path('layout/header_bg.png', image));
+  filter: none !important;
   .navbar-inner
   {
     height: 75px;
