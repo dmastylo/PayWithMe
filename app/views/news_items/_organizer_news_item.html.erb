@@ -1,0 +1,5 @@
+<li class="news-item <%= "unread" if !news_item.read? %>">
+    <strong><%= news_item.title %></strong>
+    <span class="timestamp"><%= time_ago_in_words(news_item.updated_at) %> ago</span><br />
+    <div class="clearfix"></div>
+</li>

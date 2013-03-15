@@ -30,7 +30,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="span8">
+    <div class="span4">
       <h3>Quick Statistics</h3>
       <div class="well" id="quick-statistics">
         <% if @event.paid_percentage > 0 %>
@@ -44,6 +44,19 @@
         <div class="quarter"><strong>Goal:</strong></div>
         <div class="three-quarters"><%= humanized_money_with_symbol @event.total_amount %></div>
         <div class="clearfix"></div>
+      </div>
+    </div>
+    <div class="span4">
+      <h3>Event News</h3>
+      <div class="well">
+        <% if @news_items.empty? %>
+          There is no recent event news.
+        <% else %>
+          <ul class="unstyled">
+            <%= render collection: @news_items, partial: "news_items/organizer_news_item", as: :news_item %>
+          </ul>
+          <%= link_to "View all news", news_admin_event_path(@event), class: "btn btn-primary btn-block" %>
+        <% end %>
       </div>
     </div>
     <div class="span4">

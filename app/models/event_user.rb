@@ -90,13 +90,16 @@ class EventUser < ActiveRecord::Base
       self.paid_at = Time.now
       save
     end
+
+    NewsItem.create_for_paid_event_member(self.event, self.user)
     true
   end
 
-  def unpay!(payment)
-    payment.unpay!
-
+  def unpay!(payment=nil)
+    payment.unpay! if payment.present?
     self.paid_at = nil
+
+    NewsItem.create_for_unpaid_event_member(self.event, self.user)
     save
   end
 
