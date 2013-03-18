@@ -1,3 +1,6 @@
+<%
+  # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
+%>
 <% user = event_user.user %>
 <li class="member" id="member-<%= user.id %>">
   <div class="profile-image" id="image-user-<%= user.id %>" data-placement="right">

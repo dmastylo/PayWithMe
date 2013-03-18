@@ -105,7 +105,7 @@
       <div class="well">
         <% if @event.paying_members.any? %>
           <ul class="members">
-            <%= render partial: 'event_users/event_user', collection: @event.paying_event_users %>
+            <%= render partial: 'users/user', collection: @event.paying_event_users, as: :event_user %>
           </ul>
         <% else %>
           There are no members. Add some!
