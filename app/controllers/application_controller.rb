@@ -84,7 +84,7 @@ private
   end
 
   def user_activity
-    # current_user.update_attribute(:last_seen, Time.now)
+    current_user.update_attribute(:last_seen, Time.now)
   end
 
   def user_time_zone(&block)
