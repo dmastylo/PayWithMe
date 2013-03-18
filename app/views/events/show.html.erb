@@ -103,6 +103,11 @@
 
       <h3>Guest List</h3>
       <div class="well">
+        <% if @event.paid?(current_user) %>
+          <div class="push-bottom-small">
+            <em><small>Nudges remaining: <strong id="nudges-remaining"><%= @event.nudges_remaining(current_user) %></strong></small></em>
+          </div>
+        <% end %>
         <% if @event.paying_members.any? %>
           <ul class="members">
             <%= render partial: 'users/user', collection: @event.paying_event_users, as: :event_user %>

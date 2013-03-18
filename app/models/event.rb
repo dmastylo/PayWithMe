@@ -423,6 +423,14 @@ class Event < ActiveRecord::Base
       nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id, event_id: self.id)
     end
   end
+
+  def nudges_remaining(nudger)
+    Figaro.env.nudge_limit.to_i - nudger.sent_nudges.find_all_by_event_id(self.id).count
+  end
+
+  def has_nudged?(nudger, nudgee)
+    self.nudges.where(nudgee_id: nudgee.id, nudger_id: nudger.id).count > 0
+  end
   
   def is_past?
     Time.now > self.due_at
