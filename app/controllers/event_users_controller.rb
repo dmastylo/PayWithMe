@@ -29,8 +29,28 @@ class EventUsersController < ApplicationController
   end
 
   def paid
-    payment = @event_user.create_payment
-    @event_user.pay!(payment)
+    if params[:event_user][:paid_total].present? && params[:event_user][:paid_total].to_f
+      paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
+      if paid_total_cents < 0
+        paid_total_cents = nil
+        if params[:event_user][:paid_total].to_f < 0
+          @error_message = "Enter a positive number."
+        else
+          @event_user.payments.destroy_all
+          paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
+        end
+      elsif (params[:event_user][:paid_total].to_f * 100.0) > @event.split_amount_cents
+        @error_message = "Enter an amount less than the required event amount."
+      end
+    else
+      paid_total_cents = nil
+    end
+
+    unless @error_message
+      payment = @event_user.create_payment(amount_cents: paid_total_cents)
+      @event_user.pay!(payment)
+    end
+
     respond_to do |format|
       format.js
       format.html { redirect_to admin_event_path(@event) }
@@ -39,13 +59,8 @@ class EventUsersController < ApplicationController
 
   # Mark user as unpaid if he/she paid with cash
   def unpaid
-    @event_user.payments.each do |payment|
-      if payment.payment_method_id == PaymentMethod::MethodType::CASH
-        payment.destroy
-      end
-    end
-    @event_user.paid_at = nil
-    @event_user.save
+    @event_user.unpay_cash_payments!
+
     respond_to do |format|
       format.js
       format.html { redirect_to admin_event_path(@event) }

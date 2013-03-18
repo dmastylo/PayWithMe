@@ -29,6 +29,7 @@
 #  slug                       :string(255)
 #  creator_id                 :integer
 #  completed_at               :datetime
+#  admin                      :boolean
 #
 
 require 'spec_helper'

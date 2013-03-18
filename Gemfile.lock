@@ -105,6 +105,8 @@ GEM
       activesupport (= 3.2.11)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
+    activerecord-import (0.3.1)
+      activerecord (~> 3.0)
     activeresource (3.2.11)
       activemodel (= 3.2.11)
       activesupport (= 3.2.11)
@@ -286,6 +288,8 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
+    quiet_assets (1.0.2)
+      railties (>= 3.1, < 5.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -390,6 +394,7 @@ PLATFORMS
 DEPENDENCIES
   actionmailer-callbacks
   active_paypal_adaptive_payment!
+  activerecord-import
   american_date
   annotate
   bootstrap-sass!
@@ -424,6 +429,7 @@ DEPENDENCIES
   omniauth-wepay!
   paperclip
   passenger
+  quiet_assets
   rails (= 3.2.11)
   ransack
   rb-inotify (~> 0.8.8)

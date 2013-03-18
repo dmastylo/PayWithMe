@@ -19,6 +19,8 @@ class EventsController < ApplicationController
       redirect_to event_path(@event), status: :moved_permanently
     end
 
+    @event = Event.find_by_id(@event.id, include: { event_users: :user } )
+
     if params[:success]
       flash.now[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
     elsif params[:cancel]
@@ -93,6 +95,7 @@ class EventsController < ApplicationController
   end
 
   def admin
+    @event = Event.find_by_id(@event.id, include: [{ event_users: :user }, :payment_methods] )
   end
 
 private
@@ -105,7 +108,7 @@ private
 
   def check_for_payers
     unless @event.paid_members.empty?
-      flash[:error] = "You can't delete an event with paying members!"
+      flash[:error] = "You can't delete an event with paid members!"
       redirect_to admin_event_path(@event)
     end
   end
@@ -152,7 +155,7 @@ private
 
   def check_event_past
     if @event.is_past?
-      flash[:error] = "Can't edit an event that has already happened."
+      flash[:error] = "You can't edit an event that has already happened."
       redirect_to event_path(@event)
     end
   end
