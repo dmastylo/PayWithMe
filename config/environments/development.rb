@@ -25,6 +25,7 @@ PayWithMe::Application.configure do
     user_name: Figaro.env.gmail_username,
     password: Figaro.env.gmail_password
   }
+  config.action_mailer.asset_host = "http://df4d53e4be0c2e4fa134-3a26ebaee65c0bbe66210a3fc1efde8d.r41.cf2.rackcdn.com"
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log

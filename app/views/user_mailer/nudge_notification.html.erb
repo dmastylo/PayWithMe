@@ -4,6 +4,6 @@
 
     <p>You've been nudged! <%= @nudge.nudger.first_name %> wants you to get your money in for <%= @nudge.event.title %>. What are you waiting for?</p>
 
-    <p><%= link_to image_tag(asset_url('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
+    <p><%= link_to image_tag(asset_path('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
   </td>
 </tr>
