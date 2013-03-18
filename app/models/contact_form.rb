@@ -23,7 +23,7 @@ class ContactForm < MailForm::Base
   def headers
     {
       :subject => "PayWithMe Contact Form",
-      :to => "team@paywith.me",
+      :to => "support@paywith.me",
       :from => %("#{name}" <#{email}>)
     }
   end
