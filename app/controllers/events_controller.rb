@@ -88,7 +88,7 @@ class EventsController < ApplicationController
 
   def admin_pdf
 
-    event = Event.find(params[:id])
+    @event = Event.find_by_id(@event)
 
     respond_to do |format|
       format.html
@@ -96,7 +96,7 @@ class EventsController < ApplicationController
         render :pdf => 'admin_pdf',
                :template => 'events/admin_pdf',
                :handlers => [:erb],
-               :locals => { :event => event }
+               :locals => { :event => @event }
       end
     end
   end
