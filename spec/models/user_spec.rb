@@ -30,6 +30,7 @@
 #  creator_id                 :integer
 #  completed_at               :datetime
 #  admin                      :boolean
+#  send_emails                :boolean          default(TRUE)
 #
 
 require 'spec_helper'

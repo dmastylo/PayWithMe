@@ -4,10 +4,14 @@ class UserMailer < ActionMailer::Base
   layout 'mail'
 
   def signup_confirmation(user)
+    return unless user.send_emails?
+
     mail to: format_address_to(user)
   end
 
   def event_notification(user, event)
+    return unless user.send_emails?
+
     @user = user
     @event = event
 
@@ -15,6 +19,8 @@ class UserMailer < ActionMailer::Base
   end
 
   def group_notification(user, group)
+    return unless user.send_emails?
+
     @user = user
     @group = group
 
@@ -22,6 +28,8 @@ class UserMailer < ActionMailer::Base
   end
 
   def reminder_notification(user, reminder)
+    return unless user.send_emails?
+
     @user = user
     @reminder = reminder
 
@@ -29,6 +37,8 @@ class UserMailer < ActionMailer::Base
   end
 
   def nudge_notification(user, nudge)
+    return unless user.send_emails?
+    
     @user = user
     @nudge = nudge
     @event = @nudge.event
