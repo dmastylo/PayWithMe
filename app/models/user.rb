@@ -30,6 +30,7 @@
 #  creator_id                 :integer
 #  completed_at               :datetime
 #  admin                      :boolean
+#  send_emails                :boolean          default(TRUE)
 #
 
 class User < ActiveRecord::Base
@@ -40,7 +41,7 @@ class User < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone, :send_emails
   attr_accessor :profile_image_type
   has_attached_file :profile_image
 
