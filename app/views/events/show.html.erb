@@ -97,7 +97,7 @@
       <h3>Organizer</h3>
       <div class="well">
         <ul class="members">
-          <%= render @event.event_user(@event.organizer_id) %>
+          <%= render @event.event_user(@event.organizer_id), partial: 'users/user', as: :event_user %>
         </ul>
       </div>
 
