@@ -1,5 +1,5 @@
 $('#user-status-<%= @event_user.user.id %>').html('<span class="unpaid">Unpaid</span>');
-$('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/event_user_form", event_user: @event_user %>');
+$('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/dashboard_user_form", event_user: @event_user %>');
 $('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
 var money_collected = <%= @event.money_collected %>;
 if (money_collected === 0)
