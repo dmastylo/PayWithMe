@@ -57,7 +57,7 @@
       <div class="well">
         <% if @group.members.any? %>
           <ul class="members">
-            <%= render @group.members %>
+            <%= render partial: 'event_users/event_user', collection: @group.group_users %>
           </ul>
         <% else %>
           There are no members. Add some!
