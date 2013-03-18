@@ -88,15 +88,15 @@ class EventsController < ApplicationController
 
   def admin_pdf
 
-    @event = Event.find_by_id(@event)
+    event = Event.find(params[:id])
 
     respond_to do |format|
       format.html
       format.pdf do
-        render :pdf => 'admin_pdf',
-               :template => 'events/admin_pdf',
-               :handlers => [:erb],
-               :locals => { :event => @event }
+        pdf = EventPdf.new(event, view_context)
+        send_data pdf.render, filename: "#{event.title}.pdf",
+                              type: "application/pdf",
+                              disposition: "inline"
       end
     end
   end

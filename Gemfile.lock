@@ -55,6 +55,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
+    Ascii85 (1.0.2)
     actionmailer (3.2.11)
       actionpack (= 3.2.11)
       mail (~> 2.4.4)
@@ -97,6 +98,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.3.2)
+    afm (0.2.0)
     american_date (1.0.0)
     annotate (2.5.0)
       rake
@@ -178,6 +180,7 @@ GEM
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
+    hashery (2.1.0)
     hashie (1.2.0)
     highline (1.6.15)
     hike (1.2.1)
@@ -260,9 +263,18 @@ GEM
       fastthread (>= 1.0.1)
       rack
       rake (>= 0.8.1)
+    pdf-reader (1.3.1)
+      Ascii85 (~> 1.0.0)
+      afm (~> 0.2.0)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
+    prawn (0.12.0)
+      pdf-reader (>= 0.9.0)
+      ttfunk (~> 1.0.2)
     pry (0.9.11.4)
     rack (1.4.5)
     rack-cache (1.2)
@@ -316,6 +328,7 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
+    ruby-rc4 (0.1.5)
     rubyzip (0.9.9)
     rvm-capistrano (1.2.7)
       capistrano (>= 2.0.0)
@@ -349,6 +362,7 @@ GEM
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
+    ttfunk (1.0.3)
     tzinfo (0.3.35)
     uglifier (1.3.0)
       execjs (>= 0.3.0)
@@ -356,11 +370,7 @@ GEM
     warden (1.2.1)
       rack (>= 1.0)
     websocket (1.0.7)
-    wicked_pdf (0.9.4)
-      rails
     will_paginate (3.0.4)
-    wkhtmltopdf (0.1.2)
-    wkhtmltopdf-binary (0.9.9.1)
     xpath (0.1.4)
       nokogiri (~> 1.3)
 
@@ -403,6 +413,7 @@ DEPENDENCIES
   omniauth-wepay!
   paperclip
   passenger
+  prawn
   rails (= 3.2.11)
   ransack
   rb-inotify (~> 0.8.8)
@@ -417,7 +428,4 @@ DEPENDENCIES
   thin
   uglifier (>= 1.0.3)
   wepay!
-  wicked_pdf
   will_paginate
-  wkhtmltopdf
-  wkhtmltopdf-binary
