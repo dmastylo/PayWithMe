@@ -140,9 +140,7 @@ class Payment < ActiveRecord::Base
   end
 
   def unpay!
-    self.transaction_id = nil
-    self.paid_at = nil
-    self.save
+    self.destroy
   end
 
   # Public because needed in another spot

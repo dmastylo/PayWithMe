@@ -67,12 +67,16 @@ gem 'newrelic_rpm'
 # Pretty URLs
 gem 'friendly_id'
 
+# ActiveRecord extensions
+gem "activerecord-import"
+
 group :development, :test do
   gem 'sqlite3'
 end
 
 group :development do
   gem 'annotate'
+  gem 'quiet_assets'
 end
 
 group :test do

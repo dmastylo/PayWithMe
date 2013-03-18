@@ -2,16 +2,18 @@
 #
 # Table name: event_users
 #
-#  id              :integer          not null, primary key
-#  event_id        :integer
-#  user_id         :integer
-#  amount_cents    :integer          default(0)
-#  due_at          :datetime
-#  paid_at         :datetime
-#  invitation_sent :boolean          default(FALSE)
-#  payment_id      :integer
-#  visited_event   :boolean          default(FALSE)
-#  last_seen       :datetime
+#  id               :integer          not null, primary key
+#  event_id         :integer
+#  user_id          :integer
+#  amount_cents     :integer          default(0)
+#  due_at           :datetime
+#  paid_at          :datetime
+#  invitation_sent  :boolean          default(FALSE)
+#  payment_id       :integer
+#  visited_event    :boolean          default(FALSE)
+#  last_seen        :datetime
+#  paid_with_cash   :boolean          default(TRUE)
+#  paid_total_cents :integer          default(0)
 #
 
 class EventUser < ActiveRecord::Base
@@ -19,6 +21,7 @@ class EventUser < ActiveRecord::Base
   # Accessible attributes
   attr_accessible :event_id, :user_id
   monetize :amount_cents, allow_nil: true
+  monetize :paid_total_cents, allow_nil: true
 
   # Validations
   validates :event_id, presence: true
@@ -32,9 +35,9 @@ class EventUser < ActiveRecord::Base
   has_many :nudges
 
   # Callbacks
-  before_validation :copy_event_attributes
-  after_initialize :copy_event_attributes
-  after_save :copy_event_attributes
+  # before_validation :copy_event_attributes
+  # after_initialize :copy_event_attributes
+  # after_save :copy_event_attributes
 
   def paid?
   	paid_at.present?
@@ -62,11 +65,12 @@ class EventUser < ActiveRecord::Base
     self.event.present? && self.event.organizer == self.user
   end
 
-  def paid_total_cents
-    payments.where("paid_at IS NOT NULL").sum(&:amount_cents)
-  end
+  # def paid_total_cents
+  #   payments.where("paid_at IS NOT NULL").sum(&:amount_cents)
+  # end
 
   def create_payment(options={})
+    copy_event_attributes
     current_cents = options[:amount_cents] || amount_cents
     payment_method = PaymentMethod.find_by_id(options[:payment_method] || PaymentMethod::MethodType::CASH)
     if current_cents > amount_cents
@@ -84,20 +88,35 @@ class EventUser < ActiveRecord::Base
   end
 
   def pay!(payment, options={})
+    copy_event_attributes
     payment.pay!(options)
 
-    if self.paid_total_cents >= self.amount_cents
-      self.paid_at = Time.now
-      save
-    end
+    update_paid_total_cents
+    update_paid_with_cash
+    self.save
     true
   end
 
+  # def paid_with_cash?
+  #   self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
+  # end
+  
+  def unpay_cash_payments!
+    copy_event_attributes
+    self.payments.where(payment_method_id: PaymentMethod::MethodType::CASH).destroy_all
+
+    update_paid_total_cents
+    update_paid_with_cash
+    self.save
+  end
+
   def unpay!(payment)
+    copy_event_attributes
     payment.unpay!
 
-    self.paid_at = nil
-    save
+    update_paid_total_cents
+    update_paid_with_cash
+    self.save
   end
 
 private
@@ -107,5 +126,25 @@ private
       self.amount_cents = self.event.split_amount_cents
     end
   end
-  
+
+  def update_paid_with_cash
+    self.paid_with_cash = true
+    self.payments.each do |payment|
+      self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH
+    end
+  end
+
+  def update_paid_total_cents
+    self.paid_total_cents = 0
+    self.payments.each do |payment|
+      self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
+    end
+
+    if self.paid_total_cents >= self.amount_cents
+      self.paid_at = Time.now
+    else
+      self.paid_at = nil
+    end
+  end
+
 end
