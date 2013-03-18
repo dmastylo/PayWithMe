@@ -88,15 +88,9 @@ class EventsController < ApplicationController
 
   def admin_pdf
     respond_to do |format|
-      format.html { render 'admin_pdf', :locals => { :event => @event }}
+      format.html
       format.pdf do
-        pdf_str = render_to_string(:template => 'events/admin_pdf', 
-                                   :layout => false,
-                                   :locals => { :event => @event } )
-        
-        pdfs << WickedPdf.new.pdf_from_string(pdf_str)
-
-        #render :pdf => 'admin_pdf', :show_as_html => params[:debug].present?, :event => @event
+        WickedPdf.new.pdf_from_string(render_to_string(:pdf => 'events/admin_pdf.erb', :locals => { :event => @event }))
       end
     end
   end
