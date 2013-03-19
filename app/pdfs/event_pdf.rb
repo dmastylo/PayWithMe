@@ -18,20 +18,11 @@ class EventPdf < Prawn::Document
 					  ["Expected Total: #{price_cents(@event.total_amount_cents)}"],
 					  ["Total Collected: #{price_cents(@event.money_collected_cents)}"],
 					  ["Money Due: #{@event.due_at_time}, #{@event.due_at_date}"]
-					 ] 
-		{
-			:borders => [],
-			:border_width => 0
-			
-		}
+					 ]
 
 		full_data = [[ {:image => event_image, :fit => [150,150]}, event_data]]
-		{
-			:borders => [],
-			:border_width => 0
-		}
 
-		table(full_data)
+		table(full_data, :cell_style => { :borders => [] })
 	end
 
 	# Table information
