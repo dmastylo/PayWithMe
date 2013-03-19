@@ -40,7 +40,7 @@
   <div class="row">
     <div class="span5">
       <h3>Group Details</h3>
-      <div class="group-image <%= "default" if @group.image_type == :default_image %>" style="background-image: url('<%= group_image_path(@group, :full) %>');"></div>
+      <div class="underlayed-image-large <%= "default" if @group.image_type == :default_image %>" style="background-image: url('<%= group_image_path(@group, :full) %>');"></div>
       <div class="well event-description">
         <% if @group.description.present? %>
           <div class="quarter"><strong>Description:</strong></div>
