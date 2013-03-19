@@ -1,7 +1,7 @@
 class PagesController < ApplicationController
   after_filter :read_news_items, only: [:index]
 
-  # caches_page :index
+  caches_page :index, :team, :faq, :privacy_policy
 
   def index
     @upcoming_events = current_user.limited_upcoming_events if user_signed_in?
