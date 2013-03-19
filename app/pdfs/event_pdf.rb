@@ -11,13 +11,27 @@ class EventPdf < Prawn::Document
 
 	# Header information
 	def display_header
-		# image event_image, fit: [150,150]
-		text @event.title 
-		text "Organized By: #{User.find_by_id(@event.organizer_id).name}"
-		text privacy_setting
-		text "Expected Total: #{price_cents(@event.total_amount_cents)}"
-		text "Total Collected: #{price_cents(@event.money_collected_cents)}"
-		text "Money Due: #{@event.due_at_time}, #{@event.due_at_date}"
+
+		event_data = [["#{@event.title}"], 
+					  ["Organized By: #{User.find_by_id(@event.organizer_id).name}"],
+					  [privacy_setting],
+					  ["Expected Total: #{price_cents(@event.total_amount_cents)}"],
+					  ["Total Collected: #{price_cents(@event.money_collected_cents)}"],
+					  ["Money Due: #{@event.due_at_time}, #{@event.due_at_date}"]
+					 ] 
+		{
+			:borders => [],
+			:border_width => 0
+			
+		}
+
+		full_data = [[ {:image => event_image, :fit => [150,150]}, event_data]]
+		{
+			:borders => [],
+			:border_width => 0
+		}
+
+		table(full_data)
 	end
 
 	# Table information
