@@ -5,24 +5,60 @@ class EventPdf < Prawn::Document
 		@event = event
 		@view = view
 		display_header
+		move_down 20
 		display_table
 	end
 
 	# Header information
 	def display_header
-
-		data = [ [ @event.title ], 
-				 [ "Organized by: " + User.find_by_id(@event.organizer_id).name ],
-				 [ privacy_setting ],
-				 [ division_setting ],
-				 [ "Money due: " + @event.due_at_time + ", " + @event.due_at_date ] ]
-
-		table([ { :image => event_image }, data ])
+		image event_image, fit: [150,150]
+		text @event.title 
+		text "Organized By: #{User.find_by_id(@event.organizer_id).name}"
+		text privacy_setting
+		text "Expected Total: #{price_cents(@event.total_amount_cents)}"
+		text "Total Collected: #{price_cents(@event.money_collected_cents)}"
+		text "Money Due: #{@event.due_at_time}, #{@event.due_at_date}"
 	end
 
 	# Table information
 	def display_table
-		#list table of members
+		table line_item_rows do			
+			row(0).font_style = :bold
+			columns(0..4).align = :center
+			column(0).width = 155
+			column(1).width = 120
+			column(2).width = 115
+			column(3).width = 90
+			column(4).width = 60
+			self.row_colors = ["DDDDDD", "FFFFFF"]
+			self.header = true
+		end
+	end
+
+	# Row information
+	def line_item_rows
+		[["Name", "Payment Amount", "Paid Via", "Paid On", "Arrived"]] + 
+		@event.paying_members.map do |member|
+
+			# Get proper name to display
+			name = member.name || member.email
+
+			# Get rest of information
+			event_user = EventUser.find_by_user_id(member.id)
+
+			if event_user.paid?
+				amount = price(event_user.amount)
+				payment_method_name = event_user.payments[0].payment_method.name
+				pay_date = event_user.paid_at.to_date
+			else
+				amount = "Not Payed"
+				payment_method_name = ""
+				pay_date = ""
+			end	
+
+			# Put information into table
+			[name, amount, payment_method_name, pay_date, ""]
+		end
 	end
 
 	# Returns text of private or public event
@@ -30,20 +66,9 @@ class EventPdf < Prawn::Document
 		(@event.private? ? "Private " : "Public ") + "Event"
 	end
 
-	# Determines how event was divided and prints amount
-	def division_setting
-		if @event.divide_total?
-			"Split total: #{price_cents(@event.total_amount_cents)}"
-		elsif @event.divide_per_person?
-			"Amount per person: #{price_cents(@event.split_amount_cents)}"
-		elsif @event.fundraiser?
-			"Fundraiser goal: " + "GOAL_HERE"
-		end
-	end
-
 	# Turns price in cents to money value in dollars
 	def price_cents(val)
-		price(val/100)
+		price(val/100.0)
 	end
 
 	# Turns price to dollars
