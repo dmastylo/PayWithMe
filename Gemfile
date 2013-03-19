@@ -13,10 +13,11 @@ end
 
 # User authentication
 gem 'devise'
+gem 'omniauth', git: 'git://github.com/intridea/omniauth.git'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-paypal', git: 'git://github.com/datariot/omniauth-paypal.git'
-gem 'omniauth-dwolla'
+gem 'omniauth-dwolla', git: 'git://github.com/austingulati/omniauth-dwolla.git'
 gem 'omniauth-wepay', git: 'git://github.com/tenaciousflea/omniauth-wepay.git'
 
 # User profiles
