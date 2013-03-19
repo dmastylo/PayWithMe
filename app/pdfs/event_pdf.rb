@@ -4,6 +4,9 @@ class EventPdf < Prawn::Document
 		super()
 		@event = event
 		@view = view
+
+		load("fonts/Lato-Regular.ttf", "Lato");
+
 		display_header
 		move_down 20
 		display_table
@@ -20,9 +23,11 @@ class EventPdf < Prawn::Document
 					  ["Money Due: #{@event.due_at_time}, #{@event.due_at_date}"]
 					 ]
 
-		full_data = [[ {:image => event_image, :fit => [150,150]}, event_data]]
+		tmpTable = make_table(event_data, :cell_style => { :borders => [], :overflow => :shrink_to_fit })
 
-		table(full_data, :cell_style => { :borders => [] })
+		full_data = [[ {:image => event_image, :fit => [150,150]}, tmpTable]]
+
+		table full_data, :cell_style => { :borders => [] }
 	end
 
 	# Table information
@@ -37,6 +42,7 @@ class EventPdf < Prawn::Document
 			column(4).width = 55
 			self.row_colors = ["DDDDDD", "FFFFFF"]
 			self.header = true
+			overflow = :shrink_to_fit
 		end
 	end
 
