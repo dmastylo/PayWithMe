@@ -1,6 +1,6 @@
 <div class="well event <% if current_user == event.organizer %>organized<% end %>">
   <a href="<%= event_path(event) %>">
-    <div class="image" style="background-image: url('<%= event_image_path(event, :full) %>');"></div>
+    <div class="underlayed-image" style="background-image: url('<%= event_image_path(event, :full) %>');"></div>
   </a>
   <div class="info">
     <div class="icons">
