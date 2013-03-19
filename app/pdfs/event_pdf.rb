@@ -11,7 +11,7 @@ class EventPdf < Prawn::Document
 
 	# Header information
 	def display_header
-		image event_image, fit: [150,150]
+		# image event_image, fit: [150,150]
 		text @event.title 
 		text "Organized By: #{User.find_by_id(@event.organizer_id).name}"
 		text privacy_setting
@@ -25,11 +25,11 @@ class EventPdf < Prawn::Document
 		table line_item_rows do			
 			row(0).font_style = :bold
 			columns(0..4).align = :center
-			column(0).width = 155
+			column(0).width = 160
 			column(1).width = 120
 			column(2).width = 115
 			column(3).width = 90
-			column(4).width = 60
+			column(4).width = 55
 			self.row_colors = ["DDDDDD", "FFFFFF"]
 			self.header = true
 		end
@@ -51,7 +51,7 @@ class EventPdf < Prawn::Document
 				payment_method_name = event_user.payments[0].payment_method.name
 				pay_date = event_user.paid_at.to_date
 			else
-				amount = "Not Payed"
+				amount = "Not Paid"
 				payment_method_name = ""
 				pay_date = ""
 			end	
@@ -78,15 +78,12 @@ class EventPdf < Prawn::Document
 
 	# Returns image path as string
 	def event_image
-
-		img_str = "#{Rails.root}/app/assets/images/"
-
 		if @event.image_type == :upload
-			img_str + @event.image_file_name
+			"public/system/events/images/000/000/001/small/#{@event.image_file_name}"
 		elsif @event.image_type == :url
-			img_str + @event.image_url
+			open(@event.image_url)
 		elsif @event.image_type == :default_image
-			img_str + "default_event_image.png"
+			"#{Rails.root}/app/assets/images/default_event_image.png"
 		end
 	end
 end
