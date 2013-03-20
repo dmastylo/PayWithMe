@@ -66,13 +66,13 @@ class EventPdf < Prawn::Document
 			name = member.name || member.email
 
 			# Get rest of information
-			event_user = EventUser.find_by_user_id(member.id)
+			event_user = EventUser.find_by_user_id_and_event_id(member.id, @event.id)
 
 			if event_user.paid?
 				amount = price(event_user.amount)
 				payment_method_name = event_user.payments[0].payment_method.name
 				pay_date = event_user.paid_at.to_date
-			elsif event_user.paid_total != 0
+			elsif event_user.paid_total_cents > 0
 				# If the user partially paid
 				amount = price(event_user.paid_total)
 				payment_method_name = event_user.payments[0].payment_method.name
