@@ -6,8 +6,6 @@ class EventPdf < Prawn::Document
 		@event = event
 		@view = view
 
-		title = "#{@event.title}"
-
 		font_families.update(
 		 	"Lato" => {  :bold   => "#{Rails.root}/app/assets/fonts/Lato-Bold.ttf",
 		            	 :normal => "#{Rails.root}/app/assets/fonts/Lato-Regular.ttf" })
