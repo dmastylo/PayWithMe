@@ -1,8 +1,10 @@
 <tr>
   <td>
     <%= link_to user.name || "n/a", user %>
+  </td>
+  <td>
     <% if user.online? %>
-      <div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div>
+      <center><div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div></center>
     <% end %>
   </td>
   <td>
