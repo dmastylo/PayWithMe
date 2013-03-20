@@ -11,15 +11,15 @@ class EventPdf < Prawn::Document
 
 		font("Lato")
 
-		number_pages "<page> in a total of <total>", 
-		                                         {:start_count_at => 1,
-		                                          :at => [bounds.right - 50, 50],
-		                                          :align => :right,
-		                                          :size => 14}
-
 		display_header
 		move_down 20
 		display_table
+
+		number_pages "<page> of <total>", 
+		                                         {:start_count_at => 1,
+		                                          :at => [bounds.right - 50, 0],
+		                                          :align => :right,
+		                                          :size => 8}
 	end
 
 	# Header information
