@@ -20,7 +20,7 @@ class MessagesController < ApplicationController
       @message = @event.messages.create(params[:message])
       @message.user = current_user
       if @message.save
-        Event.delay.send_message_notifications(@event.id)
+        @event.delay.send_message_notifications
         respond_to do |format|
           format.html { redirect_to event_path(@event) }
           format.js
@@ -36,7 +36,7 @@ class MessagesController < ApplicationController
 
 private
   def user_on_page
-    current_user.event_users.find_by_event_id(@event.id).update_attribute(:last_seen, Time.now)
+    current_user.event_users.find_by_event_id(@event.id).update_attribute(:last_seen, Time.now) if signed_in?
   end
 
   def clear_relevant_notifications
