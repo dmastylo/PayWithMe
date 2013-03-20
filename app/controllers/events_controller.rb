@@ -19,10 +19,16 @@ class EventsController < ApplicationController
       redirect_to event_path(@event), status: :moved_permanently
     end
 
+    @event = Event.find_by_id(@event.id, include: { event_users: :user } )
+
     if params[:success]
       flash.now[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
     elsif params[:cancel]
       flash.now[:error] = "Payment cancelled!"
+    end
+
+    if !signed_in?
+      session["user_return_to"] = event_path(@event)
     end
 
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
@@ -65,6 +71,7 @@ class EventsController < ApplicationController
   def update
     members_from_users = User.from_params(params[:event].delete(:members), current_user)
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
+    # @event.payment_methods = []
 
     if @event.update_attributes(params[:event])
       flash[:success] = "Event updated!"
@@ -74,6 +81,10 @@ class EventsController < ApplicationController
 
       # For some reason, redirect_to @event doesn't work
       redirect_to admin_event_path(@event)
+    else
+      @member_emails = @event.independent_members.collect { |member| member.email }
+      @group_ids = @event.groups.collect { |group| group.id }
+      render "edit"
     end
   end
 
@@ -84,6 +95,7 @@ class EventsController < ApplicationController
   end
 
   def admin
+    @event = Event.find_by_id(@event.id, include: [{ event_users: :user }, :payment_methods] )
   end
 
   def admin_pdf
@@ -111,7 +123,7 @@ private
 
   def check_for_payers
     unless @event.paid_members.empty?
-      flash[:error] = "You can't delete an event with paying members!"
+      flash[:error] = "You can't delete an event with paid members!"
       redirect_to admin_event_path(@event)
     end
   end
@@ -129,21 +141,36 @@ private
   def check_organizer_accounts
     return unless current_user == @event.organizer
     if @event.accepts_paypal? && @event.organizer.paypal_account.nil?
-      flash.now[:error] = "Hey! You have to add a PayPal account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      flash.now[:error] = "Hey! You have to add a PayPal account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
     end
 
     if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
-      flash.now[:error] = "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      if flash.now[:error].present?
+        flash.now[:error] << "<br>"
+      else
+        flash.now[:error] = ""
+      end
+      flash.now[:error] << "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
     end
 
     if @event.accepts_wepay? && @event.organizer.wepay_account.nil?
-      flash.now[:error] = "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>.".html_safe
+      if flash.now[:error].present?
+        flash.now[:error] << "<br>"
+      else
+        flash.now[:error] = ""
+      end
+      flash.now[:error] << "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
     end
+
+    if @event.payment_methods.empty?
+      flash.now[:error] = "Hey! You haven't set any payment methods so no one can pay for this event. You can do that by <a href=\"#{url_for edit_event_path(@event)}\">editing the event</a>."
+    end
+    flash.now[:error] = flash.now[:error].html_safe unless flash.now[:error].nil?
   end
 
   def check_event_past
     if @event.is_past?
-      flash[:error] = "Can't edit an event that has already happened."
+      flash[:error] = "You can't edit an event that has already happened."
       redirect_to event_path(@event)
     end
   end

@@ -21,7 +21,7 @@
   <div class="index-partials row push-bottom push-top-small">
     <% if @groups.empty? %>
       <div class="span12">
-        You are not in any groups! Maybe you should <%= link_to "create a group?", new_group_path %>
+        You are not in any groups! Maybe you should <%= link_to "create a group", new_group_path %>? Groups are here to save you time when you're making events. If you are often inviting the same people to events, you can create a group and invite that group to future events rather than having to invite everyone individually. 
       </div>
     <% else %>
       <%= render @groups %>

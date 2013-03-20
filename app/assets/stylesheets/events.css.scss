@@ -11,6 +11,24 @@
   margin-right: $smallMargin;
 }
 
+.underlayed-image-large
+{
+    border: 1px solid $lightGray;
+    width: 100%;
+    height: 250px;
+    background-size: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: $white;
+    margin-bottom: $tinyMargin;
+    border-radius: 5px;
+    @include box-sizing(border-box);
+    &.default
+    {
+        height: 100px;
+    }
+}
+
 .event
 {
   h4
@@ -42,7 +60,7 @@
     }
     .user
     {
-      width: 130px;
+      width: 140px;
     }
     .user,.status
     {

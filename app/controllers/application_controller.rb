@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
-  before_filter :user_activity, if: :current_user
+  after_filter :user_activity, if: :current_user
   around_filter :user_time_zone, if: :current_user
 
   def default_url_options
@@ -24,7 +24,7 @@ protected
   end
 
   def user_organizes_group
-    @group = current_user.member_groups.find(params[:group_id] || params[:id])
+    @group = current_user.organized_groups.find(params[:group_id] || params[:id])
 
     if @group.nil? || !@group.is_admin?(current_user)
       redirect_to_login_or_root
@@ -62,7 +62,7 @@ protected
 
 private
   def check_for_stub_token
-    if params[:token]
+    if params[:token] && params[:token] != nil
       user = User.find_by_guest_token(params[:token])
       if user.present?
         session[:user_return_to] = url_for(port: false)

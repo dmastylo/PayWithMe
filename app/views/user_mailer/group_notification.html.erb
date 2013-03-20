@@ -5,7 +5,7 @@
     <p>You've been added to <%= @group.title %>. You will be invited to all <%= @group.title %> events in the future.</p>
 
     <p>
-    	<%= link_to image_tag(asset_url('visit_group.png'), alt: "Visit #{@group.title}"), group_url(@group, guest_params(@user)) %>
+    	<%= link_to image_tag(asset_path('visit_group.png'), alt: "Visit #{@group.title}"), group_url(@group, guest_params(@user)) %>
 	</p>
     <small>(<%= link_to 'Click here if the above link doesn\'t work', group_url(@group, guest_params(@user)) %>)</small>
     <p></p>

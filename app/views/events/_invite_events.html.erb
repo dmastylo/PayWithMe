@@ -7,7 +7,7 @@
         <i class="icon-plus icon-black"></i>
       <% end %>
     </span>
-     <a href="#" class="event-to-invite"><%= event.title %></a>
+     <a href="#" class="event-to-invite"><%= truncate(event.title, :length => 18) %></a>
     <%= f.hidden_field :user_id, :value => @user.id %>
   <% end %>
 </li>

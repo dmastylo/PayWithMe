@@ -13,6 +13,8 @@ class GroupsController < ApplicationController
     if request.path != group_path(@group)
       redirect_to group_path(@group), status: :moved_permanently
     end
+
+    @group = Group.find_by_id(@group.id, include: { group_users: :user } )
   end
 
   def new

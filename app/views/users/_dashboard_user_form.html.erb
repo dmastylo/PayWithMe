@@ -1,0 +1,12 @@
+<% if !event_user.paid? %>
+  <%= form_for(event_user, method: :put, remote: true, url: paid_event_event_user_path(event_user.event, event_user)) do |f| %>
+    <div class="input-append">
+      <% paid_total = event_user.paid_total %>
+      <% paid_total = nil unless paid_total > 0 %>
+      <%= f.text_field :paid_total, placeholder: "Enter amount unless fully paid", value: paid_total, class: "input-xlarge", "data-placement" => "left", "data-trigger" => "manual", "data-container" => "body" %>
+      <%= f.submit "Mark Paid", class: "btn btn-success", method: :put, remote: true %>
+    </div>
+  <% end %>
+<% elsif event_user.paid_with_cash? %>
+  <%= link_to "Mark Unpaid", unpaid_event_event_user_path(event_user.event, event_user), class: "btn btn-danger", method: :put, remote: true %>
+<% end %>

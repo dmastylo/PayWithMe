@@ -72,7 +72,7 @@
 
       <div class="event_division_type_option btn_group_option push-bottom-small" id="event_division_type_total">
         <%= f.label :total_amount, "Total Amount" %>
-        <div class="input-prepend">
+        <div class="input-prepend autosize">
           <span class="add-on">$</span>
           <%= f.text_field :total_amount, class: "input-block-level" %>
         </div>
@@ -80,7 +80,7 @@
 
       <div class="event_division_type_option btn_group_option push-bottom-small" id="event_division_type_split">
         <%= f.label :split_amount, "Amount Per Person" %>
-        <div class="input-prepend">
+        <div class="input-prepend autosize">
           <span class="add-on">$</span>
           <%= f.text_field :split_amount, class: "input-block-level" %>
         </div>
@@ -113,12 +113,12 @@
     <div class="well">
       <div class="alert alert-error hidden" id="add_member_error">
       </div>
-      <div class="input-append" id="single-invite">
+      <div class="input-append autosize" id="single-invite">
         <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
         <%= link_to "Add", "#", class: "btn", id: "add_member" %>
       </div>
       <div id="bulk-invite" class="hidden">
-         <%= text_area :member, :names, placeholder: "Enter email addresses separated by commas", class: "input-block-level", rows: 3 %>
+         <%= text_area :member, :names, placeholder: "Enter email addresses separated by commas, spaces, or new lines", class: "input-block-level", rows: 3 %>
         <%= link_to "Add", "#", class: "btn btn-block", id: "add_members" %>
       </div>
       <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
@@ -135,7 +135,7 @@
     <div class="well">
       <div class="alert alert-error hidden" id="add_group_error">
       </div>
-      <div class="input-append">
+      <div class="input-append autosize">
         <%= text_field :group, :name, placeholder: "Search for groups", class: "span4" %>
         <%= link_to "Add", "#", class: "btn", id: "add_group" %>
       </div>

@@ -1,6 +1,6 @@
 $(document).ready(function()
 {
-	$('.input-prepend,.input-append').autoSize();
+	$('.input-prepend.autosize,.input-append.autosize').autoSize();
 
   $("#btn-bulk-invite").click(function(e)
   {

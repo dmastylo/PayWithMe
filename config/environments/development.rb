@@ -11,7 +11,7 @@ PayWithMe::Application.configure do
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
+  config.action_controller.perform_caching = true
 
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
@@ -25,6 +25,7 @@ PayWithMe::Application.configure do
     user_name: Figaro.env.gmail_username,
     password: Figaro.env.gmail_password
   }
+  config.action_mailer.asset_host = "http://df4d53e4be0c2e4fa134-3a26ebaee65c0bbe66210a3fc1efde8d.r41.cf2.rackcdn.com"
 
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
@@ -48,7 +49,7 @@ PayWithMe::Application.configure do
   config.assets.debug = true
 
   # Default URL
-  routes.default_url_options[:host] = "local.paywith.me:3000"
+  routes.default_url_options[:host] = "localhost:3000"
 
   # Active merchant and PayPal
   ActiveMerchant::Billing::Base.mode = :test

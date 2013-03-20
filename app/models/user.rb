@@ -29,6 +29,8 @@
 #  slug                       :string(255)
 #  creator_id                 :integer
 #  completed_at               :datetime
+#  admin                      :boolean
+#  send_emails                :boolean          default(TRUE)
 #
 
 class User < ActiveRecord::Base
@@ -39,7 +41,7 @@ class User < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone, :send_emails
   attr_accessor :profile_image_type
   has_attached_file :profile_image
 
@@ -47,7 +49,7 @@ class User < ActiveRecord::Base
   # ========================================================
   validates :name, presence: true, length: { minimum: 2, maximum: 50, message: "has to be between 2 and 50 characters long" }, unless: :stub?
   validates :password, length: { minimum: 8, message: "has to be at least 8 characters long (for your safety!)" }, if: :password_required?, unless: :stub?
-  validates :guest_token, presence: true, if: :stub?
+  # validates :guest_token, presence: true, if: :stub?
   validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
   
   # Callbacks
@@ -106,28 +108,53 @@ class User < ActiveRecord::Base
   def self.from_params(params, creator=nil)
     return [] if params.nil? || params.empty?
     params = ActiveSupport::JSON.decode(params)
-    users = []
+    new_users = []
+    new_users_emails = []
+    existing_users = []
 
-    params.each do |email|
-      user = User.find_by_email(email)
-      if user.nil?
-        user = User.create_stub(email, creator)
-      end
-
-      users.push user
+    tmp_found_users = User.where(email: params)
+    found_users = {}
+    tmp_found_users.each do |user|
+      found_users[user.email] = user
     end
 
-    users.uniq
+    params.each do |email|
+      user = found_users[email]
+      if user.nil?
+        user = User.new_stub(email, creator.id)
+        new_users.push user
+        new_users_emails.push email
+      else
+        existing_users.push user
+      end
+
+    end
+
+    new_users.uniq!
+    User.import(new_users, validate: false)
+
+    new_users = User.where(email: new_users_emails)
+    new_users + existing_users
   end
 
-  def self.create_stub(email, creator=nil)
+  def self.new_stub(email, creator_id=nil)
     user = User.new(email: email)
     user.stub = true
-    user.save
-    user.guest_token = ::BCrypt::Password.create("#{email}#{user.created_at.to_s}#{pepper}")
-    user.creator_id = creator.id if creator.present?
+    user.creator_id = creator_id
+    user
+  end
+
+  def self.create_stub(email, creator_id=nil)
+    user = User.new_stub(email, creator_id)
     user.save
     user
+  end
+
+  def create_guest_token
+    if self.guest_token.nil?
+      self.guest_token = ::BCrypt::Password.create("#{email}#{self.created_at}")
+      self.save
+    end
   end
 
   def self.from_omniauth(auth)
@@ -289,7 +316,7 @@ class User < ActiveRecord::Base
 private
   def set_profile_image
     return unless self.profile_image_type.present?
-    
+
     if self.profile_image_type != "url"
       self.profile_image_url = nil
     end
@@ -297,7 +324,7 @@ private
       self.profile_image = nil
     end
 
-    profile_image_type = nil
+    self.profile_image_type = nil
   end
 
   def set_stub

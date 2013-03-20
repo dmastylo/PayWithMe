@@ -42,6 +42,10 @@ module UsersHelper
     end
   end
 
+  def user_name_with_spacing(user, options = {})
+    user_name(user, options).gsub(" ", " &nbsp; ".html_safe).html_safe
+  end
+
   def user_online(user)
     if user.online?
       '<div class="user-online" rel="tooltip" title="This user is online" data-placement="right"></div>'.html_safe

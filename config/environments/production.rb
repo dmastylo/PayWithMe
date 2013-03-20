@@ -9,16 +9,16 @@ PayWithMe::Application.configure do
   config.action_controller.perform_caching = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
-  config.serve_static_assets = true
+  config.serve_static_assets = false
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
 
   # Don't fallback to assets pipeline if a precompiled asset is missed
-  config.assets.compile = true
+  config.assets.compile = false
 
   # Generate digests for assets URLs
-  config.assets.digest = true
+  config.assets.digest = false
 
   # Don't load enviroment when precompiling
   config.assets.initialize_on_precompile = true
@@ -46,7 +46,8 @@ PayWithMe::Application.configure do
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
-  # config.action_controller.asset_host = "http://df4d53e4be0c2e4fa134-3a26ebaee65c0bbe66210a3fc1efde8d.r41.cf2.rackcdn.com"
+  config.action_controller.asset_host = "http://df4d53e4be0c2e4fa134-3a26ebaee65c0bbe66210a3fc1efde8d.r41.cf2.rackcdn.com"
+  config.action_mailer.asset_host = config.action_controller.asset_host
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
   # config.assets.precompile += %w( application.css.sass  bootstrap )

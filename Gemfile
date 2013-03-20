@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.13'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
@@ -13,10 +13,11 @@ end
 
 # User authentication
 gem 'devise'
+gem 'omniauth', git: 'git://github.com/intridea/omniauth.git'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-paypal', git: 'git://github.com/datariot/omniauth-paypal.git'
-gem 'omniauth-dwolla'
+gem 'omniauth-dwolla', git: 'git://github.com/austingulati/omniauth-dwolla.git'
 gem 'omniauth-wepay', git: 'git://github.com/tenaciousflea/omniauth-wepay.git'
 
 # User profiles
@@ -70,12 +71,16 @@ gem 'friendly_id'
 # PDF Generation
 gem 'prawn'
 
+# ActiveRecord extensions
+gem "activerecord-import"
+
 group :development, :test do
   gem 'sqlite3'
 end
 
 group :development do
   gem 'annotate'
+  gem 'quiet_assets'
 end
 
 group :test do
@@ -119,7 +124,7 @@ gem 'jquery-rails'
 # Deploy with Capistrano
 gem 'capistrano'
 gem 'rvm-capistrano'
-# gem 'fog'
+gem 'fog', git: 'git://github.com/fog/fog.git'
 
 # To use debugger
 # gem 'debugger'
