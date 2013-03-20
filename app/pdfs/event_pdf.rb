@@ -109,9 +109,7 @@ class EventPdf < Prawn::Document
 	# Returns image path as string
 	def event_image
 		if @event.image_type == :upload
-			# NEEDS WORK ###################################################################################################################
-			#open("http://755d67cfc17f419ac9b7-b6e49b6274b073a668d3a9c93161275e.r50.cf2.rackcdn.com/events/images/000/000/#{@event.id}/full/#{@event.image_file_name}")
-			"#{Rails.root}/app/assets/images/default_event_image.png"
+			open(@event.image.url)
 		elsif @event.image_type == :url
 			open(@event.image_url)
 		elsif @event.image_type == :default_image
