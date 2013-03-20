@@ -1,6 +1,9 @@
 <tr>
   <td>
     <%= link_to user.name || "n/a", user %>
+    <% if user.online? %>
+      <div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div>
+    <% end %>
   </td>
   <td>
     <%= user.email %>
