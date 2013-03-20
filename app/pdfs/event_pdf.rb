@@ -5,7 +5,17 @@ class EventPdf < Prawn::Document
 		@event = event
 		@view = view
 
-		load("fonts/Lato-Regular.ttf", "Lato");
+		font_families.update(
+		 	"Lato" => {  :bold   => "#{Rails.root}/app/assets/fonts/Lato-Bold.ttf",
+		            	 :normal => "#{Rails.root}/app/assets/fonts/Lato-Regular.ttf" })
+
+		font("Lato")
+
+		number_pages "<page> in a total of <total>", 
+		                                         {:start_count_at => 1,
+		                                          :at => [bounds.right - 50, 50],
+		                                          :align => :right,
+		                                          :size => 14}
 
 		display_header
 		move_down 20
@@ -15,7 +25,7 @@ class EventPdf < Prawn::Document
 	# Header information
 	def display_header
 
-		event_data = [["#{@event.title}"], 
+		event_data = [["<font size='24'><b>#{@event.title}</b></font>"], 
 					  ["Organized By: #{User.find_by_id(@event.organizer_id).name}"],
 					  [privacy_setting],
 					  ["Expected Total: #{price_cents(@event.total_amount_cents)}"],
@@ -23,9 +33,9 @@ class EventPdf < Prawn::Document
 					  ["Money Due: #{@event.due_at_time}, #{@event.due_at_date}"]
 					 ]
 
-		tmpTable = make_table(event_data, :cell_style => { :borders => [], :overflow => :shrink_to_fit })
+		tmpTable = make_table(event_data, :cell_style => { :borders => [], :overflow => :shrink_to_fit, :inline_format => true })
 
-		full_data = [[ {:image => event_image, :fit => [150,150]}, tmpTable]]
+		full_data = [[ {:image => event_image, :fit => [150,150], :vposition => :center, :position => :center }, tmpTable]]
 
 		table full_data, :cell_style => { :borders => [] }
 	end
