@@ -29,7 +29,7 @@ class EventPdf < Prawn::Document
 		event_data = [["<font size='24'><b>#{@event.title}</b></font>"], 
 					  ["Organized By: #{User.find_by_id(@event.organizer_id).name}"],
 					  [privacy_setting],
-					  ["Expected Total: #{price_cents(@event.total_amount_cents)}"],
+					  ["Amount Per Person: #{price_cents(@event.split_amount_cents)}"],
 					  ["Total Collected: #{price_cents(@event.money_collected_cents)}"],
 					  ["Money Due: #{@event.due_at_time}, #{@event.due_at_date}"]
 					 ]
@@ -72,7 +72,11 @@ class EventPdf < Prawn::Document
 				amount = price(event_user.amount)
 				payment_method_name = event_user.payments[0].payment_method.name
 				pay_date = event_user.paid_at.to_date
-				# NEEDS TO ACCOUNT FOR PARTIAL PAYMENTS ###################################################################################
+			elsif event_user.paid_total != 0
+				# If the user partially paid
+				amount = price(event_user.paid_total)
+				payment_method_name = event_user.payments[0].payment_method.name
+				pay_date = ""
 			else
 				amount = "Not Paid"
 				payment_method_name = ""
@@ -90,7 +94,10 @@ class EventPdf < Prawn::Document
 	end
 
 	# Turns price in cents to money value in dollars
-	def price_cents(val)
+	def price_cents(val = 0)
+		if !val
+			val = 0
+		end 
 		price(val/100.0)
 	end
 
@@ -103,7 +110,8 @@ class EventPdf < Prawn::Document
 	def event_image
 		if @event.image_type == :upload
 			# NEEDS WORK ###################################################################################################################
-			open("http://755d67cfc17f419ac9b7-b6e49b6274b073a668d3a9c93161275e.r50.cf2.rackcdn.com/events/images/000/000/001/full/#{@event.image_file_name}")
+			#open("http://755d67cfc17f419ac9b7-b6e49b6274b073a668d3a9c93161275e.r50.cf2.rackcdn.com/events/images/000/000/#{@event.id}/full/#{@event.image_file_name}")
+			"#{Rails.root}/app/assets/images/default_event_image.png"
 		elsif @event.image_type == :url
 			open(@event.image_url)
 		elsif @event.image_type == :default_image
