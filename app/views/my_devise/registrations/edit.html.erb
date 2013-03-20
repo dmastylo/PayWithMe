@@ -120,6 +120,13 @@
               <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, {}, {:class => 'input-block-level'} %>
             </div>
           </div>
+          <div class="control-group">
+            <div class="controls">
+              <label class="checkbox">
+                <%= f.check_box :send_emails %> Receive emails from PayWithMe groups and events?
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>

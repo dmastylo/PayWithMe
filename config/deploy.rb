@@ -8,6 +8,7 @@ require 'new_relic/recipes'
 require "fog"
 
 server "198.61.239.149", :web, :app, :db, primary: true
+server "166.78.100.243", :web, :app
 
 set :application, "PayWithMe"
 set :user, "deployer"
@@ -72,11 +73,12 @@ namespace :deploy do
   namespace :assets do
     task :precompile, :roles => :web, :except => { :no_release => true } do
       # Check if assets have changed. If not, don't run the precompile task - it takes a long time.
-      force_compile = true
+      force_compile = false
       changed_asset_count = 0
       begin
         from = source.next_revision(current_revision)
         asset_locations = 'app/assets/ lib/assets/ vendor/assets/'
+        puts "cd #{latest_release} && #{source.local.log(from)} #{asset_locations} | wc -l"
         changed_asset_count = capture("cd #{latest_release} && #{source.local.log(from)} #{asset_locations} | wc -l").to_i
       rescue Exception => e
         logger.info "Error: #{e}, forcing precompile"
@@ -89,8 +91,8 @@ namespace :deploy do
         storage = Fog::Storage.new(provider: 'Rackspace', rackspace_api_key: "441e6ae0fb2aa44eb6c81af9cfc8a7bb", rackspace_username: "paywithme", rackspace_region: :ord)
         directory = storage.directories.get('static-assets')
 
-        logger.info "Removing old assets"
-        directory.files.each do |file| file.destroy end
+        # logger.info "Removing old assets"
+        # directory.files.each do |file| file.destroy end
           
         logger.info "Uploading new assets"
         Dir.glob(File.join("public", "assets", "*")).each do |file|

@@ -52,28 +52,35 @@ class Group < ActiveRecord::Base
   # ========================================================
   def add_members(members_to_add, exclude_from_notifications=nil)
     editing_group = true if self.members.length != 0
+    group_users = []
+    event_users = []
+    group_invite_notifications = []
+    group_new_member_news = []
+
     members_to_add.each do |member|
       unless self.members.include?(member)
-        self.members << member
-        Notification.create_for_group(self, member) if member != exclude_from_notifications
-
-        # Only fire this if it's NOT a new group
-        # We don't want to notify all the members of all the other members
-        # when it's first being made
-        NewsItem.delay.create_for_new_group_member(self, member) if editing_group
+        group_users.push GroupUser.new(user_id: member.id, group_id: self.id)
+        group_invite_notifications.push member.id unless member == exclude_from_notifications
+        if editing_group
+          group_new_member_news.push member.id
+        end
 
         # Add the new member to the upcoming group events
         self.events.where('events.due_at > ?', Time.now).each do |event|
-          event.add_member(member, member)
+          event_users.push EventUser.new(user_id: member.id, event_id: event.id)
         end
       end
     end
 
-    delay.send_invitation_emails
+    GroupUser.import group_users unless group_users.empty?
+    EventUser.import event_users unless event_users.empty?
+    Group.delay.send_invitation_emails(self.id) unless group_users.empty?
+    Notification.delay.create_for_group(self.id, group_invite_notifications) unless group_invite_notifications.empty?
+    NewsItem.delay.create_for_new_group_member(self.id, group_new_member_news) unless group_new_member_news.empty? || !editing_group
   end
 
   def add_member(member_to_add)
-    self.add_members( [ member_to_add ] )
+    self.add_members([member_to_add])
   end
 
   # Adds members and deletes any not in the set
@@ -114,9 +121,10 @@ class Group < ActiveRecord::Base
   #   end
   # end
 
-  def send_invitation_emails
-    self.group_users.each do |group_user|
-      if !group_user.invitation_sent? && !is_admin?(group_user.user)
+  def self.send_invitation_emails(group_id)
+    group = Group.find_by_id(group_id, include: { group_users: :user })
+    group.group_users.each do |group_user|
+      if !group_user.invitation_sent? && group_user.user_id != self.organizer_id
         UserMailer.group_notification(group_user.user, self).deliver
         group_user.toggle(:invitation_sent).save
       end

@@ -3,14 +3,16 @@ require 'spec_helper'
 describe "Admin" do
 
   subject { page }
-  let(:pages) { [:index, :events, :users, :groups, :statistics] }
+  # let(:pages) { [:index, :events, :users, :groups, :statistics] }
+  # pages = [:index, :users, :events, :groups]
+  pages = [:users, :events, :groups]
 
   describe "not signed in" do
     pages.each do |page|
-      before { visit send("admin_#{page}_path") }
+      before { visit send("#{page}_admin_index_path") }
       it "should redirect to login page" do
-        it { should have_selector("h2", text: "Sign in") }
-        it { should have_selector("title", text: "Sign in") }
+        should have_selector("h2", text: "Sign In")
+        should have_selector("title", text: "Sign In")
       end
     end
   end
@@ -22,10 +24,10 @@ describe "Admin" do
     end
 
     pages.each do |page|
-      before { visit send("admin_#{page}_path") }
+      before { visit send("#{page}_admin_index_path") }
       it "should redirect to index page" do
-        it { should have_selector("h2", text: "News Feed") }
-        it { should have_selector("title", text: "PayWithMe") }
+        should have_selector("h2", text: "News Feed")
+        should have_selector("title", text: "PayWithMe")
       end
     end
   end
@@ -37,9 +39,9 @@ describe "Admin" do
     end
 
     pages.each do |page|
-      before { visit send("admin_#{page}_path") }
+      before { visit send("#{page}_admin_index_path") }
       it "should render page" do
-        it { should have_selector("title", text: "Administrator Panel") }
+        should have_selector("title", text: "Administrator Panel")
       end
     end
   end

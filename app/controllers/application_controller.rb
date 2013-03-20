@@ -24,7 +24,7 @@ protected
   end
 
   def user_organizes_group
-    @group = current_user.member_groups.find(params[:group_id] || params[:id])
+    @group = current_user.organized_groups.find(params[:group_id] || params[:id])
 
     if @group.nil? || !@group.is_admin?(current_user)
       redirect_to_login_or_root
@@ -62,7 +62,7 @@ protected
 
 private
   def check_for_stub_token
-    if params[:token]
+    if params[:token] && params[:token] != nil
       user = User.find_by_guest_token(params[:token])
       if user.present?
         session[:user_return_to] = url_for(port: false)
@@ -84,7 +84,7 @@ private
   end
 
   def user_activity
-    # current_user.update_attribute(:last_seen, Time.now)
+    current_user.update_attribute(:last_seen, Time.now)
   end
 
   def user_time_zone(&block)

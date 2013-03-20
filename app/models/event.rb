@@ -54,7 +54,7 @@ class Event < ActiveRecord::Base
   has_many :groups, through: :event_groups, source: :group
   has_many :reminders, dependent: :destroy
   has_and_belongs_to_many :payment_methods
-  has_many :nudges
+  has_many :nudges, dependent: :destroy
 
   # Callbacks
   # ========================================================
@@ -87,17 +87,15 @@ class Event < ActiveRecord::Base
   def split_amount_cents
     if division_type == DivisionType::SPLIT
       super
-    elsif paying_members.size == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE
+    elsif paying_member_count == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE
       nil
     else
-      total_amount_cents / paying_members.size
+      total_amount_cents / paying_member_count
     end
   end
 
   def money_collected_cents
-    if split_amount_cents.present?
-      split_amount_cents * paid_members.count
-    end
+    Payment.where("event_user_id IN (?) AND paid_at IS NOT NULL", self.event_user_ids).sum(&:amount_cents)
   end
 
   # Division types
@@ -127,8 +125,8 @@ class Event < ActiveRecord::Base
   # Payment methods
   # ========================================================
 
-  def accepts_payment_method?(payment_method)
-    self.payment_methods.where(id: payment_method).count > 0
+  def accepts_payment_method?(payment_method_id)
+    self.payment_methods.select { |payment_method| payment_method.id == payment_method_id }.count > 0
   end
 
   def send_with_payment_method?(payment_method)
@@ -235,13 +233,25 @@ class Event < ActiveRecord::Base
 
   # Member definitions
   # ========================================================
+  def paying_event_users
+    self.event_users.reject { |event_user| event_user.user_id == self.organizer_id }
+  end
+
   def paying_members
-    self.members - [self.organizer]
+    self.members.reject { |user| user.id == self.organizer_id }
+  end
+
+  def paying_member_count
+    self.event_users.count - 1
   end
 
   def paid_members
-    paid_event_users = event_users.where("paid_at IS NOT NULL")
+    paid_event_users = self.event_users.where("paid_at IS NOT NULL")
     users = paid_event_users.collect { |event_user| event_user.user }
+  end
+
+  def paid_member_count
+    self.event_users.where("paid_at IS NOT NULL").count
   end
 
   def unpaid_members
@@ -249,9 +259,13 @@ class Event < ActiveRecord::Base
     users = unpaid_event_users.collect { |event_user| event_user.user }
   end
 
+  def unpaid_member_count
+    self.event_users.where("paid_at IS NULL").count
+  end
+
   def paid_percentage
-    if paying_members.count > 0
-      (paid_members.count * 100.0) / paying_members.count 
+    if self.money_collected > 0
+      self.money_collected * 100.0 / self.total_amount
     else
       0
     end
@@ -263,24 +277,30 @@ class Event < ActiveRecord::Base
 
   def add_members(members_to_add, exclude_from_notifications=nil)
     editing_event = true if self.members.length != 0
+    event_users = []
+    event_update_notifications = []
+    event_invite_notifications = []
+    event_new_member_news = []
+
     members_to_add.each do |member|
       if member.valid?
         if self.members.include?(member)
-          Notification.create_or_update_for_event_update(self, member) if member != exclude_from_notifications
+          event_update_notifications.push(member.id) unless member == exclude_from_notifications
         else
-          self.members << member
-          Notification.create_for_event(self, member) if member != exclude_from_notifications
-
-          # Only fire this if it's NOT a new event
-          # We don't want to notify all the members of all the other members
-          # when it's first being made
-          NewsItem.delay.create_for_new_event_member(self, member) if editing_event
+          event_users.push EventUser.new(user_id: member.id, event_id: self.id)
+          event_invite_notifications.push member.id unless member == exclude_from_notifications
+          if editing_event
+            event_new_member_news.push member.id unless member == exclude_from_notifications
+          end
         end
       end
     end
 
-    delay.send_invitation_emails
-    # set_event_user_attributes(exclude_from_notifications)
+    EventUser.import event_users, validate: false unless event_users.empty?
+    Event.delay.send_invitation_emails(self.id) unless event_users.empty?
+    Notification.delay.create_or_update_for_event_update(self.id, event_update_notifications) unless event_update_notifications.empty?
+    Notification.delay.create_for_event(self.id, event_invite_notifications) unless event_invite_notifications.empty?
+    NewsItem.delay.create_for_new_event_member(self.id, event_new_member_news) unless event_new_member_news.empty? || !editing_event
   end
 
   # Adds members and deletes any not in the set
@@ -304,20 +324,22 @@ class Event < ActiveRecord::Base
     remove_members([member_to_remove])
   end
 
-  def send_invitation_emails
-    self.event_users.each do |event_user|
-      if !event_user.invitation_sent? && event_user.user != self.organizer
-        UserMailer.event_notification(event_user.user, self).deliver
+  def self.send_invitation_emails(event_id)
+    event = Event.find_by_id(event_id, include: { event_users: :user })
+    event.event_users.each do |event_user|
+      if !event_user.invitation_sent? && event_user.user_id != event.organizer_id
+        if event_user.user.stub?
+          event_user.user.create_guest_token
+        end
+        UserMailer.event_notification(event_user.user, event).deliver
         event_user.toggle(:invitation_sent).save
       end
     end
   end
 
-  def send_message_notifications
-    self.members.each do |member|
-      event_user = member.event_users.find_by_event_id(self.id)
-      Notification.create_or_update_for_event_message(self, member) unless event_user.on_page?
-    end
+  def self.send_message_notifications(event_id)
+    event = Event.find_by_id(event_id, include: :members)
+    Notification.create_or_update_for_event_message(event, event.member_ids)
   end
 
   def add_groups(groups_to_add)
@@ -369,11 +391,7 @@ class Event < ActiveRecord::Base
 
   def paid_with_cash?(user)
     event_user = event_user(user)
-    paid_with_cash = true
-    event_user.payments.each do |payment|
-      paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH
-    end
-    paid_with_cash
+    event_user.paid_with_cash?
   end
 
   def paid_at(user)
@@ -404,6 +422,14 @@ class Event < ActiveRecord::Base
     if can_nudge?(nudger, nudgee)
       nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id, event_id: self.id)
     end
+  end
+
+  def nudges_remaining(nudger)
+    Figaro.env.nudge_limit.to_i - nudger.sent_nudges.find_all_by_event_id(self.id).count
+  end
+
+  def has_nudged?(nudger, nudgee)
+    self.nudges.where(nudgee_id: nudgee.id, nudger_id: nudger.id).count > 0
   end
   
   def is_past?

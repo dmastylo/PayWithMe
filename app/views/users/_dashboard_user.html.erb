@@ -1,0 +1,27 @@
+<%
+  # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
+%>
+<% user = event_user.user %>
+<tr>
+  <td><%= user_name(user) %></td>
+  <td id="user-status-<%= user.id %>">
+    <% if event_user.paid? %>
+      <%= distance_of_time_in_words_to_now event_user.paid_at %> ago
+    <% elsif event_user.paid_total_cents > 0 %>
+      <%= humanized_money_with_symbol event_user.paid_total %> of <%= humanized_money_with_symbol @event.split_amount %>
+    <% else %>
+      <span class="unpaid" id="user-unpaid-<%= user.id %>">Unpaid</span>
+    <% end %>
+  </td>
+  <td>
+    <% if event_user.visited_event? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  <td id="payment-links-<%= user.id %>">
+    <% if @event.send_with_cash? %>
+      <%= render "users/dashboard_user_form", event: @event, user: user, event_user: event_user %>
+    <% end %>
+  </td>
+</tr>

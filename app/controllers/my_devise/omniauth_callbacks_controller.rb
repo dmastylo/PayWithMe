@@ -56,8 +56,17 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
 
         gateway = Payment.wepay_gateway
         response = gateway.call('/account/find', linked_account.token_secret)
-        linked_account.token = response.first["account_id"]
 
+        if response.empty?
+          response = gateway.call('/account/create', linked_account.token_secret, {
+            name: "PayWithMe Account",
+            description: "The account for use with PayWithMe events."
+          })
+          response = gateway.call('/account/find', linked_account.token_secret)
+          flash[:notice] = "A new WePay account has been created for you to use with PayWithMe. You need to activate it #{view_context.link_to "here", response.first["verification_uri"]}.".html_safe
+        end
+
+        linked_account.token = response.first["account_id"]
         linked_account.save
       elsif request.env["omniauth.auth"].provider == "paypal"
         linked_account.uid = request.env["omniauth.auth"].uid
@@ -101,6 +110,23 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
       session["devise.account_attributes"] = { provider: request.env["omniauth.auth"].provider, uid: request.env["omniauth.auth"].uid }
       redirect_to new_user_registration_path
     end
+  end
+
+  def failure
+    if signed_in?
+      # Convert to error messages that make more sense
+      if failed_strategy.name == "dwolla" && failure_message == "Invalid account status for user of this access token."
+        failure_message = "Please verify your email address before linking your account."
+      end
+
+      flash[:error] = "#{OmniAuth::Utils.camelize(failed_strategy.name)} reported the following error: #{failure_message}"
+      redirect_to edit_user_registration_path
+    else
+
+    end
+    # raise failure_message
+    # set_flash_message :alert, :failure, :kind => OmniAuth::Utils.camelize(failed_strategy.name), :reason => failure_message
+    # redirect_to after_omniauth_failure_path_for(resource_name)
   end
 
   alias_method :twitter, :all

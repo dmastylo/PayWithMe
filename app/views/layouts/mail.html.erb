@@ -17,7 +17,7 @@
 
       #pwm-body
       {
-        width: 650px;
+        width: 600px;
         border: 1px solid #CCC;
         background-color: #FFF;
       }
@@ -44,18 +44,22 @@
         text-decoration: none;
       }
 
+      a:hover
+      {
+        text-decoration: underline;
+      }
+
     </style>
   </head>
   <body>
     <table width="100%" id="pwm-background" border="0" cellpadding="0" cellspacing="0">
       <tr>
         <td align="center" valign="top" id="pwm-container">
-          <table width="650" id="pwm-body" border="0" cellpadding="0" cellspacing="0">
+          <table width="600" id="pwm-body" border="0" cellpadding="0" cellspacing="0">
             <tr>
-              <td id="logo">
-                <%= link_to image_tag(asset_url("logo.png"), alt: "Pay With Me"), root_url %>
+              <td style="padding: 0;">
+                <%= link_to image_tag(asset_path("logo_email.png"), alt: "Pay With Me"), root_url %>
               </td>
-              <td></td>
             </tr>
             <%= yield %>
             <tr>
@@ -64,7 +68,8 @@
                 1226A Pittsburgh Building<br />
                 Rensselaer Polytechnic Institute<br />
                 Troy, New York 12180<br />
-                (518) 276-2393
+                (518) 276-2393<br /><br />
+                (<%= link_to "click here to modify your email settings", edit_user_registration_url %>)
               </td>
             </tr>
           </table>

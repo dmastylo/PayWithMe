@@ -19,7 +19,7 @@ describe LinkedAccount do
 
   before { @linked_account = FactoryGirl.create(:linked_account) }
   subject { @linked_account }
-  it { should be valid }
+  it { should be_valid }
 
   describe "attributes" do
     [:provider,

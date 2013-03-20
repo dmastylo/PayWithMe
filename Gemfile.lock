@@ -25,6 +25,15 @@ GIT
       multi_json (= 1.3.6)
 
 GIT
+  remote: git://github.com/austingulati/omniauth-dwolla.git
+  revision: 38b3ba3e10ef99212bd6e1d5b6b07c48f245066c
+  specs:
+    omniauth-dwolla (0.0.13)
+      dwolla (>= 0.0.13)
+      omniauth (~> 1.0)
+      omniauth-oauth2 (~> 1.0)
+
+GIT
   remote: git://github.com/codegram/date_validator.git
   revision: 69db9042710380eaff2541091aaa74282affea2d
   specs:
@@ -33,14 +42,14 @@ GIT
 
 GIT
   remote: git://github.com/datariot/omniauth-paypal.git
-  revision: ccac2f4b58d0eae01e7e7334d024c2366c6021df
+  revision: 04d14f311d1ada93733485281ef5904f97f84747
   specs:
-    omniauth-paypal (0.1.1)
+    omniauth-paypal (1.0)
       omniauth-oauth2 (~> 1.1.0)
 
 GIT
   remote: git://github.com/fog/fog.git
-  revision: f80aba6984c8cd9862f1fa71727b4f0989260181
+  revision: fe4798167ca91deddf4774949a32883da94d685e
   specs:
     fog (1.10.0)
       builder
@@ -52,6 +61,14 @@ GIT
       net-ssh (>= 2.1.3)
       nokogiri (~> 1.5.0)
       ruby-hmac
+
+GIT
+  remote: git://github.com/intridea/omniauth.git
+  revision: e515908f10c9f780165058902fb11730eb5d9111
+  specs:
+    omniauth (1.1.3)
+      hashie (>= 1.2, < 3)
+      rack
 
 GIT
   remote: git://github.com/tenaciousflea/omniauth-wepay.git
@@ -70,19 +87,19 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    actionmailer (3.2.11)
-      actionpack (= 3.2.11)
-      mail (~> 2.4.4)
+    actionmailer (3.2.13)
+      actionpack (= 3.2.13)
+      mail (~> 2.5.3)
     actionmailer-callbacks (1.1.0)
       actionmailer (~> 3.0)
       activesupport
-    actionpack (3.2.11)
-      activemodel (= 3.2.11)
-      activesupport (= 3.2.11)
+    actionpack (3.2.13)
+      activemodel (= 3.2.13)
+      activesupport (= 3.2.13)
       builder (~> 3.0.0)
       erubis (~> 2.7.0)
       journey (~> 1.0.4)
-      rack (~> 1.4.0)
+      rack (~> 1.4.5)
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.2.1)
@@ -97,19 +114,22 @@ GEM
       json (>= 1.5.1)
       money
       nokogiri
-    activemodel (3.2.11)
-      activesupport (= 3.2.11)
+    activemodel (3.2.13)
+      activesupport (= 3.2.13)
       builder (~> 3.0.0)
-    activerecord (3.2.11)
-      activemodel (= 3.2.11)
-      activesupport (= 3.2.11)
+    activerecord (3.2.13)
+      activemodel (= 3.2.13)
+      activesupport (= 3.2.13)
       arel (~> 3.0.2)
       tzinfo (~> 0.3.29)
-    activeresource (3.2.11)
-      activemodel (= 3.2.11)
-      activesupport (= 3.2.11)
-    activesupport (3.2.11)
-      i18n (~> 0.6)
+    activerecord-import (0.3.1)
+      activerecord (~> 3.0)
+      activerecord (~> 3.0)
+    activeresource (3.2.13)
+      activemodel (= 3.2.13)
+      activesupport (= 3.2.13)
+    activesupport (3.2.13)
+      i18n (= 0.6.1)
       multi_json (~> 1.0)
     addressable (2.3.3)
     american_date (1.0.0)
@@ -122,8 +142,8 @@ GEM
     bourbon (3.1.1)
       sass (>= 3.2.0)
       thor
-    bourne (1.1.2)
-      mocha (= 0.10.5)
+    bourne (1.4.0)
+      mocha (~> 0.13.2)
     builder (3.0.4)
     capistrano (2.14.2)
       highline
@@ -138,7 +158,7 @@ GEM
       rack-test (>= 0.5.4)
       selenium-webdriver (~> 2.0)
       xpath (~> 0.1.4)
-    childprocess (0.3.8)
+    childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.9.1)
     climate_control (0.0.3)
@@ -146,14 +166,13 @@ GEM
     cocaine (0.5.1)
       climate_control (>= 0.0.3, < 1.0)
     coderay (1.0.9)
-    css_parser (1.2.6)
+    css_parser (1.3.4)
       addressable
-      rdoc
-    daemon_controller (1.1.1)
+    daemon_controller (1.1.2)
     daemons (1.1.9)
     delayed_job (3.0.5)
       activesupport (~> 3.0)
-    delayed_job_active_record (0.4.2)
+    delayed_job_active_record (0.4.3)
       activerecord (>= 2.1.0, < 4)
       delayed_job (~> 3.0)
     delorean (2.1.0)
@@ -165,8 +184,8 @@ GEM
       warden (~> 1.2.1)
     diff-lcs (1.2.1)
     erubis (2.7.0)
-    eventmachine (1.0.0)
-    excon (0.20.0)
+    eventmachine (1.0.3)
+    excon (0.20.1)
     execjs (1.4.0)
       multi_json (~> 1.0)
     factory_girl (4.2.0)
@@ -178,7 +197,8 @@ GEM
       multipart-post (~> 1.1)
     fastthread (1.0.7)
     ffi (1.4.0)
-    figaro (0.6.1)
+    figaro (0.6.3)
+      bundler (~> 1.0)
       rails (>= 3, < 5)
     formatador (0.2.4)
     friendly_id (4.0.9)
@@ -189,18 +209,18 @@ GEM
       pry (>= 0.9.10)
       terminal-table (>= 1.4.3)
       thor (>= 0.14.6)
-    guard-rspec (2.4.1)
+    guard-rspec (2.5.1)
       guard (>= 1.1)
       rspec (~> 2.11)
-    guard-spork (1.4.2)
+    guard-spork (1.5.0)
       childprocess (>= 0.2.3)
       guard (>= 1.1)
       spork (>= 0.8.4)
     hashie (1.2.0)
-    highline (1.6.15)
+    highline (1.6.16)
     hike (1.2.1)
     httpauth (0.2.0)
-    i18n (0.6.3)
+    i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.2.1)
       railties (>= 3.0, < 5.0)
@@ -208,11 +228,11 @@ GEM
     js-routes (0.8.7)
       rails (>= 3.2)
     json (1.7.7)
-    jwt (0.1.5)
+    jwt (0.1.6)
       multi_json (>= 1.0)
     listen (0.7.3)
-    lumberjack (1.0.2)
-    mail (2.4.4)
+    lumberjack (1.0.3)
+    mail (2.5.3)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -221,7 +241,7 @@ GEM
     metaclass (0.0.1)
     method_source (0.8.1)
     mime-types (1.21)
-    mocha (0.10.5)
+    mocha (0.13.3)
       metaclass (~> 0.0.1)
     money (5.1.1)
       i18n (~> 0.6.0)
@@ -237,11 +257,11 @@ GEM
       net-ssh (>= 2.6.5)
     net-sftp (2.1.1)
       net-ssh (>= 2.6.5)
-    net-ssh (2.6.5)
+    net-ssh (2.6.6)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    newrelic_rpm (3.5.7.59)
-    nokogiri (1.5.6)
+    newrelic_rpm (3.5.8.72)
+    nokogiri (1.5.7)
     oauth (0.4.7)
     oauth2 (0.8.1)
       faraday (~> 0.8)
@@ -249,13 +269,6 @@ GEM
       jwt (~> 0.1.4)
       multi_json (~> 1.0)
       rack (~> 1.2)
-    omniauth (1.1.3)
-      hashie (~> 1.2)
-      rack
-    omniauth-dwolla (0.0.13)
-      dwolla (>= 0.0.13)
-      omniauth (~> 1.0)
-      omniauth-oauth2 (~> 1.0)
     omniauth-facebook (1.4.1)
       omniauth-oauth2 (~> 1.1.0)
     omniauth-oauth (1.0.1)
@@ -264,7 +277,7 @@ GEM
     omniauth-oauth2 (1.1.1)
       oauth2 (~> 0.8.0)
       omniauth (~> 1.0)
-    omniauth-twitter (0.0.14)
+    omniauth-twitter (0.0.15)
       multi_json (~> 1.3)
       omniauth-oauth (~> 1.0)
     orm_adapter (0.4.0)
@@ -286,6 +299,8 @@ GEM
       coderay (~> 1.0.5)
       method_source (~> 0.8)
       slop (~> 3.4)
+    quiet_assets (1.0.2)
+      railties (>= 3.1, < 5.0)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -293,17 +308,17 @@ GEM
       rack
     rack-test (0.6.2)
       rack (>= 1.0)
-    rails (3.2.11)
-      actionmailer (= 3.2.11)
-      actionpack (= 3.2.11)
-      activerecord (= 3.2.11)
-      activeresource (= 3.2.11)
-      activesupport (= 3.2.11)
+    rails (3.2.13)
+      actionmailer (= 3.2.13)
+      actionpack (= 3.2.13)
+      activerecord (= 3.2.13)
+      activeresource (= 3.2.13)
+      activesupport (= 3.2.13)
       bundler (~> 1.0)
-      railties (= 3.2.11)
-    railties (3.2.11)
-      actionpack (= 3.2.11)
-      activesupport (= 3.2.11)
+      railties (= 3.2.13)
+    railties (3.2.13)
+      actionpack (= 3.2.13)
+      activesupport (= 3.2.13)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
@@ -327,7 +342,7 @@ GEM
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
       rspec-mocks (~> 2.13.0)
-    rspec-core (2.13.0)
+    rspec-core (2.13.1)
     rspec-expectations (2.13.0)
       diff-lcs (>= 1.1.3, < 2.0)
     rspec-mocks (2.13.0)
@@ -342,20 +357,20 @@ GEM
     rubyzip (0.9.9)
     rvm-capistrano (1.2.7)
       capistrano (>= 2.0.0)
-    sass (3.2.6)
+    sass (3.2.7)
     sass-rails (3.2.6)
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
-    selenium-webdriver (2.30.0)
+    selenium-webdriver (2.31.0)
       childprocess (>= 0.2.5)
       multi_json (~> 1.0)
       rubyzip
       websocket (~> 1.0.4)
-    shoulda-matchers (1.4.2)
+    shoulda-matchers (1.5.1)
       activesupport (>= 3.0.0)
-      bourne (~> 1.1.2)
-    slop (3.4.3)
+      bourne (~> 1.3)
+    slop (3.4.4)
     spork (0.9.2)
     sprockets (2.2.2)
       hike (~> 1.2)
@@ -364,16 +379,16 @@ GEM
       tilt (~> 1.1, != 1.3.0)
     sqlite3 (1.3.7)
     terminal-table (1.4.5)
-    thin (1.5.0)
+    thin (1.5.1)
       daemons (>= 1.0.9)
       eventmachine (>= 0.12.6)
       rack (>= 1.0.0)
     thor (0.17.0)
-    tilt (1.3.3)
+    tilt (1.3.6)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.35)
+    tzinfo (0.3.37)
     uglifier (1.3.0)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
@@ -390,6 +405,7 @@ PLATFORMS
 DEPENDENCIES
   actionmailer-callbacks
   active_paypal_adaptive_payment!
+  activerecord-import
   american_date
   annotate
   bootstrap-sass!
@@ -417,14 +433,16 @@ DEPENDENCIES
   mustache
   mysql2
   newrelic_rpm
-  omniauth-dwolla
+  omniauth!
+  omniauth-dwolla!
   omniauth-facebook
   omniauth-paypal!
   omniauth-twitter
   omniauth-wepay!
   paperclip
   passenger
-  rails (= 3.2.11)
+  quiet_assets
+  rails (= 3.2.13)
   ransack
   rb-inotify (~> 0.8.8)
   rinku

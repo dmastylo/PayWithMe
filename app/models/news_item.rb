@@ -25,41 +25,43 @@ class NewsItem < ActiveRecord::Base
   has_and_belongs_to_many :subjects, class_name: "User"
 
   # Creation Methods
-  def self.create_for_new_event_member(event, new_member)
+  def self.create_for_new_event_member(event_id, new_member_ids)
     values = {
       news_type: NewsType::INVITE,
       foreign_type: ForeignType::EVENT,
-      foreign_id: event.id
+      foreign_id: event_id
     }
+    event = Event.find_by_id(event_id)
 
-    event = Event.find_by_id(event.id, include: {event_users: :user})
-    event.event_users.each do |event_user|
-      user = event_user.user
-      unless user == new_member || user == event.organizer
-        news_item = user.news_items.where(values).first
+    new_member_ids.each do |new_id|
+      new_member = User.find_by_id(new_id)
+      event.members.each do |user|
+        unless user.id == new_id || user.id == event.organizer_id
+          news_item = user.news_items.where(values).first
 
-        if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = user.news_items.create(values)
+          if news_item.nil? || news_item.created_at < 2.hours.ago
+            news_item = user.news_items.create(values)
+          end
+
+          if !news_item.subjects.include?(new_member)
+            news_item.subjects << new_member
+          end
+          news_item.unread!
         end
-
-        if !news_item.subjects.include?(new_member)
-          news_item.subjects << new_member
-        end
-        news_item.unread!
       end
     end
   end
 
-  def self.create_for_new_messages(event, message_creator)
+  def self.create_for_new_messages(event_id, message_creator_id)
     values = {
       news_type: NewsType::MESSAGE,
       foreign_type: ForeignType::EVENT,
-      foreign_id: event.id
+      foreign_id: event_id
     }
-    
-    event = Event.find_by_id(event.id, include: {event_users: :user})
-    event.event_users.each do |event_user|
-      user = event_user.user
+    event = Event.find_by_id(event_id)
+    message_creator = User.find_by_id(message_creator_id)
+
+    event.members.each do |user|
       unless user == message_creator
         news_item = user.news_items.where(values).first
 
@@ -71,7 +73,7 @@ class NewsItem < ActiveRecord::Base
           news_item.subjects << message_creator
         end
         
-        if event_user.on_page?
+        if event.event_user(user).on_page?
           news_item.read!
         else
           news_item.unread!
@@ -80,27 +82,29 @@ class NewsItem < ActiveRecord::Base
     end
   end
 
-  def self.create_for_new_group_member(group, new_member)
+  def self.create_for_new_group_member(group_id, new_member_ids)
     values = {
       news_type: NewsType::INVITE,
       foreign_type: ForeignType::GROUP,
       foreign_id: group.id
     }
+    group = Group.find_by_id(group_id)
 
-    group = Group.find_by_id(group.id, include: {event_users: :user})
-    group.group_users.each do |group_user|
-      user = group_user.user
-      unless user == new_member || user == group.organizer
-        news_item = user.news_items.where(values).first
+    new_member_ids.each do |new_id|
+      new_member = User.find_by_id(new_id)
+      group.members.each do |user|
+        unless user.id == new_id || user.id == group.organizer_id
+          news_item = user.news_items.where(values).first
 
-        if news_item.nil? || news_item.created_at < 2.hours.ago
-          news_item = user.news_items.create(values)
+          if news_item.nil? || news_item.created_at < 2.hours.ago
+            news_item = user.news_items.create(values)
+          end
+
+          if !news_item.subjects.include?(new_member)
+            news_item.subjects << new_member
+          end
+          news_item.unread!
         end
-
-        if !news_item.subjects.include?(new_member)
-          news_item.subjects << new_member
-        end
-        news_item.unread!
       end
     end
   end

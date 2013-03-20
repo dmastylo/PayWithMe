@@ -40,7 +40,7 @@
   <div class="row">
     <div class="span5">
       <h3>Group Details</h3>
-      <div class="group-image <%= "default" if @group.image_type == :default_image %>" style="background-image: url('<%= group_image_path(@group, :full) %>');"></div>
+      <div class="underlayed-image-large <%= "default" if @group.image_type == :default_image %>" style="background-image: url('<%= group_image_path(@group, :full) %>');"></div>
       <div class="well event-description">
         <% if @group.description.present? %>
           <div class="quarter"><strong>Description:</strong></div>
@@ -57,7 +57,7 @@
       <div class="well">
         <% if @group.members.any? %>
           <ul class="members">
-            <%= render @group.members %>
+            <%= render partial: 'users/user', collection: @group.group_users, as: :event_user %>
           </ul>
         <% else %>
           There are no members. Add some!

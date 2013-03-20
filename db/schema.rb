@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130307152723) do
+ActiveRecord::Schema.define(:version => 20130318210413) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -44,14 +44,19 @@ ActiveRecord::Schema.define(:version => 20130307152723) do
   create_table "event_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
-    t.integer  "amount_cents",    :default => 0
+    t.integer  "amount_cents",     :default => 0
     t.datetime "due_at"
     t.datetime "paid_at"
-    t.boolean  "invitation_sent", :default => false
+    t.boolean  "invitation_sent",  :default => false
     t.integer  "payment_id"
-    t.boolean  "visited_event",   :default => false
+    t.boolean  "visited_event",    :default => false
     t.datetime "last_seen"
+    t.boolean  "paid_with_cash",   :default => true
+    t.integer  "paid_total_cents", :default => 0
   end
+
+  add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
+  add_index "event_users", ["event_id"], :name => "index_event_users_on_event_id"
 
   create_table "events", :force => true do |t|
     t.string   "title"
@@ -164,6 +169,8 @@ ActiveRecord::Schema.define(:version => 20130307152723) do
     t.integer  "subject_id"
   end
 
+  add_index "notifications", ["user_id"], :name => "index_notifications_on_user_id"
+
   create_table "nudges", :force => true do |t|
     t.integer  "nudgee_id"
     t.integer  "nudger_id"
@@ -183,6 +190,8 @@ ActiveRecord::Schema.define(:version => 20130307152723) do
     t.string   "name"
   end
 
+  add_index "payment_methods", ["name"], :name => "index_payment_methods_on_name"
+
   create_table "payments", :force => true do |t|
     t.datetime "created_at",                 :null => false
     t.datetime "updated_at",                 :null => false
@@ -199,6 +208,8 @@ ActiveRecord::Schema.define(:version => 20130307152723) do
     t.integer  "our_fee_amount_cents"
     t.integer  "payment_method_id"
   end
+
+  add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
 
   create_table "reminder_users", :force => true do |t|
     t.integer  "reminder_id"
@@ -245,6 +256,7 @@ ActiveRecord::Schema.define(:version => 20130307152723) do
     t.integer  "creator_id"
     t.datetime "completed_at"
     t.boolean  "admin"
+    t.boolean  "send_emails",                :default => true
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

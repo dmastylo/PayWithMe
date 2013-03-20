@@ -3,8 +3,10 @@
   margin-bottom: $margin;
   height: 75px;
   background-image: url(asset_path('layout/header_bg.png', image));
+  filter: none !important;
   .navbar-inner
   {
+    filter: none;
     height: 75px;
     background: transparent;
     border: 0;
@@ -17,6 +19,7 @@
         width: 141px;
         height: 32px;
         background-image: url(asset_path('layout/logo.png', image));
+        background-repeat: no-repeat;
         margin-top: 21px;
         float: left;
       }
