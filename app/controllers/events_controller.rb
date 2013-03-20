@@ -108,7 +108,7 @@ class EventsController < ApplicationController
         pdf = EventPdf.new(event, view_context)
         send_data pdf.render, filename: "#{event.title}.pdf",
                               type: "application/pdf",
-                              disposition: "inline",
+                              disposition: "inline"
       end
     end
   end
