@@ -72,6 +72,7 @@ class EventPdf < Prawn::Document
 				amount = price(event_user.amount)
 				payment_method_name = event_user.payments[0].payment_method.name
 				pay_date = event_user.paid_at.to_date
+				# NEEDS TO ACCOUNT FOR PARTIAL PAYMENTS ###################################################################################
 			else
 				amount = "Not Paid"
 				payment_method_name = ""
@@ -101,7 +102,7 @@ class EventPdf < Prawn::Document
 	# Returns image path as string
 	def event_image
 		if @event.image_type == :upload
-			# NEEDS WORK
+			# NEEDS WORK ###################################################################################################################
 			"public/system/events/images/000/000/001/small/#{@event.image_file_name}"
 		elsif @event.image_type == :url
 			open(@event.image_url)
