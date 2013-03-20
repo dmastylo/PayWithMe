@@ -1,4 +1,5 @@
 class EventPdf < Prawn::Document
+	
 	# Initializes the document
 	def initialize(event, view)
 		super()
@@ -16,10 +17,10 @@ class EventPdf < Prawn::Document
 		display_table
 
 		number_pages "<page> of <total>", 
-		                                         {:start_count_at => 1,
-		                                          :at => [bounds.right - 50, 0],
-		                                          :align => :right,
-		                                          :size => 8}
+		                              {:start_count_at => 1,
+		                               :at => [bounds.right - 50, 0],
+		                               :align => :right,
+		                               :size => 8}
 	end
 
 	# Header information
@@ -100,6 +101,7 @@ class EventPdf < Prawn::Document
 	# Returns image path as string
 	def event_image
 		if @event.image_type == :upload
+			# NEEDS WORK
 			"public/system/events/images/000/000/001/small/#{@event.image_file_name}"
 		elsif @event.image_type == :url
 			open(@event.image_url)
