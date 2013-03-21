@@ -99,16 +99,13 @@ class EventsController < ApplicationController
   end
 
   def admin_pdf
-
     event = Event.find(params[:id])
 
     respond_to do |format|
       format.html
       format.pdf do
         pdf = EventPdf.new(event, view_context)
-        send_data pdf.render, filename: "#{event.title}.pdf",
-                              type: "application/pdf",
-                              disposition: "inline"
+        send_data pdf.render, filename: "#{event.title}.pdf", type: "application/pdf", disposition: "inline"
       end
     end
   end
