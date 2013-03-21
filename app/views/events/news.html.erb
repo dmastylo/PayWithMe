@@ -1,0 +1,47 @@
+<% provide(:title, "#{@event.title} Dashboard") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span9">
+        <div class="page-header">
+          <h2>
+            <%= @event.title %> Dashboard: News
+          </h2>
+          <em>
+            <small>
+              <% if @event.public? %>
+                Public event
+              <% else %>
+                Private event
+              <% end %>
+              - Organized by <%= @event.organizer.name %>
+            </small>
+          </em>
+        </div>
+      </div>
+      <div class="span3">
+        <%= link_to "Return to event", event_path(@event), class: "btn btn-primary btn-block push-top-title" %>
+        <%= link_to "Return to dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title-second" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <h3>News</h3>
+      <div class="well">
+        <% if @news_items.empty? %>
+          There is no recent event news.
+        <% else %>
+          <ul class="unstyled push-bottom-none">
+            <%= render collection: @news_items, partial: "news_items/organizer_news_item", as: :news_item %>
+          </ul>
+        <% end %>
+      </div>
+      <%= will_paginate @news_items %>
+    </div>
+  </div>
+</div>

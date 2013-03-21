@@ -25,12 +25,14 @@ PayWithMe::Application.routes.draw do
         put 'paid'
         put 'unpaid'
         put 'nudge'
+        delete 'leave'
       end
     end
     member do
       get 'admin'
       scope '/admin' do
         get 'guests'
+        get 'news'
       end
     end
   end

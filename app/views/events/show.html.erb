@@ -31,6 +31,8 @@
               <%= f.hidden_field :user_id, :value => current_user.id %>
               <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block push-top-title-multiline" %>
           <% end %>
+        <% else %>
+          <%= link_to "Leave Event", leave_event_event_user_path(@event, @event.event_user(current_user)), class: "btn btn-primary btn-block push-top-title-multiline", method: :delete, confirm: "WARNING: The event organizer will be notified that you are leaving the event. Only do so if the nature of the event allows you to leave." %>
         <% end %>
       </div>
     </div>

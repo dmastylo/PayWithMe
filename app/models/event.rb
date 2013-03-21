@@ -55,6 +55,7 @@ class Event < ActiveRecord::Base
   has_many :reminders, dependent: :destroy
   has_and_belongs_to_many :payment_methods
   has_many :nudges, dependent: :destroy
+  has_many :news_items, foreign_key: "foreign_id"
 
   # Callbacks
   # ========================================================

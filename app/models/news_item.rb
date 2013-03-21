@@ -109,6 +109,42 @@ class NewsItem < ActiveRecord::Base
     end
   end
 
+  def self.create_for_leaving_event_member(event, old_member)
+    values = {
+      news_type: NewsType::LEAVE,
+      foreign_type: ForeignType::ORGANIZER,
+      foreign_id: event.id,
+    }
+
+    news_item = event.organizer.news_items.create(values)
+    news_item.subjects << old_member
+    news_item.save
+  end
+
+  def self.create_for_paid_event_member(event, paid_member)
+    values = {
+      news_type: NewsType::PAID,
+      foreign_type: ForeignType::ORGANIZER,
+      foreign_id: event.id,
+    }
+
+    news_item = event.organizer.news_items.create(values)
+    news_item.subjects << paid_member
+    news_item.save
+  end
+
+  def self.create_for_unpaid_event_member(event, paid_member)
+    values = {
+      news_type: NewsType::UNPAID,
+      foreign_type: ForeignType::ORGANIZER,
+      foreign_id: event.id,
+    }
+
+    news_item = event.organizer.news_items.create(values)
+    news_item.subjects << paid_member
+    news_item.save
+  end
+
   # Scope
   default_scope order('updated_at DESC')
 
@@ -129,6 +165,10 @@ class NewsItem < ActiveRecord::Base
     elsif group?
       if invite?
         "The following #{TextHelper.pluralize(self.subjects.count, "member is", "members are").sub(/\d/, '')} a member of #{group.title}:"
+      end
+    elsif organizer?
+      if paid?
+      elsif leave?
       end
     end
   end
@@ -152,6 +192,14 @@ class NewsItem < ActiveRecord::Base
       if invite?
         "#{group.title} has  #{subjects.count == 1 ? "a new member" : "new members"}!"
       end
+    elsif organizer?
+      if paid?
+        "#{UsersController.helpers.user_name(self.subjects.first)} sent a payment."
+      elsif unpaid?
+        "#{UsersController.helpers.user_name(self.subjects.first)} withdrew a payment."
+      elsif leave?
+        "#{UsersController.helpers.user_name(self.subjects.first)} left the event."
+      end
     end
   end
 
@@ -163,6 +211,10 @@ class NewsItem < ActiveRecord::Base
     foreign_type == ForeignType::GROUP
   end
 
+  def organizer?
+    foreign_type == ForeignType::ORGANIZER
+  end
+
   def message?
     news_type == NewsType::MESSAGE
   end
@@ -171,8 +223,20 @@ class NewsItem < ActiveRecord::Base
     news_type == NewsType::INVITE
   end
 
+  def leave?
+    news_type == NewsType::LEAVE
+  end
+
+  def paid?
+    news_type == NewsType::PAID
+  end
+
+  def unpaid?
+    news_type == NewsType::UNPAID
+  end
+
   def event
-    if event?
+    if event? || organizer?
       Event.find_by_id(foreign_id)
     end
   end
@@ -201,10 +265,14 @@ class NewsItem < ActiveRecord::Base
   class NewsType
     INVITE = 1
     MESSAGE = 2
+    LEAVE = 3
+    PAID = 4
+    UNPAID = 5
   end
   class ForeignType
     EVENT = 1
     GROUP = 2
+    ORGANIZER = 3
   end
 
 end

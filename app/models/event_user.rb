@@ -40,7 +40,7 @@ class EventUser < ActiveRecord::Base
   # after_save :copy_event_attributes
 
   def paid?
-  	paid_at.present?
+    paid_at.present?
   end
 
   def on_page?
@@ -94,12 +94,10 @@ class EventUser < ActiveRecord::Base
     update_paid_total_cents
     update_paid_with_cash
     self.save
+
+    NewsItem.create_for_paid_event_member(self.event, self.user)
     true
   end
-
-  # def paid_with_cash?
-  #   self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
-  # end
   
   def unpay_cash_payments!
     copy_event_attributes
@@ -107,16 +105,22 @@ class EventUser < ActiveRecord::Base
 
     update_paid_total_cents
     update_paid_with_cash
+
+    NewsItem.create_for_unpaid_event_member(self.event, self.user)
+    
     self.save
   end
 
-  def unpay!(payment)
+  def unpay!(payment=nil)
     copy_event_attributes
-    payment.unpay!
+    payment.unpay! if payment.present?
 
     update_paid_total_cents
     update_paid_with_cash
     self.save
+
+    NewsItem.create_for_unpaid_event_member(self.event, self.user)
+    true
   end
 
 private
