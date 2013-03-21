@@ -98,11 +98,10 @@ class EventsController < ApplicationController
     @event = Event.find_by_id(@event.id, include: [{ event_users: :user }, :payment_methods] )
   end
 
-  def admin_pdf
+  def guests
     event = Event.find(params[:id])
 
     respond_to do |format|
-      format.html
       format.pdf do
         pdf = EventPdf.new(event, view_context)
         send_data pdf.render, filename: "#{event.title}.pdf", type: "application/pdf", disposition: "inline"

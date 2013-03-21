@@ -29,7 +29,9 @@ PayWithMe::Application.routes.draw do
     end
     member do
       get 'admin'
-      get 'admin_pdf'
+      scope '/admin' do
+        get 'guests'
+      end
     end
   end
   resources :messages, only: :index
