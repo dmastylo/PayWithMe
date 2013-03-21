@@ -68,6 +68,9 @@ gem 'newrelic_rpm'
 # Pretty URLs
 gem 'friendly_id'
 
+# PDF Generation
+gem 'prawn', git: 'git://github.com/celic/prawn.git', submodules: true
+
 # ActiveRecord extensions
 gem "activerecord-import"
 
