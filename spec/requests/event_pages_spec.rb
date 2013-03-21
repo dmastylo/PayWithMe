@@ -120,4 +120,8 @@ describe "Event pages" do
     end
   end
 
+  describe "admin pages" do
+    
+  end
+
 end
