@@ -2,7 +2,7 @@ class EventsController < ApplicationController
   before_filter :authenticate_user!, except: [:show]
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event_or_public, only: [:show]
-  before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin]
+  before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin, :pdf]
   before_filter :check_organizer_accounts, only: [:show, :admin]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
@@ -96,6 +96,17 @@ class EventsController < ApplicationController
 
   def admin
     @event = Event.find_by_id(@event.id, include: [{ event_users: :user }, :payment_methods] )
+  end
+
+  def guests
+    event = Event.find(params[:id])
+
+    respond_to do |format|
+      format.pdf do
+        pdf = EventPdf.new(event, view_context)
+        send_data pdf.render, filename: "#{event.title}.pdf", type: "application/pdf", disposition: "inline"
+      end
+    end
   end
 
 private
