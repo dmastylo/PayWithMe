@@ -121,7 +121,48 @@ describe "Event pages" do
   end
 
   describe "admin pages" do
-    
+    describe "as non-organizer user" do
+      before do
+        @event = FactoryGirl.create(:event)
+        @user = FactoryGirl.create(:user)
+        sign_in @user
+      end
+
+      describe "visiting admin dashboard" do
+        before { visit admin_event_path(@event) }
+        it { should have_selector("title", text: full_title("")) }
+      end
+
+      describe "visiting admin guests pdf" do
+        before { visit guests_event_path(@event, format: :pdf) }
+        it { should have_selector("title", text: full_title("")) }
+      end
+
+      describe "visiting admin news" do
+        before { visit news_event_path(@event) }
+        it { should have_selector("title", text: full_title("")) }
+      end
+    end
+
+    describe "as event organizer" do
+      before do
+        @event = FactoryGirl.create(:event)
+        @user = @event.organizer
+        sign_in @user
+      end
+
+      describe "visiting admin dashboard" do
+        before { visit admin_event_path(@event) }
+
+        it { should have_selector("title", text: "Dashboard") }
+      end
+
+      describe "vising admin news" do
+        before { visit news_event_path(@event) }
+
+        it { should have_selector("title", text: "News") }
+      end
+    end
   end
 
 end

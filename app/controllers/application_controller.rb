@@ -25,10 +25,8 @@ protected
 
   def user_organizes_group
     @group = current_user.organized_groups.find(params[:group_id] || params[:id])
-
-    if @group.nil? || !@group.is_admin?(current_user)
-      redirect_to_login_or_root
-    end
+  rescue ActiveRecord::RecordNotFound => e
+    redirect_to_login_or_root
   end
 
   def user_in_event
@@ -46,10 +44,8 @@ protected
 
   def user_organizes_event
     @event = current_user.organized_events.find(params[:event_id] || params[:id])
-
-    if @event.nil?
-      redirect_to_login_or_root
-    end
+  rescue ActiveRecord::RecordNotFound => e
+    redirect_to_login_or_root
   end
 
   def user_not_stub
