@@ -317,10 +317,10 @@ private
   def set_profile_image
     return unless self.profile_image_type.present?
 
-    if self.profile_image_type != "url"
+    if self.profile_image_type.to_s != "url"
       self.profile_image_url = nil
     end
-    if self.profile_image_type != "upload"
+    if self.profile_image_type.to_s != "upload"
       self.profile_image = nil
     end
 
