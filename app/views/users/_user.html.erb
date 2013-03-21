@@ -4,7 +4,7 @@
 <% user = event_user.user %>
 <li class="member" id="member-<%= user.id %>">
   <div class="profile-image" id="image-user-<%= user.id %>" data-placement="right">
-      <%= profile_image_tag user, :thumb %> 
+    <%= profile_image_tag user, :thumb %> 
   </div>
   <div class="user">
     <%= link_to user_name(user), user %>
