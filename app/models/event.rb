@@ -98,6 +98,14 @@ class Event < ActiveRecord::Base
     Payment.where("event_user_id IN (?) AND paid_at IS NOT NULL", self.event_user_ids).sum(&:amount_cents)
   end
 
+  def paypal_fee_split_amount_cents
+    split_amount_cents * Figaro.env.paypal_fee_rate.to_f + Figaro.env.paypal_fee_static.to_f
+  end
+
+  def dwolla_fee_split_amount_cents
+    0.25
+  end
+
   # Division types
   # ========================================================
   def divide_total?
