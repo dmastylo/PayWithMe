@@ -115,6 +115,9 @@
         <% else %>
           There are no members. Add some!
         <% end %>
+        <% if current_user == @event.organizer %>
+          <%= link_to "Invite more guests", edit_event_path(@event), class: "btn btn-primary btn-block push-top-small" %>
+        <% end %>
       </div>
       <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
       <% elsif @event_user.paid? %>
