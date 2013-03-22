@@ -55,15 +55,16 @@ PayWithMe::Application.configure do
   # Disable delivery errors, bad email addresses will be ignored
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    address: "smtp.gmail.com",
+  ActionMailer::Base.smtp_settings = {
+    user_name: Figaro.env.sendgrid_username,
+    password: Figaro.env.sendgrid_password,
+    domain: Figaro.env.sendgrid_domain,
+    address: "smtp.sendgrid.net",
     port: 587,
-    domain: Figaro.env.gmail_domain,
-    authentication: "plain",
-    enable_starttls_auto: true,
-    user_name: Figaro.env.gmail_username,
-    password: Figaro.env.gmail_password
+    authentication: :plain,
+    enable_starttls_auto: true
   }
+
 
   # Enable threaded mode
   # config.threadsafe!
