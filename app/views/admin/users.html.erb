@@ -16,19 +16,44 @@
 <div class="container">
   <div class="row">
     <div class="span12">
-      <table class="table table-bordered table-striped">
-        <tr>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Registered</th>
-          <th><span rel="tooltip" title="Linked Accounts">LA</span></th>
-          <th><span rel="tooltip" title="Organized Events">OE</span></th>
-          <th><span rel="tooltip" title="Member Events">ME</span></th>
-        </tr>
-        <%= render collection: @users, partial: "users/admin_user", as: :user, locals: { full: true } %>
-      </table>
+      <ul class="nav nav-tabs" id="myTab" data-tabs="tabs">
+        <li class="active"><a href="#all_users" data-toggle="tab">All Users</a></li>
+        <li><a href="#online_users" data-toggle="tab">Online Users</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="all_users">
+          <table class="table table-bordered table-striped">
+            <tr>
+              <th>Name</th>
+              <th>On</th>
+              <th>Email</th>
+              <th>Registered</th>
+              <th><span rel="tooltip" title="Linked Accounts">LA</span></th>
+              <th><span rel="tooltip" title="Organized Events">OE</span></th>
+              <th><span rel="tooltip" title="Member Events">ME</span></th>
+            </tr>
+            <%= render collection: @users, partial: "users/admin_user", as: :user, locals: { full: true } %>
+          </table>
 
-      <%= will_paginate @users %>
+          <%= will_paginate @users %>
+        </div>
+        <div class="tab-pane" id="online_users">
+          <table class="table table-bordered table-striped">
+            <tr>
+              <th>Name</th>
+              <th>On</th>
+              <th>Email</th>
+              <th>Registered</th>
+              <th><span rel="tooltip" title="Linked Accounts">LA</span></th>
+              <th><span rel="tooltip" title="Organized Events">OE</span></th>
+              <th><span rel="tooltip" title="Member Events">ME</span></th>
+            </tr>
+            <%= render collection: User.online, partial: "users/admin_user", as: :user, locals: { full: true } %>
+          </table>
+
+          <%= will_paginate @users %>
+        </div>
+      </div>
     </div>
   </div>
 </div>
