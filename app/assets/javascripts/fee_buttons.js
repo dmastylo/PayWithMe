@@ -3,10 +3,12 @@ $(document).ready(function()
 	var $pwmFeeDiv = $("#paywithme-fee");
 	var $paypalFeeDiv = $("#paypal-fee");
 	var $dwollaFeeDiv = $("#dwolla-fee");
+	var $wepayFeeDiv = $("#wepay-fee");
 
 	var $pwmField = $("#paywithme-fee-field");
 	var $paypalField = $("#paypal-fee-field");
 	var $dwollaField = $("#dwolla-fee-field");
+	var $wepayField = $("#wepay-fee-field");
 
 	var $totalAmount = $("#event_total_amount");
 	var $splitAmount = $("#event_split_amount");
@@ -15,6 +17,8 @@ $(document).ready(function()
 	var $totalButton = $("#payment-option-total");
 	var $splitButton = $("#payment-option-total");
 	var $fundButton = $("#payment-option-total");
+
+	var $numFieldsVisible = 0;
 
 	//Function to convert number value into a money value
 	Number.prototype.toMoney = function(decimals)
@@ -40,6 +44,7 @@ $(document).ready(function()
 		var $value = 0;
 		var $paypalFee = 0;
 		var $dwollaFee = 0;
+		var $wepayFee = 0;
 		var $pwmFee = 0;
 		var $members = 0;
 
@@ -72,6 +77,14 @@ $(document).ready(function()
 
 		//Update display
 		$paypalField.val($paypalFee.toMoney());
+
+		/* --- WePay 2.9% + 30 cent static --- */
+		//Calculate fee
+		$wepayFee = (0.029 * $value);
+		$wepayFee += 0.30;
+
+		//Update display
+		$wepayField.val($wepayFee.toMoney());
 
 		/* --- Dwolla 25 cent static --- */
 		//Calculate fee
@@ -114,9 +127,10 @@ $(document).ready(function()
 		{
 			//Hide if visible
 			$dwollaFeeDiv.hide();
+			$numFieldsVisible --;
 
-			//If paypal is also hidden, hide pwm
-			if(!$paypalFeeDiv.is(':visible'))
+			//If all others hidden, hide pwm
+			if($numFieldsVisible == 0)
 			{
 				$pwmFeeDiv.hide();
 			}
@@ -126,6 +140,7 @@ $(document).ready(function()
 			//Show if not visible with proper calculations
 			$dwollaFeeDiv.fadeIn();
 			$pwmFeeDiv.fadeIn();
+			$numFieldsVisible ++;
 			calculateFees();
 		}
 	});
@@ -137,9 +152,10 @@ $(document).ready(function()
 		{
 			//Hide if visible
 			$paypalFeeDiv.hide();
+			$numFieldsVisible --;
 
-			//If dwolla is also hidden, hide pwm
-			if(!$dwollaFeeDiv.is(':visible'))
+			//If all others hidden, hide pwm
+			if($numFieldsVisible == 0)
 			{
 				$pwmFeeDiv.hide();
 			}
@@ -149,6 +165,32 @@ $(document).ready(function()
 			//Show if not visible with proper calculations
 			$paypalFeeDiv.fadeIn();
 			$pwmFeeDiv.fadeIn();
+			$numFieldsVisible ++;
+			calculateFees();
+		}
+	});
+
+	//If the wepay payment button is clicked
+	$("#allow-wepay-payment").click(function(e)
+	{
+		if($wepayFeeDiv.is(':visible'))
+		{
+			//Hide if visible
+			$wepayFeeDiv.hide();
+			$numFieldsVisible --;
+
+			//If all others hidden, hide pwm
+			if($numFieldsVisible == 0)
+			{
+				$pwmFeeDiv.hide();
+			}
+		}
+		else
+		{
+			//Show if not visible with proper calculations
+			$wepayFeeDiv.fadeIn();
+			$pwmFeeDiv.fadeIn();
+			$numFieldsVisible ++;
 			calculateFees();
 		}
 	});
