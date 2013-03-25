@@ -109,6 +109,21 @@ class EventsController < ApplicationController
     end
   end
 
+  def ticket
+    @event = Event.find(params[:id])
+
+    respond_to do |format|
+      format.svg  { render qrcode: 'http://www.facebook.com' }
+    end
+
+    #respond_to do |format|
+    #  format.pdf do
+    #    pdf = TicketPdf.new(@event, view_context)
+    #    send_data pdf.render, filename: "#{@event.title}-ticket.pdf", type: "application/pdf", disposition: "inline"
+    #  end
+    #end
+  end
+
 private
   def event_user_visit_true
     if @event.members.include?(current_user)

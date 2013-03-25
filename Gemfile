@@ -71,6 +71,9 @@ gem 'friendly_id'
 # PDF Generation
 gem 'prawn', git: 'git://github.com/celic/prawn.git', submodules: true
 
+# QR Code Generation
+gem 'rqrcode-rails3'
+
 # ActiveRecord extensions
 gem "activerecord-import"
 
