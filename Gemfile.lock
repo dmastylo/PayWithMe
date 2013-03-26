@@ -359,8 +359,6 @@ GEM
       nokogiri (>= 1.4.4)
       sprockets
     rqrcode (0.4.2)
-    rqrcode-rails3 (0.1.6)
-      rqrcode (>= 0.4.2)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -473,7 +471,7 @@ DEPENDENCIES
   rb-inotify (~> 0.8.8)
   rinku
   roadie
-  rqrcode-rails3
+  rqrcode
   rspec-rails
   rvm-capistrano
   sass-rails (~> 3.2.3)

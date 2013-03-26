@@ -99,11 +99,11 @@ class EventsController < ApplicationController
   end
 
   def guests
-    event = Event.find(params[:id])
+    @event = Event.find(params[:id])
 
     respond_to do |format|
       format.pdf do
-        pdf = EventPdf.new(event, view_context)
+        pdf = EventPdf.new(@event, view_context)
         send_data pdf.render, filename: "#{event.title}.pdf", type: "application/pdf", disposition: "inline"
       end
     end
@@ -113,15 +113,11 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
 
     respond_to do |format|
-      format.svg  { render qrcode: 'http://www.facebook.com' }
+      format.pdf do
+        pdf = TicketPdf.new(@event, view_context)
+        send_data pdf.render, filename: "#{@event.title}-ticket.pdf", type: "application/pdf", disposition: "inline"
+      end
     end
-
-    #respond_to do |format|
-    #  format.pdf do
-    #    pdf = TicketPdf.new(@event, view_context)
-    #    send_data pdf.render, filename: "#{@event.title}-ticket.pdf", type: "application/pdf", disposition: "inline"
-    #  end
-    #end
   end
 
 private
