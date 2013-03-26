@@ -6,13 +6,13 @@ class TicketPdf < Prawn::Document
 		@event = event
 		@view = view
 
-		generate_and_display_qr
+		generate_and_display_qr('http://www.paywith.me')
 	end
 
 	# Displays image
-	def generate_and_display_qr
+	def generate_and_display_qr(link_to_embed)
 
-		@qr = RQRCode::QRCode.new('http://www.facebook.com')
+		@qr = RQRCode::QRCode.new(link_to_embed)
 
 		x_pos = 0
 		y_pos = cursor
