@@ -12,7 +12,7 @@ PayWithMe::Application.routes.draw do
       get 'users'
       get 'events'
       get 'groups'
-      get 'restaurant_contacts'
+      get 'organizations'
     end
   end
 
@@ -71,8 +71,8 @@ PayWithMe::Application.routes.draw do
     end
   end
 
-  match '/restaurants', to: "restaurant_contacts#new"
-  resources :restaurant_contacts, only: [:create]
+  match '/organizations', to: "organizations#new"
+  resources :organizations, only: [:create]
 
   # Error Handling
   # ===========================================================================

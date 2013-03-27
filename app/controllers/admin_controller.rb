@@ -12,8 +12,8 @@ class AdminController < ApplicationController
     @groups_count = Group.count
     @recent_groups = Group.find(:all, order: 'created_at DESC', limit: 10)
 
-    @rest_conts_count = RestaurantContact.count
-    @recent_rest_conts = RestaurantContact.find(:all, order: 'created_at DESC', limit: 10)
+    @organizations_count = Organization.count
+    @recent_organizations = Organization.find(:all, order: 'created_at DESC', limit: 10)
   end
 
   def users
@@ -28,8 +28,8 @@ class AdminController < ApplicationController
     @groups = Group.paginate(page: params[:page], order: 'created_at DESC', include: [:group_users, :organizer])
   end
 
-  def restaurant_contacts
-    @restaurant_contacts = RestaurantContact.order('created_at DESC').paginate(page: params[:page], per_page: 20)
+  def organizations
+    @organizations = Organization.order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
 
 private
