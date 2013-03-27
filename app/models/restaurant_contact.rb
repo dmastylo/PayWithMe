@@ -14,13 +14,13 @@
 #
 
 class RestaurantContact < ActiveRecord::Base
-  
+
   attr_accessible :comment, :deal, :email, :name, :restaurant_name, :split
 
   # Validations
   validates :email, presence: true
   validates :name, presence: true
   validates :restaurant_name, presence: true
-  validates :comment, length: { maximum: 140 }
+  validates :comment, length: { maximum: 250 }
 
 end

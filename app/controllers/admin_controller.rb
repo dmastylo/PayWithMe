@@ -11,7 +11,7 @@ class AdminController < ApplicationController
 
     @groups_count = Group.count
     @recent_groups = Group.find(:all, order: 'created_at DESC', limit: 10)
-  
+
     @rest_conts_count = RestaurantContact.count
     @recent_rest_conts = RestaurantContact.find(:all, order: 'created_at DESC', limit: 10)
   end
@@ -34,7 +34,6 @@ class AdminController < ApplicationController
 
 private
   def user_is_admin
-    #redirect_to root_path unless current_user.admin?
-    true
+    redirect_to root_path unless current_user.admin?
   end
 end

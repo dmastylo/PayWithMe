@@ -46,26 +46,55 @@
 			<h3>If you're interested, let us know!</h3>
 			<%= form_for @restaurant_contact do |f| %>
 
-			<%= f.label :name %>
-			<%= f.text_field :name, placeholder: "First Last" %>
+				<div class="control-group">
+					<%= f.label :name, class: "control-label" %>
+					<div class="controls">
+						<%= f.text_field :name, placeholder: "First Last", class: "input-block-level" %>
+					</div>
+				</div>
 
-			<%= f.label :email %>
-			<%= f.text_field :email, placeholder: "example@email.com" %>
+				<div class="control-group">
+					<%= f.label :email, class: "control-label" %>
+					<div class="controls">
+						<%= f.text_field :email, placeholder: "example@email.com", class: "input-block-level" %>
+					</div>
+				</div>
 
-			<%= f.label :restaurant_name %>
-			<%= f.text_field :restaurant_name, placeholder: "Sample's Restaurant" %>
+				<div class="control-group">
+					<%= f.label :restaurant_name, "Restaurant Name", class: "control-label" %>
+					<div class="controls">
+						<%= f.text_field :restaurant_name, placeholder: "Sample's Restaurant", class: "input-block-level" %>
+					</div>
+				</div>
 
-			<%= f.label :split %>
-			<%= f.check_box :split %>
+				<div class="control-group">
+					I'm interested in...
+				</div>
 
-			<%= f.label :deal %>
-			<%= f.check_box :deal %>
+				<div class="control-group">
+					<%= f.label :split, "Split the Bill", class: "control-label" %>
+					<div class="controls">
+						<%= f.check_box :split %>
+					</div>
+				</div>
 
-			<%= f.label :comment %>
-			<%= f.text_area :comment, placeholder: "Comments (Optional)" %>
+				<div class="control-group">
+					<%= f.label :deal, "Deals via Virality", class: "control-label" %>
+					<div class="controls">
+						<%= f.check_box :deal %>
+					</div>
+				</div>
 
-			<%= f.submit "Submit", class: "btn btn-primary" %>
+				<div class="control-group">
+					<%= f.label :comment, "Comments or Questions (Optional)", class: "control-label" %>
+					<div class="controls">
+						<%= f.text_area :comment, placeholder: "250 characters max", rows: 5, class: "input-block-level" %>
+					</div>
+				</div>
 
+				<div class="form-actions">
+					<%= f.submit "Submit", class: "btn btn-block btn-primary" %>
+				</div>
 			<% end %>
 		</div>
 	</div>
