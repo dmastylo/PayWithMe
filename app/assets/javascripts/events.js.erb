@@ -4,7 +4,6 @@ $(function()
   if ($('.messages').length > 0)
   {
     // combineUserMessages();
-
     $("textarea").keypress(function(e)
     {
       if (e.keyCode == 13 && !e.shiftKey)
@@ -15,15 +14,6 @@ $(function()
       }
     });
   }
-
-  // This needs to be tested
-  // $("#member_name").keyup(function(event)
-  // {
-  //   if(event.keyCode == 13)
-  //   {
-  //     $("#add_member").click();
-  //   }
-  // });
 });
 
 // Consolidate message content into one message if multiple messages from one user
