@@ -1,0 +1,50 @@
+<% provide(:title, "Restaurants") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="page-header">
+      <h2>Restaurant Information</h2>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+	<div class="span6 no-margin">
+		<div class="well">
+			<h3>Deals</h3>
+		</div>
+	</div>
+	<div class="span6">
+		<div class="well">
+			<h3>Split the Bill</h3>
+		</div>
+	</div>
+	<div class="span12 no-margin">
+		<div class="well">
+			<h3>If you're interested, let us know!</h3>
+			<%= form_for @restaurant_contact do |f| %>
+
+			<%= f.label :name %>
+			<%= f.text_field :name, placeholder: "First Last" %>
+			
+			<%= f.label :email %>
+			<%= f.text_field :email, placeholder: "example@email.com" %>
+			
+			<%= f.label :restaurant_name %>
+			<%= f.text_field :restaurant_name, placeholder: "Sample's Restaurant" %>
+
+			<%= f.label :split %>
+			<%= f.check_box :split %>
+
+			<%= f.label :deal %>
+			<%= f.check_box :deal %>
+
+			<%= f.label :comment %>
+			<%= f.text_area :comment, placeholder: "Comments (Optional)" %>
+
+			<%= f.submit "Submit", class: "btn btn-primary" %>
+
+			<% end %>
+		</div>
+	</div>
+</div>

@@ -12,6 +12,7 @@ PayWithMe::Application.routes.draw do
       get 'users'
       get 'events'
       get 'groups'
+      get 'restaurant_contacts'
     end
   end
 
@@ -69,6 +70,9 @@ PayWithMe::Application.routes.draw do
       post 'ipn'
     end
   end
+
+  match '/restaurants', to: "restaurant_contacts#new"
+  resources :restaurant_contacts, only: [:create]
 
   # Error Handling
   # ===========================================================================
