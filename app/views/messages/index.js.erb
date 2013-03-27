@@ -1,4 +1,5 @@
 <% if !defined?(@next_messages).nil? && !@next_messages.empty? %>
+
   /////////////////////////////////////////
   // Infinite scrolling for old messages //
   /////////////////////////////////////////
@@ -21,12 +22,9 @@
   var messageSize = 0;
   $('.message').each(function()
   {
-    console.log($(this).find(".content"));
     thisMessageSize = parseInt($(this).find(".content").attr('data-count'));
     messageSize += thisMessageSize;
   });
-
-  console.log(messageSize);
 
   if (<%= @messages_count.to_i %> <= messageSize)
   {
@@ -54,10 +52,11 @@
   $('.no-messages').remove();
 
   // Remove the highlighting on new messages
-  $('.new.message').each(function()
+  $('.message.new').each(function()
   {
-      $(this).removeClass('new');
-      $(this).removeClass('latest');
+    $this = $(this);
+    $this.removeClass('new');
+    $this.removeClass('latest');
   });
 
   // Render the new messages
@@ -74,7 +73,8 @@
   fadeInNewMessages();
 
   // Flash the title if page is not in focus (jquery.titlealert.min.js)
-  $.titleAlert("New Chat Message!", {
+  $.titleAlert("New Chat Message!",
+  {
     requireBlur: true,
     stopOnFocus: true,
     stopOnMouseMove: true,
@@ -82,7 +82,8 @@
   });
 
   // Set autosize
-  $("<% @new_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize({
+  $("<% @new_messages.each do |msg| %>#message-<%= msg.id %>,<% end %>undefined").autoSize(
+  {
     fixed: '.profile-image',
     fluid: '.body'
   });
