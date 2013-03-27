@@ -1,0 +1,8 @@
+<tr>
+	<td><%= restaurant_contact.restaurant_name %></td>
+	<td><%= restaurant_contact.name %></td>
+	<td><%= restaurant_contact.split? ? "Yes" : "No" %></td>
+	<td><%= restaurant_contact.deal? ? "Yes" : "No" %></td>
+	<td><%= restaurant_contact.email %></td>
+	<td><%= restaurant_contact.comment.blank? ? "None given" : restaurant_contact.comment %></td>
+</tr>

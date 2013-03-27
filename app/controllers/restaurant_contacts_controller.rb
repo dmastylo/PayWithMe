@@ -10,7 +10,7 @@ class RestaurantContactsController < ApplicationController
 		if @restaurant_contact.save
 			flash[:success] = "Thanks for letting us know. We will contact you soon with more information"
 		else
-			flash[:error] = "Sorry, some information is missing, please fill in all non-optional fields"
+			flash[:error] = "Sorry, some information is missing, please fill in all non-optional fields. Comments can only be a maximum of 140 characters."
 		end
 
 		redirect_to restaurants_path

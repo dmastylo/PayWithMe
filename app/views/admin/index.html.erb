@@ -47,6 +47,21 @@
         </tr>
         <%= render collection: @recent_groups, partial: "groups/admin_group", as: :group %>
       </table>
+      <div class="clearfix"></div>
+
+      <h3 class="pull-left">Recent Restaurant Contacts</h3>
+      <%= link_to "View All Restaurant Contacts", restaurant_contacts_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Restaurant Name</th>
+          <th>Name</th>
+          <th>Split?</th>
+          <th>Deals?</th>
+          <th>Email</th>
+          <th>Comments</th>
+        </tr>
+        <%= render collection: @recent_rest_conts, partial: "restaurant_contacts/admin_restaurant_contact", as: :restaurant_contact %>
+      </table>
     </div>
     <div class="span4">
       <div class="well">
@@ -59,6 +74,9 @@
         </div>
         <div class="large-statistic">
           <span class="count"><%= @groups_count %></span> groups
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @rest_conts_count %></span> restaurant contacts
         </div>
       </div>
     </div>

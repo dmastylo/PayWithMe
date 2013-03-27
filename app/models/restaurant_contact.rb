@@ -21,5 +21,6 @@ class RestaurantContact < ActiveRecord::Base
   validates :email, presence: true
   validates :name, presence: true
   validates :restaurant_name, presence: true
+  validates :comment, length: { maximum: 140 }
 
 end

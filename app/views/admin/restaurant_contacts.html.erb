@@ -16,7 +16,19 @@
 <div class="container">
   <div class="row">
     <div class="span12">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Restaurant Name</th>
+          <th>Name</th>
+          <th>Split?</th>
+          <th>Deals?</th>
+          <th>Email</th>
+          <th>Comments</th>
+        </tr>
+        <%= render collection: @restaurant_contacts, partial: "restaurant_contacts/admin_restaurant_contact", as: :restaurant_contact, locals: { full: true } %>
+      </table>
 
+      <%= will_paginate @restaurant_contacts %>
     </div>
   </div>
 </div>
