@@ -56,7 +56,7 @@
 				<div class="control-group">
 					<%= f.label :email, class: "control-label" %>
 					<div class="controls">
-						<%= f.text_field :email, placeholder: "example@email.com", class: "input-block-level" %>
+						<%= f.email_field :email, placeholder: "example@email.com", class: "input-block-level" %>
 					</div>
 				</div>
 
@@ -91,6 +91,7 @@
 						<%= f.text_area :comment, placeholder: "250 characters max", rows: 5, class: "input-block-level" %>
 					</div>
 				</div>
+				If you have more to say, use our <%= link_to "Contact Page", new_contact_form_path %> after hitting submit or send us an email at <a href="mailto:support@paywith.me">support@paywith.me</a>.
 
 				<div class="form-actions">
 					<%= f.submit "Submit", class: "btn btn-block btn-primary" %>
