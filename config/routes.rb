@@ -72,7 +72,7 @@ PayWithMe::Application.routes.draw do
   end
 
   match '/organizations', to: "organizations#new"
-  resources :organizations, only: [:create]
+  resources :organizations, only: :create
 
   # Error Handling
   # ===========================================================================
