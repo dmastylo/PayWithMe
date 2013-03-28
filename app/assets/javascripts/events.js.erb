@@ -3,7 +3,9 @@ $(function()
   // Enter submits messages, shift-enter does a new line in the chat message
   if ($('.messages').length > 0)
   {
-    // combineUserMessages();
+    // combine when the DOM is fully loaded
+    combineUserMessages();
+
     $("textarea").keypress(function(e)
     {
       if (e.keyCode == 13 && !e.shiftKey)
@@ -19,25 +21,26 @@ $(function()
 // Consolidate message content into one message if multiple messages from one user
 function combineUserMessages()
 {
-  $firstMessage = $(".message:first-child");
+  $previousMessage = $(".message:first-child");
 
   $('.message').each(function()
   {
     $this = $(this);
 
-    if ($this.attr('data-user') === $firstMessage.attr('data-user') && $this.attr('data-time') !== $firstMessage.attr('data-time'))
+    if ($this.attr('data-user') === $previousMessage.attr('data-user') && $this.attr('data-time') !== $previousMessage.attr('data-time'))
     {
-      $firstMessage.find(".content").append("<br />" + $this.find(".content").html());
-      $firstMessage.find(".content").attr('data-count', parseInt($firstMessage.find(".content").attr('data-count')) + parseInt($this.find(".content").attr('data-count')));
-      $firstMessage.attr('data-oldest-time', $this.attr('data-oldest-time'));
+      $previousMessage.find(".content").append("<br />" + $this.find(".content").html());
+      $previousMessage.find(".content").attr('data-count', parseInt($previousMessage.find(".content").attr('data-count')) + parseInt($this.find(".content").attr('data-count')));
+      $previousMessage.attr('data-oldest-time', $this.attr('data-oldest-time'));
       $this.remove();
     }
     else
     {
-      $firstMessage = $this;
+      $previousMessage = $this;
     }
   });
 }
+
 
 function fadeInNewMessages()
 {
