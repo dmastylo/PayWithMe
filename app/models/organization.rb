@@ -15,6 +15,7 @@
 
 class Organization < ActiveRecord::Base
 
+	# Accessible attributes
   attr_accessible :comment, :deal, :email, :name, :organization_name, :split
 
   # Validations
