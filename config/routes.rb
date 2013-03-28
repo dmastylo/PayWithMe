@@ -12,6 +12,7 @@ PayWithMe::Application.routes.draw do
       get 'users'
       get 'events'
       get 'groups'
+      get 'payments'
     end
   end
 
