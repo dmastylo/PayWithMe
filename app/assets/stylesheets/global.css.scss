@@ -101,16 +101,9 @@ em
   &.wrapper-top
   {
     margin-top: -1 * $margin;
-    margin-bottom: $margin;
-    border-width: 5px 0 5px 0;
-    padding-bottom: $margin;
+    margin-bottom: $smallMargin;
+    border-width: 0 0 5px 0;
     .page-header { margin-top: $smallMargin; }
-  }
-  &.wrapper-bottom
-  {
-    margin-bottom: $margin;
-    border-width: 5px 0 0 0;
-    .page-header { margin-bottom: $smallMargin; }
   }
 }
 
