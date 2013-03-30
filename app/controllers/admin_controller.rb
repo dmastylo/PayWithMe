@@ -31,13 +31,12 @@ class AdminController < ApplicationController
     @groups = Group.paginate(page: params[:page], order: 'created_at DESC', include: [:group_users, :organizer])
   end
 
-<<<<<<< HEAD
   def organizations
     @organizations = Organization.order('created_at DESC').paginate(page: params[:page], per_page: 20)
-=======
+  end
+
   def payments
     @payments = Payment.paginate(page: params[:page], order: 'created_at DESC', include: [:payer, :payee, :event])
->>>>>>> master
   end
 
 private
