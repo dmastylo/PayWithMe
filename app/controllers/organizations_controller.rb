@@ -12,6 +12,6 @@ class OrganizationsController < ApplicationController
 			flash[:error] = "Sorry, some information is missing, please fill in all non-optional fields. Comments can only be a maximum of 250 characters."
 		end
 
-		redirect_to root_path
+		redirect_to organizations_path
 	end
 end
