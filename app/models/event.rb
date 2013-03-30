@@ -124,7 +124,6 @@ class Event < ActiveRecord::Base
 
   # Payment methods
   # ========================================================
-
   def accepts_payment_method?(payment_method_id)
     self.payment_methods.select { |payment_method| payment_method.id == payment_method_id }.count > 0
   end
@@ -403,6 +402,7 @@ class Event < ActiveRecord::Base
   end
 
   # Nudges
+  # ========================================================
   def can_nudge?(nudger, nudgee)
     if !invited?(nudger) ||
       !invited?(nudgee) ||

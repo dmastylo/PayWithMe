@@ -12,7 +12,11 @@ PayWithMe::Application.routes.draw do
       get 'users'
       get 'events'
       get 'groups'
+<<<<<<< HEAD
       get 'organizations'
+=======
+      get 'payments'
+>>>>>>> master
     end
   end
 
