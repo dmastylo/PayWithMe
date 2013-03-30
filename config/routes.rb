@@ -12,11 +12,8 @@ PayWithMe::Application.routes.draw do
       get 'users'
       get 'events'
       get 'groups'
-<<<<<<< HEAD
       get 'organizations'
-=======
       get 'payments'
->>>>>>> master
     end
   end
 
@@ -75,7 +72,7 @@ PayWithMe::Application.routes.draw do
     end
   end
 
-  #match '/organizations', to: "organizations#new"
+  # match '/organizations', to: "organizations#new"
   resources :organizations#, only: :create
 
   # Error Handling
