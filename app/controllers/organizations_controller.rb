@@ -1,7 +1,5 @@
 class OrganizationsController < ApplicationController
-
 	def new
-		puts "New Organization"
 		@organization = Organization.new
 	end
 
@@ -14,6 +12,6 @@ class OrganizationsController < ApplicationController
 			flash[:error] = "Sorry, some information is missing, please fill in all non-optional fields. Comments can only be a maximum of 250 characters."
 		end
 
-		redirect_to organizations_path
+		redirect_to root_path
 	end
 end
