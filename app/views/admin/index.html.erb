@@ -53,14 +53,13 @@
       <%= link_to "View All Organization Contacts", organizations_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
       <table class="table table-bordered table-striped">
         <tr>
-          <th>Organization Name</th>
           <th>Name</th>
+          <th>Contact</th>
           <th>Split?</th>
           <th>Deals?</th>
           <th>Email</th>
-          <th>Comments</th>
         </tr>
-        <%= render collection: @recent_organizations, partial: "organizations/admin_organization", as: :organization %>
+        <%= render collection: @recent_organizations, partial: "organizations/admin_organization", as: :organization, locals: { full: false } %>
       </table>
       <div class="clearfix"></div>
 

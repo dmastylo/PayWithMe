@@ -5,6 +5,7 @@ class OrganizationsController < ApplicationController
 
 	def create
 		@organization = Organization.new(params[:organization])
+		@organization.type = "restaurant"
 
 		if @organization.save
 			flash[:success] = "Thanks for letting us know. We will contact you soon with more information."

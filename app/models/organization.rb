@@ -15,6 +15,8 @@
 
 class Organization < ActiveRecord::Base
 
+	set_inheritance_column :none
+
 	# Accessible attributes
   attr_accessible :comment, :deal, :email, :name, :contact, :split
 
