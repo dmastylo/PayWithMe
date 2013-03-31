@@ -12,6 +12,9 @@ class AdminController < ApplicationController
     @groups_count = Group.count
     @recent_groups = Group.find(:all, order: 'created_at DESC', limit: 10)
 
+    @organizations_count = Organization.count
+    @recent_organizations = Organization.find(:all, order: 'created_at DESC', limit: 10)
+
     @payments_count = Payment.count
     @recent_payments = Payment.find(:all, order: 'created_at DESC', limit: 10)
   end
@@ -26,6 +29,10 @@ class AdminController < ApplicationController
 
   def groups
     @groups = Group.paginate(page: params[:page], order: 'created_at DESC', include: [:group_users, :organizer])
+  end
+
+  def organizations
+    @organizations = Organization.order('created_at DESC').paginate(page: params[:page], per_page: 20)
   end
 
   def payments

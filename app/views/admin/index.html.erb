@@ -47,6 +47,22 @@
         </tr>
         <%= render collection: @recent_groups, partial: "groups/admin_group", as: :group %>
       </table>
+      <div class="clearfix"></div>
+
+      <h3 class="pull-left">Recent Organization Contacts</h3>
+      <%= link_to "View All Organization Contacts", organizations_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Organization Name</th>
+          <th>Name</th>
+          <th>Split?</th>
+          <th>Deals?</th>
+          <th>Email</th>
+          <th>Comments</th>
+        </tr>
+        <%= render collection: @recent_organizations, partial: "organizations/admin_organization", as: :organization %>
+      </table>
+      <div class="clearfix"></div>
 
       <h3 class="pull-left">Recent Payments</h3>
       <%= link_to "View All Payments", payments_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
@@ -72,6 +88,9 @@
         </div>
         <div class="large-statistic">
           <span class="count"><%= @groups_count %></span> groups
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @organizations_count %></span> restaurant contacts
         </div>
         <div class="large-statistic">
           <span class="count"><%= @payments_count %></span> payments
