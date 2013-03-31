@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130318210413) do
+ActiveRecord::Schema.define(:version => 20130331211504) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -178,6 +178,18 @@ ActiveRecord::Schema.define(:version => 20130318210413) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.datetime "sent_at"
+  end
+
+  create_table "organizations", :force => true do |t|
+    t.string   "email"
+    t.boolean  "split",      :default => true
+    t.boolean  "deal",       :default => true
+    t.string   "comment"
+    t.string   "name"
+    t.string   "contact"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.string   "type"
   end
 
   create_table "payment_methods", :force => true do |t|

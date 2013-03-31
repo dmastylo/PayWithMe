@@ -25,7 +25,13 @@
             <li><%= link_to "Users", users_admin_index_path %></li>
             <li><%= link_to "Events", events_admin_index_path %></li>
             <li><%= link_to "Groups", groups_admin_index_path %></li>
+            <li><%= link_to "Organizations", organizations_admin_index_path %></li>
             <li><%= link_to "Payments", payments_admin_index_path %></li>
+          </ul>
+        <% else %>
+          <strong>What is PayWithMe?</strong>
+          <ul class="unstyled">
+            <li><%= link_to "For Restaurants", new_organization_path %></li>
           </ul>
         <% end %>
       </div>
