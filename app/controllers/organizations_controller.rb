@@ -8,6 +8,8 @@ class OrganizationsController < ApplicationController
 
 		if @organization.save
 			flash[:success] = "Thanks for letting us know. We will contact you soon with more information."
+
+			redirect_to root_path
 		else
 			render "new"
 		end

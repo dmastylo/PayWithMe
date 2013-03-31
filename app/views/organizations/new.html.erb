@@ -58,9 +58,9 @@
 				<%= render 'shared/error_messages', object: f.object %>
 
 				<div class="control-group">
-					<%= f.label :name, class: "control-label" %>
+					<%= f.label :contact, "Your Name", class: "control-label" %>
 					<div class="controls">
-						<%= f.text_field :name, placeholder: "First Last", class: "input-block-level" %>
+						<%= f.text_field :contact, placeholder: "First Last", class: "input-block-level" %>
 					</div>
 				</div>
 
@@ -72,9 +72,9 @@
 				</div>
 
 				<div class="control-group">
-					<%= f.label :organization_name, "Restaurant Name (optional)", class: "control-label" %>
+					<%= f.label :name, "Restaurant Name (optional)", class: "control-label" %>
 					<div class="controls">
-						<%= f.text_field :organization_name, placeholder: "Sample's Restaurant", class: "input-block-level" %>
+						<%= f.text_field :name, placeholder: "Sample's Restaurant", class: "input-block-level" %>
 					</div>
 				</div>
 
