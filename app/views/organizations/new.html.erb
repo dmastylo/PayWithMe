@@ -1,9 +1,9 @@
-<% provide(:title, "Organizations") %>
+<% provide(:title, "Restaurants") %>
 
 <% content_for(:wrapper_top) do %>
   <div class="container">
     <div class="page-header">
-      <h2>Organization Information</h2>
+      <h2>Restaurant Information</h2>
     </div>
   </div>
 <% end %>
@@ -52,8 +52,10 @@
 	</div>
 	<div class="span12 no-margin">
 		<div class="well">
+			<a name="form"></a>
 			<h3>If you're interested, let us know!</h3>
-			<%= form_for @organization do |f| %>
+			<%= form_for @organization, :url => polymorphic_path(@organization, anchor: 'form') do |f| %>
+				<%= render 'shared/error_messages', object: f.object %>
 
 				<div class="control-group">
 					<%= f.label :name, class: "control-label" %>
@@ -70,9 +72,9 @@
 				</div>
 
 				<div class="control-group">
-					<%= f.label :organization_name, "Organization Name", class: "control-label" %>
+					<%= f.label :organization_name, "Restaurant Name (optional)", class: "control-label" %>
 					<div class="controls">
-						<%= f.text_field :organization_name, placeholder: "Sample's Organization", class: "input-block-level" %>
+						<%= f.text_field :organization_name, placeholder: "Sample's Restaurant", class: "input-block-level" %>
 					</div>
 				</div>
 
@@ -81,21 +83,19 @@
 				</div>
 
 				<div class="control-group">
-					<%= f.label :split, "Split the Bill", class: "control-label" %>
-					<div class="controls">
-						<%= f.check_box :split %>
-					</div>
+					<label class="checkbox">
+						<%= f.check_box :split %> Split the Bill
+					</label>
 				</div>
 
 				<div class="control-group">
-					<%= f.label :deal, "Deals via Virality", class: "control-label" %>
-					<div class="controls">
-						<%= f.check_box :deal %>
-					</div>
+					<label class="checkbox">
+						<%= f.check_box :deal %> Deals via Virality
+					</label>
 				</div>
 
 				<div class="control-group">
-					<%= f.label :comment, "Comments or Questions (Optional)", class: "control-label" %>
+					<%= f.label :comment, "Comments or Questions (optional)", class: "control-label" %>
 					<div class="controls">
 						<%= f.text_area :comment, placeholder: "250 characters max", rows: 5, class: "input-block-level" %>
 					</div>

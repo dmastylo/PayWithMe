@@ -21,7 +21,7 @@ class Organization < ActiveRecord::Base
   # Validations
   validates :email, presence: true
   validates :name, presence: true
-  validates :organization_name, presence: true
+  # validates :organization_name, presence: true
   validates :comment, length: { maximum: 250 }
 
 end
