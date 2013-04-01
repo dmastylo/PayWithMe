@@ -4,6 +4,7 @@ class EventsController < ApplicationController
   before_filter :user_in_event_or_public, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin, :guests]
   before_filter :check_organizer_accounts, only: [:show, :admin]
+  before_filter :check_user_accounts, only: [:new, :create]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
   before_filter :check_event_past, only: [:edit, :update]
@@ -162,6 +163,13 @@ private
       flash.now[:error] = "Hey! You haven't set any payment methods so no one can pay for this event. You can do that by <a href=\"#{url_for edit_event_path(@event)}\">editing the event</a>."
     end
     flash.now[:error] = flash.now[:error].html_safe unless flash.now[:error].nil?
+  end
+
+  def check_user_accounts
+    if current_user.linked_accounts.empty? && !current_user.using_cash?
+      flash[:error] = "You need to set up payment options before creating an event."
+      redirect_to accounts_users_path
+    end
   end
 
   def check_event_past

@@ -10,18 +10,18 @@ class UsersController < ApplicationController
     @your_organized_and_public_events = current_user.upcoming_organized_events.where(privacy_type: Event::PrivacyType::PRIVATE) + current_user.upcoming_events.where(privacy_type: Event::PrivacyType::PUBLIC)
 
     if @user == current_user
-        @upcoming_public_and_shared_events = current_user.upcoming_events
-        @past_public_and_shared_events = current_user.past_events
+      @upcoming_public_and_shared_events = current_user.upcoming_events
+      @past_public_and_shared_events = current_user.past_events
     else
-        # Upcoming Events
-        upcoming_public_events = @user.upcoming_events.where(privacy_type: Event::PrivacyType::PUBLIC)
-        upcoming_shared_events = @user.upcoming_events.merge current_user.upcoming_events.select { |your_member_event| @user.upcoming_events.include? your_member_event }
-        @upcoming_public_and_shared_events = upcoming_public_events | upcoming_shared_events
+      # Upcoming Events
+      upcoming_public_events = @user.upcoming_events.where(privacy_type: Event::PrivacyType::PUBLIC)
+      upcoming_shared_events = @user.upcoming_events.merge current_user.upcoming_events.select { |your_member_event| @user.upcoming_events.include? your_member_event }
+      @upcoming_public_and_shared_events = upcoming_public_events | upcoming_shared_events
 
-        # Past Events
-        past_public_events = @user.past_events.where(privacy_type: Event::PrivacyType::PUBLIC)
-        past_shared_events = @user.past_events.merge current_user.past_events.select { |your_member_event| @user.past_events.include? your_member_event }
-        @past_public_and_shared_events = past_public_events | past_shared_events
+      # Past Events
+      past_public_events = @user.past_events.where(privacy_type: Event::PrivacyType::PUBLIC)
+      past_shared_events = @user.past_events.merge current_user.past_events.select { |your_member_event| @user.past_events.include? your_member_event }
+      @past_public_and_shared_events = past_public_events | past_shared_events
     end
 
     @event_user = EventUser.new
@@ -44,5 +44,15 @@ class UsersController < ApplicationController
         render json: @users
       end
     end
+  end
+
+  def accounts
+    session["user_return_to"] = new_event_path
+  end
+
+  def cash
+    current_user.using_cash = true
+    current_user.save
+    redirect_to new_event_path
   end
 end

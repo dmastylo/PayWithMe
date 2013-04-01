@@ -43,6 +43,10 @@ PayWithMe::Application.routes.draw do
   resources :users, only: [:show] do
     collection do
       get 'search'
+      get 'accounts'
+      scope '/accounts' do
+        post 'cash'
+      end
     end
   end
 

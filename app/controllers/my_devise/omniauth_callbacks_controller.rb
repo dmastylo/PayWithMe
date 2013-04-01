@@ -92,7 +92,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
             # Account added flash message
             flash[:success] = "#{provider} account successfully synced!"
           end
-          session["user_return_to"] = edit_user_registration_path
+          session["user_return_to"] ||= edit_user_registration_path
         end
       else
         if new_registration

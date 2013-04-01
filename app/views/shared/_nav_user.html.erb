@@ -1,4 +1,11 @@
-<li><%= link_to user_name_with_spacing(current_user), user_path(current_user), class: current_page_link(user_path(current_user)) %></li>
+<li>
+  <%= link_to user_name_with_spacing(current_user), user_path(current_user), class: current_page_link(user_path(current_user)) %>
+</li>
+<% if current_user.wepay_account.present? %>
+  <li>
+    <%= link_to humanized_money_with_symbol(current_user.wepay_account.balance), "#" %>
+  </li>
+<% end %>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" id="notifications-dropdown-toggle" data-toggle="dropdown">
     <i class="icon-white icon-globe"></i>

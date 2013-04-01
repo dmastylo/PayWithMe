@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: organizations
+#
+#  id         :integer          not null, primary key
+#  email      :string(255)
+#  split      :boolean          default(TRUE)
+#  deal       :boolean          default(TRUE)
+#  comment    :string(255)
+#  name       :string(255)
+#  contact    :string(255)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  type       :string(255)
+#
+
 require 'spec_helper'
 
 describe Organization do
