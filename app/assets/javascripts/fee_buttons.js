@@ -145,6 +145,19 @@ $(document).ready(function()
 		}
 	});
 
+	//Run method whenever the field is changed for like-live updates
+	$totalAmount.change(function(e)
+	{
+		calculateFees();
+	});
+
+	$splitAmount.change(function(e)
+	{
+		calculateFees();
+	});
+
+	//Include fundraiser in the future
+
 	//Recalculate if the payment type buttons are clicked
 	$totalButton.click(function(e)
 	{
