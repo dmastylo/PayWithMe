@@ -107,7 +107,8 @@ em
   }
   &.wrapper-bottom-homepage
   {
-    margin-bottom: $margin;
+    margin-bottom: 0;
+    padding-bottom: $smallMargin;
     border-width: 5px 0 0 0;
     .page-header { margin-bottom: $smallMargin; }
   }
