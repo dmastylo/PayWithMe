@@ -6,6 +6,7 @@ $(function()
     // combine when the DOM is fully loaded
     combineUserMessages();
 
+    // If you press shift-enter insert newlines
     $("textarea").keypress(function(e)
     {
       if (e.keyCode == 13 && !e.shiftKey)
@@ -23,20 +24,23 @@ function combineUserMessages()
 {
   $previousMessage = $(".message:first-child");
 
-  $('.message').each(function()
+  $('.message').each(function(index)
   {
-    $this = $(this);
+    if (index != 0)
+    {
+      $this = $(this);
 
-    if ($this.attr('data-user') === $previousMessage.attr('data-user') && $this.attr('data-time') !== $previousMessage.attr('data-time'))
-    {
-      $previousMessage.find(".content").append("<br />" + $this.find(".content").html());
-      $previousMessage.find(".content").attr('data-count', parseInt($previousMessage.find(".content").attr('data-count')) + parseInt($this.find(".content").attr('data-count')));
-      $previousMessage.attr('data-oldest-time', $this.attr('data-oldest-time'));
-      $this.remove();
-    }
-    else
-    {
-      $previousMessage = $this;
+      if ($this.attr('data-user') === $previousMessage.attr('data-user') && $this.find('.content').html() !== $previousMessage.find('.content').html())
+      {
+        $previousMessage.find(".content").append("<br />" + $this.find(".content").html());
+        $previousMessage.find(".content").attr('data-count', parseInt($previousMessage.find(".content").attr('data-count')) + parseInt($this.find(".content").attr('data-count')));
+        $previousMessage.attr('data-oldest-time', $this.attr('data-oldest-time'));
+        $this.remove();
+      }
+      else
+      {
+        $previousMessage = $this;
+      }
     }
   });
 }
