@@ -4,6 +4,9 @@
       <h2>We make collecting money simple.</h2>
       <em>Create a group, enter the amount, and the money will start pouring in. You'll get your money sooner so you'll have extra time for more important things.</em><br />
       <%= link_to "Start Collecting", new_user_registration_path, class: "btn btn-primary btn-large btn-cta" %>
+      <h2>Set up promotional events.</h2>
+      <em>Attract more people to your business using our Deals via Virality and Split the Bill features.</em><br />
+      <%= link_to "Find Out More", new_organization_path, class: "btn btn-primary btn-large btn-cta" %>
     </div>
     <div class="span5 static-width">
       <iframe width="350" height="250" src="http://www.youtube.com/embed/-9u8b1jxK8c?rel=0" allowfullscreen class="img-polaroid"></iframe>
@@ -66,6 +69,25 @@
     <div class="span7 home-feature-description">
       <h3>Let group members remind each other</h3>
       <em><small>Our nudge feature lets users who have already paid put the pressure on the unpaid users. In many group payment situations, the whole group benefits from everyone paying. There's no reason why the event organizer should be the only one that reminds people to pay. Nudging will help you get your money!</small></em>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-bottom-homepage">
+  <div class="container">
+    <div class="row">
+      <div class="span12">
+        <h2>As featured in:</h2>
+        <div class="span3" style="margin-top:30px">
+          <%= link_to (image_tag "business_review.png"), "http://www.bizjournals.com/albany/print-edition/2012/03/09/rpi-students-win-startup-weekend.html", :target => "_blank" %>
+        </div>
+        <div class="span3 offset1" style="margin-top:20px">
+          <%= link_to (image_tag "times_union.png"), "http://albarchive.merlinone.net/mweb/wmsql.wm.request?oneimage&imageid=17677234", :target => "_blank" %>
+        </div>
+        <div class="span3 offset1">
+          <%= link_to (image_tag "startup_weekend.png"), "http://startupweekend.org/", :target => "_blank" %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

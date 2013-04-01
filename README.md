@@ -18,3 +18,10 @@ rake db:reset
 ````
 
 You need to make sure that `db:seed` runs at some point to populate the `payment_methods` table. The above mentioned tasks include `db:seed`.
+
+To run tests:
+
+````
+rake db:test:prepare
+````
+

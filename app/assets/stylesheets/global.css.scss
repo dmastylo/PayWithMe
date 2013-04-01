@@ -105,6 +105,21 @@ em
     border-width: 0 0 5px 0;
     .page-header { margin-top: $smallMargin; }
   }
+  &.wrapper-bottom-homepage
+  {
+    margin-bottom: 0;
+    padding-bottom: $smallMargin;
+    border-width: 5px 0 0 0;
+    .page-header { margin-bottom: $smallMargin; }
+  }
+  &.wrapper-top-homepage
+  {
+    margin-top: -1 * $margin;
+    margin-bottom: $margin;
+    border-width: 0 0 5px 0;
+    padding-bottom: $margin;
+    .page-header { margin-top: $smallMargin; }
+  }
 }
 
 .push-bottom { margin-bottom: $margin; }
@@ -186,6 +201,11 @@ ul.error-messages
     font-weight: bold;
     margin-right: $tinyMargin;
   }
+}
+
+.no-margin
+{
+  margin-left: 0px !important;
 }
 
 // START MOBILE FIXES

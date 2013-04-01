@@ -1,0 +1,10 @@
+<tr>
+	<td><%= organization.name %></td>
+	<td><%= organization.contact %></td>
+	<td><%= organization.split? ? "Yes" : "No" %></td>
+	<td><%= organization.deal? ? "Yes" : "No" %></td>
+	<td><%= organization.email %></td>
+	<% if full %>
+		<td><%= organization.comment.blank? ? "None given" : organization.comment %></td>
+	<% end %>
+</tr>
