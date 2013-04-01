@@ -3,7 +3,7 @@
 </li>
 <% if current_user.wepay_account.present? %>
   <li>
-    <%= link_to humanized_money_with_symbol(current_user.wepay_account.balance), transactions_linked_account_path(current_user.wepay_account) %>
+    <%= link_to humanized_money_with_symbol(current_user.wepay_account.balance), linked_account_path(current_user.wepay_account) %>
   </li>
 <% end %>
 <li class="dropdown">

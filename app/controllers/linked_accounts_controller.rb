@@ -1,6 +1,7 @@
 class LinkedAccountsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :user_owns_linked_account, only: [:destroy, :transactions]
+  before_filter :user_owns_linked_account, only: [:destroy, :transactions, :show, :balance, :withdraw]
+  before_filter :account_is_wepay, only: [:transactions, :show, :balance, :withdraw]
 
   def index
     session["user_return_to"] = new_event_path
@@ -22,13 +23,48 @@ class LinkedAccountsController < ApplicationController
     redirect_to edit_user_registration_path
   end
 
-  def transactions
+  def show
+    @payments = current_user.received_payments.where('status <> "new"').order('updated_at DESC').limit(10).includes(:payer, :event)
+  end
 
+  def payments
+    @payments = current_user.received_payments.where('status <> "new"').order('updated_at DESC').paginate(page: params[:page]).includes(:payer, :event)
+  end
+
+  def balance
+    # Force disallowing updating balance more than once per minute
+    if @linked_account.balanced_at.nil? || (Time.now - @linked_account.balanced_at) > Figaro.env.balance_update_minimum.to_i
+      @linked_account.update_balance
+      flash[:success] = "Balance updated!"
+    else
+      flash[:error] = "Wait a second, after updating your balance you must wait a minute before updating again."
+    end
+    redirect_to linked_account_path(@linked_account)
+  end
+
+  def withdraw
+    gateway = Payment.wepay_gateway
+    response = gateway.call('/withdrawal/create', @linked_account.token_secret,
+    {
+      account_id: @linked_account.token,
+      mode: 'iframe'
+    })
+
+    if response["error_description"]
+      flash[:error] = "WePay returned the following error when attempting to withdraw: #{response["error_description"]}."
+      redirect_to linked_account_path(@linked_account)
+    end
+
+    @iframe_url = response["withdrawal_uri"]
   end
 
 private
   def user_owns_linked_account
     @linked_account = current_user.linked_accounts.find_by_id(params[:id])
     redirect_to root_path unless @linked_account.present?
+  end
+
+  def account_is_wepay
+    redirect_to root_path unless @linked_account.provider == "wepay"
   end
 end

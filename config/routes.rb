@@ -38,9 +38,11 @@ PayWithMe::Application.routes.draw do
   end
   resources :messages, only: :index
 
-  resources :linked_accounts, only: [:destroy, :index] do
+  resources :linked_accounts, only: [:destroy, :index, :show] do
     member do
-      get 'transactions'
+      get 'payments'
+      get 'balance'
+      get 'withdraw'
     end
     collection do
       post 'cash'

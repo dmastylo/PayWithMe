@@ -213,9 +213,9 @@ Devise.setup do |config|
   if Rails.env.production?
     OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
     ENV['SSL_CERT_DIR'] = '/etc/ssl/certs/'
-    config.omniauth :wepay, Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, client_options: { authorize_url: "https://www.wepay.com/v2/oauth2/authorize", token_url: "https://wepayapi.com/v2/oauth2/token", site: "https://www.wepayapi.com/v2" }
+    config.omniauth :wepay, Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, client_options: { authorize_url: "https://www.wepay.com/v2/oauth2/authorize", token_url: "https://wepayapi.com/v2/oauth2/token", site: "https://www.wepayapi.com/v2" }, scope: 'manage_accounts,view_balance,collect_payments,refund_payments,view_user,send_money'
   else
-    config.omniauth :wepay, Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret
+    config.omniauth :wepay, Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret, scope: 'manage_accounts,view_balance,collect_payments,refund_payments,view_user,send_money'
   end
 
   # ==> Warden configuration

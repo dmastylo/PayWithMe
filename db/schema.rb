@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130401185834) do
+ActiveRecord::Schema.define(:version => 20130401202014) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -207,8 +207,8 @@ ActiveRecord::Schema.define(:version => 20130401185834) do
   add_index "payment_methods", ["name"], :name => "index_payment_methods_on_name"
 
   create_table "payments", :force => true do |t|
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.datetime "requested_at"
     t.datetime "paid_at"
     t.datetime "due_at"
@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(:version => 20130401185834) do
     t.integer  "processor_fee_amount_cents"
     t.integer  "our_fee_amount_cents"
     t.integer  "payment_method_id"
+    t.string   "status",                     :default => "new"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"

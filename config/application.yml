@@ -21,6 +21,8 @@ CHAT_MSG_PER_PAGE: 15
 
 # Time in seconds between updating WePay account balances
 BALANCE_UPDATE: 600
+# After updating their balance, the user must wait this amount of time (seconds) before updating again, to prevent brute force
+BALANCE_UPDATE_MINIMUM: 60
 
 # In milliseconds
 CHAT_LIMIT: 1000

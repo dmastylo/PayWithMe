@@ -105,7 +105,7 @@ private
   def update_user_balance
     wepay_account = current_user.wepay_account
     if wepay_account.present?
-      if wepay_account.balanced_at.nil? || (wepay_account.balanced_at - Time.now) > Figaro.env.balance_update.to_i
+      if wepay_account.balanced_at.nil? || (Time.now - wepay_account.balanced_at) > Figaro.env.balance_update.to_i
         wepay_account.update_balance
       end
     end
