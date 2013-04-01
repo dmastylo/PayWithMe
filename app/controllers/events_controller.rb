@@ -168,7 +168,7 @@ private
   def check_user_accounts
     if current_user.linked_accounts.empty? && !current_user.using_cash?
       flash[:error] = "You need to set up payment options before creating an event."
-      redirect_to accounts_users_path
+      redirect_to linked_accounts_path
     end
   end
 

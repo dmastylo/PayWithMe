@@ -45,14 +45,4 @@ class UsersController < ApplicationController
       end
     end
   end
-
-  def accounts
-    session["user_return_to"] = new_event_path
-  end
-
-  def cash
-    current_user.using_cash = true
-    current_user.save
-    redirect_to new_event_path
-  end
 end

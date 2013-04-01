@@ -24,7 +24,7 @@ class LinkedAccount < ActiveRecord::Base
   validates :user_id, presence: true
   validates :uid, presence: true
 
-  monetize :balance_cents
+  monetize :balance_cents, allow_nil: true
 
   # Associations
   belongs_to :user
