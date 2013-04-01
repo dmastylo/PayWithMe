@@ -48,10 +48,8 @@ $(document).ready(function()
 		{
 			$value = $totalAmount.val();
 
-			//Need to determine amount of people in event *******************************************************************
-			$members = 1;
-
-			//Should loop through things with the class 'member' keeping a count of all of them
+			$members = $('.member').length;
+			if($members == 0) $members = 1;
 
 			$value /= $members;
 		}
