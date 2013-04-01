@@ -1,24 +1,74 @@
+idleTime = 0;
+
 $(function()
 {
-    // Event-show-page specific
-    if ($('.messages').length > 0)
-    {
-        // set first message to latest-message
-        $(".message:first-child").addClass("latest");
+  // Event-show-page specific
+  if ($('.messages').length > 0)
+  {
+    // set first message to latest-message
+    $(".message:first-child").addClass("latest");
 
-        // Poll for new messages
-        setTimeout(updateMessages, <%= Figaro.env.chat_polling.to_i %>);
-    }
+    // Poll for new messages
+    var pollingFrequency = <%= Figaro.env.chat_polling.to_i %>;
+    setTimeout(updateMessages, pollingFrequency);
+
+    // Track user activity on page
+    // Increment the idle time counter every minute
+    var idleInterval = setInterval(timerIncrement, 60000);
+
+    // Mouse movement or keypressing will zero the idleTime
+    $(this).mousemove(function (e)
+    {
+      oldIdleTime = idleTime;
+      idleTime = 0;
+
+      if (oldIdleTime >= 300000)
+      {
+        updateMessages(pollingFrequency);
+      }
+    });
+    $(this).keypress(function (e)
+    {
+      oldIdleTime = idleTime;
+      idleTime = 0;
+
+      if (oldIdleTime >= 300000)
+      {
+        updateMessages(pollingFrequency);
+      }
+    });
+  }
 });
 
-
-function updateMessages()
+function timerIncrement()
 {
-    var event_id = $(".messages").attr("data-id");
-    var after = $(".message").length > 0
-              ? $(".messages").find(".latest.message").attr("data-time")
-              : "0";
-    $.getScript("/messages.js?event_id=" + event_id + "&after=" + after);
+  // in milliseconds
+  idleTime = idleTime + 60000;
+}
 
-    setTimeout(updateMessages, <%= Figaro.env.chat_polling.to_i %>);
+function updateMessages(pollingFrequency)
+{
+  var event_id = $(".messages").attr("data-id");
+  var after = $(".message").length > 0
+        ? $(".messages").find(".latest.message").attr("data-time")
+        : "0";
+  $.getScript("/messages.js?event_id=" + event_id + "&after=" + after);
+
+  if (idleTime >= 600000)
+  {
+    // 10 minutes
+    pollingFrequency = 600000;
+  }
+  else if (idleTime > 300000)
+  {
+    // 5 minutes
+    pollingFrequency = 300000;
+    setTimeout(updateMessages, pollingFrequency);
+  }
+  else
+  {
+    // 5 seconds
+    pollingFrequency = 5000;
+    setTimeout(updateMessages, pollingFrequency);
+  }
 }
