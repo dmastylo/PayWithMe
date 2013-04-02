@@ -43,6 +43,7 @@ PayWithMe::Application.routes.draw do
       get 'payments'
       get 'balance'
       get 'withdraw'
+      get 'withdrawals'
     end
     collection do
       post 'cash'
@@ -77,6 +78,12 @@ PayWithMe::Application.routes.draw do
     member do
       get 'pin'
       post 'pay'
+      post 'ipn'
+    end
+  end
+
+  resources :withdrawals, only: [] do
+    member do
       post 'ipn'
     end
   end

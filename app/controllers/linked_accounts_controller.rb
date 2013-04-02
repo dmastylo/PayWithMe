@@ -24,7 +24,9 @@ class LinkedAccountsController < ApplicationController
   end
 
   def show
+    # TODO: Make this only WePay transactions
     @payments = current_user.received_payments.where('status <> "new"').order('updated_at DESC').limit(10).includes(:payer, :event)
+    @withdrawals = current_user.wepay_account.withdrawals.where('status <> "new"').order('updated_at DESC').limit(10)
   end
 
   def payments
@@ -43,18 +45,23 @@ class LinkedAccountsController < ApplicationController
   end
 
   def withdraw
+    # @linked_account.withdrawals.where('amount_cents IS NULL AND status = "new"').destroy_all
+    withdrawal = @linked_account.withdrawals.create
+
     gateway = Payment.wepay_gateway
     response = gateway.call('/withdrawal/create', @linked_account.token_secret,
     {
       account_id: @linked_account.token,
+      callback_uri: ipn_withdrawal_url(withdrawal),
       mode: 'iframe'
     })
 
     if response["error_description"]
-      flash[:error] = "WePay returned the following error when attempting to withdraw: #{response["error_description"]}."
+      flash[:error] = "WePay returned the following error when attempting to withdraw: #{response["error_description"]}"
       redirect_to linked_account_path(@linked_account)
     end
 
+    withdrawal.update_attributes(transaction_id: response["withdrawal_id"])
     @iframe_url = response["withdrawal_uri"]
   end
 

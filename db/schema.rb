@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130402010306) do
+ActiveRecord::Schema.define(:version => 20130402035035) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -278,5 +278,14 @@ ActiveRecord::Schema.define(:version => 20130402010306) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["slug"], :name => "index_users_on_slug"
+
+  create_table "withdrawals", :force => true do |t|
+    t.integer  "linked_account_id"
+    t.integer  "amount_cents"
+    t.string   "status",            :default => "new"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.string   "transaction_id"
+  end
 
 end

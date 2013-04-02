@@ -31,7 +31,7 @@
 #  completed_at               :datetime
 #  admin                      :boolean
 #  send_emails                :boolean          default(TRUE)
-#  using_cash                 :boolean
+#  using_cash                 :boolean          default(FALSE)
 #
 
 class User < ActiveRecord::Base
