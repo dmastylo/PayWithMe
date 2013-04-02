@@ -16,7 +16,7 @@ class AdminController < ApplicationController
     @recent_organizations = Organization.find(:all, order: 'created_at DESC', limit: 10)
 
     @payments_count = Payment.count
-    @recent_payments = Payment.find(:all, order: 'created_at DESC', limit: 10)
+    @recent_payments = Payment.where('paid_at IS NOT NULL').order('created_at DESC').limit(10)
   end
 
   def users
@@ -36,7 +36,7 @@ class AdminController < ApplicationController
   end
 
   def payments
-    @payments = Payment.paginate(page: params[:page], order: 'created_at DESC', include: [:payer, :payee, :event])
+    @payments = Payment.where('paid_at IS NOT NULL').paginate(page: params[:page], order: 'created_at DESC', include: [:payer, :payee, :event])
   end
 
 private
