@@ -11,44 +11,35 @@ $(function()
     // This will only fire on smaller screens
     $(window).scroll(function()
     {
-      if (window.matchMedia("(max-width: 767px)").matches)
+      if (window.matchMedia("(max-width: 767px)").matches && 
+         ($(window).scrollTop() > $(document).height() - $(window).height() - 400) &&
+         !loadingOldMessages && moreMessageContent)
       {
-        if (($(window).scrollTop() > $(document).height() - $(window).height() - 400) &&
-          !loadingOldMessages && moreMessageContent)
-        {
-          var event_id = $(".messages").attr("data-id");
-          var last_message_time = $(".message").length > 0
-                              ? $(".message:last").attr("data-oldest-time")
-                              : "0";
-
-          // currently loading new data so prevent this from being fired
-          loadingOldMessages = true;
-
-          $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
-        }
+        pullMessages();
       }
     });
 
     // Thiw will only fire on larger screens
     $('.messages').scroll(function()
     {
-      if (screen.width > 767)
+      if (screen.width > 767 && ($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
+         !loadingOldMessages && moreMessageContent)
       {
-        console.log("large");
-        if (($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
-          !loadingOldMessages && moreMessageContent)
-        {
-          var event_id = $(".messages").attr("data-id");
-          var last_message_time = $(".message").length > 0
-                              ? $(".message:last").attr("data-oldest-time")
-                              : "0";
-
-          // currently loading new data so prevent this from being fired
-          loadingOldMessages = true;
-
-          $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
-        }
+        pullMessages();
       }
     });
   }
 });
+
+function pullMessages()
+{
+  var event_id = $(".messages").attr("data-id");
+  var last_message_time = $(".message").length > 0
+                      ? $(".message:last").attr("data-oldest-time")
+                      : "0";
+
+  // currently loading new data so prevent this from being fired
+  loadingOldMessages = true;
+
+  $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
+}
