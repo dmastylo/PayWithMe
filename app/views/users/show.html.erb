@@ -21,10 +21,10 @@
       <%= profile_image_tag @user, :large %>
 
       <div class="large-statistic push-top">
-        <span class="count"><%= @user.organized_events.count %></span> organized <%= @user.organized_events.count == 1 ? 'event' : 'event'.pluralize %>
+        <span class="count"><%= @combined_organized_events.count %></span> organized <%= @combined_organized_events.count == 1 ? 'event' : 'event'.pluralize %>
       </div>
       <div class="large-statistic push-bottom">
-        <span class="count" id="member-event-count"><%= @user.member_events.count %></span> member <%= @user.member_events.count == 1 ? 'event' : 'event'.pluralize %>
+        <span class="count" id="member-event-count"><%= @combined_member_events.count %></span> member <%= @combined_member_events.count == 1 ? 'event' : 'event'.pluralize %>
       </div>
 
       <% unless @user == current_user %>
