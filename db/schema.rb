@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130401202014) do
+ActiveRecord::Schema.define(:version => 20130402010306) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -272,7 +272,7 @@ ActiveRecord::Schema.define(:version => 20130401202014) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
-    t.boolean  "using_cash"
+    t.boolean  "using_cash",                 :default => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
