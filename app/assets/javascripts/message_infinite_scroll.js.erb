@@ -22,7 +22,8 @@ $(function()
     // Thiw will only fire on larger screens
     $('.messages').scroll(function()
     {
-      if (screen.width > 767 && ($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
+      if (screen.width > 767 &&
+         ($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
          !loadingOldMessages && moreMessageContent)
       {
         pullMessages();
