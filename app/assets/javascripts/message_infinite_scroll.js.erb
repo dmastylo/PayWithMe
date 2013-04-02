@@ -6,45 +6,49 @@ var loadingOldMessages = false;
 
 $(function()
 {
-  $(window).scroll(function()
+  if ($('.messages').length > 0)
   {
-    // console.log("clientWidth = " + window.matchMedia( "(max-width: 767px)" ));
-    if (window.matchMedia("(max-width: 767px)").matches)
+    // This will only fire on smaller screens
+    $(window).scroll(function()
     {
-      if (($(window).scrollTop() > $(document).height() - $(window).height() - 400) &&
-        !loadingOldMessages && moreMessageContent)
+      if (window.matchMedia("(max-width: 767px)").matches)
       {
-        var event_id = $(".messages").attr("data-id");
-        var last_message_time = $(".message").length > 0
-                            ? $(".message:last").attr("data-oldest-time")
-                            : "0";
+        if (($(window).scrollTop() > $(document).height() - $(window).height() - 400) &&
+          !loadingOldMessages && moreMessageContent)
+        {
+          var event_id = $(".messages").attr("data-id");
+          var last_message_time = $(".message").length > 0
+                              ? $(".message:last").attr("data-oldest-time")
+                              : "0";
 
-        // currently loading new data so prevent this from being fired
-        loadingOldMessages = true;
+          // currently loading new data so prevent this from being fired
+          loadingOldMessages = true;
 
-        $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
+          $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
+        }
       }
-    }
-  });
+    });
 
-  $('.messages').scroll(function()
-  {
-    if (screen.width > 767)
+    // Thiw will only fire on larger screens
+    $('.messages').scroll(function()
     {
-      console.log("large");
-      if (($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
-        !loadingOldMessages && moreMessageContent)
+      if (screen.width > 767)
       {
-        var event_id = $(".messages").attr("data-id");
-        var last_message_time = $(".message").length > 0
-                            ? $(".message:last").attr("data-oldest-time")
-                            : "0";
+        console.log("large");
+        if (($(this)[0].scrollHeight - $(this).scrollTop() <= $(this).outerHeight() + 50) &&
+          !loadingOldMessages && moreMessageContent)
+        {
+          var event_id = $(".messages").attr("data-id");
+          var last_message_time = $(".message").length > 0
+                              ? $(".message:last").attr("data-oldest-time")
+                              : "0";
 
-        // currently loading new data so prevent this from being fired
-        loadingOldMessages = true;
+          // currently loading new data so prevent this from being fired
+          loadingOldMessages = true;
 
-        $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
+          $.getScript("/messages.js?event_id=" + event_id + "&last_message_time=" + last_message_time);
+        }
       }
-    }
-  });
+    });
+  }
 });
