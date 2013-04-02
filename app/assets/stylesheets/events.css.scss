@@ -174,3 +174,12 @@
 
 #btn-bulk-invite { margin-top: $tinyMargin; }
 .btn_group_option { display: none; }
+
+@media (max-width: 767px)
+{
+  .messages
+  {
+    height: auto;
+    overflow-y: none;
+  }
+}
