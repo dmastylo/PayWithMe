@@ -14,6 +14,7 @@
 #  last_seen        :datetime
 #  paid_with_cash   :boolean          default(TRUE)
 #  paid_total_cents :integer          default(0)
+#  status           :integer          default(0)
 #
 
 class EventUser < ActiveRecord::Base
@@ -107,6 +108,7 @@ class EventUser < ActiveRecord::Base
 
     update_paid_total_cents
     update_paid_with_cash
+    update_status
     self.save
   end
 
@@ -116,7 +118,14 @@ class EventUser < ActiveRecord::Base
 
     update_paid_total_cents
     update_paid_with_cash
+    update_status
     self.save
+  end
+
+  class Status
+    UNPAID = 0
+    PENDING = 1
+    PAID = 2
   end
 
 private
@@ -144,6 +153,18 @@ private
       self.paid_at = Time.now
     else
       self.paid_at = nil
+    end
+  end
+
+  def update_status
+    statuses = self.payments.collect(&:status).uniq
+
+    if statuses.include?("new")
+      self.status = EventUser::Status::PENDING
+    elsif ["authorized", "captured"].include?(statuses)
+      self.status = EventUser::Status::PAID
+    else
+      self.status = EventUser::Status::UNPAID
     end
   end
 
