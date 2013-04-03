@@ -9,6 +9,7 @@ class EventsController < ApplicationController
   before_filter :check_for_payers, only: [:destroy]
   before_filter :check_event_past, only: [:edit, :update]
   before_filter :clear_relevant_notifications, only: [:show], if: :current_user
+  before_filter :update_event_user_status, only: [:show]
 
   def index
     @upcoming_events = current_user.upcoming_events
@@ -176,6 +177,21 @@ private
     if @event.is_past?
       flash[:error] = "You can't edit an event that has already happened."
       redirect_to event_path(@event)
+    end
+  end
+
+  def update_event_user_status
+    if params[:success] == '1' && signed_in?
+      if params[:checkout_id]
+        payment = current_user.sent_payments.find_by_transaction_id_and_event_id(params[:checkout_id], @event.id)
+      else
+        payment = current_user.sent_payments.find_by_event_id(@event.id)
+      end
+      payment.update!
+
+      if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event.event_user(current_user).status)
+        @display_nudge_modal = true
+      end
     end
   end
 end

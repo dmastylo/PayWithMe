@@ -94,6 +94,7 @@ class EventUser < ActiveRecord::Base
 
     update_paid_total_cents
     update_paid_with_cash
+    update_status
     self.save
     true
   end
@@ -128,7 +129,7 @@ class EventUser < ActiveRecord::Base
     PAID = 2
   end
 
-private
+# private
   def copy_event_attributes
     if self.event.present? && self.member?
       self.due_at = self.event.due_at
@@ -159,9 +160,9 @@ private
   def update_status
     statuses = self.payments.collect(&:status).uniq
 
-    if statuses.include?("new")
+    if statuses.include?("new") && paid_at.nil?
       self.status = EventUser::Status::PENDING
-    elsif ["authorized", "captured"].include?(statuses)
+    elsif paid_at.present?
       self.status = EventUser::Status::PAID
     else
       self.status = EventUser::Status::UNPAID

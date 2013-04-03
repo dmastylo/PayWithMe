@@ -168,6 +168,33 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  def update!
+    if self.payment_method_id == PaymentMethod::MethodType::WEPAY
+      if self.transaction_id.present?
+        gateway = Payment.wepay_gateway
+        response = gateway.call('/checkout', self.payee.wepay_account.token_secret,
+        {
+          checkout_id: self.transaction_id
+        })
+
+        if response["error"].present?
+          # Handle error
+        else
+          self.status = response["state"]
+          self.save
+
+          if ["captured", "authorized"].include?(response["state"])
+            self.event_user.pay!(self, transaction_id: self.transaction_id)
+          else
+            self.event_user.unpay!(self)
+          end
+        end
+      else
+        # Nothing we can do
+      end
+    end
+  end
+
 private
   def self.paypal_gateway
     if Rails.env.production?
