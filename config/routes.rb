@@ -14,6 +14,7 @@ PayWithMe::Application.routes.draw do
       get 'groups'
       get 'organizations'
       get 'payments'
+      get 'nudges'
     end
   end
 
