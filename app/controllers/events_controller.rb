@@ -191,6 +191,7 @@ private
 
       if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event.event_user(current_user).status)
         @display_nudge_modal = true
+        @event_user.reload
       end
     end
   end

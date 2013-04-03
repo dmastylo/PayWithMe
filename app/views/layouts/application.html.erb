@@ -62,6 +62,10 @@
       <%= render 'shared/stub_login' %>
     <% end %>
 
+    <% if @display_nudge_modal %>
+      <%= render 'nudges/modal' %>
+    <% end %>
+
     <%= render 'shared/analytics' if Rails.env.production? %>
   </body>
 </html>

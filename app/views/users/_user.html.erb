@@ -2,8 +2,8 @@
   # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
 %>
 <% user = event_user.user %>
-<li class="member" id="member-<%= user.id %>">
-  <div class="profile-image" id="image-user-<%= user.id %>" data-placement="right">
+<li class="member member-<%= user.id %>">
+  <div class="profile-image image-user-<%= user.id %>" data-placement="right">
     <%= profile_image_tag user, :thumb %> 
   </div>
   <div class="user">
@@ -32,7 +32,7 @@
   <% if signed_in? && @event.present? %>
     <% if @event.can_nudge?(current_user, user) %>
       <div class="nudge">
-        <span id="link-user-<%= user.id %>"><%= link_to "Nudge!", nudge_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-primary", method: :put, remote: true %></span>
+        <span class="link-user-<%= user.id %>"><%= link_to "Nudge!", nudge_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-primary", method: :put, remote: true %></span>
       </div>
     <% elsif @event.has_nudged?(current_user, user) %>
       <div class="nudge">
