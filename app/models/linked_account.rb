@@ -26,7 +26,25 @@ class LinkedAccount < ActiveRecord::Base
   validates :user_id, presence: true
   validates :uid, presence: true
 
+  monetize :balance_cents, allow_nil: true
+
   # Associations
   belongs_to :user
+  has_many :withdrawals
+
+  def update_balance
+    if provider != "wepay"
+      raise "LinkedAccount::update_balance is not currently defined for accounts other then WePay accounts"
+    end
+
+    gateway = Payment.wepay_gateway
+    response = gateway.call('/account/balance', self.token_secret, {
+      account_id: self.token
+    })
+
+    self.balance_cents = response["available_balance"].to_f * 100
+    self.balanced_at = Time.now
+    self.save
+  end
 
 end
