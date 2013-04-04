@@ -31,6 +31,7 @@
 #  completed_at               :datetime
 #  admin                      :boolean
 #  send_emails                :boolean          default(TRUE)
+#  referrer_id                :integer
 #
 
 class User < ActiveRecord::Base
@@ -41,7 +42,7 @@ class User < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone, :send_emails
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone, :send_emails, :referrer_id, :referrer
   attr_accessor :profile_image_type
   has_attached_file :profile_image
 
@@ -77,6 +78,7 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :subject_news_items, class_name: "NewsItem"
   belongs_to :creator, class_name: "User"
   has_many :created_users, class_name: "User", foreign_key: "creator_id"
+  belongs_to :referrer, class_name: "CampusRep"
 
   # Scopes
   # ========================================================

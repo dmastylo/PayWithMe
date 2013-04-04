@@ -57,6 +57,13 @@
             </div>
           <% end %>
 
+          <div class="control-group">
+            <%= f.label :referrer_id, class: 'control-label' %>
+            <div class="controls">
+              <%= f.select :referrer_id, CampusRep.all.collect { |c| [c.name + " from " + c.school, c.id] }, { :prompt => 'Were you referred by a campus rep?' }, class: "input-block-level" %>
+            </div>
+          </div>
+
           <div class="form-actions">
             <%= f.submit "Sign up", class: 'btn btn-block  btn-primary' %>
           </div>

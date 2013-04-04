@@ -31,6 +31,7 @@
 #  completed_at               :datetime
 #  admin                      :boolean
 #  send_emails                :boolean          default(TRUE)
+#  referrer_id                :integer
 #
 
 require 'spec_helper'
