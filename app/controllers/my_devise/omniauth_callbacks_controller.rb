@@ -1,6 +1,5 @@
 class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def all
-
     # Used for flash messages
     provider = request.env["omniauth.auth"].provider.humanize
 
@@ -73,6 +72,13 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
         linked_account.token = request.env["omniauth.auth"].credentials.token
 
         linked_account.save
+      elsif request.env["omniauth.auth"].provider == "facebook"
+        # Set profile image
+        if user.profile_image_type == :gravatar
+          user.profile_image_type = :url
+          user.profile_image_url = request.env["omniauth.auth"].info.image.gsub('?type=square', '?type=large')
+        end
+
       end
 
       user.save
