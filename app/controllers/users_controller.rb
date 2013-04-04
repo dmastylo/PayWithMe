@@ -14,7 +14,7 @@ class UsersController < ApplicationController
         @past_public_and_shared_events = current_user.past_events
 
         # Combined for counts
-        @combined_member_events = @upcoming_public_and_shared_events + @past_public_and_shared_events
+        @combined_member_events = @upcoming_public_and_shared_events | @past_public_and_shared_events
         @combined_organized_events = @combined_member_events.delete_if { |event| event.organizer != @user }
     else
         # Upcoming Events
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
         @past_public_and_shared_events = past_public_events | past_shared_events
 
         # Combined for counts
-        @combined_member_events = @upcoming_public_and_shared_events + @past_public_and_shared_events
+        @combined_member_events = @upcoming_public_and_shared_events | @past_public_and_shared_events
         @combined_organized_events = @combined_member_events.delete_if { |event| event.organizer != @user }
     end
 
