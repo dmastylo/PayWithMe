@@ -188,6 +188,8 @@ private
         payment = current_user.sent_payments.find_by_event_id(@event.id)
       end
       payment.update!
+      @event_user.update_status
+      @event_user.save
 
       if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event.event_user(current_user).status)
         @display_nudge_modal = true

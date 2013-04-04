@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130403201001) do
+ActiveRecord::Schema.define(:version => 20130404005555) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20130403201001) do
     t.boolean  "paid_with_cash",   :default => true
     t.integer  "paid_total_cents", :default => 0
     t.integer  "status",           :default => 0
+    t.integer  "nudges_remaining", :default => 0
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"

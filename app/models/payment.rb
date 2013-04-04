@@ -170,6 +170,7 @@ class Payment < ActiveRecord::Base
   # updating the payment information from the processor
   # to marking the event_user as paid
   def update!
+    # return
     if self.payment_method_id == PaymentMethod::MethodType::WEPAY
       if self.transaction_id.present?
         gateway = Payment.wepay_gateway

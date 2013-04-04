@@ -27,7 +27,13 @@ class Nudge < ActiveRecord::Base
   belongs_to :event
 
   # Callbacks
-  after_create :send_nudge_email
+  after_create :send_nudge_email_if_paid
+
+  def send_nudge_email_if_paid
+    if self.event.event_user(self.nudger).status == EventUser::Status::PAID
+      send_nudge_email
+    end
+  end
 
 private
   # Two methods to keep the delayed_job job clean and without extra information
@@ -37,7 +43,12 @@ private
 
   def self.send_nudge_email(nudge_id)
     nudge = Nudge.find(nudge_id)
-    UserMailer.nudge_notification(nudge.nudgee, nudge).deliver
+    if nudge.sent_at.nil?
+      UserMailer.nudge_notification(nudge.nudgee, nudge).deliver
+      
+      nudge.sent_at = Time.now
+      nudge.save
+    end
   end
 
 end

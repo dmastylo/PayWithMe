@@ -25,4 +25,8 @@ $('.link-user-<%= @event_user.user_id %>').html('<a class="btn btn-primary disab
 $profilePicture.removeClass('nudge');
 $profilePicture.unbind('mouseenter');
 
-$('.nudges-remaining').html('<%= @event_user.event.nudges_remaining(current_user) %>');
+$('.nudges-remaining').html('<%= @nudger_event_user.nudges_remaining %>');
+
+<% if @nudger_event_user.nudges_remaining == 0 %>
+	$('.btn-nudge').remove();
+<% end %>
