@@ -44,20 +44,7 @@ class PaymentsController < ApplicationController
       end
     elsif @payment.payment_method_id == PaymentMethod::MethodType::WEPAY
       if @payment.transaction_id == params[:checkout_id]
-        gateway = Payment.wepay_gateway
-        response = gateway.call('/checkout', @payment.payee.wepay_account.token_secret,
-        {
-          checkout_id: @payment.transaction_id
-        })
-
-        @payment.status = response["state"]
-        @payment.save
-
-        if ["captured", "authorized"].include?(response["state"])
-          @payment.event_user.pay!(@payment, transaction_id: @payment.transaction_id)
-        else
-          @payment.event_user.unpay!(@payment)
-        end
+        @payment.update
       end
     end
   end

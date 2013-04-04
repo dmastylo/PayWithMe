@@ -111,8 +111,6 @@ class Payment < ActiveRecord::Base
         # fees_payer: "PRIMARYRECEIVER"
       )
 
-      # raise response.to_yaml
-
       gateway.redirect_url_for(response["payKey"])
     elsif payment_method_id == PaymentMethod::MethodType::WEPAY
       gateway = Payment.wepay_gateway
@@ -168,6 +166,9 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  # Handles the entire payment updating process from
+  # updating the payment information from the processor
+  # to marking the event_user as paid
   def update!
     if self.payment_method_id == PaymentMethod::MethodType::WEPAY
       if self.transaction_id.present?
@@ -192,6 +193,10 @@ class Payment < ActiveRecord::Base
       else
         # Nothing we can do
       end
+    elsif self.payment_method_id == PaymentMethod::MethodType::PAYPAL
+      # TODO
+    elsif self.payment_method_id == PaymentMethod::MethodType::DWOLLA
+      # TODO
     end
   end
 
