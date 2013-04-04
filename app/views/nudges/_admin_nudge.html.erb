@@ -1,0 +1,21 @@
+<tr>
+  <td>
+    <%= link_to nudge.event.title, nudge.event %>
+  </td>
+  <td>
+    <%= link_to nudge.nudger.name || "n/a", nudge.nudger %>
+  </td>
+  <td>
+    <%= link_to nudge.nudgee.name || "n/a", nudge.nudgee %>
+  </td>
+  <td>
+    <%= distance_of_time_in_words_to_now nudge.created_at %> ago
+  </td>
+  <td>
+    <% if Payment.find_by_payer_id_and_event_id(nudge.nudgee.id, nudge.event.id).nil? %> 
+      No
+    <% else %>
+      Yes
+    <% end %>
+  </td>
+</tr>

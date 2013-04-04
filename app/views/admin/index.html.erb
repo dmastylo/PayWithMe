@@ -75,6 +75,19 @@
         </tr>
         <%= render collection: @recent_payments, partial: "payments/admin_payment", as: :payment %>
       </table>
+
+      <h3 class="pull-left">Recent Nudges</h3>
+      <%= link_to "View All Nudges", nudges_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Event</th>
+          <th>Nudger</th>
+          <th>Nudgee</th>
+          <th>Created</th>
+          <th><span rel="tooltip" title="Did the nudgee pay?">Effect?</span></th>
+        </tr>
+        <%= render collection: @recent_nudges, partial: "nudges/admin_nudge", as: :nudge %>
+      </table>
     </div>
     <div class="span4">
       <div class="well">
@@ -93,6 +106,9 @@
         </div>
         <div class="large-statistic">
           <span class="count"><%= @payments_count %></span> payments
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @nudges_count %></span> nudges
         </div>
       </div>
     </div>
