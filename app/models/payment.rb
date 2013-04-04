@@ -111,6 +111,9 @@ class Payment < ActiveRecord::Base
         # fees_payer: "PRIMARYRECEIVER"
       )
 
+      self.transaction_id = response["payKey"]
+      self.save
+
       gateway.redirect_url_for(response["payKey"])
     elsif payment_method_id == PaymentMethod::MethodType::WEPAY
       gateway = Payment.wepay_gateway
