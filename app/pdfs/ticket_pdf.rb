@@ -1,12 +1,11 @@
 class TicketPdf < Prawn::Document
 
 	# Initializes the document
-	def initialize(event)#, view)
+	def initialize(event)
 		super()
 		@event = event
-		#@view = view
 
-		generate_and_display_qr('http://www.paywith.me')
+
 	end
 
 	# Displays image
@@ -37,5 +36,9 @@ class TicketPdf < Prawn::Document
 		   	x_pos = 0
 
 		end
+	end
+
+	def render
+		generate_and_display_qr('http://www.paywith.me')
 	end
 end

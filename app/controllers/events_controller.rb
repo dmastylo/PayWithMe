@@ -112,13 +112,8 @@ class EventsController < ApplicationController
 
   def ticket
     @event = Event.find(params[:id])
-
-    respond_to do |format|
-      format.pdf do
-        pdf = TicketPdf.new(@event)
-        UserMailer.ticket_notification(current_user, @event, pdf).deliver
-      end
-    end
+    UserMailer.ticket_notification(current_user, @event).deliver
+    redirect_to event_path(@event)
   end
 
 private
@@ -184,9 +179,11 @@ private
   end
 
   def user_has_paid
-    if !@event.paid_members.include?(current_user)
-      flash[:error] = "You have not paid yet. When you pay you can print out your ticket to the event."
-      redirect_to event_path(@event)
-    end
+    #unless @event.paid_members.empty?
+    #  unless @event.paid_members.include?(current_user)
+    #    flash[:error] = "You have not paid yet. When you pay you can print out your ticket to the event."
+    #    redirect_to event_path(@event)
+    #  end
+    #end
   end
 end
