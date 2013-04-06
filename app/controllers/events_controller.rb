@@ -1,7 +1,8 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!, except: [:show]
   before_filter :user_not_stub, only: [:new, :create]
-  before_filter :user_in_event_or_public, only: [:show]
+  before_filter :user_has_paid, only: [:ticket]
+  before_filter :user_in_event_or_public, only: [:show, :ticket]
   before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin, :guests]
   before_filter :check_organizer_accounts, only: [:show, :admin]
   before_filter :event_user_visit_true, only: [:show]
@@ -36,7 +37,7 @@ class EventsController < ApplicationController
     @message = Message.new
     @event_user = EventUser.new unless @event.members.include?(current_user)
   end
-  
+
   def new
     @event = current_user.organized_events.new
   end
@@ -180,5 +181,11 @@ private
       flash[:error] = "You can't edit an event that has already happened."
       redirect_to event_path(@event)
     end
+  end
+
+  def user_has_paid
+    # Provide error and redirect to home page if user has not paid
+    if @event.paid_members.include?(current_user)
+
   end
 end
