@@ -1,10 +1,10 @@
 class TicketPdf < Prawn::Document
 
 	# Initializes the document
-	def initialize(event, view)
+	def initialize(event)#, view)
 		super()
 		@event = event
-		@view = view
+		#@view = view
 
 		generate_and_display_qr('http://www.paywith.me')
 	end

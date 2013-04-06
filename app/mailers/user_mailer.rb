@@ -24,6 +24,8 @@ class UserMailer < ActionMailer::Base
     @user = user
     @event = event
 
+    attachments["#{@event.title} Ticket"] = TicketPdf.new(@event)
+
     mail to: format_address_to(user), subject: "You're ticket to: #{@event.title}"
   end
 
