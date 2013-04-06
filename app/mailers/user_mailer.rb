@@ -18,15 +18,13 @@ class UserMailer < ActionMailer::Base
     mail to: format_address_to(user), subject: "You're invited: #{@event.title}"
   end
 
-  def ticket_notification(user, event)
+  def ticket_notification(user, event, pdf)
     return unless user.send_emails?
 
     @user = user
     @event = event
 
-    pdf_view = TicketPdf.new(@event)
-
-    attachments["#{@event.title} Ticket.pdf"] = pdf_view.render
+    attachments["#{@event.title} Ticket.pdf"] = pdf
 
     mail to: format_address_to(user), subject: "Your ticket to: #{@event.title}"
   end

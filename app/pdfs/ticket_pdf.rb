@@ -5,7 +5,9 @@ class TicketPdf < Prawn::Document
 		super()
 		@event = event
 
+		generate_and_display_qr('http://www.paywith.me')
 
+		text "Success"
 	end
 
 	# Displays image
@@ -36,9 +38,5 @@ class TicketPdf < Prawn::Document
 		   	x_pos = 0
 
 		end
-	end
-
-	def render
-		generate_and_display_qr('http://www.paywith.me')
 	end
 end

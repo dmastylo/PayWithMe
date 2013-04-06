@@ -112,7 +112,10 @@ class EventsController < ApplicationController
 
   def ticket
     @event = Event.find(params[:id])
-    UserMailer.ticket_notification(current_user, @event).deliver
+
+    pdf = TicketPdf.new(@event).render
+
+    UserMailer.ticket_notification(current_user, @event, pdf).deliver
     redirect_to event_path(@event)
   end
 
