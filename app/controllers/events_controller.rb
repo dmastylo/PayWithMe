@@ -115,8 +115,8 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.pdf do
-        pdf = TicketPdf.new(@event, view_context)
-        send_data pdf.render, filename: "#{event.title}-ticket.pdf", type: "application/pdf", disposition: "inline"
+        pdf = TicketPdf.new(@event)
+        UserMailer.ticket_notification(current_user, @event, pdf).deliver
       end
     end
   end
@@ -179,6 +179,13 @@ private
   def check_event_past
     if @event.is_past?
       flash[:error] = "You can't edit an event that has already happened."
+      redirect_to event_path(@event)
+    end
+  end
+
+  def user_has_paid
+    if !@event.paid_members.include?(current_user)
+      flash[:error] = "You have not paid yet. When you pay you can print out your ticket to the event."
       redirect_to event_path(@event)
     end
   end
