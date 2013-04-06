@@ -13,6 +13,8 @@ PayWithMe::Application.routes.draw do
       get 'users'
       get 'events'
       get 'groups'
+      get 'organizations'
+      get 'payments'
     end
   end
 
@@ -71,6 +73,8 @@ PayWithMe::Application.routes.draw do
       post 'ipn'
     end
   end
+
+  resources :organizations, only: [:new, :create]
 
   # Error Handling
   # ===========================================================================
