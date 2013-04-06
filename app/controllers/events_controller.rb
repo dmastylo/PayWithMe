@@ -116,7 +116,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.pdf do
         pdf = TicketPdf.new(@event, view_context)
-        send_data pdf.render, filename: "#{@event.title}-ticket.pdf", type: "application/pdf", disposition: "inline"
+        send_data pdf.render, filename: "#{event.title}-ticket.pdf", type: "application/pdf", disposition: "inline"
       end
     end
   end
@@ -181,11 +181,5 @@ private
       flash[:error] = "You can't edit an event that has already happened."
       redirect_to event_path(@event)
     end
-  end
-
-  def user_has_paid
-    # Provide error and redirect to home page if user has not paid
-    if @event.paid_members.include?(current_user)
-
   end
 end

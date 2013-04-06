@@ -18,6 +18,15 @@ class UserMailer < ActionMailer::Base
     mail to: format_address_to(user), subject: "You're invited: #{@event.title}"
   end
 
+  def ticket_notification(user, event)
+    return unless user.send_emails?
+
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "You're ticket to: #{@event.title}"
+  end
+
   def group_notification(user, group)
     return unless user.send_emails?
 
@@ -38,7 +47,7 @@ class UserMailer < ActionMailer::Base
 
   def nudge_notification(user, nudge)
     return unless user.send_emails?
-    
+
     @user = user
     @nudge = nudge
     @event = @nudge.event
