@@ -50,6 +50,9 @@ class PaymentsController < ApplicationController
           checkout_id: @payment.transaction_id
         })
 
+        @payment.status = response["state"]
+        @payment.save
+
         if ["captured", "authorized"].include?(response["state"])
           @payment.event_user.pay!(@payment, transaction_id: @payment.transaction_id)
         else

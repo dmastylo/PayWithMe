@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130331211504) do
+ActiveRecord::Schema.define(:version => 20130402035035) do
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -125,9 +125,11 @@ ActiveRecord::Schema.define(:version => 20130331211504) do
     t.integer  "user_id"
     t.string   "uid"
     t.string   "token_secret"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.string   "email"
+    t.integer  "balance_cents"
+    t.datetime "balanced_at"
   end
 
   create_table "messages", :force => true do |t|
@@ -205,8 +207,8 @@ ActiveRecord::Schema.define(:version => 20130331211504) do
   add_index "payment_methods", ["name"], :name => "index_payment_methods_on_name"
 
   create_table "payments", :force => true do |t|
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
     t.datetime "requested_at"
     t.datetime "paid_at"
     t.datetime "due_at"
@@ -219,6 +221,7 @@ ActiveRecord::Schema.define(:version => 20130331211504) do
     t.integer  "processor_fee_amount_cents"
     t.integer  "our_fee_amount_cents"
     t.integer  "payment_method_id"
+    t.string   "status",                     :default => "new"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
@@ -269,10 +272,20 @@ ActiveRecord::Schema.define(:version => 20130331211504) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
+    t.boolean  "using_cash",                 :default => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["slug"], :name => "index_users_on_slug"
+
+  create_table "withdrawals", :force => true do |t|
+    t.integer  "linked_account_id"
+    t.integer  "amount_cents"
+    t.string   "status",            :default => "new"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
+    t.string   "transaction_id"
+  end
 
 end
