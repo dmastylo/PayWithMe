@@ -136,7 +136,7 @@ describe "Group pages" do
         describe "when not invited" do
           before { visit groups_path }
 
-          it { should have_selector("a", text: "create a group?") } # Redirects to root_path
+          it { should have_selector("a", text: "create a group") } # Redirects to root_path
         end
       end
     end
