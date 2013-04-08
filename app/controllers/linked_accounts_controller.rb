@@ -57,6 +57,9 @@ class LinkedAccountsController < ApplicationController
     })
 
     if response["error_description"]
+      if response["error_description"].include?("send_money")
+        response["error_description"] = "Please unlink and relink your WePay account to withdraw from PayWithMe."
+      end
       flash[:error] = "WePay returned the following error when attempting to withdraw: #{response["error_description"]}"
       redirect_to linked_account_path(@linked_account)
     end
