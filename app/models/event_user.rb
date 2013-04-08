@@ -19,7 +19,7 @@
 #
 
 class EventUser < ActiveRecord::Base
-  
+
   # Accessible attributes
   attr_accessible :event_id, :user_id
   monetize :amount_cents, allow_nil: true
@@ -96,8 +96,15 @@ class EventUser < ActiveRecord::Base
     update_paid_total_cents
     update_paid_with_cash
     update_status
+
+    # Only send ticket if total amount is paid
+    if self.paid_total_cents == self.amount_cents
+      send_ticket
+    end
+
     send_nudges
     update_nudges_remaining
+    send_ticket
     self.save
     true
   end
@@ -105,7 +112,15 @@ class EventUser < ActiveRecord::Base
   # def paid_with_cash?
   #   self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
   # end
-  
+
+  def send_ticket
+    @event = self.event
+
+    pdf = TicketPdf.new(@event).render
+
+    UserMailer.ticket_notification(self.user, @event, pdf).deliver
+  end
+
   def unpay_cash_payments!
     copy_event_attributes
     self.payments.where(payment_method_id: PaymentMethod::MethodType::CASH).destroy_all
