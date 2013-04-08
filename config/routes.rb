@@ -34,7 +34,6 @@ PayWithMe::Application.routes.draw do
     end
     member do
       get 'admin'
-      get 'ticket'
       scope '/admin' do
         get 'guests'
       end

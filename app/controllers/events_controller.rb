@@ -1,8 +1,7 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!, except: [:show]
   before_filter :user_not_stub, only: [:new, :create]
-  before_filter :user_has_paid, only: [:ticket]
-  before_filter :user_in_event_or_public, only: [:show, :ticket]
+  before_filter :user_in_event_or_public, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin, :guests]
   before_filter :check_organizer_accounts, only: [:show, :admin]
   before_filter :check_user_accounts, only: [:new, :create]
@@ -112,15 +111,6 @@ class EventsController < ApplicationController
     end
   end
 
-  # def ticket
-  #   @event = Event.find(params[:id])
-
-  #   pdf = TicketPdf.new(@event).render
-
-  #   UserMailer.ticket_notification(current_user, @event, pdf).deliver
-  #   redirect_to event_path(@event)
-  # end
-
 private
   def event_user_visit_true
     if @event.members.include?(current_user)
@@ -188,15 +178,6 @@ private
       flash[:error] = "You can't edit an event that has already happened."
       redirect_to event_path(@event)
     end
-  end
-
-  def user_has_paid
-    #unless @event.paid_members.empty?
-    #  unless @event.paid_members.include?(current_user)
-    #    flash[:error] = "You have not paid yet. When you pay you can print out your ticket to the event."
-    #    redirect_to event_path(@event)
-    #  end
-    #end
   end
 
   def update_event_user_status
