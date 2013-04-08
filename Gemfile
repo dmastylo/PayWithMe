@@ -59,7 +59,7 @@ gem 'js-routes'
 
 # Payments
 gem 'active_paypal_adaptive_payment', git: 'git://github.com/austingulati/active_paypal_adaptive_payment.git'
-gem 'dwolla', git: 'git://github.com/austingulati/dwolla-ruby.git'
+gem 'dwolla-ruby', git: 'git://github.com/austingulati/dwolla-ruby.git'
 gem 'wepay', git: 'git://github.com/wepay/Ruby-SDK.git'
 
 # Monitoring

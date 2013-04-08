@@ -89,6 +89,8 @@ class Payment < ActiveRecord::Base
     if payment_method_id == PaymentMethod::MethodType::DWOLLA
       Rails.application.routes.url_helpers.pin_payment_path(self)
     elsif payment_method_id == PaymentMethod::MethodType::PAYPAL
+      # Comments in this block are disabled because lack of access to ChainedPayments
+
       recipients = [
         # {
         #   email: Figaro.env.paypal_email,
@@ -143,6 +145,68 @@ class Payment < ActiveRecord::Base
 
   def unpay!
     self.destroy
+  end
+
+  # Handles the entire payment updating process from
+  # updating the payment information from the processor
+  # to marking the event_user as paid
+  def update!
+    return unless self.transaction_id.present?
+
+    if self.payment_method_id == PaymentMethod::MethodType::WEPAY
+      gateway = Payment.wepay_gateway
+      response = gateway.call('/checkout', self.payee.wepay_account.token_secret, { checkout_id: self.transaction_id })
+
+      if response["error"].present?
+        # Handle error
+      else
+        self.status = response["state"]
+        self.save
+
+        if ["captured", "authorized"].include?(self.status)
+          self.event_user.pay!(self, transaction_id: self.transaction_id)
+        else
+          # Something needs to be done here to handle cancelled and other states
+          # self.event_user.unpay!(self)
+        end
+      end
+    elsif self.payment_method_id == PaymentMethod::MethodType::PAYPAL
+      gateway = Payment.paypal_gateway
+      response = gateway.details_for_payment({ pay_key: self.transaction_id })
+
+      if response.error.present?
+        # Handle error
+      else
+        self.status = response.status.downcase
+        self.save
+
+        if self.status == "completed"
+          self.event_user.pay!(self, transaction_id: self.transaction_id)
+        else
+          # Something needs to be done here to handle cancelled and other states
+          # self.event_user.unpay!(self)
+        end
+      end
+
+    elsif self.payment_method_id == PaymentMethod::MethodType::DWOLLA
+      dwolla_user = Dwolla::User.me(self.payer.dwolla_account.token)
+
+      begin
+        response = dwolla_user.transaction(self.transaction_id)
+
+        self.status = response["Status"].downcase
+        self.save
+
+        if self.status == "processed"
+          self.event_user.pay!(self, transaction_id: self.transaction_id)
+        else
+          # Something needs to be done here to handle cancelled and other states
+          # self.event_user.unpay!(self)
+        end
+      rescue Exception => e
+        # Handle error
+      end
+    end
   end
 
   # Public because needed in another spot
