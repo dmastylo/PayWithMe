@@ -6,6 +6,7 @@ FactoryGirl.define do
     sequence(:email) { |n| "person_#{n}@example.com"}
     password "foobarbaz"
     password_confirmation "foobarbaz"
+    using_cash true
 
     factory :stub_user do
       password ""

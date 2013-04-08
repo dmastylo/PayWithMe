@@ -44,3 +44,32 @@
     width: 100%;
   }
 }
+
+#stub-login-modal
+{
+  width: 700px;
+  height: 650px;
+
+  .modal-body
+  {
+    max-height: 475px;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 767px)
+{
+  #stub-login-modal
+  {
+    width: 96%;
+    height: 96%;
+    position: absolute;
+    left: 2%;
+    right: 2%;
+
+    .modal-body
+    {
+      max-height: none;
+    }
+  }
+}

@@ -3,7 +3,7 @@ $('.overlay').remove();
 
 // Shake profile picture
 var rumbleTimeout;
-$profilePicture = $('#image-user-<%= @event_user.user_id %>');
+$profilePicture = $('.image-user-<%= @event_user.user_id %>');
 $profilePicture.jrumble();
 clearTimeout(rumbleTimeout);
 $profilePicture.trigger('startRumble');
@@ -21,8 +21,12 @@ rumbleTimeout = setTimeout(function()
 }, 1000)
 
 
-$('#link-user-<%= @event_user.user_id %>').html('<a class="btn btn-primary disabled">Nudged</a>');
+$('.link-user-<%= @event_user.user_id %>').html('<a class="btn btn-primary disabled">Nudged</a>');
 $profilePicture.removeClass('nudge');
 $profilePicture.unbind('mouseenter');
 
-$('#nudges-remaining').html('<%= @event_user.event.nudges_remaining(current_user) %>');
+$('.nudges-remaining').html('<%= @nudger_event_user.nudges_remaining %>');
+
+<% if @nudger_event_user.nudges_remaining == 0 %>
+	$('.btn-nudge').remove();
+<% end %>
