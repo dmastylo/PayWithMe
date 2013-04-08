@@ -116,7 +116,7 @@ class EventUser < ActiveRecord::Base
   def send_ticket
     @event = self.event
 
-    pdf = TicketPdf.new(@event).render
+    pdf = TicketPdf.new(@event, self).render
 
     UserMailer.ticket_notification(self.user, @event, pdf).deliver
   end

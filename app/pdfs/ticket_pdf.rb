@@ -1,13 +1,47 @@
 class TicketPdf < Prawn::Document
 
 	# Initializes the document
-	def initialize(event)
+	def initialize(event, event_user)
 		super()
 		@event = event
+		@event_user = event_user
 
-		generate_and_display_qr('http://www.paywith.me/paid', 200, 300)
+		font_families.update(
+		  "Lato" => {
+		    bold: "#{Rails.root}/app/assets/fonts/Lato-Bold.ttf",
+		    normal: "#{Rails.root}/app/assets/fonts/Lato-Regular.ttf"
+		  }
+		)
 
-		text "Success"
+		font("Lato")
+
+		info_table = make_table(fill_in_information, cell_style: { borders: [], overflow: :expand, inline_format: true })
+		ticket_table = make_table(fill_in_ticket, cell_style: { borders: [], overflow: :expand, inline_format: true })
+
+		full_data = [[info_table, ticket_table]]
+
+		table full_data, cell_style: { borders: [] }
+		#generate_and_display_qr('http://www.paywith.me/paid', 200, 300)
+	end
+
+	# Fills in information, the left side of the ticket
+	def fill_in_information
+		[
+			["Your ticket to:"],
+			["#{@event.title}"],
+			["Name: #{@event_user.user.name || @event_user.user.email}"],
+			["Payment Method: #{@event_user.payments[0].payment_method.name}"],
+			["Date Paid: #{@event_user.paid_at}"],
+			["Event Details: #{@event.description}"]
+		]
+	end
+
+	# Fills in ticket, the right side of the ticket
+	def fill_in_ticket
+		[
+			["Test info"],
+			["Testing"]
+		]
 	end
 
 	# Displays image

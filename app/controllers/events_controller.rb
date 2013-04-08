@@ -106,7 +106,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.pdf do
         pdf = EventPdf.new(@event, view_context)
-        send_data pdf.render, filename: "#{event.title}.pdf", type: "application/pdf", disposition: "inline"
+        send_data pdf.render, filename: "#{@event.title}.pdf", type: "application/pdf", disposition: "inline"
       end
     end
   end
