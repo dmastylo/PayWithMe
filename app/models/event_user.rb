@@ -167,7 +167,7 @@ private
   def update_paid_with_cash
     self.paid_with_cash = true
     self.payments.each do |payment|
-      self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH
+      self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH || payment.paid_at.nil?
     end
   end
 
