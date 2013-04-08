@@ -5,18 +5,18 @@ class TicketPdf < Prawn::Document
 		super()
 		@event = event
 
-		generate_and_display_qr('http://www.paywith.me/paid')
+		generate_and_display_qr('http://www.paywith.me/paid', 200, 300)
 
 		text "Success"
 	end
 
 	# Displays image
-	def generate_and_display_qr(link_to_embed)
+	def generate_and_display_qr(link_to_embed, x_start, y_start)
 
 		@qr = RQRCode::QRCode.new(link_to_embed)
 
-		x_pos = 0
-		y_pos = cursor
+		x_pos = x_start
+		y_pos = y_start
 
 		@qr.modules.each_index do |x|
 
@@ -35,7 +35,7 @@ class TicketPdf < Prawn::Document
 		   		end
 		   	end
 
-		   	x_pos = 0
+		   	x_pos = x_start
 
 		end
 	end
