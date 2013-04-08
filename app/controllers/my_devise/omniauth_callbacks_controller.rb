@@ -65,6 +65,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
           flash[:notice] = "A new WePay account has been created for you to use with PayWithMe. You need to activate it #{view_context.link_to "here", response.first["verification_uri"]}.".html_safe
         end
 
+
         linked_account.token = response.first["account_id"]
         linked_account.save
       elsif request.env["omniauth.auth"].provider == "paypal"
@@ -98,7 +99,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
             # Account added flash message
             flash[:success] = "#{provider} account successfully synced!"
           end
-          session["user_return_to"] = edit_user_registration_path
+          session["user_return_to"] ||= edit_user_registration_path
         end
       else
         if new_registration

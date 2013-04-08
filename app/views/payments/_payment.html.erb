@@ -1,0 +1,17 @@
+<tr>
+	<td>
+		<%= link_to payment.event.title, payment.event %>
+	</td>
+	<td>
+		<%= link_to user_name(payment.payer), payment.payer %>
+	</td>
+	<td>
+		<%=l payment.updated_at %>
+	</td>
+	<td>
+		<%= humanized_money_with_symbol payment.amount %>
+	</td>
+	<td>
+		<%= payment.status %>
+	</td>
+</tr>

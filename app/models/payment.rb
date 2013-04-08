@@ -17,6 +17,7 @@
 #  processor_fee_amount_cents :integer
 #  our_fee_amount_cents       :integer
 #  payment_method_id          :integer
+#  status                     :string(255)      default("new")
 #
 
 class Payment < ActiveRecord::Base
@@ -110,7 +111,8 @@ class Payment < ActiveRecord::Base
         # fees_payer: "PRIMARYRECEIVER"
       )
 
-      # raise response.to_yaml
+      self.transaction_id = response["payKey"]
+      self.save
 
       gateway.redirect_url_for(response["payKey"])
     elsif payment_method_id == PaymentMethod::MethodType::WEPAY
