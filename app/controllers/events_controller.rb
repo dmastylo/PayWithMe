@@ -190,7 +190,6 @@ private
     end
   end
 
-<<<<<<< HEAD
   def user_has_paid
     #unless @event.paid_members.empty?
     #  unless @event.paid_members.include?(current_user)
@@ -198,7 +197,8 @@ private
     #    redirect_to event_path(@event)
     #  end
     #end
-=======
+  end
+
   def update_event_user_status
     if params[:success] == '1' && signed_in?
       if params[:checkout_id]
@@ -215,6 +215,5 @@ private
         @event_user.reload
       end
     end
->>>>>>> master
   end
 end
