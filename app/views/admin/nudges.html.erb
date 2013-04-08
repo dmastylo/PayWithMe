@@ -1,0 +1,33 @@
+<% provide(:title, "Nudges | Administrator Panel") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span9">
+        <h2>Administrator Panel: Nudges</h2>
+      </div>
+      <div class="span3">
+        <%= link_to "Return to home", admin_index_path, class: "btn btn-primary btn-block push-top-title" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Event</th>
+          <th>Nudger</th>
+          <th>Nudgee</th>
+          <th>Created</th>
+          <th><span rel="tooltip" title="Did the nudgee pay?">Effect?</span></th>
+        </tr>
+        <%= render collection: @nudges, partial: "nudges/admin_nudge", as: :nudge %>
+      </table>
+
+      <%= will_paginate @nudges %>
+    </div>
+  </div>
+</div>

@@ -12,6 +12,10 @@ class UsersController < ApplicationController
     if @user == current_user
       @upcoming_public_and_shared_events = current_user.upcoming_events
       @past_public_and_shared_events = current_user.past_events
+
+      # Combined for counts
+      @combined_member_events = @upcoming_public_and_shared_events | @past_public_and_shared_events
+      @combined_organized_events = @combined_member_events.delete_if { |event| event.organizer != @user }
     else
       # Upcoming Events
       upcoming_public_events = @user.upcoming_events.where(privacy_type: Event::PrivacyType::PUBLIC)
@@ -22,6 +26,10 @@ class UsersController < ApplicationController
       past_public_events = @user.past_events.where(privacy_type: Event::PrivacyType::PUBLIC)
       past_shared_events = @user.past_events.merge current_user.past_events.select { |your_member_event| @user.past_events.include? your_member_event }
       @past_public_and_shared_events = past_public_events | past_shared_events
+
+      # Combined for counts
+      @combined_member_events = @upcoming_public_and_shared_events | @past_public_and_shared_events
+      @combined_organized_events = @combined_member_events.delete_if { |event| event.organizer != @user }
     end
 
     @event_user = EventUser.new
