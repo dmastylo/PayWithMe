@@ -14,6 +14,8 @@
 #  last_seen        :datetime
 #  paid_with_cash   :boolean          default(TRUE)
 #  paid_total_cents :integer          default(0)
+#  status           :integer          default(0)
+#  nudges_remaining :integer          default(0)
 #
 
 class EventUser < ActiveRecord::Base
@@ -93,6 +95,9 @@ class EventUser < ActiveRecord::Base
 
     update_paid_total_cents
     update_paid_with_cash
+    update_status
+    send_nudges
+    update_nudges_remaining
     self.save
     true
   end
@@ -107,6 +112,7 @@ class EventUser < ActiveRecord::Base
 
     update_paid_total_cents
     update_paid_with_cash
+    update_status
     self.save
   end
 
@@ -116,7 +122,38 @@ class EventUser < ActiveRecord::Base
 
     update_paid_total_cents
     update_paid_with_cash
+    update_status
+    update_nudges_remaining
     self.save
+  end
+
+  class Status
+    UNPAID = 0
+    PENDING = 1
+    PAID = 2
+  end
+
+  def update_nudges_remaining
+    if self.paid?
+      self.nudges_remaining = Figaro.env.nudge_limit.to_i - Nudge.where(
+        nudger_id: self.user_id, event_id: self.event_id).count
+    else
+      self.nudges_remaining = 0
+    end
+
+    self.save
+  end
+
+  def update_status
+    statuses = self.payments.collect(&:status).uniq
+
+    if statuses.include?("new") && paid_at.nil?
+      self.status = EventUser::Status::PENDING
+    elsif paid_at.present?
+      self.status = EventUser::Status::PAID
+    else
+      self.status = EventUser::Status::UNPAID
+    end
   end
 
 private
@@ -130,7 +167,7 @@ private
   def update_paid_with_cash
     self.paid_with_cash = true
     self.payments.each do |payment|
-      self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH
+      self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH || payment.paid_at.nil?
     end
   end
 
@@ -144,6 +181,14 @@ private
       self.paid_at = Time.now
     else
       self.paid_at = nil
+    end
+  end
+
+  def send_nudges
+    if self.paid?
+      Nudge.where(event_id: self.event_id, nudger_id: self.user_id).each do |nudge|
+        nudge.send_nudge_email_if_paid
+      end
     end
   end
 

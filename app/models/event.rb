@@ -403,14 +403,22 @@ class Event < ActiveRecord::Base
 
   # Nudges
   # ========================================================
-  def can_nudge?(nudger, nudgee)
+  def can_nudge?(nudger, nudgee, nudger_event_user=nil, nudgee_event_user=nil)
+    if nudger_event_user.nil?
+      nudger_event_user = self.event_user(nudger)
+    end
+
+    if nudgee_event_user.nil?
+      nudgee_event_user = self.event_user(nudgee)
+    end
+
     if !invited?(nudger) ||
       !invited?(nudgee) ||
-      paid_at(nudger).nil? ||
-      paid_at(nudgee).present? ||
+      nudger_event_user.status == EventUser::Status::UNPAID ||
+      nudgee_event_user.paid_at.present? ||
       nudgee == self.organizer ||
       nudger.stub? ||
-      nudger.sent_nudges.find_all_by_event_id(self.id).count >= Figaro.env.nudge_limit.to_i ||
+      nudger_event_user.nudges_remaining <= 0 ||
       self.nudges.where(nudgee_id: nudgee.id, nudger_id: nudger.id).count > 0
       false
     else

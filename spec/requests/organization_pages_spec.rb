@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "Organizations page" do
 	before do
 		@organization = FactoryGirl.create(:organization)
-		visit organizations_path
+		visit new_organization_path
 	end
 
 	subject { page }
@@ -11,9 +11,9 @@ describe "Organizations page" do
 
 	describe "valid submission" do
 		before do
-			fill_in "Name", with: "New Testuser"
+			fill_in "Your Name", with: "New Testuser"
 			fill_in "Email", with: "example@email.com"
-			fill_in "Organization Name", with: "Sample Restaurant"
+			fill_in "Restaurant Name (optional)", with: "Sample Restaurant"
 		end
 
 		it "should add the organization to the database" do
@@ -26,7 +26,7 @@ describe "Organizations page" do
 		describe "with no name" do
 			before do
 				fill_in "Email", with: "example@email.com"
-				fill_in "Organization Name", with: "Sample Restaurant"
+				fill_in "Restaurant Name (optional)", with: "Sample Restaurant"
 			end
 
 			it "should not add the organization to the database" do
@@ -36,8 +36,8 @@ describe "Organizations page" do
 
 		describe "with no email" do
 			before do
-				fill_in "Name", with: "New Testuser"
-				fill_in "Organization Name", with: "Sample Restaurant"
+				fill_in "Your Name", with: "New Testuser"
+				fill_in "Restaurant Name (optional)", with: "Sample Restaurant"
 			end
 
 			it "should not add the organization to the database" do
@@ -47,20 +47,9 @@ describe "Organizations page" do
 
 		describe "with invalid email" do
 			before do
-				fill_in "Name", with: "New Testuser"
+				fill_in "Your Name", with: "New Testuser"
 				fill_in "Email", with: "test@example@email.com"
-				fill_in "Organization Name", with: "Sample Restaurant"
-			end
-
-			it "should not add the organization to the database" do
-				expect{ click_button submit }.not_to change(Organization, :count)
-			end
-		end
-
-		describe "with no organization name" do
-			before do
-				fill_in "Name", with: "New Testuser"
-				fill_in "Email", with: "example@email.com"
+				fill_in "Restaurant Name (optional)", with: "Sample Restaurant"
 			end
 
 			it "should not add the organization to the database" do
@@ -70,9 +59,9 @@ describe "Organizations page" do
 
 		describe "with comment exceeding 250 characters" do
 			before do
-				fill_in "Name", with: "New Testuser"
+				fill_in "Your Name", with: "New Testuser"
 				fill_in "Email", with: "example@email.com"
-				fill_in "Organization Name", with: "Sample Restaurant"
+				fill_in "Restaurant Name (optional)", with: "Sample Restaurant"
 				fill_in "Comment", with: "a" * 251
 			end
 

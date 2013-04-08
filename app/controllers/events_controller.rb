@@ -5,10 +5,12 @@ class EventsController < ApplicationController
   before_filter :user_in_event_or_public, only: [:show, :ticket]
   before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin, :guests]
   before_filter :check_organizer_accounts, only: [:show, :admin]
+  before_filter :check_user_accounts, only: [:new, :create]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
   before_filter :check_event_past, only: [:edit, :update]
   before_filter :clear_relevant_notifications, only: [:show], if: :current_user
+  before_filter :update_event_user_status, only: [:show]
 
   def index
     @upcoming_events = current_user.upcoming_events
@@ -174,6 +176,13 @@ private
     flash.now[:error] = flash.now[:error].html_safe unless flash.now[:error].nil?
   end
 
+  def check_user_accounts
+    if current_user.linked_accounts.where(provider: [:wepay, :paypal, :dwolla]).empty? && !current_user.using_cash?
+      flash[:error] = "You need to set up payment options before creating an event."
+      redirect_to linked_accounts_path
+    end
+  end
+
   def check_event_past
     if @event.is_past?
       flash[:error] = "You can't edit an event that has already happened."
@@ -181,6 +190,7 @@ private
     end
   end
 
+<<<<<<< HEAD
   def user_has_paid
     #unless @event.paid_members.empty?
     #  unless @event.paid_members.include?(current_user)
@@ -188,5 +198,23 @@ private
     #    redirect_to event_path(@event)
     #  end
     #end
+=======
+  def update_event_user_status
+    if params[:success] == '1' && signed_in?
+      if params[:checkout_id]
+        payment = current_user.sent_payments.find_by_transaction_id_and_event_id(params[:checkout_id], @event.id)
+      else
+        payment = current_user.sent_payments.find_by_event_id(@event.id)
+      end
+      payment.update!
+      @event_user.update_status
+      @event_user.save
+
+      if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event.event_user(current_user).status)
+        @display_nudge_modal = true
+        @event_user.reload
+      end
+    end
+>>>>>>> master
   end
 end
