@@ -15,14 +15,14 @@ class PaymentsController < ApplicationController
       else
         dwolla_user = Dwolla::User.me(@payment.payer.dwolla_account.token)
         begin
-          trans_id = dwolla_user.send_money_to(@payment.payee.dwolla_account.uid, @payment.total_amount.to_f, params[:pin], nil, "Payment for #{@payment.event.title}", nil, true)
+          transaction_id = dwolla_user.send_money_to(@payment.payee.dwolla_account.uid, @payment.total_amount.to_f, params[:pin], nil, "Payment for #{@payment.event.title}", nil, true)
         rescue Exception => e
           flash[:error] = e.message
           render "pin"
           return
         end
 
-        @payment.event_user.pay!(@payment, transaction_id: trans_id)
+        @payment.update!
         redirect_to event_path(@payment.event, success: 1)
       end
     end
@@ -35,30 +35,15 @@ class PaymentsController < ApplicationController
     if @payment.payment_method_id == PaymentMethod::MethodType::PAYPAL
       notify = ActiveMerchant::Billing::Integrations::PaypalAdaptivePayment::Notification.new(request.raw_post)
       event_user = Payment.find_by_id(params[:id])
-      if notify.acknowledge && @payment.present?
-        if notify.complete?
-          @payment.event_user.pay!(@payment, transaction_id: params["transaction"]["0"][".id"])
-        else
-          # Nothing for now
-        end
+      if notify.acknowledge && @payment.transaction_id == params["transaction"]["0"][".id"] # A sanity check to make sure that we're talking about the same payment, not sure if necessary
+        @payment.update!
       end
     elsif @payment.payment_method_id == PaymentMethod::MethodType::WEPAY
-      if @payment.transaction_id == params[:checkout_id]
-        gateway = Payment.wepay_gateway
-        response = gateway.call('/checkout', @payment.payee.wepay_account.token_secret,
-        {
-          checkout_id: @payment.transaction_id
-        })
-
-        @payment.status = response["state"]
-        @payment.save
-
-        if ["captured", "authorized"].include?(response["state"])
-          @payment.event_user.pay!(@payment, transaction_id: @payment.transaction_id)
-        else
-          @payment.event_user.unpay!(@payment)
-        end
+      if @payment.transaction_id == params[:checkout_id] # See above comment
+        @payment.update!
       end
+    elsif @payment.payment_method_id == PaymentMethod::MethodType::DWOLLA
+      raise "PaymentsController::ipn is not yet defined for Dwolla payments."
     end
   end
 

@@ -122,7 +122,7 @@
       <div class="well">
         <% if @event.paid?(current_user) %>
           <div class="push-bottom-small">
-            <em><small>Nudges remaining: <strong id="nudges-remaining"><%= @event.nudges_remaining(current_user) %></strong></small></em>
+            <em><small>Nudges remaining: <strong class="nudges-remaining"><%= @event_user.nudges_remaining %></strong></small></em>
           </div>
         <% end %>
         <% if @event.paying_members.any? %>
