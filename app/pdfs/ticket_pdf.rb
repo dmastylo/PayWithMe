@@ -5,7 +5,7 @@ class TicketPdf < Prawn::Document
 		super()
 		@event = event
 
-		generate_and_display_qr('http://www.paywith.me')
+		generate_and_display_qr('http://www.paywith.me/paid')
 
 		text "Success"
 	end
