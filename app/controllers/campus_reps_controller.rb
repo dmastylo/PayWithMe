@@ -22,7 +22,7 @@ class CampusRepsController < ApplicationController
 
   def update
     if @campus_rep.update_attributes(params[:campus_rep])
-      flash[:success] = "Campus Rep updated!"
+      flash[:success] = "Campus Rep updated."
       redirect_to campus_reps_admin_index_path
     else
       render "edit"
