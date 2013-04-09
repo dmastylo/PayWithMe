@@ -281,11 +281,8 @@ ActiveRecord::Schema.define(:version => 20130404022821) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
-<<<<<<< HEAD
     t.integer  "referrer_id"
-=======
     t.boolean  "using_cash",                 :default => false
->>>>>>> master
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

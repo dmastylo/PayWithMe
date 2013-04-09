@@ -45,9 +45,4 @@ class AdminController < ApplicationController
   def nudges
     @nudges = Nudge.paginate(page: params[:page], order: 'created_at DESC')
   end
-
-private
-  def user_is_admin
-    redirect_to root_path unless current_user.admin?
-  end
 end

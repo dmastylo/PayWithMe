@@ -57,6 +57,8 @@ PayWithMe::Application.routes.draw do
     end
   end
 
+  resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
+
   resources :groups do
     collection do
       get 'search'

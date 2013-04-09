@@ -18,5 +18,13 @@ class CampusRep < ActiveRecord::Base
   # Relationships
   # ========================================================
   has_many :referrals, class_name: "User"
+
+  # Static functions
+  # ========================================================
+  def self.list_of_reps
+    CampusRep.all.collect { |c| [c.name + " from " + c.school, c.id] }
+  end
+
+  
   
 end
