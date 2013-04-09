@@ -61,6 +61,10 @@ protected
     end
   end
 
+  def user_is_admin
+    redirect_to root_path unless current_user.admin?
+  end
+
 private
   def check_for_stub_token
     if params[:token] && params[:token] != nil

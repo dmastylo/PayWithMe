@@ -25,12 +25,12 @@
           <table class="table table-bordered table-striped">
             <tr>
               <th>Name</th>
-              <th><span rel="tooltip" title="Online Users">On</span></th>
+              <th><a rel="tooltip" title="Online Users">On</a></th>
               <th>Email</th>
               <th>Registered</th>
-              <th><span rel="tooltip" title="Linked Accounts">LA</span></th>
-              <th><span rel="tooltip" title="Organized Events">OE</span></th>
-              <th><span rel="tooltip" title="Member Events">ME</span></th>
+              <th><a rel="tooltip" title="Linked Accounts">LA</a></th>
+              <th><a rel="tooltip" title="Organized Events">OE</a></th>
+              <th><a rel="tooltip" title="Member Events">ME</a></th>
             </tr>
             <%= render collection: @users, partial: "users/admin_user", as: :user, locals: { full: true } %>
           </table>
@@ -41,12 +41,12 @@
           <table class="table table-bordered table-striped">
             <tr>
               <th>Name</th>
-              <th><span rel="tooltip" title="Online Users">On</span></th>
+              <th><a rel="tooltip" title="Online Users">On</a></th>
               <th>Email</th>
               <th>Registered</th>
-              <th><span rel="tooltip" title="Linked Accounts">LA</span></th>
-              <th><span rel="tooltip" title="Organized Events">OE</span></th>
-              <th><span rel="tooltip" title="Member Events">ME</span></th>
+              <th><a rel="tooltip" title="Linked Accounts">LA</a></th>
+              <th><a rel="tooltip" title="Organized Events">OE</a></th>
+              <th><a rel="tooltip" title="Member Events">ME</a></th>
             </tr>
             <%= render collection: User.online, partial: "users/admin_user", as: :user, locals: { full: true } %>
           </table>
