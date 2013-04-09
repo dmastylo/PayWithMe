@@ -2,7 +2,7 @@ class CampusRepsController < ApplicationController
   before_filter :user_is_admin
 
   def new
-    @event = CampusRep.new
+    @campus_rep = CampusRep.new
   end
 
   def create
@@ -21,6 +21,8 @@ class CampusRepsController < ApplicationController
   end
 
   def update
+    @campus_rep = CampusRep.find(params[:id])
+    
     if @campus_rep.update_attributes(params[:campus_rep])
       flash[:success] = "Campus Rep updated."
       redirect_to campus_reps_admin_index_path

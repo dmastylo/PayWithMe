@@ -17,7 +17,7 @@ class CampusRep < ActiveRecord::Base
 
   # Relationships
   # ========================================================
-  has_many :referrals, class_name: "User"
+  has_many :referrals, class_name: "User", foreign_key: "referrer_id"
 
   # Static functions
   # ========================================================
@@ -25,6 +25,4 @@ class CampusRep < ActiveRecord::Base
     CampusRep.all.collect { |c| [c.name + " from " + c.school, c.id] }
   end
 
-  
-  
 end
