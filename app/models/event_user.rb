@@ -104,7 +104,6 @@ class EventUser < ActiveRecord::Base
 
     send_nudges
     update_nudges_remaining
-    send_ticket
     self.save
     true
   end
@@ -112,14 +111,6 @@ class EventUser < ActiveRecord::Base
   # def paid_with_cash?
   #   self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
   # end
-
-  def send_ticket
-    @event = self.event
-
-    pdf = TicketPdf.new(@event, self).render
-
-    UserMailer.ticket_notification(self.user, @event, pdf).deliver
-  end
 
   def unpay_cash_payments!
     copy_event_attributes
@@ -207,4 +198,9 @@ private
     end
   end
 
+  def send_ticket
+    @event = self.event
+    pdf = TicketPdf.new(@event, self).render
+    UserMailer.ticket_notification(self.user, @event, pdf).deliver
+  end
 end
