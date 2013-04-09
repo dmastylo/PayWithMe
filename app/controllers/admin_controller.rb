@@ -20,6 +20,9 @@ class AdminController < ApplicationController
 
     @nudges_count = Nudge.count
     @recent_nudges = Nudge.find(:all, order: 'created_at DESC', limit: 10)
+
+    @campus_reps_count = CampusRep.count
+    @recent_campus_reps = CampusRep.find(:all, order: 'created_at DESC', limit: 10)
   end
 
   def users
@@ -46,8 +49,7 @@ class AdminController < ApplicationController
     @nudges = Nudge.paginate(page: params[:page], order: 'created_at DESC')
   end
 
-private
-  def user_is_admin
-    redirect_to root_path unless current_user.admin?
+  def campus_reps
+    @campus_reps = CampusRep.paginate(page: params[:page], order: 'created_at DESC')
   end
 end

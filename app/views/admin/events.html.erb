@@ -22,10 +22,10 @@
           <th>Organizer</th>
           <th>Members</th>
           <th>Created</th>
-          <th><span rel="tooltip" title="Division Type">DT</span></th>
-          <th><span rel="tooltip" title="Privacy Type">PT</span></th>
-          <th><span rel="tooltip" title="Payment Methods">PM</span></th>
-          <th><span rel="tooltip" title="Amount Per Person">APP</span></th>
+          <th><a rel="tooltip" title="Division Type">DT</a></th>
+          <th><a rel="tooltip" title="Privacy Type">PT</a></th>
+          <th><a rel="tooltip" title="Payment Methods">PM</a></th>
+          <th><a rel="tooltip" title="Amount Per Person">APP</a></th>
         </tr>
         <%= render collection: @events, partial: "events/admin_event", as: :event, locals: { full: true } %>
       </table>

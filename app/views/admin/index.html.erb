@@ -15,7 +15,7 @@
       <table class="table table-bordered table-striped">
         <tr>
           <th>Name</th>
-          <th><span rel="tooltip" title="Online Users">On</span></th>
+          <th><a rel="tooltip" title="Online Users">On</a></th>
           <th>Email</th>
           <th>Registered</th>
         </tr>
@@ -84,9 +84,22 @@
           <th>Nudger</th>
           <th>Nudgee</th>
           <th>Created</th>
-          <th><span rel="tooltip" title="Did the nudgee pay?">Effect?</span></th>
+          <th><a rel="tooltip" title="Did the nudgee pay?">Effect?</a></th>
         </tr>
         <%= render collection: @recent_nudges, partial: "nudges/admin_nudge", as: :nudge %>
+      </table>
+
+      <h3 class="pull-left">Recent Campus Reps</h3>
+      <%= link_to "View All Campus Reps", campus_reps_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
+      <%= link_to "Add New Campus Rep", new_campus_rep_path, class: "btn btn-primary pull-right push-top-small" %>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th><a rel="tooltip" title="Click name to edit">Name<a></th>
+          <th>School</th>
+          <th>Referrals</th>
+          <th>Created</th>
+        </tr>
+        <%= render collection: @recent_campus_reps, partial: "campus_reps/admin_campus_rep", as: :campus_rep %>
       </table>
     </div>
     <div class="span4">
@@ -109,6 +122,9 @@
         </div>
         <div class="large-statistic">
           <span class="count"><%= @nudges_count %></span> nudges
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @campus_reps_count %></span> campus reps
         </div>
       </div>
     </div>
