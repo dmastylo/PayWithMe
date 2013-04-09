@@ -10,7 +10,6 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
     else
       resource = build_resource({})
     end
-
     respond_with resource
   end
 

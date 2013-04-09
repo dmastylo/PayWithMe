@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130404005555) do
+ActiveRecord::Schema.define(:version => 20130404022821) do
+
+  create_table "campus_reps", :force => true do |t|
+    t.string   "name"
+    t.string   "school"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "contact_forms", :force => true do |t|
     t.datetime "created_at", :null => false
@@ -274,6 +281,7 @@ ActiveRecord::Schema.define(:version => 20130404005555) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
+    t.integer  "referrer_id"
     t.boolean  "using_cash",                 :default => false
   end
 
