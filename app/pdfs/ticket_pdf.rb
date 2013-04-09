@@ -13,18 +13,9 @@ class TicketPdf < Prawn::Document
 		draw_information
 		draw_graphics
 		draw_ticket_stub
-
-		# info_table = make_table(fill_in_information, cell_style: { borders: [], overflow: :expand, inline_format: true, padding_left: 5, padding_right: 5, width: 200 })
-		# left_side = [[ info_table, {image: event_image, fit: [150, 150], vposition: :center, padding_left: 5, padding_top: 15, padding_right: 5, height: 200 } ]]
-
-		# ticket_table = make_table(fill_in_ticket, cell_style: { borders: [], overflow: :expand, inline_format: true, rotate: 90 })
-
-		# full_data = [[left_side, ticket_table]]
-		# table full_data, cell_style: { borders: [] }
-
-		#generate_and_display_qr('http://www.paywith.me/paid', 200, 300)
 	end
 
+	# Draws text based information on left side
 	def draw_information
 		standard_size = font_size
 		x_pos = 10
@@ -43,48 +34,28 @@ class TicketPdf < Prawn::Document
 		text_box "Event Details: #{@event.description}", at: [x_pos, y_pos - 120], width: 240, height: 70, overflow: :truncate
 	end
 
+	# Draw all graphical content on left side
 	def draw_graphics
 
 		# Draws event image on ticket
 		image event_image, at: [280, 170], fit: [160, 160]
 
 		# Draws small m logo in corner
+		image m_image, at: [10, 50], fit: [40, 40]
 
-		#if @event.image_type != :default_image
-			image m_image, at: [10, 50], fit: [40, 40]
-		#end
-
+		# Draws paywith.me text along the bottom
 		standard_size = font_size
 
 		font_size 20
 		text_box "www.paywith.me", at: [60, 30], height: 40
 
 		font_size standard_size
-
 	end
 
+	# Draws ticket stub, right portion
 	def draw_ticket_stub
-
-	end
-
-	# Fills in information, the left side of the ticket
-	def fill_in_information
-		[
-			["<font size='10'>Your ticket to:</font>"],
-			["<font size='24'><b>#{@event.title}</b></font>"],
-			["Name: #{@event_user.user.name || @event_user.user.email}"],
-			["Payment Method: #{@event_user.payments[0].payment_method.name}"],
-			["Date Paid: #{@event_user.paid_at}"],
-			["Event Details: #{@event.description}"]
-		]
-	end
-
-	# Fills in ticket, the right side of the ticket
-	def fill_in_ticket
-		[
-			["Test info"],
-			["Testing"]
-		]
+		image pwm_image, at: [462, 226]
+		generate_and_display_qr("http://www.paywith.me/paid", 680, 43)
 	end
 
 	# Displays qr code as grid
@@ -96,19 +67,19 @@ class TicketPdf < Prawn::Document
 		y_pos = y_start
 		width = 5
 
-		@qr.modules.each_index do |x|
-		 	y_pos -= width
-		 	@qr.modules.each_index do |y|
-				x_pos += width
-		    	if @qr.dark?(x,y)
-		    		fill_color "000000"
-		    		fill_rectangle [x_pos, y_pos], width, width
-		   		else
-		   			fill_color "FFFFFF"
-		   			fill_rectangle [x_pos ,y_pos], width, width
-		   		end
-		   	end
-		   	x_pos = x_start
+		@qr.modules.each_index do |y|
+		 	x_pos -= width
+		 	@qr.modules.each_index do |x|
+				y_pos += width
+	    	if @qr.dark?(x,y)
+	    		fill_color "000000"
+	    		fill_rectangle [x_pos, y_pos], width, width
+	   		else
+	   			fill_color "FFFFFF"
+	   			fill_rectangle [x_pos ,y_pos], width, width
+	   		end
+		  end
+		  y_pos = y_start
 		end
 	end
 
@@ -125,7 +96,7 @@ class TicketPdf < Prawn::Document
 
 	# Return paywithme image path as string
 	def pwm_image
-		"#{Rails.root}/app/assets/images/logo_black.png"
+		"#{Rails.root}/app/assets/images/logo_black_rotated.png"
 	end
 
 	# Return m image path as string
