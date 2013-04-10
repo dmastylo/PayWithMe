@@ -7,7 +7,6 @@ PayWithMe::Application.routes.draw do
   match '/faq', to: "pages#faq"
   match '/jobs', to: "pages#jobs"
   match '/restaurants', to: "pages#restaurants"
-  match '/paid', to: "pages#paid"
 
   resources :admin, only: :index do
     collection do
@@ -95,6 +94,8 @@ PayWithMe::Application.routes.draw do
   resources :organizations, only: [:new, :create]
 
   resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
+
+  resources :tickets
 
   # Error Handling
   # ===========================================================================
