@@ -11,7 +11,7 @@ PayWithMe::Application.configure do
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = true
+  config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
@@ -49,7 +49,7 @@ PayWithMe::Application.configure do
   config.assets.debug = true
 
   # Default URL
-  routes.default_url_options[:host] = "localhost:3000"
+  routes.default_url_options[:host] = "local.paywith.me:3000"
 
   # Active merchant and PayPal
   ActiveMerchant::Billing::Base.mode = :test

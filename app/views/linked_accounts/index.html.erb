@@ -1,0 +1,49 @@
+<% provide(:title, "Payment Accounts") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <h2>Payment Accounts</h2>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="row push-bottom">
+    <div class="span6">
+      <h3>Where should your money go?</h3>
+      <p>
+        In order to collect money, unless you're doing exclusively cash payments, you will need a payment account. PayWithMe has three options for collecting electronic payments: <strong>WePay</strong>, <strong>PayPal</strong>, and <strong>Dwolla</strong>.
+      </p>
+      <p>
+        If you are unsure, here are a few tips on selecting which payment endpoint to use:
+        <ol>
+          <li>
+            If you have a PayPal account or you think that some of your event members will have PayPal accounts, you should use <strong>PayPal</strong>.
+          </li>
+          <li>
+            If you have a Dwolla account and you know that all of your event members use Dwolla, you should use <strong>Dwolla</strong>. Note that Dwolla requires you and all members to have Dwolla accounts. The advantage of Dwolla is much lower fees.
+          </li>
+          <li>
+            Otherwise, you should use <strong>WePay</strong>. We will walk you through creating a WePay account. The above two platforms require you to have both a PayWithMe account and an account on the platform site. Once you get started with WePay, you will only need to use your PayWithMe account - you can completely forget that you're using WePay.
+          </li>
+        </ol>
+    </div>
+    <div class="span6">
+<!--       <h3>How does it work?</h3>
+      [insert graphic here] -->
+    </div>
+  </div>
+  <div class="row push-bottom">
+    <div class="span3">
+      <%= link_to "Use <strong>WePay</strong>".html_safe, user_omniauth_authorize_path(:wepay), class: "btn btn-block btn-primary btn-block" %>
+    </div>
+    <div class="span3">
+      <%= link_to "Use <strong>PayPal</strong>".html_safe, user_omniauth_authorize_path(:paypal), class: "btn btn-block btn-primary btn-block" %>
+    </div>
+    <div class="span3">
+      <%= link_to "Use <strong>Dwolla</strong>".html_safe, user_omniauth_authorize_path(:dwolla), class: "btn btn-block btn-primary btn-block" %>
+    </div>
+    <div class="span3">
+      <%= link_to "Use <strong>Cash</strong>".html_safe, cash_linked_accounts_path, method: :post, class: "btn btn-block btn-primary btn-block" %>
+    </div>
+  </div>
+</div>

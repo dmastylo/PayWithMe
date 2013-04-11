@@ -59,7 +59,7 @@ gem 'js-routes'
 
 # Payments
 gem 'active_paypal_adaptive_payment', git: 'git://github.com/austingulati/active_paypal_adaptive_payment.git'
-gem 'dwolla', git: 'git://github.com/austingulati/dwolla-ruby.git'
+gem 'dwolla-ruby', git: 'git://github.com/austingulati/dwolla-ruby.git'
 gem 'wepay', git: 'git://github.com/wepay/Ruby-SDK.git'
 
 # Monitoring
@@ -92,7 +92,7 @@ group :test do
   gem 'guard-rspec'
   gem 'rb-inotify', '~> 0.8.8'
   gem 'delorean'
-  gem 'shoulda-matchers', '~> 1.4.2'
+  gem 'shoulda-matchers', '1.5.2'
 end
 
 # Gems used only for assets and not required

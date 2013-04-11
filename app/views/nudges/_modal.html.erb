@@ -1,0 +1,30 @@
+<% if @event.nudges_remaining(current_user) > 0 %>
+  <div id="nudge-modal" class="modal hide fade" tabindex="-1" role="dialog">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal">×</button>
+      <h2>Send some nudges!</h2>
+    </div>
+
+    <div class="modal-body">
+      <p>Since you just paid, you're free to send nudges to other users.</p>
+      <p>
+        <em><small>Nudges remaining: <strong class="nudges-remaining"><%= @event_user.nudges_remaining %></strong></small></em>
+      </p>
+      <ul class="members">  
+        <%= render partial: 'users/user', collection: @event.paying_event_users.reject { |event_user| event_user == @event_user }, as: :event_user %>
+      </ul>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">View event</button>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $("#nudge-modal").modal();
+      $("#nudge-modal .members").show();
+    });
+  </script>
+<% end %>

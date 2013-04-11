@@ -208,14 +208,14 @@ Devise.setup do |config|
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', :scope => 'user,public_repo'
   config.omniauth :twitter, "cL8nIQpvNApkT1nATe0A", "ktYwHKA5L1kNfRzIkwwMzs7XxXANHmp1xHPW55kIcOU"
   config.omniauth :facebook, "141836152608292", "b34af2003a66f9e3a6b4c6a3ab6ad701"
-  config.omniauth :paypal, "8e506b8cf40c988e6be2bd57cf205ba6", "7069b33ce6b8687a", scope: "profile|email"
+  config.omniauth :paypal, "8e506b8cf40c988e6be2bd57cf205ba6", "7069b33ce6b8687a", scope: "openid profile email"
   config.omniauth :dwolla, "XV7LXC7tu3NlVe8qFcwKVJCIp9AmEzIXHUC2P6QOwu06H3i3Om", "U34SfFeKCYWvJ/xJzOJDW1iDlAgeZ/FXqkUepevRFdDvAaT7XO", scope: "accountinfofull|transactions|send", provider_ignores_state: true
   if Rails.env.production?
     OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
     ENV['SSL_CERT_DIR'] = '/etc/ssl/certs/'
-    config.omniauth :wepay, Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, client_options: { authorize_url: "https://www.wepay.com/v2/oauth2/authorize", token_url: "https://wepayapi.com/v2/oauth2/token", site: "https://www.wepayapi.com/v2" }
+    config.omniauth :wepay, Figaro.env.wepay_client_id, Figaro.env.wepay_client_secret, client_options: { authorize_url: "https://www.wepay.com/v2/oauth2/authorize", token_url: "https://wepayapi.com/v2/oauth2/token", site: "https://www.wepayapi.com/v2" }, scope: 'manage_accounts,view_balance,collect_payments,refund_payments,view_user,send_money'
   else
-    config.omniauth :wepay, Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret
+    config.omniauth :wepay, Figaro.env.wepay_sandbox_client_id, Figaro.env.wepay_sandbox_client_secret, scope: 'manage_accounts,view_balance,collect_payments,refund_payments,view_user,send_money'
   end
 
   # ==> Warden configuration

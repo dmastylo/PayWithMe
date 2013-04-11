@@ -3,9 +3,7 @@ require 'spec_helper'
 describe "Admin" do
 
   subject { page }
-  # let(:pages) { [:index, :events, :users, :groups, :statistics] }
-  # pages = [:index, :users, :events, :groups]
-  pages = [:users, :events, :groups]
+  pages = [:users, :events, :groups, :payments]
 
   describe "not signed in" do
     pages.each do |page|

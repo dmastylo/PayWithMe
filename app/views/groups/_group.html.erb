@@ -1,20 +1,20 @@
 <div class="span3">
   <div class="well group <% if current_user == group.organizer %>organized<% end %>">
-  	<a href="<%= group_path(group) %>">
-  		<div class="underlayed-image" style="background-image: url('<%= group_image_path(group, :full) %>');"></div>
-  	</a>
-	<div class="info">
-    	<div class="icons">
-    		<% if current_user == group.organizer %>
-	        	<i class="icon-wrench" rel="tooltip" title="You organize this group!" data-placement="right"></i>
-    		<% end %>
-	    </div>
-	    <h4>
-	    	<%= link_to truncate(group.title, :length => 32, :separator => ' '), group %>
-	    </h4>
-	    <div class="count">
-	    	<%= pluralize group.members.count, "member" %>
-	    </div>
-	</div>
+    <a href="<%= group_path(group) %>">
+      <div class="underlayed-image" style="background-image: url('<%= group_image_path(group, :full) %>');"></div>
+    </a>
+    <div class="info">
+      <div class="icons">
+        <% if current_user == group.organizer %>
+          <i class="icon-wrench" rel="tooltip" title="You organize this group!" data-placement="right"></i>
+        <% end %>
+      </div>
+      <h4><%= link_to truncate(group.title, :length => 32, :separator => ' '), group %>
+      </h4>
+      <div class="count">
+        <%= pluralize group.members.count, "member" %>
+      </div>
+    </div>
+  <div class="clearfix"></div>
   </div>
 </div>

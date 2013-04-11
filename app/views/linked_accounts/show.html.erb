@@ -1,0 +1,58 @@
+<% provide(:title, "Your Account") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="page-header">
+      <h2>Your Account</h2>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="span8">
+      <h3 class="pull-left">Recent Payments</h3>
+      <%= link_to "View All Payments", payments_linked_account_path(@linked_account), class: "btn btn-primary pull-right push-top-small" %>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Event</th>
+          <th>From</th>
+          <th>Last Updated</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+        <%= render @payments %>
+
+        <% if @payments.empty? %>
+          <tr>
+            <td colspan="4">You have no recent payments.</td>
+          </tr>
+        <% end %>
+      </table>
+      <h3 class="pull-left">Recent Withdrawals</h3>
+      <%= link_to "View All Withdrawals", withdrawals_linked_account_path(@linked_account), class: "btn btn-primary pull-right push-top-small" %>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Last Updated</th>
+          <th>Amount</th>
+          <th>Status</th>
+        </tr>
+        <%= render @withdrawals %>
+
+        <% if @withdrawals.empty? %>
+          <tr>
+            <td colspan="4">You have no recent withdrawals.</td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+    <div class="span4">
+      <div class="well">
+        <h3>Your Balance: <%= humanized_money_with_symbol @linked_account.balance %></h3>
+        Last updated: <%= distance_of_time_in_words_to_now @linked_account.balanced_at %> ago
+        <%= link_to "Update balance now", balance_linked_account_path(@linked_account), class: "btn btn-primary btn-block push-top-small" %>
+        <%= link_to "Withdraw money to bank account", withdraw_linked_account_path(@linked_account), class: "btn btn-primary btn-block push-top-small" %>
+      </div>
+    </div>
+  </div>
+</div>

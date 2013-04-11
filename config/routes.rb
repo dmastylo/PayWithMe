@@ -1,7 +1,7 @@
 PayWithMe::Application.routes.draw do
 
   root to: "pages#index"
-  devise_for :users, controllers: { registrations: "my_devise/registrations", omniauth_callbacks: "my_devise/omniauth_callbacks", sessions: "my_devise/sessions", registrations: "my_devise/registrations", passwords: "my_devise/passwords" }
+  devise_for :users, controllers: { registrations: "my_devise/registrations", omniauth_callbacks: "my_devise/omniauth_callbacks", sessions: "my_devise/sessions", passwords: "my_devise/passwords" }
   match '/team', to: "pages#team"
   match '/privacy_policy', to: "pages#privacy_policy"
   match '/faq', to: "pages#faq"
@@ -12,6 +12,10 @@ PayWithMe::Application.routes.draw do
       get 'users'
       get 'events'
       get 'groups'
+      get 'organizations'
+      get 'payments'
+      get 'nudges'
+      get 'campus_reps'
     end
   end
 
@@ -38,7 +42,17 @@ PayWithMe::Application.routes.draw do
   end
   resources :messages, only: :index
 
-  resources :linked_accounts, only: [:destroy]
+  resources :linked_accounts, only: [:destroy, :index, :show] do
+    member do
+      get 'payments'
+      get 'balance'
+      get 'withdraw'
+      get 'withdrawals'
+    end
+    collection do
+      post 'cash'
+    end
+  end
 
   resources :users, only: [:show] do
     collection do
@@ -71,6 +85,16 @@ PayWithMe::Application.routes.draw do
       post 'ipn'
     end
   end
+
+  resources :withdrawals, only: [] do
+    member do
+      post 'ipn'
+    end
+  end
+
+  resources :organizations, only: [:new, :create]
+
+  resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
 
   # Error Handling
   # ===========================================================================
