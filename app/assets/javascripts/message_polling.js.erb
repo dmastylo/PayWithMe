@@ -101,7 +101,7 @@ function updateMessages(pollingFrequency)
             : "0";
   $.getScript("/messages.js?event_id=" + event_id + "&after=" + after);
 
-  timeIntervals.determinePollingFrequency(idleTime);
+  setTimeout(updateMessages, timeIntervals.determinePollingFrequency(idleTime));
 
   // TODO: This needs to be changed to be configurable as well as make the timeouts
   // less abrupt, i.e. polling still happens on seconds basis, but updates every few minutes
