@@ -1,5 +1,50 @@
 // measures in milliseconds how much time has passed since the user was active
-idleTime = 0;
+var idleTime = 0;
+
+function timeIntervals()
+{
+  this.timesInMilliseconds = {
+    "600000": 600000,
+    "300000": 25000,
+    "180000": 10000
+  };
+
+  this.determinePollingFrequency = function(idleTime)
+  {
+    pollingFrequency = 5000;
+    pollingFrequencyValues = pollingFrequencyValues();
+
+    for (var i = 0; i < pollingFrequencyValues.length; ++i)
+    {
+      if (idleTime >= parseInt(pollingFrequencyValues[i]))
+      {
+        pollingFrequency = timesInMilliseconds[pollingFrequencyValues[i]];
+        console.log(pollingFrequency);
+      }
+    }
+
+    return pollingFrequency;
+  };
+
+  // Private
+  var pollingFrequencyValues = function()
+  {
+    var pollingFrequencyValues = [];
+
+    for (var key in timesInMilliseconds)
+    {
+      if (timesInMilliseconds.hasOwnProperty(key))
+      {
+        pollingFrequencyValues.push(key);
+      }
+    }
+
+    pollingFrequencyValues.sort();
+
+    return pollingFrequencyValues;
+  };
+};
+
 
 $(function()
 {
@@ -8,6 +53,8 @@ $(function()
   {
     // set first message to latest-message
     $(".message:first-child").addClass("latest");
+
+    var timeIntervals = new timeIntervals();
 
     // Poll for new messages
     var pollingFrequency = <%= Figaro.env.chat_polling.to_i %>;
@@ -54,29 +101,31 @@ function updateMessages(pollingFrequency)
             : "0";
   $.getScript("/messages.js?event_id=" + event_id + "&after=" + after);
 
+  timeIntervals.determinePollingFrequency(idleTime);
+
   // TODO: This needs to be changed to be configurable as well as make the timeouts
   // less abrupt, i.e. polling still happens on seconds basis, but updates every few minutes
-  if (idleTime >= 600000)
-  {
-    // 10 minutes, pause the polling
-    pollingFrequency = 600000;
-  }
-  else if (idleTime > 300000)
-  {
-    // 5 minutes
-    pollingFrequency = 300000;
-    setTimeout(updateMessages, pollingFrequency);
-  }
-  else if (idleTime > 180000)
-  {
-    // 3 minutes
-    pollingFrequency = 180000;
-    setTimeout(updateMessages, pollingFrequency);
-  }
-  else
-  {
-    // 5 seconds
-    pollingFrequency = 5000;
-    setTimeout(updateMessages, pollingFrequency);
-  }
+  // if (idleTime >= 600000)
+  // {
+  //   // 10 minutes, pause the polling
+  //   pollingFrequency = 600000;
+  // }
+  // else if (idleTime > 300000)
+  // {
+  //   // 5 minutes
+  //   pollingFrequency = 300000;
+  //   setTimeout(updateMessages, pollingFrequency);
+  // }
+  // else if (idleTime > 180000)
+  // {
+  //   // 3 minutes
+  //   pollingFrequency = 180000;
+  //   setTimeout(updateMessages, pollingFrequency);
+  // }
+  // else
+  // {
+  //   // 5 seconds
+  //   pollingFrequency = 5000;
+  //   setTimeout(updateMessages, pollingFrequency);
+  // }
 }
