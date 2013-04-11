@@ -1,8 +1,9 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
-  after_filter :user_activity, if: :current_user
-  around_filter :user_time_zone, if: :current_user
+  after_filter :user_activity, if: :signed_in?
+  around_filter :user_time_zone, if: :signed_in?
+  after_filter :update_user_balance, if: :signed_in?
 
   def default_url_options
     if Rails.env.production?
@@ -60,6 +61,10 @@ protected
     end
   end
 
+  def user_is_admin
+    redirect_to root_path unless current_user.admin?
+  end
+
 private
   def check_for_stub_token
     if params[:token] && params[:token] != nil
@@ -98,6 +103,15 @@ private
     else
       flash[:error] = "You're not on the list."
       redirect_to root_path
+    end
+  end
+
+  def update_user_balance
+    wepay_account = current_user.wepay_account
+    if wepay_account.present?
+      if wepay_account.balanced_at.nil? || (Time.now - wepay_account.balanced_at) > Figaro.env.balance_update.to_i
+        wepay_account.update_balance
+      end
     end
   end
 end

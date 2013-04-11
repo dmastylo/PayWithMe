@@ -1,0 +1,11 @@
+#nudge-modal
+{
+  .members
+  {
+    display: block !important;
+    max-height: 266px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: $tinyMargin;
+  }
+}

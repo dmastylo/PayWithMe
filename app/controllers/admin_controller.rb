@@ -16,7 +16,13 @@ class AdminController < ApplicationController
     @recent_organizations = Organization.find(:all, order: 'created_at DESC', limit: 10)
 
     @payments_count = Payment.count
-    @recent_payments = Payment.find(:all, order: 'created_at DESC', limit: 10)
+    @recent_payments = Payment.where('paid_at IS NOT NULL').order('created_at DESC').limit(10)
+
+    @nudges_count = Nudge.count
+    @recent_nudges = Nudge.find(:all, order: 'created_at DESC', limit: 10)
+
+    @campus_reps_count = CampusRep.count
+    @recent_campus_reps = CampusRep.find(:all, order: 'created_at DESC', limit: 10)
   end
 
   def users
@@ -36,11 +42,14 @@ class AdminController < ApplicationController
   end
 
   def payments
-    @payments = Payment.paginate(page: params[:page], order: 'created_at DESC', include: [:payer, :payee, :event])
+    @payments = Payment.where('paid_at IS NOT NULL').paginate(page: params[:page], order: 'created_at DESC', include: [:payer, :payee, :event])
   end
 
-private
-  def user_is_admin
-    redirect_to root_path unless current_user.admin?
+  def nudges
+    @nudges = Nudge.paginate(page: params[:page], order: 'created_at DESC')
+  end
+
+  def campus_reps
+    @campus_reps = CampusRep.paginate(page: params[:page], order: 'created_at DESC')
   end
 end

@@ -72,6 +72,8 @@
   </div> -->
   <div class="row">
     <div class="span5">
+      
+
       <h3>Event Details</h3>
       <div class="underlayed-image-large <%= "default" if @event.image_type == :default_image %>" style="background-image: url('<%= event_image_path(@event, :full) %>');"></div>
       <div class="well description">
@@ -93,32 +95,7 @@
         <div class="three-quarters"><%= @event.payment_methods.collect(&:name).join(", ") %></div>
         <div class="clearfix"></div>
       </div>
-
-      <h3>Organizer</h3>
-      <div class="well">
-        <ul class="members">
-          <%= render object: @event.event_user(@event.organizer_id), partial: 'users/user', as: :event_user %>
-        </ul>
-      </div>
-
-      <h3>Guest List</h3>
-      <div class="well">
-        <% if @event.paid?(current_user) %>
-          <div class="push-bottom-small">
-            <em><small>Nudges remaining: <strong id="nudges-remaining"><%= @event.nudges_remaining(current_user) %></strong></small></em>
-          </div>
-        <% end %>
-        <% if @event.paying_members.any? %>
-          <ul class="members">
-            <%= render partial: 'users/user', collection: @event.paying_event_users, as: :event_user %>
-          </ul>
-        <% else %>
-          There are no members. Add some!
-        <% end %>
-        <% if current_user == @event.organizer %>
-          <%= link_to "Invite more guests", edit_event_path(@event), class: "btn btn-primary btn-block push-top-small" %>
-        <% end %>
-      </div>
+      
       <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
       <% elsif @event_user.paid? %>
         <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block push-bottom" %>
@@ -133,6 +110,32 @@
           <%= event_user_pay_button(@event_user, "WePay") %>
         <% end %>
       <% end %>
+
+      <h3>Organizer</h3>
+      <div class="well">
+        <ul class="members">
+          <%= render object: @event.event_user(@event.organizer_id), partial: 'users/user', as: :event_user %>
+        </ul>
+      </div>
+
+      <h3>Guest List</h3>
+      <div class="well">
+        <% if @event.paid?(current_user) %>
+          <div class="push-bottom-small">
+            <em><small>Nudges remaining: <strong class="nudges-remaining"><%= @event_user.nudges_remaining %></strong></small></em>
+          </div>
+        <% end %>
+        <% if @event.paying_members.any? %>
+          <ul class="members">
+            <%= render partial: 'users/user', collection: @event.paying_event_users, as: :event_user %>
+          </ul>
+        <% else %>
+          There are no members. Add some!
+        <% end %>
+        <% if current_user == @event.organizer %>
+          <%= link_to "Invite more guests", edit_event_path(@event), class: "btn btn-primary btn-block push-top-small" %>
+        <% end %>
+      </div>
     </div>
 
     <div class="span7">
