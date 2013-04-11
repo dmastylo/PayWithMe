@@ -1,7 +1,7 @@
 // measures in milliseconds how much time has passed since the user was active
 var idleTime = 0;
 
-function timeIntervals()
+var timeIntervals = new function()
 {
   this.timesInMilliseconds = {
     "600000": 600000,
@@ -12,28 +12,29 @@ function timeIntervals()
   this.determinePollingFrequency = function(idleTime)
   {
     pollingFrequency = 5000;
-    pollingFrequencyValues = pollingFrequencyValues();
+    pollingFrequencyValues = this.pollingFrequencyValues();
 
     for (var i = 0; i < pollingFrequencyValues.length; ++i)
     {
       if (idleTime >= parseInt(pollingFrequencyValues[i]))
       {
-        pollingFrequency = timesInMilliseconds[pollingFrequencyValues[i]];
-        console.log(pollingFrequency);
+        pollingFrequency = this.timesInMilliseconds[pollingFrequencyValues[i]];
       }
     }
+
+    console.log(pollingFrequency);
 
     return pollingFrequency;
   };
 
   // Private
-  var pollingFrequencyValues = function()
+  this.pollingFrequencyValues = function()
   {
     var pollingFrequencyValues = [];
 
-    for (var key in timesInMilliseconds)
+    for (var key in this.timesInMilliseconds)
     {
-      if (timesInMilliseconds.hasOwnProperty(key))
+      if (this.timesInMilliseconds.hasOwnProperty(key))
       {
         pollingFrequencyValues.push(key);
       }
@@ -43,7 +44,7 @@ function timeIntervals()
 
     return pollingFrequencyValues;
   };
-};
+}
 
 
 $(function()
@@ -53,8 +54,6 @@ $(function()
   {
     // set first message to latest-message
     $(".message:first-child").addClass("latest");
-
-    var timeIntervals = new timeIntervals();
 
     // Poll for new messages
     var pollingFrequency = <%= Figaro.env.chat_polling.to_i %>;
