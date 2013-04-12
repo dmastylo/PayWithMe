@@ -124,6 +124,7 @@ class Payment < ActiveRecord::Base
         account_id: payee.wepay_account.token,
         amount: self.amount.to_s,
         app_fee: self.our_fee_amount.to_s,
+        fee_payer: "Payer",
         short_description: "Payment for #{self.event.title}",
         type: "EVENT",
         redirect_uri: Rails.application.routes.url_helpers.event_url(self.event, success: 1),
@@ -259,7 +260,7 @@ private
     end
 
     if self.payment_method.present? && self.amount_cents.present?
-      self.processor_fee_amount_cents = self.payment_method.processor_fee_after_our_fee(amount_cents)
+      self.processor_fee_amount_cents = self.payment_method.processor_fee(amount_cents)
       self.our_fee_amount_cents = self.payment_method.our_fee(amount_cents)
     end
   end
