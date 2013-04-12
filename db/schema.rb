@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130404022821) do
+ActiveRecord::Schema.define(:version => 20130412205913) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20130404022821) do
     t.integer  "paid_total_cents", :default => 0
     t.integer  "status",           :default => 0
     t.integer  "nudges_remaining", :default => 0
+    t.boolean  "ticket_sent",      :default => false
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -281,8 +282,8 @@ ActiveRecord::Schema.define(:version => 20130404022821) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
-    t.integer  "referrer_id"
     t.boolean  "using_cash",                 :default => false
+    t.integer  "referrer_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -55,7 +55,7 @@ class TicketPdf < Prawn::Document
 	# Draws ticket stub, right portion
 	def draw_ticket_stub
 		image pwm_image, at: [462, 226]
-		generate_and_display_qr("http://www.paywith.me/tickets/paid?eu_id=#{@event_user.id}", 690, 30)
+		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", 690, 30)
 	end
 
 	# Displays qr code as grid

@@ -16,6 +16,7 @@
 #  paid_total_cents :integer          default(0)
 #  status           :integer          default(0)
 #  nudges_remaining :integer          default(0)
+#  ticket_sent      :boolean          default(FALSE)
 #
 
 class EventUser < ActiveRecord::Base
@@ -98,7 +99,7 @@ class EventUser < ActiveRecord::Base
     update_status
 
     # Only send ticket if total amount is paid
-    if self.paid_total_cents == self.amount_cents
+    if self.paid_total_cents == self.amount_cents && !self.ticket_sent
       send_ticket
     end
 
@@ -199,8 +200,30 @@ private
   end
 
   def send_ticket
+    EventUser.delay.send_ticket(self.id)
+  end
+
+  def self.send_ticket(event_user_id)
+    event_user = EventUser.find(event_user_id)
+
     @event = self.event
     pdf = TicketPdf.new(@event, self).render
+
     UserMailer.ticket_notification(self.user, @event, pdf).deliver
+    ticket_sent = true
+  end
+
+  def send_nudge_email
+    Nudge.delay.send_nudge_email(self.id)
+  end
+
+  def self.send_nudge_email(nudge_id)
+    nudge = Nudge.find(nudge_id)
+    if nudge.sent_at.nil?
+      UserMailer.nudge_notification(nudge.nudgee, nudge).deliver
+
+      nudge.sent_at = Time.now
+      nudge.save
+    end
   end
 end
