@@ -99,8 +99,12 @@ class EventUser < ActiveRecord::Base
     update_status
 
     # Only send ticket if total amount is paid, if a ticket hasn't been sent yet and if the organizer wants tickets
-    if self.paid_total_cents == self.amount_cents && !self.ticket_sent? && self.event.send_tickets?
-      send_ticket
+    if self.paid_total_cents == self.amount_cents
+      if !self.ticket_sent?
+        if self.event.send_tickets?
+          send_ticket
+        end
+      end
     end
 
     send_nudges
