@@ -46,6 +46,14 @@ class UserMailer < ActionMailer::Base
     mail to: format_address_to(user), subject: "#{@nudge.event.title}: #{@nudge.nudger.first_name} Nudged You"
   end
 
+  def leave_notification(user, event)
+    @user = user
+    @event = event
+    @organizer = @event.organizer
+
+    mail to: format_address_to(@organizer), subject: "#{@event.title}: {UserHelper.user_name(@user)} has left"
+  end
+
 private
   def format_address_to(user)
     require 'mail'

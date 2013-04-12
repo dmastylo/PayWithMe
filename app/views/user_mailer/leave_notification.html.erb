@@ -1,0 +1,14 @@
+<tr>
+  <td colspan="2">
+    <p>Hi <%= (@organizer.first_name.empty?) ? "there" : @organizer.first_name %>,</p>
+
+    <p>The following user has left <%= @event.title %>:</p>
+
+    <p>
+      <% if @user.name.present? %>Name: <%= @user.name %><br>
+      Email: <%= @user.email %>
+    </p>
+
+    <p><%= link_to image_tag(asset_path('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event) %></p>
+  </td>
+</tr>
