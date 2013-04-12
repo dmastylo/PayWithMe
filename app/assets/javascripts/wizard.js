@@ -6,6 +6,7 @@
     this.options = options;
     this.currentStep = 1;
 
+    this.init();
     this.listen();
     this.$element.find('.wizard-card').hide();
     this.$element.find("#wizard-card-"+this.currentStep).show();
@@ -14,6 +15,20 @@
   Wizard.prototype = 
   {
     constructor: Wizard,
+
+    init: function()
+    {
+      // Later make this more general
+      $("#event_division_type").change(function()
+      {
+        $(".event_division_type_option").hide();
+        $(".event_division_type_option").removeClass("selected");
+        $("#event_division_type_"+$(this).val()).show();
+        $("#event_division_type_"+$(this).val()).addClass("selected");
+      });
+      $("#event_division_type_"+$("#event_division_type").val()).show();
+      $("#event_division_type_"+$("#event_division_type").val()).addClass("selected");
+    },
 
     listen: function()
     {
@@ -34,29 +49,17 @@
       this.$element.find("#wizard-step-"+this.currentStep).removeClass("active");
       this.$element.find("#wizard-step-"+this.currentStep+" i").removeClass("icon-white");
       this.$element.find("#wizard-card-"+this.currentStep).hide()
-      this.currentStep = newStep;
+      this.currentStep = parseInt(newStep);
       this.$element.find("#wizard-step-"+this.currentStep).addClass("active");
       this.$element.find("#wizard-step-"+this.currentStep+" i").addClass("icon-white");
       this.$element.find("#wizard-card-"+this.currentStep).show();
 
-      this.$element.find("#wizard-card-"+this.currentStep+" .autosize").each(function()
+      this.$element.find("#wizard-card-"+this.currentStep+" .autosize").trigger("show");
+      this.$element.find("#wizard-card-"+this.currentStep+" .btn_group_option").each(function()
       {
-        $parent = $(this);
-        
-        $parent.parent().show();
-
-        $fixed = $parent.find("span.add-on");
-        $fluid = $parent.find("input");
-
-        parentWidth = $parent.width();
-        fixedWidth = $fixed.outerWidth(true);
-
-        var calculatedOffset = $fluid.outerWidth(true) - $fluid.outerWidth();
-        $fluid.css('width', (parentWidth - fixedWidth - calculatedOffset));
-
-        if(!$parent.parent().hasClass("selected"))
-          $parent.parent().hide();
-      });
+        if($(this).hasClass("selected"))
+          $(this).show();
+      })
     }
   };
 

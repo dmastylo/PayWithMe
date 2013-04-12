@@ -5,7 +5,7 @@
     <div class="wizard-step active" id="wizard-step-1">Step 1: Details <i class="icon-chevron-right icon-white"></i></div>
     <div class="wizard-step" id="wizard-step-2">Step 2: Money <i class="icon-chevron-right"></i></div>
     <div class="wizard-step" id="wizard-step-3">Step 3: Members <i class="icon-chevron-right"></i></div>
-    <div class="wizard-step" id="wizard-step-4">Step 4: Finalize <i class="icon-chevron-right"></i></div>
+    <!-- <div class="wizard-step" id="wizard-step-4">Step 4: Finalize <i class="icon-chevron-right"></i></div> -->
   </div>
   <div class="span9">
     <div class="wizard-card" id="wizard-card-1" style="display: block;">
@@ -76,9 +76,82 @@
                 <%= f.text_field :split_amount, class: "input-block-level" %>
               </div>
             </div>
+
           </div>
         </div>
+          
+        <div class="control-group required">
+          <%= f.label :payment_methods_raw, "How do you want to collect money? (select all that apply, required)" %>
+          <%= f.hidden_field :payment_methods_raw %>
+          <div class="btn-group input-block-level" id="event_payment_methods_raw_btn_group" data-toggle="buttons-checkbox">
+            <button type="button" class="btn half push-bottom-tiny" data-name="cash" data-value="<%= PaymentMethod::MethodType::CASH %>" title="Manually mark cash payers as paid.">Cash<i class="icon-ok"></i></button>
+            <button type="button" class="btn half last push-bottom-tiny" data-name="paypal" data-value="<%= PaymentMethod::MethodType::PAYPAL %>" <% if current_user.paypal_account.nil? %>title="You will need a linked PayPal account but you can set that up after."<% end %>>PayPal<i class="<% if current_user.paypal_account.nil? %>icon-remove<% else %>icon-ok<% end %>"></i></button>
+            <div class="clearfix"></div>
+            <button type="button" class="btn half" data-name="dwolla" data-value="<%= PaymentMethod::MethodType::DWOLLA %>" <% if current_user.dwolla_account.nil? %>title="You will need a linked Dwolla account but you can set that up after."<% end %>>Dwolla<i class="<% if current_user.dwolla_account.nil? %>icon-remove<% else %>icon-ok<% end %>"></i></button>
+            <button type="button" class="btn half last" data-name="wepay" data-value="<%= PaymentMethod::MethodType::WEPAY %>" <% if current_user.wepay_account.nil? %>title="You will need a linked WePay account but you can set that up after."<% end %>>WePay<i class="<% if current_user.wepay_account.nil? %>icon-remove<% else %>icon-ok<% end %>"></i></button>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+
         <%= link_to "Continue to next step".html_safe, "#", class: "btn btn-primary btn-block push-top-small wizard-submit", id: "wizard-submit-1" %>
+      </div>
+    </div>
+    <div class="wizard-card" id="wizard-card-3">
+      <div class="wizard-card-title"><h3>Step 3: Invite Members</h3></div>
+      <div class="wizard-card-body">
+        <div class="control-group required">
+          <%= f.label :invitation_types, "How do you to invite members? (select all that apply, required)" %>
+          <%= f.hidden_field :invitation_types %>
+          <div class="btn-group input-block-level" id="event_invitation_types_btn_group" data-toggle="buttons-checkbox">
+            <button type="button" class="btn half push-bottom-tiny" data-name="members" data-value="1">I want to invite people by email or name.</button>
+            <button type="button" class="btn half push-bottom-tiny" data-name="link" data-value="2">I want to share a link on Facebook, email, etc.</button>
+            <div class="clearfix"></div>
+            <button type="button" class="btn half" data-name="groups" data-value="3">I have created a PayWithMe group to invite.</button>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+
+        <div class="half event_invitation_types_option btn_group_option push-top-small" id="event_invitation_types_members">
+          <h3 style="float: left;">Invite members</h3>
+          <a href="#" id="btn-bulk-invite" class="btn btn-primary pull-right" rel="tooltip" title="Submit a comma-separated list of emails">Bulk invitation mode</a>
+          <div class="clearfix"></div>
+          <div class="alert alert-error hidden" id="add_member_error">
+          </div>
+          <div class="input-append autosize" id="single-invite">
+            <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
+            <%= link_to "Add", "#", class: "btn", id: "add_member" %>
+          </div>
+          <div id="bulk-invite" class="hidden">
+             <%= text_area :member, :names, placeholder: "Enter email addresses separated by commas, spaces, or new lines", class: "input-block-level", rows: 3 %>
+            <%= link_to "Add", "#", class: "btn btn-block", id: "add_members" %>
+          </div>
+          <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
+          <div id="invited_members">
+            <% @event.independent_members.each do |user| %>
+              <%= render 'users/invited_user', mustache: user_for_mustache(user) %>
+            <% end %>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+
+        <div class="half last event_invitation_types_option btn_group_option push-top-small" id="event_invitation_types_groups">
+          <h3>Invite groups</h3>
+          <div class="alert alert-error hidden" id="add_group_error"></div>
+          <div class="input-append autosize">
+            <%= text_field :group, :name, placeholder: "Search for groups", class: "span4" %>
+            <%= link_to "Add", "#", class: "btn", id: "add_group" %>
+          </div>
+          <%= f.hidden_field :groups, value: (@group_ids.to_json if @group_ids) %>
+          <div id="invited_groups">
+            <% @event.groups.each do |group| %>
+              <%= render 'groups/invited_group', mustache: group_for_mustache(group) %>
+            <% end %>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <%= f.submit "Create event and send invitations", class: "btn btn-primary btn-block push-top-small" %>
       </div>
     </div>
   </div>
@@ -123,6 +196,7 @@
       $("#event_privacy_type").buttonGroup();
       $("#event_image_type").buttonGroup();
       $("#event_payment_methods_raw").buttonGroup();
+      $("#event_invitation_types").buttonGroup();
 
       $('#member_name').addSomething({
         somethings: <%= @member_emails.to_json.html_safe || "[]" %>,
@@ -145,16 +219,6 @@
           return;
         },
       });
-
-      $("#event_division_type").change(function()
-      {
-        $(".event_division_type_option").hide();
-        $(".event_division_type_option").removeClass("selected");
-        $("#event_division_type_"+$(this).val()).show();
-        $("#event_division_type_"+$(this).val()).addClass("selected");
-      });
-      $("#event_division_type_"+$("#event_division_type").val()).show();
-      $("#event_division_type_"+$("#event_division_type").val()).addClass("selected");
 
       $(".wizard").wizard();
     });

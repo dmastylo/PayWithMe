@@ -25,8 +25,8 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw
-  attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types
+  attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw, :invitation_types
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
   monetize :money_collected_cents, allow_nil: true
@@ -61,6 +61,7 @@ class Event < ActiveRecord::Base
   before_validation :clear_amounts
   before_validation :concatenate_dates
   before_validation :parse_payment_methods
+  before_validation :set_privacy_type
   before_save :clear_dates
   before_save :set_event_image
   before_save :add_organizer_to_members
@@ -87,7 +88,7 @@ class Event < ActiveRecord::Base
   def split_amount_cents
     if division_type == DivisionType::SPLIT
       super
-    elsif paying_member_count == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE
+    elsif paying_member_count == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE || total_amount_cents.nil?
       nil
     else
       total_amount_cents / paying_member_count
@@ -517,5 +518,17 @@ private
   def clear_notifications_and_news_items
     Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all
+  end
+
+  def set_privacy_type
+    if self.invitation_types.present?
+      self.invitation_types = ActiveSupport::JSON.decode(self.invitation_types) unless self.invitation_types.is_a?(Array)
+
+      if self.invitation_types.include?(2)
+        self.privacy_type = PrivacyType::PUBLIC
+      else
+        self.privacy_type = PrivacyType::PRIVATE
+      end
+    end
   end
 end

@@ -86,6 +86,11 @@ em
   {
     width: 50%;
   }
+  .btn i
+  {
+    float: right;
+    margin-top: 3px;
+  }
 }
 
 .wrapper
@@ -246,5 +251,15 @@ ul.error-messages
   .img-polaroid
   {
     width: 100%;
+  }
+}
+
+.half
+{
+  width: 49%;
+  float: left;
+  &.last
+  {
+    margin-left: 2%;
   }
 }

@@ -41,6 +41,15 @@
 				});
 
 				this.$input.val(JSON.stringify(this.val));
+
+				if($button.hasClass("active"))
+				{
+					this.hideChild(name);
+				}
+				else
+				{
+					this.showChild(name);
+				}
 			}
 			else if(!$button.hasClass('disabled'))
 			{
@@ -87,6 +96,14 @@
 		showChild: function(name)
 		{
 			$("." + this.name + "_option#" + this.name + "_" + name).fadeIn();
+			$("." + this.name + "_option#" + this.name + "_" + name).addClass("selected");
+			$("." + this.name + "_option#" + this.name + "_" + name + " .autosize").trigger("show");
+		},
+
+		hideChild: function(name)
+		{
+			$("." + this.name + "_option#" + this.name + "_" + name).hide();
+			$("." + this.name + "_option#" + this.name + "_" + name).removeClass("selected");
 		}
 
 	}
