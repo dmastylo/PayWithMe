@@ -16,9 +16,9 @@
       width: 1170px;
       #logo
       {
-        width: 141px;
+        width: 185px;
         height: 32px;
-        background-image: url(asset_path('layout/logo.png', image));
+        background-image: url(asset_path('layout/logo_beta.png', image));
         background-repeat: no-repeat;
         margin-top: 21px;
         float: left;
@@ -127,8 +127,8 @@
       margin: 0;
       #logo
       {
-        width: 66px;
-        background-image: url(asset_path('layout/logo_mobile.png', image));
+        width: 111px;
+        background-image: url(asset_path('layout/logo_mobile_beta.png', image));
       }
     }
   }
