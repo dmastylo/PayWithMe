@@ -93,6 +93,11 @@
         <button type="button" class="btn half" data-name="public" data-value="2" title="Only invited can join and view the event.">Private Event</button>
       </div>
 
+      <div class="push-bottom-small">
+        <%= f.label :send_tickets, "Send Tickets" %>
+        <%= f.check_box :send_tickets, title:"Emails out a ticket to the event when each member pays for the event." %>
+      </div>
+
       <%= f.label :payment_methods_raw, "Accepted Payment Methods (Select One Or More)" %>
       <%= f.hidden_field :payment_methods_raw %>
       <div class="btn-group input-block-level" id="event_payment_methods_raw_btn_group"  data-toggle="buttons-checkbox">

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130412205913) do
+ActiveRecord::Schema.define(:version => 20130412212241) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -72,8 +72,8 @@ ActiveRecord::Schema.define(:version => 20130412205913) do
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.integer  "division_type"
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(:version => 20130412205913) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "image_url"
+    t.boolean  "send_tickets",       :default => false
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
