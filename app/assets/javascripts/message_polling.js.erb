@@ -10,7 +10,7 @@ var timeIntervals = new function()
   this.timesInMilliseconds = {
     "600000": 600000,
     "300000": 25000,
-    "180000": 10000
+    "18000": 10000
   };
 
   this.determinePollingFrequency = function(idleTime)
@@ -61,11 +61,11 @@ $(function()
 
     // Poll for new messages
     var pollingFrequency = <%= Figaro.env.chat_polling.to_i %>;
-    setTimeout(updateMessages, pollingFrequency);
+    timer = setTimeout(updateMessages, pollingFrequency);
 
     // Track user activity on page
     // Increment the idle time counter every minute
-    var idleInterval = setInterval(timerIncrement, 60000);
+    var idleInterval = setInterval(timerIncrement, 6000);
 
     // Mouse movement or keypressing will zero the idleTime
     $(this).mousemove(function (e)
@@ -93,7 +93,7 @@ function resetIdleTime(pollingFrequency)
 
 function timerIncrement()
 {
-  idleTime += 60000;
+  idleTime += 6000;
 }
 
 function updateMessages(pollingFrequency)
