@@ -1,8 +1,12 @@
+var timer;
+
 // measures in milliseconds how much time has passed since the user was active
 var idleTime = 0;
 
 var timeIntervals = new function()
 {
+  // Don't forget to change the mousemovement/keypress firing value as well
+  // if you change these values
   this.timesInMilliseconds = {
     "600000": 600000,
     "300000": 25000,
@@ -11,20 +15,20 @@ var timeIntervals = new function()
 
   this.determinePollingFrequency = function(idleTime)
   {
-    pollingFrequency = 5000;
-    pollingFrequencyValues = this.pollingFrequencyValues();
+    var localPollingFrequency = 5000;
+    var pollingFrequencyValues = this.pollingFrequencyValues();
 
     for (var i = 0; i < pollingFrequencyValues.length; ++i)
     {
       if (idleTime >= parseInt(pollingFrequencyValues[i]))
       {
-        pollingFrequency = this.timesInMilliseconds[pollingFrequencyValues[i]];
+        localPollingFrequency = this.timesInMilliseconds[pollingFrequencyValues[i]];
       }
     }
 
-    console.log(pollingFrequency);
+    console.log(localPollingFrequency);
 
-    return pollingFrequency;
+    return localPollingFrequency;
   };
 
   // Private
@@ -66,26 +70,26 @@ $(function()
     // Mouse movement or keypressing will zero the idleTime
     $(this).mousemove(function (e)
     {
-      oldIdleTime = idleTime;
-      idleTime = 0;
-
-      if (oldIdleTime >= 180000)
-      {
-        updateMessages(pollingFrequency);
-      }
+      resetIdleTime(pollingFrequency);
     });
     $(this).keypress(function (e)
     {
-      oldIdleTime = idleTime;
-      idleTime = 0;
-
-      if (oldIdleTime >= 180000)
-      {
-        updateMessages(pollingFrequency);
-      }
+      resetIdleTime(pollingFrequency);
     });
   }
 });
+
+function resetIdleTime(pollingFrequency)
+{
+  oldIdleTime = idleTime;
+  idleTime = 0;
+
+  if (oldIdleTime >= 180000)
+  {
+    clearTimeout(timer);
+    updateMessages(pollingFrequency);
+  }
+}
 
 function timerIncrement()
 {
@@ -100,31 +104,5 @@ function updateMessages(pollingFrequency)
             : "0";
   $.getScript("/messages.js?event_id=" + event_id + "&after=" + after);
 
-  setTimeout(updateMessages, timeIntervals.determinePollingFrequency(idleTime));
-
-  // TODO: This needs to be changed to be configurable as well as make the timeouts
-  // less abrupt, i.e. polling still happens on seconds basis, but updates every few minutes
-  // if (idleTime >= 600000)
-  // {
-  //   // 10 minutes, pause the polling
-  //   pollingFrequency = 600000;
-  // }
-  // else if (idleTime > 300000)
-  // {
-  //   // 5 minutes
-  //   pollingFrequency = 300000;
-  //   setTimeout(updateMessages, pollingFrequency);
-  // }
-  // else if (idleTime > 180000)
-  // {
-  //   // 3 minutes
-  //   pollingFrequency = 180000;
-  //   setTimeout(updateMessages, pollingFrequency);
-  // }
-  // else
-  // {
-  //   // 5 seconds
-  //   pollingFrequency = 5000;
-  //   setTimeout(updateMessages, pollingFrequency);
-  // }
+  timer = setTimeout(updateMessages, timeIntervals.determinePollingFrequency(idleTime));
 }
