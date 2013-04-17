@@ -61,11 +61,11 @@ class TicketPdf < Prawn::Document
 	# Displays qr code as grid
 	def generate_and_display_qr(link_to_embed, x_start, y_start)
 
-		@qr = RQRCode::QRCode.new(link_to_embed, size: 5)
+		@qr = RQRCode::QRCode.new(link_to_embed, size: 7)
 
 		x_pos = x_start
 		y_pos = y_start
-		width = 5
+		width = 4
 
 		@qr.modules.each_index do |y|
 		 	x_pos -= width
