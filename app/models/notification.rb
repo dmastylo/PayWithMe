@@ -46,7 +46,7 @@ class Notification < ActiveRecord::Base
       notifications.push Notification.new(
         notification_type: NotificationType::INVITE,
         foreign_type: ForeignType::GROUP,
-        foreign_id: group.id,
+        foreign_id: group_id,
         user_id: user_id
       )
     end

@@ -7,7 +7,7 @@ class EventsController < ApplicationController
   before_filter :check_user_accounts, only: [:new, :create]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
-  before_filter :check_event_past, only: [:edit, :update]
+  # before_filter :check_event_past, only: [:edit, :update]
   before_filter :clear_relevant_notifications, only: [:show], if: :current_user
   before_filter :update_event_user_status, only: [:show]
 
@@ -173,12 +173,12 @@ private
     end
   end
 
-  def check_event_past
-    if @event.is_past?
-      flash[:error] = "You can't edit an event that has already happened."
-      redirect_to event_path(@event)
-    end
-  end
+  # def check_event_past
+  #   if @event.is_past?
+  #     flash[:error] = "You can't edit an event that has already happened."
+  #     redirect_to event_path(@event)
+  #   end
+  # end
 
   def update_event_user_status
     if params[:success] == '1' && signed_in?
