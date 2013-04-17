@@ -3,10 +3,21 @@
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3>Paid!</h3>
+			<h3><%= @event_user.paid?  ? 'Paid!' : 'Not Paid!' %></h3>
 			<div class="well">
-				<p><%= @event_user.user.name || @event_user.user.email %> has paid via <%= @event_user.payments[0].payment_method.name %> to attend <%= @event_user.event.title %>.</p>
-				<p><%= @event_user.user.name || @event_user.user.email %> paid a total of <%= humanized_money_with_symbol @event_user.paid_total_cents / 100 %> on <%= @event_user.paid_at.to_date %>.</p>
+				<p>
+					<%= @event_user.user.name || @event_user.user.email %> has
+					<% if @event_user.paid? %>
+						paid via <%= @event_user.payments[0].payment_method.name %>
+					<% else %>
+						not paid
+					<% end %>
+					to attend <%= @event_user.event.title %>.
+				</p>
+
+				<% if @event_user.paid? %>
+					<p><%= @event_user.user.name || @event_user.user.email %> paid a total of <%= humanized_money_with_symbol @event_user.paid_total_cents / 100 %> on <%= @event_user.paid_at.to_date %>.</p>
+				<% end %>
 			</div>
 		</div>
 	</div>
