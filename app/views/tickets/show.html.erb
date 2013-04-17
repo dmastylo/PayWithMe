@@ -3,7 +3,7 @@
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3><%= @event_user.paid?  ? 'Paid!' : 'Not Paid!' %></h3>
+			<h2><%= @event_user.paid?  ? 'Paid!' : 'Not Paid!' %></h2>
 			<div class="well">
 				<p>
 					<%= @event_user.user.name || @event_user.user.email %> has
