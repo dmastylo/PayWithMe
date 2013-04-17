@@ -65,7 +65,7 @@ class TicketPdf < Prawn::Document
 
 		x_pos = x_start
 		y_pos = y_start
-		width = 4
+		width = 1
 
 		@qr.modules.each_index do |y|
 		 	x_pos -= width
