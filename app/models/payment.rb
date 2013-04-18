@@ -113,8 +113,6 @@ class Payment < ActiveRecord::Base
         fees_payer: "PRIMARYRECEIVER"
       )
 
-      raise response.to_yaml
-
       self.transaction_id = response["payKey"]
       self.save
 
