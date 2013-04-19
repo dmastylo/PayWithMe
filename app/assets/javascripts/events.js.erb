@@ -3,48 +3,44 @@ $(function()
   // Enter submits messages, shift-enter does a new line in the chat message
   if ($('.messages').length > 0)
   {
+    // combine when the DOM is fully loaded
     combineUserMessages();
 
+    // If you press shift-enter insert newlines
     $("textarea").keypress(function(e)
     {
       if (e.keyCode == 13 && !e.shiftKey)
       {
         e.preventDefault();
-        // now call the code to submit your form
         $(this).parent('form').submit();
         return;
       }
     });
   }
-
-  // This needs to be tested
-  // $("#member_name").keyup(function(event)
-  // {
-  //   if(event.keyCode == 13)
-  //   {
-  //     $("#add_member").click();
-  //   }
-  // });
 });
 
 // Consolidate message content into one message if multiple messages from one user
-function combineUserMessages() {
-  $lastMessage = $(".message:first-child");
+function combineUserMessages()
+{
+  $previousMessage = $(".message:first-child");
 
-  $('.message').each(function()
+  $('.message').each(function(index)
   {
-    $this = $(this);
+    if (index != 0)
+    {
+      $this = $(this);
 
-    if ($this.attr('data-user') === $lastMessage.attr('data-user') && $this.attr('data-time') !== $lastMessage.attr('data-time'))
-    {
-      $lastMessage.find(".content").append("<br />" + $this.find(".content").html());
-      $lastMessage.find(".content").attr('data-count', parseInt($lastMessage.find(".content").attr('data-count')) + parseInt($this.find(".content").attr('data-count')));
-      $lastMessage.attr('data-oldest-time', $this.attr('data-oldest-time'));
-      $this.remove();
-    }
-    else
-    {
-      $lastMessage = $this;
+      if ($this.attr('data-user') === $previousMessage.attr('data-user') && $this.find('.content').html() !== $previousMessage.find('.content').html())
+      {
+        $previousMessage.find(".content").append("<br />" + $this.find(".content").html());
+        $previousMessage.find(".content").attr('data-count', parseInt($previousMessage.find(".content").attr('data-count')) + parseInt($this.find(".content").attr('data-count')));
+        $previousMessage.attr('data-oldest-time', $this.attr('data-oldest-time'));
+        $this.remove();
+      }
+      else
+      {
+        $previousMessage = $this;
+      }
     }
   });
 }
@@ -62,13 +58,14 @@ function fadeInNewMessages()
 function temporarySpamBlock()
 {
   // Disable the ability to post a new message for a second
-  if ($('.post-message').attr("disabled"))
+  $postMessage = $('.post-message');
+  if ($postMessage.attr("disabled"))
   {
-    $('.post-message').removeAttr("disabled");
+    $postMessage.removeAttr("disabled");
   }
   else
   {
-    $('.post-message').attr("disabled", "disabled");
+    $postMessage.attr("disabled", "disabled");
     setTimeout(temporarySpamBlock, <%= Figaro.env.chat_limit.to_i %>);
   }
 }
