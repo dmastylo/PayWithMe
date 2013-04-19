@@ -6,6 +6,11 @@ class TicketPdf < Prawn::Document
 		@event = event
 		@event_user = event_user
 
+		# draw_ticket_1
+		draw_ticket_2
+	end
+
+	def draw_ticket_1
 		# Draws border
 		rectangle [0, 250], 700, 250
 		stroke_vertical_line 0, 250, at: 450
@@ -13,6 +18,16 @@ class TicketPdf < Prawn::Document
 		draw_information
 		draw_graphics
 		draw_ticket_stub
+	end
+
+	def draw_ticket_2
+		# Draws border
+		rectangle [0, 250], 700, 250
+		stroke_vertical_line 0, 250, at: 450
+
+		# draw text information
+		# draw graphics
+		# draw ticket stub
 	end
 
 	# Draws text based information on left side
@@ -76,7 +91,7 @@ class TicketPdf < Prawn::Document
 	    		fill_rectangle [x_pos, y_pos], width, width
 	   		else
 	   			fill_color "FFFFFF"
-	   			fill_rectangle [x_pos ,y_pos], width, width
+	   			fill_rectangle [x_pos, y_pos], width, width
 	   		end
 		  end
 		  y_pos = y_start
@@ -90,7 +105,7 @@ class TicketPdf < Prawn::Document
 	  elsif @event.image_type == :url
 	    open(@event.image_url)
 	  elsif @event.image_type == :default_image
-	    "#{Rails.root}/app/assets/images/default_event_image.png"
+	    m_image
 	  end
 	end
 
