@@ -6,28 +6,18 @@ class TicketPdf < Prawn::Document
 		@event = event
 		@event_user = event_user
 
-		# draw_ticket_1
-		draw_ticket_2
+		draw_ticket
 	end
 
-	def draw_ticket_1
+	def draw_ticket
 		# Draws border
 		rectangle [0, 250], 700, 250
-		stroke_vertical_line 0, 250, at: 450
+
+		stroke_vertical_line 0, 250, at: 550
 
 		draw_information
 		draw_graphics
 		draw_ticket_stub
-	end
-
-	def draw_ticket_2
-		# Draws border
-		rectangle [0, 250], 700, 250
-		stroke_vertical_line 0, 250, at: 450
-
-		# draw text information
-		# draw graphics
-		# draw ticket stub
 	end
 
 	# Draws text based information on left side
