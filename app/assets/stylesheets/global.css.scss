@@ -213,6 +213,21 @@ ul.error-messages
   margin-left: 0px !important;
 }
 
+.field_with_error
+{
+  input
+  {
+    border-color: $red;
+    &:focus
+    {
+      border-color: $red;
+      -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(189, 54, 47, 0.4);
+      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(189, 54, 47, 0.4);
+      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(189, 54, 47, 0.4);
+    }
+  }
+}
+
 // START MOBILE FIXES
 @media (max-width: 767px)
 {

@@ -61,7 +61,7 @@ class Event < ActiveRecord::Base
   before_validation :clear_amounts
   before_validation :concatenate_dates
   before_validation :parse_payment_methods
-  before_validation :set_privacy_type
+  before_validation :parse_invitation_types
   before_save :clear_dates
   before_save :set_event_image
   before_save :add_organizer_to_members
@@ -231,6 +231,22 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def invitation_types
+    if @invitation_types.present?
+      @invitation_types
+    else
+      invitation_types = []
+      if paying_member_count > 0
+        invitation_types << 1
+      end
+
+      if self.groups.count > 0
+        invitation_types << 3
+      end
+      invitation_types
+    end
+  end
+        
   # Member definitions
   # ========================================================
   def paying_event_users
@@ -520,15 +536,9 @@ private
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all
   end
 
-  def set_privacy_type
+  def parse_invitation_types
     if self.invitation_types.present?
       self.invitation_types = ActiveSupport::JSON.decode(self.invitation_types) unless self.invitation_types.is_a?(Array)
-
-      if self.invitation_types.include?(2)
-        self.privacy_type = PrivacyType::PUBLIC
-      else
-        self.privacy_type = PrivacyType::PRIVATE
-      end
     end
   end
 end

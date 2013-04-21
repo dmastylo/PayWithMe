@@ -28,6 +28,25 @@
       });
       $("#event_division_type_"+$("#event_division_type").val()).show();
       $("#event_division_type_"+$("#event_division_type").val()).addClass("selected");
+
+      var found_error = false;
+      var that = this;
+      this.$element.find('.wizard-card').each(function()
+      {
+        var errors = $(this).find('.field_with_error');
+        if(errors.length > 0)
+        {
+          var id = $(this).attr("id").replace("wizard-card-", "");
+          var $step = $("#wizard-step-"+id);
+          $step.find("i").removeClass("icon-chevron-right").addClass("icon-exclamation-sign");
+
+          if(!found_error)
+          {
+            that.switchToCard(id);
+            found_error = true;
+          }
+        }
+      });
     },
 
     listen: function()
@@ -54,6 +73,7 @@
       this.$element.find("#wizard-step-"+this.currentStep+" i").addClass("icon-white");
       this.$element.find("#wizard-card-"+this.currentStep).show();
 
+      this.$element.find("#wizard-card-"+this.currentStep+" .control-group").show();
       this.$element.find("#wizard-card-"+this.currentStep+" .autosize").trigger("show");
       this.$element.find("#wizard-card-"+this.currentStep+" .btn_group_option").each(function()
       {
