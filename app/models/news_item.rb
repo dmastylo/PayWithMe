@@ -86,7 +86,7 @@ class NewsItem < ActiveRecord::Base
     values = {
       news_type: NewsType::INVITE,
       foreign_type: ForeignType::GROUP,
-      foreign_id: group.id
+      foreign_id: group_id
     }
     group = Group.find_by_id(group_id)
 

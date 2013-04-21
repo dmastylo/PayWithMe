@@ -22,7 +22,7 @@ class GroupsController < ApplicationController
   end
 
   def create
-    members = User.from_params(params[:group].delete(:members))
+    members = User.from_params(params[:group].delete(:members), current_user)
     @group = current_user.organized_groups.new(params[:group])
 
     if @group.save
