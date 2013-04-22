@@ -4,7 +4,11 @@
     <div class="control-group required">
       <%= f.label :privacy_type, "Do you want everyone to be able to see your event? (required)" %>
       <div class="controls">
-        <%= f.select :privacy_type, options_for_select([["Only those invited should be able to see the event.", 2], ["The event is public to everyone.", 1]], @event.privacy_type), {}, { class: 'input-block-level' } %>
+        <%= f.hidden_field :privacy_type %>
+        <div class="btn-group input-block-level push-bottom-small" id="event_privacy_type_btn_group" data-toggle="buttons-radio">
+          <button type="button" class="btn half" data-name="private" data-value="1">Public event: anyone can join.</button>
+          <button type="button" class="btn half" data-name="public" data-value="2">Private event: only those I invite.</button>
+        </div>
       </div>
     </div>
 
