@@ -13,7 +13,7 @@
     @include box-sizing(border-box);
     .container
     {
-      width: 1170px;
+      width: 940px;
       #logo
       {
         width: 185px;
@@ -190,6 +190,8 @@
           border: 1px solid $black;
           margin-right: $smallMargin;
           vertical-align: -8px;
+          width: 32px;
+          height: 32px;
         }
         &:hover
         {
