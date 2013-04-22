@@ -234,14 +234,21 @@ ul.error-messages
   body
   {
     padding: 0;
+    font-size: 18px;
   }
   .container
   {
-    margin: 0 $margin;
+    margin: 0 $smallMargin;
   }
   .wrapper.wrapper-top
   {
     margin-top: -1 * $smallMargin;
+  }
+  .btn
+  {
+    font-size: 20px;
+    padding: 8px 0;
+    height: 40px;
   }
   .btn-group
   {
