@@ -19,6 +19,7 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  image_url          :string(255)
+#  send_tickets       :boolean          default(FALSE)
 #
 
 class Event < ActiveRecord::Base
@@ -55,6 +56,8 @@ class Event < ActiveRecord::Base
   has_many :reminders, dependent: :destroy
   has_and_belongs_to_many :payment_methods
   has_many :nudges, dependent: :destroy
+  has_many :items, dependent: :destroy
+  accepts_nested_attributes_for :items, allow_destroy: true
 
   # Callbacks
   # ========================================================
@@ -111,6 +114,10 @@ class Event < ActiveRecord::Base
 
   def fundraiser?
     division_type == DivisionType::FUNDRAISE
+  end
+
+  def itemized?
+    division_type == DivisionType::ITEMIZED
   end
 
   # Privacy types
@@ -185,6 +192,7 @@ class Event < ActiveRecord::Base
     TOTAL = 1
     SPLIT = 2
     FUNDRAISE = 3
+    ITEMIZED = 4
   end
   class PrivacyType
     PUBLIC = 1

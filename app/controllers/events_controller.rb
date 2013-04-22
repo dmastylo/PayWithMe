@@ -41,6 +41,7 @@ class EventsController < ApplicationController
   
   def new
     @event = current_user.organized_events.new
+    @event.items.new
   end
 
   def create

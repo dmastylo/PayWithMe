@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130412212241) do
+ActiveRecord::Schema.define(:version => 20130422190221) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -129,6 +129,17 @@ ActiveRecord::Schema.define(:version => 20130412212241) do
   end
 
   add_index "groups", ["slug"], :name => "index_groups_on_slug"
+
+  create_table "items", :force => true do |t|
+    t.string   "title"
+    t.integer  "event_id"
+    t.integer  "amount_cents"
+    t.boolean  "allow_quantity"
+    t.integer  "quantity_min"
+    t.integer  "quantity_max"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
 
   create_table "linked_accounts", :force => true do |t|
     t.string   "provider"

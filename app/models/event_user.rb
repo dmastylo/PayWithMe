@@ -16,6 +16,7 @@
 #  paid_total_cents :integer          default(0)
 #  status           :integer          default(0)
 #  nudges_remaining :integer          default(0)
+#  ticket_sent      :boolean          default(FALSE)
 #
 
 class EventUser < ActiveRecord::Base
