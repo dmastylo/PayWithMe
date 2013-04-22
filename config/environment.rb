@@ -9,3 +9,4 @@ date_format = '%m/%d/%Y'
 time_format = date_format + ' %I:%M%p'
 Time::DATE_FORMATS[:default] = time_format
 Date::DATE_FORMATS[:default] = date_format
+Time::DATE_FORMATS[:ordinal] = lambda { |time| time.strftime("%B #{time.day.ordinalize}, %Y at %I:%M%p") }

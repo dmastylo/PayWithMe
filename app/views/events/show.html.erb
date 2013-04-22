@@ -89,7 +89,7 @@
           <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
         <% end %>
         <div class="quarter"><strong>Money Due</strong></div>
-        <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
+        <div class="three-quarters"><%= @event.due_at.to_s(:ordinal) %></div>
         <div class="clearfix"></div>
         <div class="quarter"><strong>Accepted Payment Methods</strong></div>
         <div class="three-quarters"><%= @event.payment_methods.collect(&:name).join(", ") %></div>

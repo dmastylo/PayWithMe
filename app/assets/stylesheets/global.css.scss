@@ -15,6 +15,12 @@ input, button, select, textarea
   border-color: $grey;
 }
 
+.img-full
+{
+  @include box-sizing(border-box);
+  width: 100%;
+}
+
 h1,h2,h3,h4
 {
   font-weight: bold;

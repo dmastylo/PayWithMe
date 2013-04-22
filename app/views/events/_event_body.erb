@@ -24,7 +24,7 @@
         Was due
       <% else %>
         Due
-      <% end %> at <%= event.due_at %>
+      <% end %> on <%= event.due_at.to_s(:ordinal) %>
     </div>
   </div>
 </div>
