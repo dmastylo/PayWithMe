@@ -3,21 +3,39 @@ class TicketPdf < Prawn::Document
 	# Initializes the document
 	def initialize(event, event_user)
 		super(:page_layout => :landscape)
+
+		# Set font
+		font_families.update(
+		  "Lato" => {
+		    bold: "#{Rails.root}/app/assets/fonts/Lato-Bold.ttf",
+		    normal: "#{Rails.root}/app/assets/fonts/Lato-Regular.ttf"
+		  }
+		)
+
+		font("Lato")
+
+		# Variable declarations
 		@event = event
 		@event_user = event_user
+
+		@width = 600
+		@height = 200
+		@origin = 0
+		@stub_start_x = 450
 
 		draw_ticket
 	end
 
 	def draw_ticket
 		# Draws border
-		rectangle [0, 250], 700, 250
+		rectangle [@origin, @height], @width, @height
 
-		draw_vertical_dashed_line 550
-		#stroke_vertical_line 0, 250, at: 550
+		draw_vertical_dashed_line @stub_start_x
 
+		# Draws left side
 		draw_information
-		draw_graphics
+
+		# Draws right side
 		draw_ticket_stub
 	end
 
@@ -25,7 +43,7 @@ class TicketPdf < Prawn::Document
 	def draw_information
 		standard_size = font_size
 		x_pos = 10
-		y_pos = 240
+		y_pos = 190
 
 		font_size 10
 		text_box "Your ticket to:", at: [x_pos, y_pos]
@@ -38,30 +56,15 @@ class TicketPdf < Prawn::Document
 		text_box "Payment Method: #{@event_user.payments[0].payment_method.name}", at: [x_pos, y_pos - 80], width: 240
 		text_box "Date Paid: #{@event_user.paid_at}", at: [x_pos, y_pos - 100], width: 240
 		text_box "Event Details: #{@event.description}", at: [x_pos, y_pos - 120], width: 240, height: 70, overflow: :truncate
-	end
-
-	# Draw all graphical content on left side
-	def draw_graphics
 
 		# Draws event image on ticket
 		image event_image, at: [280, 170], fit: [160, 160]
-
-		# Draws small m logo in corner
-		image m_image, at: [10, 50], fit: [40, 40]
-
-		# Draws paywith.me text along the bottom
-		standard_size = font_size
-
-		font_size 20
-		text_box "www.paywith.me", at: [60, 30], height: 40
-
-		font_size standard_size
 	end
 
 	# Draws ticket stub, right portion
 	def draw_ticket_stub
-		image pwm_image, at: [560, 226]
-		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", 690, 30)
+		image pwm_image, at: [@stub_start_x + 10, 186], fit: [130, 100]
+		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 5, 15)
 	end
 
 	# Displays qr code as grid
@@ -73,9 +76,9 @@ class TicketPdf < Prawn::Document
 		y_pos = y_start
 		width = 3
 
-		@qr.modules.each_index do |y|
-		 	x_pos -= width
-		 	@qr.modules.each_index do |x|
+		@qr.modules.each_index do |x|
+		 	x_pos += width
+		 	@qr.modules.each_index do |y|
 				y_pos += width
 	    	if @qr.dark?(x,y)
 	    		fill_color "000000"
@@ -107,7 +110,7 @@ class TicketPdf < Prawn::Document
 
 	# Return paywithme image path as string
 	def pwm_image
-		"#{Rails.root}/app/assets/images/logo_black.png"
+		"#{Rails.root}/app/assets/images/ticket_logo.png"
 	end
 
 	# Return m image path as string
@@ -116,13 +119,12 @@ class TicketPdf < Prawn::Document
 	end
 
 	def draw_vertical_dashed_line(x)
-		# Value for size of line and space in between. 'Coincidentally' allows for an exact size match of height
-		# Height is 0 to 250 installments of 5 leads to 13 lines 12 spaces
+		# Value for size of line and space in between
 		size = 10
 
 		y = 0
 
-		(250/(size*2)+1).times do
+		(@height/(size*2)).times do
 			stroke_vertical_line y, y+size, at: x
 			y += size*2
 		end
