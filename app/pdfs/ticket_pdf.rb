@@ -43,19 +43,36 @@ class TicketPdf < Prawn::Document
 	def draw_information
 		standard_size = font_size
 		x_pos = 10
-		y_pos = 190
+		y_pos = 180
+		gap_size = 15
 
 		font_size 10
 		text_box "Your ticket to:", at: [x_pos, y_pos]
 
+		y_pos -= gap_size
+
+		# Draws event title
 		font_size 24
-		text_box "#{@event.title}", style: :bold, at: [x_pos, y_pos - 25], width: 430, overflow: :truncate
+		text_box "#{@event.title}", style: :bold, at: [x_pos, y_pos], width: 430, overflow: :truncate
+
+		y_pos -= 2*gap_size
 
 		font_size standard_size
-		text_box "Name: #{@event_user.user.name || @event_user.user.email}", at: [x_pos, y_pos - 60], width: 240
-		text_box "Payment Method: #{@event_user.payments[0].payment_method.name}", at: [x_pos, y_pos - 80], width: 240
-		text_box "Date Paid: #{@event_user.paid_at}", at: [x_pos, y_pos - 100], width: 240
-		text_box "Event Details: #{@event.description}", at: [x_pos, y_pos - 120], width: 240, height: 70, overflow: :truncate
+
+		# Draws user name
+		text_box "Name: #{@event_user.user.name || @event_user.user.email}", at: [x_pos, y_pos], width: 240
+		y_pos -= gap_size
+
+		# Draws payment method
+		text_box "Payment Method: #{@event_user.payments[0].payment_method.name}", at: [x_pos, y_pos], width: 240
+		y_pos -= gap_size
+
+		# Draws paid at
+		text_box "Date Paid: #{@event_user.paid_at}", at: [x_pos, y_pos], width: 240
+		y_pos -= gap_size
+
+		# Draws event description
+		text_box "Event Details: #{@event.description}", at: [x_pos, y_pos], width: 240, height: 70, overflow: :truncate
 
 		# Draws event image on ticket
 		image event_image, at: [280, 170], fit: [160, 160]
