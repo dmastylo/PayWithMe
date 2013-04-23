@@ -1,20 +1,23 @@
-<div class="item">
+<div class="item-form well" id="item_0">
+  <strong class="item-title">Item #1</strong>
+  <div class="clearfix"></div>
   <div class="half">
     <%= f.label :title, "What is the name of the item? (required)" %>
     <%= f.text_field :title, placeholder: "Formal Ticket", class: "input-block-level" %>
   </div>
   <div class="half last">
-    <%= f.label :amount_cents, "How much does the item cost? (required)" %>
-    <%= f.text_field :amount_cents, placeholder: "50.00", class: "input-block-level" %>
+    <%= f.label :amount, "How much does the item cost? (required)" %>
+    <%= f.text_field :amount, placeholder: "50.00", class: "input-block-level" %>
   </div>
-  <div class="half">
-    <%= f.label :allow_quantity, "Can people select what quantity of this item they want? (required)" %>
-    <div class="btn-group input-block-level push-bottom-small" data-toggle="buttons-radio">
+  <div class="half bottom">
+    <%= f.label :allow_quantity, "Can people select a quantity? (required)" %>
+    <%= f.hidden_field :allow_quantity %>
+    <div class="btn-group input-block-level item-quantity" data-toggle="buttons-radio">
       <button type="button" class="btn half" data-name="allow" data-value="1">Yes, different quantities.</button>
-      <button type="button" class="btn half" data-name="disallow" data-value="2">No, just one quantity.</button>
+      <button type="button" class="btn half" data-name="disallow" data-value="0">No, just one quantity.</button>
     </div>
   </div>
-  <div class="half last">
+  <div class="half last bottom item-quantity-yes">
     <%= f.label :allow_quantity, "What are the minimum and maximum quantities? (required)" %>
     <%= f.text_field :quantity_min, placeholder: "1", class: "input-block-level half" %>
     <%= f.text_field :quantity_max, placeholder: "5", class: "input-block-level half last" %>

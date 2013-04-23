@@ -26,7 +26,7 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types, :items_attributes
   attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw, :invitation_types
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
@@ -36,7 +36,7 @@ class Event < ActiveRecord::Base
   # Validations
   # ========================================================
   validates :organizer_id, presence: true
-  validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3, message: "is an invalid division type" }
+  validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 4, message: "is an invalid division type" }
   validates :privacy_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2, message: "is an invalid privacy type" }
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long" }
   validates :due_at, presence: true
@@ -81,7 +81,7 @@ class Event < ActiveRecord::Base
   def total_amount_cents
     if division_type == DivisionType::TOTAL
       super
-    elsif paying_members.size == 0 || division_type == DivisionType::FUNDRAISE || division_type.nil? || split_amount_cents.nil?
+    elsif paying_members.size == 0 || division_type == DivisionType::FUNDRAISE || division_type == DivisionType::ITEMIZED || division_type.nil? || split_amount_cents.nil?
       nil
     else
       split_amount_cents * paying_members.size
@@ -91,7 +91,7 @@ class Event < ActiveRecord::Base
   def split_amount_cents
     if division_type == DivisionType::SPLIT
       super
-    elsif paying_member_count == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE || total_amount_cents.nil?
+    elsif paying_member_count == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE || division_type == DivisionType::ITEMIZED || total_amount_cents.nil?
       nil
     else
       total_amount_cents / paying_member_count

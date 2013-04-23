@@ -1,0 +1,10 @@
+.item-form
+{
+	padding: $smallMargin;
+	margin-bottom: $tinyMargin;
+	.item-quantity-yes { display: none; }
+	.bottom
+	{
+		input { margin-bottom: 0; }
+	}
+}
