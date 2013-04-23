@@ -13,7 +13,8 @@ class TicketPdf < Prawn::Document
 		# Draws border
 		rectangle [0, 250], 700, 250
 
-		stroke_vertical_line 0, 250, at: 550
+		draw_vertical_dashed_line 550
+		#stroke_vertical_line 0, 250, at: 550
 
 		draw_information
 		draw_graphics
@@ -59,7 +60,7 @@ class TicketPdf < Prawn::Document
 
 	# Draws ticket stub, right portion
 	def draw_ticket_stub
-		image pwm_image, at: [462, 226]
+		image pwm_image, at: [560, 226]
 		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", 690, 30)
 	end
 
@@ -70,7 +71,7 @@ class TicketPdf < Prawn::Document
 
 		x_pos = x_start
 		y_pos = y_start
-		width = 1
+		width = 3
 
 		@qr.modules.each_index do |y|
 		 	x_pos -= width
@@ -99,13 +100,31 @@ class TicketPdf < Prawn::Document
 	  end
 	end
 
+	# Return vertical paywithme image path as string
+	def pwm_image_rotated
+		"#{Rails.root}/app/assets/images/logo_black_rotated.png"
+	end
+
 	# Return paywithme image path as string
 	def pwm_image
-		"#{Rails.root}/app/assets/images/logo_black_rotated.png"
+		"#{Rails.root}/app/assets/images/logo_black.png"
 	end
 
 	# Return m image path as string
 	def m_image
 		"#{Rails.root}/app/assets/images/default_event_image.png"
+	end
+
+	def draw_vertical_dashed_line(x)
+		# Value for size of line and space in between. 'Coincidentally' allows for an exact size match of height
+		# Height is 0 to 250 installments of 5 leads to 13 lines 12 spaces
+		size = 10
+
+		y = 0
+
+		(250/(size*2)+1).times do
+			stroke_vertical_line y, y+size, at: x
+			y += size*2
+		end
 	end
 end
