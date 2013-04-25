@@ -89,11 +89,10 @@ class Payment < ActiveRecord::Base
     if payment_method_id == PaymentMethod::MethodType::DWOLLA
       Rails.application.routes.url_helpers.pin_payment_path(self)
     elsif payment_method_id == PaymentMethod::MethodType::PAYPAL
-      # Comments in this block are disabled because lack of access to ChainedPayments
 
       recipients = [
         {
-          email: Figaro.env.paypal_email,
+          email: 'austin-facilitator@gulati.info', # Figaro.env.paypal_email,
           amount: self.our_fee_amount.to_s,
           primary: false
         },
