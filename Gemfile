@@ -21,7 +21,7 @@ gem 'omniauth-dwolla', git: 'git://github.com/austingulati/omniauth-dwolla.git'
 gem 'omniauth-wepay', git: 'git://github.com/tenaciousflea/omniauth-wepay.git'
 
 # User profiles
-gem 'gravatar_image_tag'
+gem 'gravatar_image_tag', git: 'git://github.com/mdeering/gravatar_image_tag.git'
 gem 'paperclip'
 
 # Configuration
