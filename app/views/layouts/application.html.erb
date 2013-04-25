@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    
+
     <%= yield %>
 
     <% if Rails.env.development? %>
@@ -66,6 +66,7 @@
       <%= render 'nudges/modal' %>
     <% end %>
 
+    <%= render 'shared/nav_mobile' if signed_in? %>
     <%= render 'shared/analytics' if Rails.env.production? %>
   </body>
 </html>

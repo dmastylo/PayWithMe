@@ -27,9 +27,9 @@
           <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title-multiline", rel: "tooltip", title: "Manage your event and view statistics" %>
         <% elsif @event.public? && !@event.members.include?(current_user) %>
           <%= form_for [@event, @event_user] do |f| %>
-              <%= f.hidden_field :event_id, :value => @event.id %>
-              <%= f.hidden_field :user_id, :value => current_user.id %>
-              <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block push-top-title-multiline" %>
+            <%= f.hidden_field :event_id, :value => @event.id %>
+            <%= f.hidden_field :user_id, :value => current_user.id %>
+            <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block push-top-title-multiline" %>
           <% end %>
         <% end %>
       </div>
@@ -135,6 +135,7 @@
         <% end %>
       </div>
     </div>
+
     <div class="span7">
       <h3>Chat Board</h3>
       <div class="well">

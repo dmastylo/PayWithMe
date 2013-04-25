@@ -92,15 +92,15 @@ class Payment < ActiveRecord::Base
       # Comments in this block are disabled because lack of access to ChainedPayments
 
       recipients = [
-        # {
-        #   email: Figaro.env.paypal_email,
-        #   amount: event.our_fee_amount.to_f,
-        #   primary: false
-        # },
+        {
+          email: Figaro.env.paypal_email,
+          amount: self.our_fee_amount.to_s,
+          primary: false
+        },
         {
           email: payee.paypal_account.email,
-          amount: self.total_amount.to_s
-          # primary: true
+          amount: self.total_amount.to_s,
+          primary: true
         }
       ]
 
@@ -110,7 +110,7 @@ class Payment < ActiveRecord::Base
         cancel_url: Rails.application.routes.url_helpers.event_url(self.event, cancel: 1),
         ipn_notification_url: Rails.application.routes.url_helpers.ipn_payment_url(self),
         receiver_list: recipients,
-        # fees_payer: "PRIMARYRECEIVER"
+        fees_payer: "PRIMARYRECEIVER"
       )
 
       self.transaction_id = response["payKey"]

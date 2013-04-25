@@ -124,8 +124,8 @@ class Group < ActiveRecord::Base
   def self.send_invitation_emails(group_id)
     group = Group.find_by_id(group_id, include: { group_users: :user })
     group.group_users.each do |group_user|
-      if !group_user.invitation_sent? && group_user.user_id != self.organizer_id
-        UserMailer.group_notification(group_user.user, self).deliver
+      if !group_user.invitation_sent? && group_user.user_id != group.organizer_id
+        UserMailer.group_notification(group_user.user, group).deliver
         group_user.toggle(:invitation_sent).save
       end
     end

@@ -11,6 +11,7 @@
 #
 
 class Message < ActiveRecord::Base
+  
   # Callbacks
   after_create :notify_news_feed
 

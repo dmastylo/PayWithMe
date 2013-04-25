@@ -20,7 +20,11 @@ class PaymentMethod < ActiveRecord::Base
   def processor_fee(amount)
     fee = 0
     if amount >= fee_threshold_cents
-      fee = (amount + static_fee_cents) / ((100.0 - percent_fee.to_f) / 100.0) - amount
+      if name == "WePay"
+        fee = amount * (percent_fee.to_f / 100.0) + static_fee_cents
+      else
+        fee = (amount + static_fee_cents) / ((100.0 - percent_fee.to_f) / 100.0) - amount
+      end
     end
     if fee < minimum_fee_cents
       fee = minimum_fee_cents
@@ -30,9 +34,13 @@ class PaymentMethod < ActiveRecord::Base
 
   def our_fee(amount)
     if name == "WePay"
-      (((Figaro.env.percent_fee.to_f - percent_fee.to_f) / 100.0) * amount + 
-        Figaro.env.static_fee_cents.to_f) / (( 100.0 + percent_fee.to_f ) / 100.0 )
-    elsif name == "PayPal" || name == "Cash"
+      # (((Figaro.env.percent_fee.to_f - percent_fee.to_f) / 100.0) * amount + 
+      #   Figaro.env.static_fee_cents.to_f) / (( 100.0 + percent_fee.to_f ) / 100.0 )
+      ((0.03 * amount + 80.0) - processor_fee(amount)).floor - 1
+      # (0.00013 * amount + 47.68).ceil
+    elsif name == "PayPal"
+      (0.00013 * amount + 47.68).ceil + 1
+    elsif name == "Cash"
       0
     elsif name == "Dwolla"
       25

@@ -13,12 +13,12 @@
     @include box-sizing(border-box);
     .container
     {
-      width: 1170px;
+      width: 940px;
       #logo
       {
-        width: 141px;
+        width: 185px;
         height: 32px;
-        background-image: url(asset_path('layout/logo.png', image));
+        background-image: url(asset_path('layout/logo_beta.png', image));
         background-repeat: no-repeat;
         margin-top: 21px;
         float: left;
@@ -28,6 +28,7 @@
         float: right;
         li
         {
+          &.mobile { display: none; }
           a
           {
             @include box-sizing(border-box);
@@ -127,8 +128,24 @@
       margin: 0;
       #logo
       {
-        width: 66px;
-        background-image: url(asset_path('layout/logo_mobile.png', image));
+        width: 111px;
+        background-image: url(asset_path('layout/logo_mobile_beta.png', image));
+      }
+    }
+    .desktop { display: none; }
+    .mobile
+    {
+      display: block !important;
+      margin-top: 18px;
+      .btn-navbar
+      {
+        background-color: $darkBlue;
+        background-image: none;
+        margin-top: -1px;
+        &:hover
+        {
+          background-color: #222b3b;
+        }
       }
     }
   }
@@ -140,4 +157,56 @@
       margin-top: 0;
     }
   }
+}
+
+#mobile-sidebar
+{
+  width: 250px;
+  height: 100%;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  background-color: $darkBlue;
+  display: none;
+  .nav
+  {
+    li
+    {
+      font-size: 20px;
+      color: $white;
+      text-shadow: 1px 1px 0 $darkBlue;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: -1px;
+      border-bottom: 1px dotted $black;
+      a
+      {
+        @include box-sizing(border-box);
+        width: 100%;
+        padding: 15px;
+        color: $white;
+        img
+        {
+          border: 1px solid $black;
+          margin-right: $smallMargin;
+          vertical-align: -8px;
+          width: 32px;
+          height: 32px;
+        }
+        &:hover
+        {
+          background-color: #222b3b;
+        }
+      }
+    }
+  }
+}
+
+#mobile-sidebar-helper
+{
+  position: fixed;
+  display: none;
+  height: 100%;
+  left: 0px;
+  top: 0px;
 }

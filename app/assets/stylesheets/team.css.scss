@@ -9,6 +9,13 @@
     margin-right: $smallMargin;
   }
   p { line-height: 18px; }
+
+  min-height: 205px;
+
+  .content
+  {
+    padding-top: $smallMargin !important;
+  }
 }
 
 @media (max-width: 979px) and (min-width: 768px)
