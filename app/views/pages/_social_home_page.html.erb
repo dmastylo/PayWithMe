@@ -2,7 +2,7 @@
   <h2>What is PayWithMe?</h2>
   <em>The ONLY payment platform that helps ensure organizer repayment.</em><br />
 
-  <a href="#home-modal" role="button" class="btn btn-primary btn-large btn-cta" data-toggle="modal">How?</a>
+  <a href="#home-modal" role="button" class="btn btn-primary btn-cta btn-large" data-toggle="modal">How?</a>
 
   <div id="home-modal" class="modal hide fade" tabindex="-1" role="dialog">
     <div class="modal-header">
@@ -29,12 +29,14 @@
   </div>
 
   <h2>PayWithMe makes collecting money simple.</h2>
-  <em>Create an event, enter the amount, and the money will start pouring in. You'll get your money sooner so you'll have extra time for more important things.</em><br />
-  <%= link_to "Start Collecting", new_user_registration_path, class: "btn btn-primary btn-large btn-cta" %>
+  <em>Create an event, enter the amount, and the money will start pouring in. You'll get your money sooner so you'll have extra time for more important things. <strong>Start collecting now for FREE:</strong></em><br />
+  <%= link_to "<span></span>Sign Up With Facebook".html_safe, user_omniauth_authorize_path(:facebook), class: "btn btn-primary btn-cta-small btn-facebook" %>
+  <%= link_to "<span></span>Sign Up With Twitter".html_safe, user_omniauth_authorize_path(:twitter), class: "btn btn-primary btn-cta-small btn-twitter" %>
+  <%= link_to "Normal Registration", new_user_registration_path, class: "btn btn-primary btn-cta-small" %>
   <!--
   <h2>Set up promotional events.</h2>
   <em>Attract more people to your business using our Deals via Virality and Split the Bill features.</em><br />
-  <%= link_to "Find Out More", new_organization_path, class: "btn btn-primary btn-large btn-cta" %>
+  <%= link_to "Find Out More", new_organization_path, class: "btn btn-primary btn-cta" %>
   -->
 </div>
 <div class="span5 static-width">

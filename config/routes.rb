@@ -94,6 +94,8 @@ PayWithMe::Application.routes.draw do
 
   resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
 
+  match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
+
   # Error Handling
   # ===========================================================================
   match "/404", :to => "errors#not_found"
