@@ -101,6 +101,13 @@ GIT
   specs:
     wepay (0.0.1)
 
+PATH
+  remote: /home/austin/Code/Rails/vanity
+  specs:
+    vanity (1.8.0)
+      redis (~> 2.0)
+      redis-namespace (~> 1.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -360,6 +367,9 @@ GEM
       ffi (>= 0.5.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    redis (2.2.2)
+    redis-namespace (1.0.3)
+      redis (< 3.0.0)
     rinku (1.7.2)
     roadie (2.3.4)
       actionmailer (> 3.0.0, < 3.3.0)
@@ -485,5 +495,6 @@ DEPENDENCIES
   sqlite3
   thin
   uglifier (>= 1.0.3)
+  vanity!
   wepay!
   will_paginate

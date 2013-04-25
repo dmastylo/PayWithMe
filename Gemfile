@@ -74,6 +74,9 @@ gem 'prawn', git: 'git://github.com/celic/prawn.git', submodules: true
 # ActiveRecord extensions
 gem "activerecord-import"
 
+# AB testing
+gem 'vanity', path: '/home/austin/Code/Rails/vanity' # git: 'git://github.com/austingulati/vanity.git'
+
 group :development, :test do
   gem 'sqlite3'
 end

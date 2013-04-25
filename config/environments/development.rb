@@ -53,4 +53,7 @@ PayWithMe::Application.configure do
 
   # Active merchant and PayPal
   ActiveMerchant::Billing::Base.mode = :test
+
+  # Run A/B tests in development
+  Vanity.playground.collecting = true
 end
