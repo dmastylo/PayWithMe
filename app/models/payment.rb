@@ -92,7 +92,7 @@ class Payment < ActiveRecord::Base
 
       recipients = [
         {
-          email: 'austin-facilitator@gulati.info', # Figaro.env.paypal_email,
+          email: Figaro.env.paypal_email,
           amount: self.our_fee_amount.to_s,
           primary: false
         },
