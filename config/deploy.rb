@@ -102,7 +102,7 @@ namespace :deploy do
           directory.files.create(key: File.join("assets", "layout", File.basename(file)), body: File.open(file)) unless File.directory?(file)
         end
         Dir.glob(File.join("public", "assets", "reps", "*")).each do |file|
-          directory.files.create(key: File.join("assets", "layout", File.basename(file)), body: File.open(file)) unless File.directory?(file)
+          directory.files.create(key: File.join("assets", "reps", File.basename(file)), body: File.open(file)) unless File.directory?(file)
         end
         Dir.glob(File.join("public", "assets", "icons", "*")).each do |file|
           directory.files.create(key: File.join("assets", "icons", File.basename(file)), body: File.open(file)) unless File.directory?(file)
