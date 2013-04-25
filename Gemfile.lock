@@ -34,6 +34,14 @@ GIT
       omniauth-oauth2 (~> 1.0)
 
 GIT
+  remote: git://github.com/austingulati/vanity.git
+  revision: 7c4d03e8f7b684960826810a439c6096057673be
+  specs:
+    vanity (1.8.0)
+      redis (~> 2.0)
+      redis-namespace (~> 1.0.0)
+
+GIT
   remote: git://github.com/celic/prawn.git
   revision: e3f5b66ba32e7b5b520fcaf889ff20ba1d2c65e3
   submodules: true
@@ -100,13 +108,6 @@ GIT
   revision: eb5ffbd4e7de52ecf84117ec939da3781a821fef
   specs:
     wepay (0.0.1)
-
-PATH
-  remote: /home/austin/Code/Rails/vanity
-  specs:
-    vanity (1.8.0)
-      redis (~> 2.0)
-      redis-namespace (~> 1.0.0)
 
 GEM
   remote: https://rubygems.org/
