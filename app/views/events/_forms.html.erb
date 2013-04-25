@@ -86,6 +86,22 @@
         </div>
       </div>
 
+      <div class="event_division_type_option btn_group_option push-bottom-small" id="event_division_type_fundraise">
+        <%= f.label :fundraiser_goal, "Fundraiser Goal" %>
+        <div class="input-prepend autosize">
+          <span class="add-on">$</span>
+          <%= f.text_field :fundraiser_goal, class: "input-block-level" %>
+        </div>
+      </div>
+
+      <div class="event_division_type_option btn_group_option push-bottom-small" id="event_division_type_fundraise">
+        <%= f.label :minimum_donation, "Minimum Donation" %>
+        <div class="input-prepend autosize">
+          <span class="add-on">$</span>
+          <%= f.text_field :minimum_donation, class: "input-block-level", placeholder: "optional" %>
+        </div>
+      </div>
+
       <%= f.label :privacy_type, "Event Privacy" %>
       <%= f.hidden_field :privacy_type %>
       <div class="btn-group input-block-level push-bottom-small" id="event_privacy_type_btn_group" data-toggle="buttons-radio">

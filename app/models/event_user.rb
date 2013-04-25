@@ -75,7 +75,7 @@ class EventUser < ActiveRecord::Base
     copy_event_attributes
     current_cents = options[:amount_cents] || amount_cents
     payment_method = PaymentMethod.find_by_id(options[:payment_method] || PaymentMethod::MethodType::CASH)
-    if current_cents > amount_cents
+    if !event.fundraiser? && current_cents > amount_cents
       return false
     end
 
@@ -177,10 +177,14 @@ private
       self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
     end
 
-    if self.paid_total_cents >= self.amount_cents
+    if event.fundraiser?
       self.paid_at = Time.now
     else
-      self.paid_at = nil
+      if self.paid_total_cents >= self.amount_cents
+        self.paid_at = Time.now
+      else
+        self.paid_at = nil
+      end
     end
   end
 

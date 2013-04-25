@@ -80,7 +80,12 @@
           <div class="three-quarters"><%= @event.description %></div>
           <div class="clearfix"></div>
         <% end %>
-        <% unless @event.fundraiser? %>
+        <% if @event.fundraiser? %>
+          <div class="quarter"><strong>Fundraiser Goal</strong></div>
+          <div class="three-quarters"><%= number_to_currency(@event.fundraiser_goal) %></div>
+          <div class="quarter"><strong>Current Progress</strong></div>
+          <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.money_collected %></div>
+        <% else %>
           <div class="quarter"><strong>Total Goal</strong></div>
           <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
           <div class="quarter"><strong>Per User Goal</strong></div>
