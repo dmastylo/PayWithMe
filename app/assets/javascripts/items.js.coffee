@@ -18,3 +18,20 @@ jQuery ->
 			el.hide()
 		$(this).parent().parent().find("input").val $(this).data("value")
 	$(".item-quantity button").click handleQuantityChange
+
+	updateItemsTotal = (e) ->
+		sum = 0
+		$(".item-total").each ->
+			html = $(this).html()
+			value = html.replace("$", "")
+			sum += parseFloat(value)
+		$(".items-total").html("$" + sum.toFixed(2))
+
+	$(".item-quantity").change (e) ->
+		$total = $(this).parent().find(".item-total")
+		price = $(this).attr("data-amount")
+		quantity = $(this).val()
+		$total.html("$" + (price * quantity).toFixed(2))
+		updateItemsTotal()
+
+	updateItemsTotal()

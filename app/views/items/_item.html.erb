@@ -1,8 +1,9 @@
 <div class="item push-bottom-tiny">
-	<strong><%= item.title %></strong><br />
-	<% if item.allow_quantity? %>
-		<select disabled><option value="1">1</option></select> x <%= humanized_money_with_symbol item.amount %> = <strong><%= humanized_money_with_symbol item.amount %></strong>
-	<% else %>
-		<select disabled><option value="1">1</option></select> x <%= humanized_money_with_symbol item.amount %> = <strong><%= humanized_money_with_symbol item.amount %></strong>
+	<strong><%= f.object.item.title %></strong><br />
+  <% if f.object.item.allow_quantity? %>
+		<%= f.select :quantity, options_for_select((f.object.item.quantity_min..f.object.item.quantity_max).map { |i| [i,i] }
+), {}, { class: "item-quantity", :"data-amount" => f.object.item.amount } %> x <%= humanized_money_with_symbol f.object.item.amount %> = <strong class="item-total"><%= humanized_money_with_symbol (f.object.item.quantity_min * f.object.item.amount.to_f) %></strong>
+  <% else %>
+    <select disabled><option value="1">1</option></select> x <%= humanized_money_with_symbol f.object.item.amount %> = <strong class="item-total"><%= humanized_money_with_symbol f.object.item.amount %></strong>
 	<% end %>
 </div>

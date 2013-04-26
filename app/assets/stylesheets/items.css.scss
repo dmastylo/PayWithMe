@@ -9,12 +9,19 @@
 	}
 }
 
-.item
+#items
 {
-	select
+	a.btn.push-bottom
 	{
-		width: 50px;
-		vertical-align: middle;
-		margin-top: 5px;
+		margin-bottom: 0;
+	}
+	.item
+	{
+		select
+		{
+			width: 75px;
+			vertical-align: middle;
+			margin-top: 5px;
+		}
 	}
 }

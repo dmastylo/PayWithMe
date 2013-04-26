@@ -89,6 +89,13 @@ class EventUser < ActiveRecord::Base
       payment_method_id: payment_method.id,
       paid_at: nil
     )
+
+    if self.event.itemized?
+      self.event.items.each do |item|
+        payment.item_users.find_or_create_by_event_id_and_event_user_id_and_item_id_and_user_id(event_id: payment.event_id, event_user_id: payment.event_user_id, item_id: item.id, user_id: payment.event_user.user_id)
+      end
+    end
+    payment
   end
 
   def pay!(payment, options={})

@@ -38,6 +38,8 @@ class Payment < ActiveRecord::Base
   belongs_to :event
   belongs_to :event_user
   belongs_to :payment_method
+  has_many :item_users
+  accepts_nested_attributes_for :item_users, allow_destroy: true
 
   # Validations
   validates :payer_id, presence: true
@@ -46,7 +48,7 @@ class Payment < ActiveRecord::Base
   validates :requested_at, presence: true
   validates :due_at, presence: true
   validates :event_user_id, presence: true
-  validates :amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }
+  validates :amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :paid?
   validates :processor_fee_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :our_fee_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :payment_method, presence: true, if: :paid?
