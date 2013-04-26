@@ -37,6 +37,7 @@ class EventsController < ApplicationController
     @messages_count = @event.messages.size
     @message = Message.new
     @event_user = EventUser.new unless @event.members.include?(current_user)
+    @payment = @event.event_user(current_user).create_payment if @event.itemized?
   end
   
   def new

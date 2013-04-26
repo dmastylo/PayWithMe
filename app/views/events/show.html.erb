@@ -68,14 +68,20 @@
       <% elsif @event_user.paid? %>
         <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block push-bottom" %>
       <% else %>
-        <% if @event.send_with_paypal? %>
-          <%= event_user_pay_button(@event_user, "PayPal") %>
-        <% end %>
-        <% if @event.send_with_dwolla? %>
-          <%= event_user_pay_button(@event_user, "Dwolla") %>
-        <% end %>
-        <% if @event.send_with_wepay? %>
-          <%= event_user_pay_button(@event_user, "WePay") %>
+        <% if @event.divide_total? || @event.divide_per_person? %>
+          <% if @event.send_with_paypal? %>
+            <%= event_user_pay_button(@event_user, "PayPal") %>
+          <% end %>
+          <% if @event.send_with_dwolla? %>
+            <%= event_user_pay_button(@event_user, "Dwolla") %>
+          <% end %>
+          <% if @event.send_with_wepay? %>
+            <%= event_user_pay_button(@event_user, "WePay") %>
+          <% end %>
+        <% elsif @event.itemized? %>
+          <%= form_for @payment %>
+
+          <% end %>
         <% end %>
       <% end %>
 
