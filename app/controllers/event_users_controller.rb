@@ -28,6 +28,7 @@ class EventUsersController < ApplicationController
     redirect_to payment.url
   end
 
+  # Mark user as paid in admin dashboard
   def paid
     if params[:event_user][:paid_total].present? && params[:event_user][:paid_total].to_f
       paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
