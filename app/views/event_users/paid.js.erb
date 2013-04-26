@@ -12,6 +12,7 @@
    $('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('show');
 
    setTimeout(function() { $('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('hide'); }, 5000);
+
 <% else %>
 
   <% if @event_user.paid? %>
@@ -22,8 +23,7 @@
     $('#user-status-<%= @event_user.user.id %>').html('Unpaid');
   <% end %>
 
-  $('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/dashboard_user_form", event: @event_user.event, user: @event_user.user, event_user: @event_user %>');
- $('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('hide');
+  $('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/dashboard_user_form", event: @event_user.event, user: @event_user.user, event_user: @event_user %>');$('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('hide');
   $('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
   if ($('.progress').length === 0)
   {

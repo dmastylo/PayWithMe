@@ -156,6 +156,14 @@ class EventUser < ActiveRecord::Base
     end
   end
 
+  def cash_set_to_zero
+    self.payments.destroy_all
+    self.paid_at = nil
+    self.paid_total_cents = 0
+    self.paid_with_cash = false
+    self.save
+  end
+
 private
   def copy_event_attributes
     if self.event.present? && self.member?

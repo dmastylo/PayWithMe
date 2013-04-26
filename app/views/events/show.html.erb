@@ -82,9 +82,9 @@
         <% end %>
         <% if @event.fundraiser? %>
           <div class="quarter"><strong>Fundraiser Goal</strong></div>
-          <div class="three-quarters"><%= number_to_currency(@event.fundraiser_goal) %></div>
+          <div class="three-quarters"><%= number_to_currency @event.fundraiser_goal %></div>
           <div class="quarter"><strong>Current Progress</strong></div>
-          <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.money_collected %></div>
+          <div class="three-quarters" id="money-collected"><%= number_to_currency @event.money_collected %></div>
         <% else %>
           <div class="quarter"><strong>Total Goal</strong></div>
           <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
@@ -100,9 +100,17 @@
       </div>
       
       <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
-      <% elsif @event_user.paid? %>
+      <% elsif @event_user.paid? && !@event.fundraiser? %>
         <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block push-bottom" %>
       <% else %>
+        <% if @event.fundraiser? %>
+          <% if @event_user.paid? %>
+            <div class="well">
+              You have contributed <%= number_to_currency @event_user.paid_total %>
+            </div>
+          <% end %>
+          <%= text_field_tag 'payment_amount', 'Enter contribution amount', class: "input-block-level" %>
+        <% end %>
         <% if @event.send_with_paypal? %>
           <%= event_user_pay_button(@event_user, "PayPal") %>
         <% end %>

@@ -46,9 +46,11 @@ class EventUsersController < ApplicationController
       paid_total_cents = nil
     end
 
-    unless @error_message
+    if !@error_message && params[:event_user][:paid_total].to_f > 0
       payment = @event_user.create_payment(amount_cents: paid_total_cents)
       @event_user.pay!(payment)
+    elsif !@error_message && params[:event_user][:paid_total].to_f == 0
+      @event_user.cash_set_to_zero
     end
 
     respond_to do |format|
