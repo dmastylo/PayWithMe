@@ -1,0 +1,8 @@
+<div class="item push-bottom-tiny">
+	<strong><%= item.title %></strong><br />
+	<% if item.allow_quantity? %>
+		<select disabled><option value="1">1</option></select> x <%= humanized_money_with_symbol item.amount %> = <strong><%= humanized_money_with_symbol item.amount %></strong>
+	<% else %>
+		<select disabled><option value="1">1</option></select> x <%= humanized_money_with_symbol item.amount %> = <strong><%= humanized_money_with_symbol item.amount %></strong>
+	<% end %>
+</div>
