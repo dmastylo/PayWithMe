@@ -19,7 +19,6 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  image_url          :string(255)
-#  send_tickets       :boolean          default(FALSE)
 #
 
 class Event < ActiveRecord::Base

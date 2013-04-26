@@ -36,10 +36,12 @@ class PaymentMethod < ActiveRecord::Base
     if name == "WePay"
       # (((Figaro.env.percent_fee.to_f - percent_fee.to_f) / 100.0) * amount + 
       #   Figaro.env.static_fee_cents.to_f) / (( 100.0 + percent_fee.to_f ) / 100.0 )
-      ((0.03 * amount + 80.0) - processor_fee(amount)).floor - 1
+      # ((0.04 * amount + 80.0) - processor_fee(amount)).floor - 1
       # (0.00013 * amount + 47.68).ceil
+      (0.01069 * amount + 48.5909).ceil
     elsif name == "PayPal"
-      (0.00013 * amount + 47.68).ceil + 1
+      # (0.01069 * amount + 48.5909).ceil
+      1.04 * amount + 80 - processor_fee(amount) - amount
     elsif name == "Cash"
       0
     elsif name == "Dwolla"

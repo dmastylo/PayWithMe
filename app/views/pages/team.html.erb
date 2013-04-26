@@ -53,4 +53,20 @@
 			}
 		%>
 	</div>
+	<div class="row">
+		<div class="span12">
+			<h3>Campus Representatives</h3>
+			<p>Our campus reps are the face of PayWithMe on college campuses all across the country. These reps go door to door pitching our product, spreading awareness, and having a great time doing it! If you like to become a rep yourself - find more info <%= link_to "here", jobs_path %>.</p>
+		</div>
+	</div>
+	<div class="row">
+		<%= render partial: "team_member", 
+			locals: {
+				name: "Ghedalia Gold-Pastor", 
+				picture: "reps/ghedalia.jpg",
+				rollover: "reps/ghedalia-cartoon.jpg", 
+				description: "Ghedalia is a mechanical engineering student at the University of Maryland. He has a passion for basketball, chipotle, and entrepreneurship. Ghedalia is committed to creating useful and successful products."
+			}
+		%>
+	</div>
 </div>

@@ -105,6 +105,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
         if new_registration
           # Registration flash message
           flash[:success] = "Registered with #{provider} successfully."
+          track! :signup
         else
           # Sign in flash message
           flash[:success] = "Signed in with #{provider} successfully."

@@ -16,7 +16,6 @@
 #  paid_total_cents :integer          default(0)
 #  status           :integer          default(0)
 #  nudges_remaining :integer          default(0)
-#  ticket_sent      :boolean          default(FALSE)
 #
 
 class EventUser < ActiveRecord::Base
@@ -76,8 +75,10 @@ class EventUser < ActiveRecord::Base
     copy_event_attributes
     current_cents = options[:amount_cents] || amount_cents
     payment_method = PaymentMethod.find_by_id(options[:payment_method] || PaymentMethod::MethodType::CASH)
-    if current_cents > amount_cents
-      return false
+    unless self.event.fundraiser? || self.event.itemized?
+      if current_cents > amount_cents
+        return false
+      end
     end
 
     payment = user.sent_payments.find_or_create_by_payee_id_and_event_id_and_event_user_id_and_amount_cents_and_payment_method_id_and_paid_at(
@@ -161,6 +162,8 @@ private
   def copy_event_attributes
     if self.event.present? && self.member?
       self.due_at = self.event.due_at
+    end
+    unless self.event.fundraiser? || self.event.itemized?
       self.amount_cents = self.event.split_amount_cents
     end
   end

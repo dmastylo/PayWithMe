@@ -70,6 +70,7 @@ class EventsController < ApplicationController
   def edit
     @member_emails = @event.independent_members.collect { |member| member.email }
     @group_ids = @event.groups.collect { |group| group.id }
+    @event.items.new if @event.items.empty?
   end
 
   def update

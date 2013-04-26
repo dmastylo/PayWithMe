@@ -79,9 +79,12 @@
             <%= event_user_pay_button(@event_user, "WePay") %>
           <% end %>
         <% elsif @event.itemized? %>
-          <%= form_for @payment %>
-
-          <% end %>
+          <h3>Available Items</h3>
+          <div class="well">
+            <%= form_for @payment, url: items_payment_path(@payment) do |f| %>
+              <%= render @event.items %>
+            <% end %>
+          </div>
         <% end %>
       <% end %>
 

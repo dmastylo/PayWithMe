@@ -17,9 +17,16 @@ class Item < ActiveRecord::Base
 
   # Accessible attributes
   attr_accessible :allow_quantity, :amount, :quantity_max, :quantity_min, :title
-  monetize :amount_cents, allow_nil: true
+  monetize :amount_cents
 
   # Relationships
   belongs_to :event
+
+  # Validations
+  validates :title, presence: true
+  validates :amount, presence: true
+  # validates :allow_quantity, presence: true
+  validates :quantity_min, presence: true, if: :allow_quantity?
+  validates :quantity_max, presence: true, if: :allow_quantity?
 
 end

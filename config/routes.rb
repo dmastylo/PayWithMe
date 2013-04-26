@@ -81,6 +81,7 @@ PayWithMe::Application.routes.draw do
       get 'pin'
       post 'pay'
       post 'ipn'
+      post 'items'
     end
   end
 
@@ -93,6 +94,8 @@ PayWithMe::Application.routes.draw do
   resources :organizations, only: [:new, :create]
 
   resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
+
+  match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
 
   # Error Handling
   # ===========================================================================
