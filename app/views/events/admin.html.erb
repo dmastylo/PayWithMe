@@ -30,7 +30,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="span8">
+    <div class="span<% if @event.public? || @event.share_link? %>4<% else %>8<% end %>">
       <h3>Quick Statistics</h3>
       <div class="well" id="quick-statistics">
         <% if (@event.divide_total? || @event.divide_per_person?) && @event.paid_percentage > 0 %>
@@ -46,6 +46,19 @@
         <div class="clearfix"></div>
       </div>
     </div>
+    <% if @event.public? || @event.share_link? %>
+      <div class="span4">
+        <h3>Share Event</h3>
+        <div class="well">
+          <strong>Event link:</strong>
+          <% if @event.public? %>
+            <input type="text" value="<%= event_url(@event, port: false) %>" class="input-block-level push-top-tiny" />
+          <% elsif @event.share_link? %>
+            <input type="text" value="<%= event_url(@event, etoken: @event.guest_token, port: false) %>" class="input-block-level push-top-tiny" />
+          <% end %>
+        </div>
+      </div>
+    <% end %>
     <div class="span4">
       <h3>Event Actions</h3>
       <div class="well">
