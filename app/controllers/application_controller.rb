@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   after_filter :user_activity, if: :signed_in?
   around_filter :user_time_zone, if: :signed_in?
   after_filter :update_user_balance, if: :signed_in?
+  use_vanity :current_user
 
   def default_url_options
     if Rails.env.production?
