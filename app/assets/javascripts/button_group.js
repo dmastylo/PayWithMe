@@ -63,7 +63,6 @@
 		onCreate: function()
 		{
 			var that = this;
-			console.log(that.val);
 			this.$buttons.on('click', $.proxy(that.onClick, that));
 
 			if(this.val)

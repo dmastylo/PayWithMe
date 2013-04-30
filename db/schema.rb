@@ -84,10 +84,7 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "image_url"
-<<<<<<< HEAD
     t.string   "guest_token"
-=======
->>>>>>> master
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
