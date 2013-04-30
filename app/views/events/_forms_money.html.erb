@@ -4,7 +4,9 @@
     <div class="control-group required">
       <%= f.label :division_type, "What is easiest for describing how much you are collecting? (required)" %>
       <div class="controls">
-        <%= f.select :division_type, options_for_select([["I need a total amount of money. Everyone pays an equal share.", 1], ["I need a certain amount from each person. The total doesn't matter.", 2], ["Anyone can pay as much as they want. For example, a fundraiser.", 3]], @event.division_type), {}, { class: 'input-block-level' } %>
+        <%= f.select :division_type, options_for_select([["I need a total amount of money. For example: $500 for a new stereo.", 1], ["I need a certain amount from each person. For example: $30 for new uniforms.", 2], 
+        # ["Anyone can pay as much as they want. For example, a fundraiser.", 3]
+        ], @event.division_type), {}, { class: 'input-block-level' } %>
         <div class="event_division_type_option btn_group_option" id="event_division_type_1">
           <%= f.label :total_amount, "How much do you need in total? (required)" %>
           <div class="input-prepend autosize">

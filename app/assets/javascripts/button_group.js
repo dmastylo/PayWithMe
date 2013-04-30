@@ -63,6 +63,7 @@
 		onCreate: function()
 		{
 			var that = this;
+			console.log(that.val);
 			this.$buttons.on('click', $.proxy(that.onClick, that));
 
 			if(this.val)
@@ -76,6 +77,7 @@
 						if($.inArray(val, that.val) !== -1)
 						{
 							$this.addClass('active');
+							that.showChild($this.data("name"));
 						}
 						else
 						{
