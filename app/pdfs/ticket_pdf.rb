@@ -23,7 +23,46 @@ class TicketPdf < Prawn::Document
 		@origin = 0
 		@stub_start_x = 450
 
-		draw_ticket
+		# draw_ticket
+		draw_ticket_2
+	end
+
+	def draw_ticket_2
+		# Draws border
+		rectangle [@origin, @height + @origin], @width, @height
+
+		draw_vertical_dashed_line @stub_start_x
+
+		# Draws left side
+		draw_information_2
+
+		# Draws right side
+		draw_ticket_stub_2
+	end
+
+	def draw_information_2
+		# Draws large event image along top
+		move_cursor_to @height - 5
+		table [[ { image: event_image, fit: [@stub_start_x - 20, @height / 2 - 10],
+																	 position: :center,
+																	 padding: [0, 10, 0, 0]
+					} ]],
+					cell_style: { width: @stub_start_x - 10,
+								        height: @height / 2 - 10,
+								        borders: [] }
+
+		# Draws information below image
+		# Title horizontally, bold, shrink to fit, text box
+
+		# Paid information, via, date, across bottom. Skim date to just show date not time
+	end
+
+	def draw_ticket_stub_2
+		# Draws PayWithMe logo
+
+		# Draws some event_user information
+
+		# Draws qr code
 	end
 
 	def draw_ticket
@@ -87,11 +126,11 @@ class TicketPdf < Prawn::Document
 	# Displays qr code as grid
 	def generate_and_display_qr(link_to_embed, x_start, y_start)
 
-		@qr = RQRCode::QRCode.new(link_to_embed, size: 7)
+		@qr = RQRCode::QRCode.new(link_to_embed, size: 6)
 
 		x_pos = x_start
 		y_pos = y_start
-		width = 3
+		width = 2
 
 		@qr.modules.each_index do |x|
 		 	x_pos += width
