@@ -112,13 +112,23 @@ class EventPdf < Prawn::Document
     @view.number_to_currency(val)
   end
 
+  def remote_file_is_image?(url)
+    url = URI.parse(url)
+
+    http = Net::HTTP.new(url.host, url.port)
+    http.use_ssl = true unless url.scheme == "http"
+
+    response = http.head(url.request_uri)['Content-Type']
+    return response.start_with?('image')
+  end
+
   # Returns image path as string
   def event_image
     if @event.image_type == :upload
-      open(@event.image.url)
-    elsif @event.image_type == :url
+      return open(@event.image.url)
+    elsif @event.image_type == :url && remote_file_is_image?(@event.image_url)
       open(@event.image_url)
-    elsif @event.image_type == :default_image
+    else
       "#{Rails.root}/app/assets/images/default_event_image.png"
     end
   end

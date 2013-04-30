@@ -89,7 +89,6 @@ class Payment < ActiveRecord::Base
     if payment_method_id == PaymentMethod::MethodType::DWOLLA
       Rails.application.routes.url_helpers.pin_payment_path(self)
     elsif payment_method_id == PaymentMethod::MethodType::PAYPAL
-      # Comments in this block are disabled because lack of access to ChainedPayments
 
       recipients = [
         {
