@@ -1,8 +1,8 @@
 class EventUsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :event_public_or_user_organizes_event, only: [:create]
-  before_filter :user_owns_event_user, only: [:pay, :pin]
-  before_filter :valid_payment_method, only: [:pay]
+  before_filter :user_owns_event_user, only: [:pay, :pay_fundraiser, :pin]
+  before_filter :valid_payment_method, only: [:pay, :pay_fundraiser]
   before_filter :user_organizes_event, only: [:paid, :unpaid]
   before_filter :user_in_event, only: [:nudge]
   before_filter :event_owns_event_user, only: [:paid, :unpaid, :nudge]
@@ -25,6 +25,13 @@ class EventUsersController < ApplicationController
 
   def pay
     payment = @event_user.create_payment(payment_method: params[:method])
+    redirect_to payment.url
+  end
+
+  def pay_fundraiser
+    actual_amount_cents = (params[:amount_cents].to_f * 100).to_s
+    puts "\n\n\n\n\n\n\n\n\n YOOO #{params[:amount_cents]} \n\n\n\n\n\n\n\n\n"
+    payment = @event_user.create_payment(payment_method: params[:method], amount_cents: actual_amount_cents)
     redirect_to payment.url
   end
 

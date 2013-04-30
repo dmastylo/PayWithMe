@@ -161,6 +161,7 @@ class EventUser < ActiveRecord::Base
     self.paid_at = nil
     self.paid_total_cents = 0
     self.paid_with_cash = false
+    self.status = 0
     self.save
   end
 
@@ -169,6 +170,12 @@ private
     if self.event.present? && self.member?
       self.due_at = self.event.due_at
       self.amount_cents = self.event.split_amount_cents
+    end
+  end
+
+  def copy_fundraiser_event_attributes
+    if self.event.present? && self.member?
+      self.due_at = self.event.due_at
     end
   end
 

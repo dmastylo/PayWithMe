@@ -18,7 +18,7 @@
         <% if user == @event.organizer %>
           Event Organizer
         <% elsif event_user.paid? %>
-          Contributed
+          Contributed <%= number_to_currency event_user.paid_total %>
         <% else %>
           Has Not Contributed
         <% end %>
