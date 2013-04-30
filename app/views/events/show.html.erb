@@ -25,7 +25,7 @@
           <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top-title-multiline" %>
         <% elsif current_user == @event.organizer %>
           <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title-multiline", rel: "tooltip", title: "Manage your event and view statistics" %>
-        <% elsif @event.public? && !@event.members.include?(current_user) %>
+        <% elsif (@event.public? || @event.invitation_type_ids.include?(InvitationType::Type::LINK)) && !@event.members.include?(current_user) %>
           <%= form_for [@event, @event_user] do |f| %>
             <%= f.hidden_field :event_id, :value => @event.id %>
             <%= f.hidden_field :user_id, :value => current_user.id %>
@@ -89,7 +89,7 @@
           <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
         <% end %>
         <div class="quarter"><strong>Money Due</strong></div>
-        <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
+        <div class="three-quarters"><%= @event.due_at.to_s(:ordinal) %></div>
         <div class="clearfix"></div>
         <div class="quarter"><strong>Accepted Payment Methods</strong></div>
         <div class="three-quarters"><%= @event.payment_methods.collect(&:name).join(", ") %></div>

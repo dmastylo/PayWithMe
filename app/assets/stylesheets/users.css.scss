@@ -57,6 +57,18 @@
   }
 }
 
+.profile_image_thumb
+{
+  max-width: 32px;
+  max-height: 32px;
+}
+
+.profile_image_large
+{
+  max-width: 210px;
+  max-height: 210px;
+}
+
 @media (max-width: 767px)
 {
   #stub-login-modal

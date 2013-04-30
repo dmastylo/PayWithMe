@@ -1,0 +1,44 @@
+<div class="wizard-card" id="wizard-card-1">
+  <div class="wizard-card-title"><h3>Step 1: Money Collection</h3></div>
+  <div class="wizard-card-body">
+    <div class="control-group required">
+      <%= f.label :division_type, "What is easiest for describing how much you are collecting? (required)" %>
+      <div class="controls">
+        <%= f.select :division_type, options_for_select([["I need a total amount of money. For example: $500 for a new stereo.", 1], ["I need a certain amount from each person. For example: $30 for new uniforms.", 2], 
+        # ["Anyone can pay as much as they want. For example, a fundraiser.", 3]
+        ], @event.division_type), {}, { class: 'input-block-level' } %>
+        <div class="event_division_type_option btn_group_option" id="event_division_type_1">
+          <%= f.label :total_amount, "How much do you need in total? (required)" %>
+          <div class="input-prepend autosize">
+            <span class="add-on">$</span>
+            <%= f.text_field :total_amount, class: "input-block-level" %>
+          </div>
+        </div>
+
+        <div class="event_division_type_option btn_group_option" id="event_division_type_2">
+          <%= f.label :split_amount, "How much do you need each person to pay? (required)" %>
+          <div class="input-prepend autosize">
+            <span class="add-on">$</span>
+            <%= f.text_field :split_amount, class: "input-block-level" %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+      
+    <div class="control-group required">
+      <%= f.label :payment_methods_raw, "How do you want to collect money? (select all that apply, required)" %>
+      <%= f.hidden_field :payment_methods_raw %>
+      <div class="btn-group input-block-level" id="event_payment_methods_raw_btn_group" data-toggle="buttons-checkbox">
+        <button type="button" class="btn half push-bottom-tiny" data-name="cash" data-value="<%= PaymentMethod::MethodType::CASH %>" title="Manually mark cash payers as paid.">Cash<i class="icon-ok"></i></button>
+        <button type="button" class="btn half last push-bottom-tiny" data-name="paypal" data-value="<%= PaymentMethod::MethodType::PAYPAL %>" <% if current_user.paypal_account.nil? %>title="You will need a linked PayPal account but you can set that up after."<% end %>>PayPal<i class="<% if current_user.paypal_account.nil? %>icon-remove<% else %>icon-ok<% end %>"></i></button>
+        <div class="clearfix"></div>
+        <button type="button" class="btn half" data-name="dwolla" data-value="<%= PaymentMethod::MethodType::DWOLLA %>" <% if current_user.dwolla_account.nil? %>title="You will need a linked Dwolla account but you can set that up after."<% end %>>Dwolla<i class="<% if current_user.dwolla_account.nil? %>icon-remove<% else %>icon-ok<% end %>"></i></button>
+        <button type="button" class="btn half last" data-name="wepay" data-value="<%= PaymentMethod::MethodType::WEPAY %>" <% if current_user.wepay_account.nil? %>title="You will need a linked WePay account but you can set that up after."<% end %>>WePay<i class="<% if current_user.wepay_account.nil? %>icon-remove<% else %>icon-ok<% end %>"></i></button>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+
+    <%= link_to "Continue to next step".html_safe, "#", class: "btn btn-primary btn-block push-top-small wizard-submit", id: "wizard-submit-1" %>
+  </div>
+</div>
