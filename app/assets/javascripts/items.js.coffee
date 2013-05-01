@@ -46,20 +46,24 @@ jQuery ->
 
   # Updates the total price on the pay button
   updateItemsTotal = (e) ->
+    $items = $(".item-total")
+    if $items.length == 0
+      return
     sum = 0
-    $(".item-total").each ->
+    $items.each ->
       html = $(this).html()
       value = html.replace("$", "")
       sum += parseFloat(value)
     $(".items-total").html("$" + sum.toFixed(2))
 
+  # Updates the individual amount for a single item
   updateItemSingle = (item) ->
     $total = $(item).parent().find(".item-total")
     price = $(item).attr("data-amount")
     quantity = $(item).val()
     $total.html("$" + (price * quantity).toFixed(2))
 
-  # Updates the individual amount for a single item
+  # Handle changing an item quantity
   $(".item-quantity").change (e) ->
     updateItemSingle(this)
     updateItemsTotal()

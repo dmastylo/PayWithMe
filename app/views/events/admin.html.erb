@@ -33,7 +33,9 @@
     <div class="span<% if @event.public? || @event.share_link? %>4<% else %>8<% end %>">
       <h3>Quick Statistics</h3>
       <div class="well" id="quick-statistics">
-        <% unless @event.itemized? %>
+        <% if @event.itemized? %>
+          <%= render "items/dashboard_totals", items: @items %>
+        <% else %>
           <% if (@event.divide_total? || @event.divide_per_person?) && @event.paid_percentage > 0 %>
             <div class="progress">
               <div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div>
@@ -72,18 +74,19 @@
       </div>
     </div>
   </div>
-  <div class="row">
-    <div class="span12">
-      <h3>Event Members</h3>
-      <table class="table table-striped table-bordered">
-        <tr>
-          <th style="width:25%">Name</th>
-          <th style="width:20%">Paid</th>
-          <th style="width:15%">Visited Event?</th>
-          <th style="width:40%">Actions</th>
-        </tr>
-        <%= render collection: @event.paying_event_users, partial: "users/dashboard_user", as: :event_user %>
-      </table>
+
+  <% unless @paid_event_users.empty? %>
+    <h3>Paid Members</h3>
+    <div class="row">
+      <%= render collection: @paid_event_users, partial: "users/dashboard_paid_user", as: :event_user, locals: { itemized: @event.itemized? } %>
     </div>
-  </div>
+  <% end %>
+
+  <% unless @unpaid_event_users.empty? %>
+    <h3>Unpaid Members</h3>
+    <div class="row">
+      <%= render collection: @unpaid_event_users, partial: "users/dashboard_unpaid_user", as: :event_user, locals: { itemized: @event.itemized? } %>
+    </div>
+  <% end %>
+  
 </div>

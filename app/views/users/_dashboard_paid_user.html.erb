@@ -1,0 +1,33 @@
+<%
+  # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
+%>
+<% user = event_user.user %>
+<div class="span4">
+  <div class="well dashboard-user dashboard-paid-user">
+    <div class="profile-image image-user-<%= user.id %>">
+      <%= profile_image_tag user, :thumb %> 
+    </div>
+    <div class="user">
+      <%= link_to user_name(user), user %>
+      <% if user.online? %>
+        <div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div>
+      <% end %>
+      <br />
+      <strong>Paid:</strong> <%= distance_of_time_in_words_to_now event_user.paid_at %> ago
+    </div>
+    <div class="clearfix"></div>
+    <% if itemized %>
+      <div class="push-top-tiny">
+        <% event_user.item_users.each do |item_user| %>
+          <% item = @items[item_user.item_id] %>
+          <strong><%= item.title %>:</strong>
+          <%= item_user.quantity %>
+          <br />
+        <% end %>
+        <div class="push-top-tiny">
+          <em><strong>Total:</strong> <%= humanized_money_with_symbol event_user.paid_total %></em>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

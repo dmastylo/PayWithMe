@@ -30,6 +30,8 @@ class PaymentsController < ApplicationController
   end
 
   def items
+    @payment.event_user.clean_up_payments!(@payment.id)
+
     if @payment.update_attributes(params[:payment].slice(:item_users_attributes, :payment_method_id))
       if @payment.update_for_items!
         redirect_to @payment.url

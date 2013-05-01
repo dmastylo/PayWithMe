@@ -58,6 +58,8 @@ class Event < ActiveRecord::Base
   has_many :items, dependent: :destroy
   accepts_nested_attributes_for :items, allow_destroy: true
   has_many :invitation_types, dependent: :destroy
+  has_many :item_users
+  has_many :payments
 
   # Callbacks
   # ========================================================
@@ -273,18 +275,29 @@ class Event < ActiveRecord::Base
     self.event_users.count - 1
   end
 
+  def paid_event_users(options={})
+    if options[:include_items]
+      includes = [:user, :item_users]
+    else
+      includes = [:user]
+    end
+    self.event_users.where("paid_at IS NOT NULL").includes(includes)
+  end
+
   def paid_members
-    paid_event_users = self.event_users.where("paid_at IS NOT NULL")
-    users = paid_event_users.collect { |event_user| event_user.user }
+    self.paid_event_users.collect { |event_user| event_user.user }
   end
 
   def paid_member_count
     self.event_users.where("paid_at IS NOT NULL").count
   end
 
+  def unpaid_event_users
+    event_users.where("paid_at IS NULL").includes(:user)
+  end
+
   def unpaid_members
-    unpaid_event_users = event_users.where("paid_at IS NULL")
-    users = unpaid_event_users.collect { |event_user| event_user.user }
+    self.unpaid_event_users.collect { |event_user| event_user.user }
   end
 
   def unpaid_member_count
@@ -487,6 +500,10 @@ private
     if division_type != DivisionType::TOTAL
       total_amount_cents = nil
       total_amount = nil
+    end
+
+    if division_type != DivisionType::ITEMIZED
+      self.items = []
     end
   end
 

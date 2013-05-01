@@ -137,6 +137,15 @@ class EventUser < ActiveRecord::Base
     self.save
   end
 
+  # Deletes all unfinished payments except for keep_payment
+  def clean_up_payments!(keep_payment_id=nil)
+    self.payments.each do |payment|
+      if payment.id != keep_payment_id && payment.paid_at.nil?
+        payment.destroy
+      end
+    end
+  end
+
   class Status
     UNPAID = 0
     PENDING = 1
@@ -155,14 +164,13 @@ class EventUser < ActiveRecord::Base
   end
 
   def update_status
-    
-    
     statuses = self.payments.collect(&:status).uniq
 
     if statuses.include?("new") && paid_at.nil?
       self.status = EventUser::Status::PENDING
     elsif paid_at.present?
       self.status = EventUser::Status::PAID
+      clean_up_payments!
     else
       self.status = EventUser::Status::UNPAID
     end

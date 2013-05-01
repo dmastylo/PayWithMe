@@ -17,6 +17,7 @@ class Item < ActiveRecord::Base
 
   # Accessible attributes
   attr_accessible :allow_quantity, :amount, :quantity_max, :quantity_min, :title
+  attr_accessor :total_quantity
   monetize :amount_cents
 
   # Relationships
