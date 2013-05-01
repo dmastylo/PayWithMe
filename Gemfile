@@ -77,6 +77,9 @@ gem "activerecord-import"
 # AB testing
 gem 'vanity', git: 'git://github.com/austingulati/vanity.git'
 
+# Nested forms
+gem 'nested_form'
+
 group :development, :test do
   gem 'sqlite3'
 end

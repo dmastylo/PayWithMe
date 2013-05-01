@@ -22,15 +22,13 @@
         </div>
 
         <div class="event_division_type_option btn_group_option" id="event_division_type_4">
-          <%= f.fields_for :items do |builder| %>
-            <script type="text/html" id="item-template">
+          <div id="items">
+            <%= f.fields_for :items do |builder| %>
               <%= render 'items/form', f: builder %>
-            </script>
-            <div id="items">
-              <%= render 'items/form', f: builder %>
-            </div>
-          <% end %>
-          <button class="btn btn-block" id="add-item">Add Item</button>
+            <% end %>
+          </div>
+          <%= f.link_to_add "Add an item", :items, class: "btn btn-block", data: { target: "#items" } %>
+          <!-- <button class="btn btn-block" id="add-item">Add Item</button> -->
         </div>
 
       </div>
