@@ -45,24 +45,38 @@ class TicketPdf < Prawn::Document
 		move_cursor_to @height - 5
 		table [[ { image: event_image, fit: [@stub_start_x - 20, @height / 2 - 10],
 																	 position: :center,
-																	 padding: [0, 10, 0, 0]
+																	 padding: [0, 0, 0, 20]
 					} ]],
-					cell_style: { width: @stub_start_x - 10,
+					cell_style: { width: @stub_start_x - 20,
 								        height: @height / 2 - 10,
 								        borders: [] }
 
 		# Draws information below image
-		# Title horizontally, bold, shrink to fit, text box
+		font_size 24
+		text_box "#{@event.title}", style: :bold, at: [@origin + 10, @height / 2], width: @stub_start_x - 20, overflow: :shrink_to_fit, align: :center
 
 		# Paid information, via, date, across bottom. Skim date to just show date not time
+		font_size 10
+		text_box "Admit #{@event_user.user.name || @event_user.user.email}", at: [@origin + 10, 60 ], width: 240
+
+		text_box "paid via #{@event_user.payments[0].payment_method.name}", at: [@origin + 10, 40], width: 240
+
+		text_box "on #{@event_user.paid_at.to_date}", at: [@origin + 10, 20], width: 240
 	end
 
 	def draw_ticket_stub_2
 		# Draws PayWithMe logo
+		image pwm_image, at: [@stub_start_x + 10, 186], fit: [130, 100]
 
 		# Draws some event_user information
+		font_size 10
+		text_box "#{@event_user.user.name || @event_user.user.email}", at: [@stub_start_x + 10, @height - 70], width: @width - @stub_start_x - 20, align: :center
+
+		# Fix later
+		text_box " paid #{@event_user.payments[0].payment_method.name} #{@event_user.paid_total_cents}", at: [@stub_start_x + 10, @height - 80], width: @width - @stub_start_x - 20, align: :center
 
 		# Draws qr code
+		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 33, 10)
 	end
 
 	def draw_ticket
