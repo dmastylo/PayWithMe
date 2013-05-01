@@ -1,5 +1,5 @@
 <div class="item-form well">
-  <strong class="item-title">Item #<span class="number">1</span> (<%= f.link_to_remove "remove" %>)</strong>
+  <strong class="item-title">Item #<span class="number"><%= form_counter %></span> (<%= f.link_to_remove "remove" %>)</strong>
   <div class="clearfix"></div>
   <div class="half">
     <%= f.label :title, "What is the name of the item? (required)" %>
@@ -11,10 +11,10 @@
   </div>
   <div class="half bottom">
     <%= f.label :allow_quantity, "Can people select a quantity? (required)" %>
-    <%= f.hidden_field :allow_quantity %>
+    <%= f.hidden_field :allow_quantity, class: "item-quantity-hidden" %>
     <div class="btn-group input-block-level item-quantity" data-toggle="buttons-radio">
-      <button type="button" class="btn half" data-name="allow" data-value="1">Yes, different quantities.</button>
-      <button type="button" class="btn half" data-name="disallow" data-value="0">No, just one quantity.</button>
+      <button type="button" class="btn half" data-name="allow" data-value="t">Yes, different quantities.</button>
+      <button type="button" class="btn half" data-name="disallow" data-value="f">No, just one quantity.</button>
     </div>
   </div>
   <div class="half last bottom item-quantity-yes">

@@ -23,8 +23,10 @@
 
         <div class="event_division_type_option btn_group_option" id="event_division_type_4">
           <div id="items">
+            <% form_counter = 0 %>
             <%= f.fields_for :items do |builder| %>
-              <%= render 'items/form', f: builder %>
+              <% form_counter = form_counter + 1 %>
+              <%= render 'items/form', f: builder, form_counter: form_counter %>
             <% end %>
           </div>
           <%= f.link_to_add "Add an item", :items, class: "btn btn-block", data: { target: "#items" } %>

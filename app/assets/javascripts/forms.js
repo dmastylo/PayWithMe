@@ -22,10 +22,4 @@ $(document).ready(function()
       $btn.html('Bulk invitation mode');
     }
   });
-
-  $(document).on('nested:fieldAdded', function(event){
-    var $field = event.field;
-    var $items = $("#items");
-    $field.find(".number").html($items.children().length);
-  });
 });
