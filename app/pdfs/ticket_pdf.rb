@@ -70,10 +70,10 @@ class TicketPdf < Prawn::Document
 
 		# Draws some event_user information
 		font_size 10
-		text_box "#{@event_user.user.name || @event_user.user.email}", at: [@stub_start_x + 10, @height - 70], width: @width - @stub_start_x - 20, align: :center
+		text_box "#{@event_user.user.name || @event_user.user.email}", at: [@stub_start_x + 10, @height - 60], width: @width - @stub_start_x - 20, align: :center
 
 		# Fix later
-		text_box " paid #{@event_user.payments[0].payment_method.name} #{@event_user.paid_total_cents}", at: [@stub_start_x + 10, @height - 80], width: @width - @stub_start_x - 20, align: :center
+		text_box " paid #{@event_user.payments[0].payment_method.name} #{@event_user.paid_total_cents}", at: [@stub_start_x + 10, @height - 70], width: @width - @stub_start_x - 20, align: :center
 
 		# Draws qr code
 		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 33, 10)
