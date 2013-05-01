@@ -63,3 +63,10 @@ jQuery ->
 
   # Initially set the total amount
   updateItemsTotal()
+
+  # Handle submitting the form
+  $("#items .btn-pay").click (e) ->
+    e.preventDefault()
+    $("#payment_payment_method_id").val($(this).data("method"))
+    $(this).parent().submit()
+    false

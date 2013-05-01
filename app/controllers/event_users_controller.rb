@@ -24,6 +24,7 @@ class EventUsersController < ApplicationController
   end
 
   def pay
+    raise params.to_yaml
     payment = @event_user.create_payment(payment_method: params[:method])
     redirect_to payment.url
   end

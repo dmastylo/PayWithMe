@@ -25,7 +25,7 @@ class Payment < ActiveRecord::Base
   # Accessible attributes
   # There is no available create route right now so we
   # can get away with things that shouldn't be accessible
-  attr_accessible :error_message, :payer_id, :payee_id, :event_id, :payment_method_id, :amount_cents, :processor_fee_amount_cents, :our_fee_amount_cents, :due_at, :requested_at, :event_user_id, :paid_at
+  attr_accessible :error_message, :payer_id, :payee_id, :event_id, :payment_method_id, :amount_cents, :processor_fee_amount_cents, :our_fee_amount_cents, :due_at, :requested_at, :event_user_id, :paid_at, :item_users_attributes
   attr_accessor :error_message
   monetize :amount_cents, allow_nil: true
   monetize :processor_fee_amount_cents, allow_nil: true
@@ -211,6 +211,32 @@ class Payment < ActiveRecord::Base
     end
   end
 
+  # Returns truthy value if update works, otherwise falsey
+  def update_for_items!
+    total_amount_cents = 0
+    self.item_users.each do |item_user|
+      item = item_user.item
+      if item.allow_quantity?
+        if item_user.quantity >= item.quantity_min && item_user.quantity <= item.quantity_max
+          item_user.total_amount_cents = item.amount_cents * item_user.quantity
+        else
+          return false
+        end
+      else
+        item_user.total_amount_cents = item.amount_cents
+        item_user.quantity = 1
+      end
+      total_amount_cents += item_user.total_amount_cents
+      item_user.save
+    end
+
+    self.amount_cents = total_amount_cents
+    update_fees
+    self.save
+    self.reload
+    true
+  end
+
   # Public because needed in another spot
   def self.dwolla_gateway
     Dwolla::Client.new(
@@ -260,6 +286,10 @@ private
       self.due_at = self.event.due_at
     end
 
+    update_fees
+  end
+
+  def update_fees
     if self.payment_method.present? && self.amount_cents.present?
       self.processor_fee_amount_cents = self.payment_method.processor_fee(amount_cents)
       self.our_fee_amount_cents = self.payment_method.our_fee(amount_cents)

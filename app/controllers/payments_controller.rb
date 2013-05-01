@@ -2,6 +2,7 @@ class PaymentsController < ApplicationController
   before_filter :authenticate_user!, except: [:ipn]
   before_filter :user_owns_payment, except: [:ipn]
   before_filter :valid_payment_method_for_pin, only: [:pin]
+  before_filter :valid_payment_method_for_items, only: [:items]
 
   def pin
   end
@@ -24,6 +25,17 @@ class PaymentsController < ApplicationController
 
         @payment.update!
         redirect_to event_path(@payment.event, success: 1)
+      end
+    end
+  end
+
+  def items
+    if @payment.update_attributes(params[:payment].slice(:item_users_attributes, :payment_method_id))
+      if @payment.update_for_items!
+        redirect_to @payment.url
+      else
+        flash[:error] = "Please select valid quantities of each item."
+        redirect_to event_path(@payment.event)
       end
     end
   end
@@ -58,6 +70,13 @@ private
     unless current_user.dwolla_account.present?
       flash[:error] = "Please link your Dwolla account before paying with Dwolla."
       redirect_to edit_user_registration_path
+    end
+  end
+
+  def valid_payment_method_for_items
+    if !@payment.event.accepts_payment_method?(params[:payment][:payment_method_id].to_i)
+      flash[:error] = "Please select a valid payment method."
+      redirect_to event_path(@payment.event)
     end
   end
 

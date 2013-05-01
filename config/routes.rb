@@ -81,7 +81,7 @@ PayWithMe::Application.routes.draw do
       get 'pin'
       post 'pay'
       post 'ipn'
-      post 'items'
+      put 'items'
     end
   end
 
