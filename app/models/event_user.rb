@@ -35,6 +35,7 @@ class EventUser < ActiveRecord::Base
   belongs_to :event
   has_many :payments
   has_many :nudges
+  has_many :item_users
 
   # Callbacks
   # before_validation :copy_event_attributes
@@ -154,6 +155,8 @@ class EventUser < ActiveRecord::Base
   end
 
   def update_status
+    
+    
     statuses = self.payments.collect(&:status).uniq
 
     if statuses.include?("new") && paid_at.nil?

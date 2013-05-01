@@ -53,15 +53,20 @@ jQuery ->
       sum += parseFloat(value)
     $(".items-total").html("$" + sum.toFixed(2))
 
+  updateItemSingle = (item) ->
+    $total = $(item).parent().find(".item-total")
+    price = $(item).attr("data-amount")
+    quantity = $(item).val()
+    $total.html("$" + (price * quantity).toFixed(2))
+
   # Updates the individual amount for a single item
   $(".item-quantity").change (e) ->
-    $total = $(this).parent().find(".item-total")
-    price = $(this).attr("data-amount")
-    quantity = $(this).val()
-    $total.html("$" + (price * quantity).toFixed(2))
+    updateItemSingle(this)
     updateItemsTotal()
 
-  # Initially set the total amount
+  # Initially set the total amount and single amounts
+  $(".item-quantity").each ->
+    updateItemSingle(this)
   updateItemsTotal()
 
   # Handle submitting the form

@@ -38,7 +38,7 @@ class Payment < ActiveRecord::Base
   belongs_to :event
   belongs_to :event_user
   belongs_to :payment_method
-  has_many :item_users
+  has_many :item_users, dependent: :destroy
   accepts_nested_attributes_for :item_users, allow_destroy: true
 
   # Validations

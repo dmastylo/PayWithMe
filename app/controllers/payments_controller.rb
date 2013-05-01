@@ -74,7 +74,7 @@ private
   end
 
   def valid_payment_method_for_items
-    if !@payment.event.accepts_payment_method?(params[:payment][:payment_method_id].to_i)
+    if !@payment.event.accepts_payment_method?(params[:payment][:payment_method_id].to_i) || params[:payment][:payment_method_id].to_i == PaymentMethod::MethodType::CASH
       flash[:error] = "Please select a valid payment method."
       redirect_to event_path(@payment.event)
     end
