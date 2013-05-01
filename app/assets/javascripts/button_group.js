@@ -76,6 +76,7 @@
 						if($.inArray(val, that.val) !== -1)
 						{
 							$this.addClass('active');
+							that.showChild($this.data("name"));
 						}
 						else
 						{
