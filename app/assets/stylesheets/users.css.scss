@@ -69,6 +69,33 @@
   max-height: 210px;
 }
 
+.dashboard-user
+{
+  .profile_image
+  {
+    float: left;
+    margin-right: $tinyMargin;
+    border: 1px solid $lightGray;
+  }
+  .user
+  {
+    margin-top: -3px;
+  }
+}
+
+.dashboard-unpaid-user
+{
+  .profile-image
+  {
+    float: left;
+    margin-right: $tinyMargin;
+  }
+  .user
+  {
+    line-height: 34px;
+  }
+}
+
 @media (max-width: 767px)
 {
   #stub-login-modal

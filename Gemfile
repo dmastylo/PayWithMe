@@ -77,6 +77,9 @@ gem "activerecord-import"
 # AB testing
 gem 'vanity', git: 'git://github.com/austingulati/vanity.git'
 
+# Nested forms
+gem 'nested_form'
+
 group :development, :test do
   gem 'sqlite3'
 end
@@ -105,7 +108,7 @@ end
   gem 'bourbon'
   gem 'bootstrap-sass', git: 'git://github.com/austingulati/bootstrap-sass.git' # path: '/var/www/bootstrap-sass'
   gem 'mustache'
-  # gem 'coffee-rails', '~> 3.2.1'
+  gem 'coffee-rails', '~> 3.2.1'
 
   # See https://github.com/sstephenson/execjs#readme for more supported runtimes
   # gem 'therubyracer', :platforms => :ruby

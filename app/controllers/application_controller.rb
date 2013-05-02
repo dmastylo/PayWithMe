@@ -41,7 +41,7 @@ protected
   def user_in_event
     @event ||= Event.find(params[:event_id] || params[:id])
 
-    if !event_allows_guest? && (!signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.admin?))
+    if (!signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.admin?)) && !event_allows_guest?
       redirect_to_login_or_root
     end
   end

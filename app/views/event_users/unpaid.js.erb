@@ -1,6 +1,19 @@
-$('#user-status-<%= @event_user.user.id %>').html('<span class="unpaid">Unpaid</span>');
-$('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/dashboard_user_form", event_user: @event_user %>');
+$("#unpaid-members .row").append('<%=j render "users/dashboard_unpaid_user", event_user: @event_user, itemized: false %>')
+$("#paid-members .dashboard-user-<%= @event_user.id %>").remove();
+
+$("#unpaid-members").show();
+if($("#paid-members .row .dashboard-paid-user").length === 0)
+{
+  $("#paid-members").hide(); 
+}
+
+$('#payment-links-<%= @event_user.id %> .input-append').autoSize({
+  fixed: 'input[type=submit]',
+  fluid: 'input[type=text]'
+});
+
 $('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
+
 var money_collected = <%= @event.money_collected %>;
 if (money_collected === 0)
 {

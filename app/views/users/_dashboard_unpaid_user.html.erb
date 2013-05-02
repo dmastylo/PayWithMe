@@ -1,0 +1,20 @@
+<%
+  # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
+%>
+<% user = event_user.user %>
+<div class="span4 dashboard-unpaid-user dashboard-user-<%= event_user.id %>">
+  <div class="well">
+    <div class="profile-image image-user-<%= user.id %>">
+      <%= profile_image_tag user, :thumb %> 
+    </div>
+    <div class="user">
+      <%= link_to user_name(user), user %>
+      <% if user.online? %>
+        <div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div>
+      <% end %>
+    </div>
+    <% if !itemized && @event.send_with_cash? %>
+      <%= render "users/dashboard_user_form", event: @event, user: user, event_user: event_user %>
+    <% end %>
+  </div>
+</div>
