@@ -80,6 +80,8 @@ class EventUser < ActiveRecord::Base
       return false
     end
 
+    puts "Emailing Tickets2"
+
     payment = user.sent_payments.find_or_create_by_payee_id_and_event_id_and_event_user_id_and_amount_cents_and_payment_method_id_and_paid_at(
       payee_id: event.organizer.id,
       event_id: event.id,
@@ -89,20 +91,22 @@ class EventUser < ActiveRecord::Base
       paid_at: nil
     )
 
-    puts "Emailing Tickets"
-    # Only send ticket if total amount is paid, if a ticket hasn't been sent yet and if the organizer wants tickets
-    if self.paid_total_cents == self.amount_cents && !self.event.send_tickets? && self.event.send_tickets?
-      send_ticket
-    end
   end
 
   def pay!(payment, options={})
+
     copy_event_attributes
     payment.pay!(options)
 
     update_paid_total_cents
     update_paid_with_cash
     update_status
+
+    puts "Emailing Tickets"
+    # Only send ticket if total amount is paid, if a ticket hasn't been sent yet and if the organizer wants tickets
+    if self.paid_total_cents == self.amount_cents && !self.event.send_tickets? && self.event.send_tickets?
+      send_ticket
+    end
 
     send_nudges
     update_nudges_remaining
