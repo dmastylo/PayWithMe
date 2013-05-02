@@ -25,7 +25,7 @@
           <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top-title-multiline" %>
         <% elsif current_user == @event.organizer %>
           <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title-multiline", rel: "tooltip", title: "Manage your event and view statistics" %>
-        <% elsif @event.public? && !@event.members.include?(current_user) %>
+        <% elsif (@event.public? || @event.invitation_type_ids.include?(InvitationType::Type::LINK)) && !@event.members.include?(current_user) %>
           <%= form_for [@event, @event_user] do |f| %>
             <%= f.hidden_field :event_id, :value => @event.id %>
             <%= f.hidden_field :user_id, :value => current_user.id %>
@@ -37,39 +37,7 @@
   </div>
 <% end %>
 
-
 <div class="container">
-  <!-- <div class="row">
-    <div class="span9">
-      <div class="page-header">
-        <h2>
-          <%= @event.title %>
-          <% if @event.public? %>
-            <i class="icon-globe" rel="tooltip" title="Public event" data-placement="right"></i>
-          <% else %>
-            <i class="icon-lock" rel="tooltip" title="Private event" data-placement="right"></i>
-          <% end %>
-        </h2>
-      </div>
-    </div>
-    <% if !signed_in? %>
-      <div class="span3">
-        <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top" %>
-      </div>
-    <% elsif current_user == @event.organizer %>
-      <div class="span3">
-        <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title", rel: "tooltip", title: "Manage your event and view statistics" %>
-      </div>
-    <% elsif @event.public? && !@event.members.include?(current_user) %>
-      <div class="span3">
-        <%= form_for [@event, @event_user] do |f| %>
-            <%= f.hidden_field :event_id, :value => @event.id %>
-            <%= f.hidden_field :user_id, :value => current_user.id %>
-            <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block pull-right push-top" %>
-        <% end %>
-      </div>
-    <% end %>
-  </div> -->
   <div class="row">
     <div class="span5">
       <h3>Event Details</h3>
@@ -89,14 +57,14 @@
             <div class="quarter"><strong>Minimum Donation</strong></div>
             <div class="three-quarters" id="money-collected"><%= number_to_currency @event.minimum_donation %></div>
           <% end %>
-        <% else %>
+        <% elsif !@event.fundraiser? || !@event.itemized? %>
           <div class="quarter"><strong>Total Goal</strong></div>
           <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
           <div class="quarter"><strong>Per User Goal</strong></div>
           <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
         <% end %>
         <div class="quarter"><strong>Money Due</strong></div>
-        <div class="three-quarters"><%= @event.due_at.strftime("%m/%d/%Y at %I:%M%p") %></div>
+        <div class="three-quarters"><%= @event.due_at.to_s(:ordinal) %></div>
         <div class="clearfix"></div>
         <div class="quarter"><strong>Accepted Payment Methods</strong></div>
         <div class="three-quarters"><%= @event.payment_methods.collect(&:name).join(", ") %></div>
@@ -127,7 +95,7 @@
           <% if @event.send_with_wepay? %>
             <%= event_user_pay_fundraiser_button(@event_user, "WePay") %>
           <% end %>
-        <% else %>
+        <% elsif @event.divide_total? || @event.divide_per_person? %>
           <% if @event.send_with_paypal? %>
             <%= event_user_pay_button(@event_user, "PayPal") %>
           <% end %>
@@ -137,6 +105,28 @@
           <% if @event.send_with_wepay? %>
             <%= event_user_pay_button(@event_user, "WePay") %>
           <% end %>
+        <% elsif @event.itemized? %>
+          <h3>Available Items</h3>
+          <div class="well" id="items">
+            <%= form_for @payment, url: items_payment_path(@payment) do |f| %>
+              <%= f.fields_for :item_users do |builder| %>
+                <%= render 'items/item', f: builder %>
+              <% end %>
+              <%= f.hidden_field :payment_method_id %>
+              <div class="push-bottom-small">
+                <strong>Total:</strong> <span class="items-total"></span>
+              </div>
+              <% if @event.send_with_paypal? %>
+                <%= link_to event_user_pay_text(@event_user, "PayPal"), "#", class: "btn btn-primary btn-block btn-pay", data: { method: PaymentMethod::MethodType::PAYPAL } %>
+              <% end %>
+              <% if @event.send_with_dwolla? %>
+                <%= link_to event_user_pay_text(@event_user, "Dwolla"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::DWOLLA } %>
+              <% end %>
+              <% if @event.send_with_wepay? %>
+                <%= link_to event_user_pay_text(@event_user, "WePay"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::WEPAY } %>
+              <% end %>
+            <% end %>
+          </div>
         <% end %>
       <% end %>
 
@@ -202,7 +192,6 @@
       });
 
       var content = $('#contribution_amount').val();
-
       $('#contribution_amount').keyup(function()
       { 
         if ($('#contribution_amount').val() !== content)

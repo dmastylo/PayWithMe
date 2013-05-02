@@ -34,18 +34,25 @@ class EventsController < ApplicationController
     end
 
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
-    @messages_count = @event.messages.size
+    @messages_count = @event.messages.count
     @message = Message.new
-    @event_user = EventUser.new unless @event.members.include?(current_user)
+    @event_user = @event.event_user(current_user)
+    if @event_user.present?
+      @payment = @event_user.create_payment if @event.itemized? && !@event_user.paid_at.present?
+    else
+      @event_user = EventUser.new
+    end
   end
   
   def new
     @event = current_user.organized_events.new
+    @event.items.new
   end
 
   def create
     members_from_users = User.from_params(params[:event].delete(:members), current_user)
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
+    invitation_types = InvitationType.from_params(params[:event].delete(:invitation_types))
     @event = current_user.organized_events.new(params[:event])
 
     if @event.save
@@ -53,6 +60,7 @@ class EventsController < ApplicationController
 
       @event.add_members(members_from_users + members_from_groups + [current_user], current_user)
       @event.add_groups(groups)
+      @event.invitation_types = invitation_types
 
       # For some reason, redirect_to @event doesn't work
       redirect_to event_path(@event)
@@ -68,11 +76,13 @@ class EventsController < ApplicationController
   def edit
     @member_emails = @event.independent_members.collect { |member| member.email }
     @group_ids = @event.groups.collect { |group| group.id }
+    @event.items.new if @event.items.empty?
   end
 
   def update
     members_from_users = User.from_params(params[:event].delete(:members), current_user)
     groups, members_from_groups = Group.groups_and_members_from_params(params[:event].delete(:groups), current_user)
+    invitation_types = InvitationType.from_params(params[:event].delete(:invitation_types))
     # @event.payment_methods = []
 
     if @event.update_attributes(params[:event])
@@ -80,6 +90,7 @@ class EventsController < ApplicationController
 
       @event.set_members(members_from_users + members_from_groups + [current_user], current_user)
       @event.set_groups(groups)
+      @event.invitation_types = invitation_types
 
       # For some reason, redirect_to @event doesn't work
       redirect_to admin_event_path(@event)
@@ -98,6 +109,26 @@ class EventsController < ApplicationController
 
   def admin
     @event = Event.find_by_id(@event.id, include: [{ event_users: :user }, :payment_methods] )
+
+    if @event.itemized?
+      @items = {}
+      @event.items.each do |item|
+        item.total_quantity = 0
+        @items[item.id] = item
+      end
+
+      event_users = @event.payments.where("paid_at IS NOT NULL").includes(:item_users)
+      event_users.each do |event_user|
+        event_user.item_users.each do |item_user|
+          if item_user.quantity.present?
+            @items[item_user.item_id].total_quantity += item_user.quantity
+          end
+        end
+      end
+    end
+
+    @paid_event_users = @event.paid_event_users(include_items: true)
+    @unpaid_event_users = @event.unpaid_event_users
   end
 
   def guests
@@ -187,6 +218,7 @@ private
       else
         payment = current_user.sent_payments.find_by_event_id(@event.id)
       end
+      return unless payment.present?
       payment.update!
       @event_user.update_status
       @event_user.save

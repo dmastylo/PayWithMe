@@ -35,6 +35,7 @@ class EventUser < ActiveRecord::Base
   belongs_to :event
   has_many :payments
   has_many :nudges
+  has_many :item_users
 
   # Callbacks
   # before_validation :copy_event_attributes
@@ -75,8 +76,15 @@ class EventUser < ActiveRecord::Base
     copy_event_attributes
     current_cents = options[:amount_cents] || amount_cents
     payment_method = PaymentMethod.find_by_id(options[:payment_method] || PaymentMethod::MethodType::CASH)
-    if !event.fundraiser? && current_cents > amount_cents
-      return false
+# <<<<<<< HEAD
+#     if !event.fundraiser? && current_cents > amount_cents
+#       return false
+#     end
+# =======
+    unless self.event.fundraiser? || self.event.itemized?
+      if current_cents > amount_cents
+        return false
+      end
     end
 
     payment = user.sent_payments.find_or_create_by_payee_id_and_event_id_and_event_user_id_and_amount_cents_and_payment_method_id_and_paid_at(
@@ -87,6 +95,13 @@ class EventUser < ActiveRecord::Base
       payment_method_id: payment_method.id,
       paid_at: nil
     )
+
+    if self.event.itemized?
+      self.event.items.each do |item|
+        payment.item_users.find_or_create_by_event_id_and_event_user_id_and_item_id_and_user_id(event_id: payment.event_id, event_user_id: payment.event_user_id, item_id: item.id, user_id: payment.event_user.user_id)
+      end
+    end
+    payment
   end
 
   def pay!(payment, options={})
@@ -127,6 +142,15 @@ class EventUser < ActiveRecord::Base
     self.save
   end
 
+  # Deletes all unfinished payments except for keep_payment
+  def clean_up_payments!(keep_payment_id=nil)
+    self.payments.each do |payment|
+      if payment.id != keep_payment_id && payment.paid_at.nil?
+        payment.destroy
+      end
+    end
+  end
+
   class Status
     UNPAID = 0
     PENDING = 1
@@ -151,6 +175,7 @@ class EventUser < ActiveRecord::Base
       self.status = EventUser::Status::PENDING
     elsif paid_at.present?
       self.status = EventUser::Status::PAID
+      clean_up_payments!
     else
       self.status = EventUser::Status::UNPAID
     end
@@ -170,6 +195,8 @@ private
   def copy_event_attributes
     if self.event.present? && self.member?
       self.due_at = self.event.due_at
+    end
+    unless self.event.fundraiser? || self.event.itemized?
       self.amount_cents = self.event.split_amount_cents
     end
   end

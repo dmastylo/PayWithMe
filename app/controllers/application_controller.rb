@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
+  before_filter :check_for_event_token
   after_filter :user_activity, if: :signed_in?
   around_filter :user_time_zone, if: :signed_in?
   after_filter :update_user_balance, if: :signed_in?
@@ -10,8 +11,12 @@ class ApplicationController < ActionController::Base
     if Rails.env.production?
       {host: "paywith.me"}.merge(super)
     else
-      {host: "localhost:3000"}.merge(super)
+      {host: "local.paywith.me:3000"}.merge(super)
     end
+  end
+
+  def event_allows_guest?
+    @event.share_link? && session[:allowed_events].present? && session[:allowed_events].include?(@event.id)
   end
 
 protected
@@ -36,7 +41,7 @@ protected
   def user_in_event
     @event ||= Event.find(params[:event_id] || params[:id])
 
-    if !signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.admin?)
+    if (!signed_in? || (!@event.members.include?(current_user) && !@event.public? && !current_user.admin?)) && !event_allows_guest?
       redirect_to_login_or_root
     end
   end
@@ -85,6 +90,17 @@ private
       else
         flash[:error] = "Invalid login token."
         redirect_to root_path
+      end
+    end
+  end
+
+  def check_for_event_token
+    if params[:etoken] && params[:etoken] != nil
+      event = Event.find_by_guest_token(params[:etoken])
+
+      if event.present?
+        session[:allowed_events] = [] if session[:allowed_events].nil?
+        session[:allowed_events] << event.id if !session[:allowed_events].include?(event.id)
       end
     end
   end

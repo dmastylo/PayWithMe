@@ -28,7 +28,7 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :fundraiser_goal_cents, :fundraiser_goal, :minimum_donation, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :fundraiser_goal_cents, :fundraiser_goal, :minimum_donation, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types, :items_attributes
   attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
@@ -40,7 +40,7 @@ class Event < ActiveRecord::Base
   # Validations
   # ========================================================
   validates :organizer_id, presence: true
-  validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 3, message: "is an invalid division type" }
+  validates :division_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 4, message: "is an invalid division type" }
   validates :privacy_type, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 2, message: "is an invalid privacy type" }
   validates :title, presence: true, length: { minimum: 2, maximum: 120, message: "has to be between 2 and 120 characters long" }
   validates :due_at, presence: true
@@ -62,6 +62,11 @@ class Event < ActiveRecord::Base
   has_many :reminders, dependent: :destroy
   has_and_belongs_to_many :payment_methods
   has_many :nudges, dependent: :destroy
+  has_many :items, dependent: :destroy
+  accepts_nested_attributes_for :items, allow_destroy: true
+  has_many :invitation_types, dependent: :destroy
+  has_many :item_users
+  has_many :payments
 
   # Callbacks
   # ========================================================
@@ -73,6 +78,7 @@ class Event < ActiveRecord::Base
   before_save :add_organizer_to_members
   before_destroy :clear_notifications_and_news_items
   after_save :create_payment_methods
+  after_save :create_guest_token
 
   # Pretty URLs
   # ========================================================
@@ -84,7 +90,7 @@ class Event < ActiveRecord::Base
   def total_amount_cents
     if division_type == DivisionType::TOTAL
       super
-    elsif paying_members.size == 0 || division_type == DivisionType::FUNDRAISE || division_type.nil? || split_amount_cents.nil?
+    elsif paying_members.size == 0 || division_type == DivisionType::FUNDRAISE || division_type == DivisionType::ITEMIZED || division_type.nil? || split_amount_cents.nil?
       nil
     else
       split_amount_cents * paying_members.size
@@ -94,7 +100,7 @@ class Event < ActiveRecord::Base
   def split_amount_cents
     if division_type == DivisionType::SPLIT
       super
-    elsif paying_member_count == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE
+    elsif paying_member_count == 0 || division_type.nil? || division_type == DivisionType::FUNDRAISE || division_type == DivisionType::ITEMIZED || total_amount_cents.nil?
       nil
     else
       total_amount_cents / paying_member_count
@@ -119,6 +125,10 @@ class Event < ActiveRecord::Base
     division_type == DivisionType::FUNDRAISE
   end
 
+  def itemized?
+    division_type == DivisionType::ITEMIZED
+  end
+
   # Privacy types
   # ========================================================
   def public?
@@ -127,6 +137,10 @@ class Event < ActiveRecord::Base
 
   def private?
     privacy_type == PrivacyType::PRIVATE
+  end
+
+  def share_link?
+    self.invitation_type_ids.include?(InvitationType::Type::LINK)
   end
 
   # Payment methods
@@ -195,6 +209,7 @@ class Event < ActiveRecord::Base
     TOTAL = 1
     SPLIT = 2
     FUNDRAISE = 3
+    ITEMIZED = 4
   end
   class PrivacyType
     PUBLIC = 1
@@ -241,6 +256,22 @@ class Event < ActiveRecord::Base
     end
   end
 
+  # def invitation_types
+  #   if @invitation_types.present?
+  #     @invitation_types
+  #   else
+  #     invitation_types = []
+  #     if paying_member_count > 0
+  #       invitation_types << 1
+  #     end
+
+  #     if self.groups.count > 0
+  #       invitation_types << 3
+  #     end
+  #     invitation_types
+  #   end
+  # end
+        
   # Member definitions
   # ========================================================
   def paying_event_users
@@ -255,18 +286,29 @@ class Event < ActiveRecord::Base
     self.event_users.count - 1
   end
 
+  def paid_event_users(options={})
+    if options[:include_items]
+      includes = [:user, :item_users]
+    else
+      includes = [:user]
+    end
+    self.event_users.where("paid_at IS NOT NULL").includes(includes).reject { |event_user| event_user.user_id == self.organizer_id }
+  end
+
   def paid_members
-    paid_event_users = self.event_users.where("paid_at IS NOT NULL")
-    users = paid_event_users.collect { |event_user| event_user.user }
+    self.paid_event_users.collect { |event_user| event_user.user }
   end
 
   def paid_member_count
     self.event_users.where("paid_at IS NOT NULL").count
   end
 
+  def unpaid_event_users
+    event_users.where("paid_at IS NULL").includes(:user).reject { |event_user| event_user.user_id == self.organizer_id }
+  end
+
   def unpaid_members
-    unpaid_event_users = event_users.where("paid_at IS NULL")
-    users = unpaid_event_users.collect { |event_user| event_user.user }
+    self.unpaid_event_users.collect { |event_user| event_user.user }
   end
 
   def unpaid_member_count
@@ -394,6 +436,10 @@ class Event < ActiveRecord::Base
     members.include?(user)
   end
 
+  def invitation_type_ids
+    self.invitation_types.collect { |invitation_type| invitation_type.invitation_type }
+  end
+
   def event_user(user)
     event_users.find_by_user_id(user)
   end
@@ -474,6 +520,10 @@ private
     if division_type != DivisionType::FUNDRAISE
       fundraiser_goal = nil
     end
+    
+    if division_type != DivisionType::ITEMIZED
+      self.items = []
+    end
   end
 
   def concatenate_dates
@@ -536,5 +586,12 @@ private
   def clear_notifications_and_news_items
     Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all
+  end
+
+  def create_guest_token
+    if self.guest_token.nil? && self.invitation_type_ids.include?(InvitationType::Type::LINK)
+      self.guest_token = ::BCrypt::Password.create("#{self.title}#{self.created_at}")
+      self.save
+    end
   end
 end

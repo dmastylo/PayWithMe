@@ -55,8 +55,9 @@
 		listen: function()
 		{
 			var that = this;
-			$(window).resize(function() { that.resize() });
-			$(document).ready(function() { that.resize() });
+			$(window).resize(function() { that.resize(); });
+			$(document).ready(function() { that.resize(); });
+			this.$parent.on('show', function() { that.resize(); })
 		}
 	}
 
