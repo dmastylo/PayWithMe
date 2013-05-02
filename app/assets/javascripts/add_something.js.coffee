@@ -1,0 +1,4 @@
+do($ = jQuery) ->
+	AddSomething.prototype = {
+	
+	}
