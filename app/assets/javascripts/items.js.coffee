@@ -27,14 +27,14 @@ jQuery ->
 
   # Handle changes when adding a field
   $(document).on "nested:fieldAdded", (e) ->
-    $field = e.field;
+    $field = e.field
     $items = $("#items")
-    $field.find(".number").html($items.find(".fields:visible").length);
+    $field.find(".number").html($items.find(".fields:visible").length)
     $field.find(".item-quantity button").click handleQuantityChange
 
   # Handle changes when removing a field
   $(document).on "nested:fieldRemoved", (e) ->
-    $field = e.field;
+    $field = e.field
     $items = $("#items")
     id = 1
     $items.find(".fields:visible").each ->
@@ -55,6 +55,10 @@ jQuery ->
       value = html.replace("$", "")
       sum += parseFloat(value)
     $(".items-total").html("$" + sum.toFixed(2))
+    if sum == 0
+      $(".pay-buttons").hide()
+    else
+      $(".pay-buttons").show()
 
   # Updates the individual amount for a single item
   updateItemSingle = (item) ->
@@ -77,5 +81,5 @@ jQuery ->
   $("#items .btn-pay").click (e) ->
     e.preventDefault()
     $("#payment_payment_method_id").val($(this).data("method"))
-    $(this).parent().submit()
+    $(this).parent().parent().submit()
     false

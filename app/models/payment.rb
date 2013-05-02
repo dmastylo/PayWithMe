@@ -230,6 +230,10 @@ class Payment < ActiveRecord::Base
       item_user.save
     end
 
+    if total_amount_cents == 0
+      return false
+    end
+
     self.amount_cents = total_amount_cents
     update_fees
     self.save
