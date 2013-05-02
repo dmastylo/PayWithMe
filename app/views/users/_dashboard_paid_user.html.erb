@@ -2,7 +2,7 @@
   # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
 %>
 <% user = event_user.user %>
-<div class="span4">
+<div class="span4 dashboard-user-<%= event_user.id %>">
   <div class="well dashboard-user dashboard-paid-user">
     <div class="profile-image image-user-<%= user.id %>">
       <%= profile_image_tag user, :thumb %> 
@@ -28,6 +28,8 @@
           <em><strong>Total:</strong> <%= humanized_money_with_symbol event_user.paid_total %></em>
         </div>
       </div>
+    <% elsif @event.send_with_cash? %>
+      <%= render "users/dashboard_user_form", event: @event, user: user, event_user: event_user %>
     <% end %>
   </div>
 </div>

@@ -281,7 +281,7 @@ class Event < ActiveRecord::Base
     else
       includes = [:user]
     end
-    self.event_users.where("paid_at IS NOT NULL").includes(includes)
+    self.event_users.where("paid_at IS NOT NULL").includes(includes).reject { |event_user| event_user.user_id == self.organizer_id }
   end
 
   def paid_members
@@ -293,7 +293,7 @@ class Event < ActiveRecord::Base
   end
 
   def unpaid_event_users
-    event_users.where("paid_at IS NULL").includes(:user)
+    event_users.where("paid_at IS NULL").includes(:user).reject { |event_user| event_user.user_id == self.organizer_id }
   end
 
   def unpaid_members
