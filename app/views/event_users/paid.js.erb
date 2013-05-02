@@ -18,7 +18,18 @@
      $("#unpaid-members").hide(); 
     }
   <% else %>
+<<<<<<< HEAD
+    $('#user-status-<%= @event_user.user.id %>').html('Unpaid');
+    var money_collected = <%= @event.money_collected %>;
+    if (money_collected === 0.00)
+    {
+      $('.progress').remove();
+    }
+  <% end %>
 
+  $('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/dashboard_user_form", event: @event_user.event, user: @event_user.user, event_user: @event_user %>');
+  $('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('hide');
+=======
   $("#unpaid-members .dashboard-user-<%= @event_user.id %>").replaceWith('<%=j render "users/dashboard_unpaid_user", event_user: @event_user, itemized: false %>');
   $('#payment-links-<%= @event_user.id %> .input-append').autoSize({
     fixed: 'input[type=submit]',
@@ -27,8 +38,8 @@
   <% end %>
 
   $('#payment-links-<%= @event_user.id %> input.input-xlarge').tooltip('hide');
+>>>>>>> master
   $('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
-
 
   if ($('.progress').length === 0)
   {
