@@ -113,18 +113,18 @@
                 <%= render 'items/item', f: builder %>
               <% end %>
               <%= f.hidden_field :payment_method_id %>
-              <div class="push-bottom-small">
-                <strong>Total:</strong> <span class="items-total"></span>
+              <strong>Total:</strong> <span class="items-total"></span>
+              <div class="pay-buttons push-top-small">
+                <% if @event.send_with_paypal? %>
+                  <%= link_to event_user_pay_text(@event_user, "PayPal"), "#", class: "btn btn-primary btn-block btn-pay", data: { method: PaymentMethod::MethodType::PAYPAL } %>
+                <% end %>
+                <% if @event.send_with_dwolla? %>
+                  <%= link_to event_user_pay_text(@event_user, "Dwolla"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::DWOLLA } %>
+                <% end %>
+                <% if @event.send_with_wepay? %>
+                  <%= link_to event_user_pay_text(@event_user, "WePay"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::WEPAY } %>
+                <% end %>
               </div>
-              <% if @event.send_with_paypal? %>
-                <%= link_to event_user_pay_text(@event_user, "PayPal"), "#", class: "btn btn-primary btn-block btn-pay", data: { method: PaymentMethod::MethodType::PAYPAL } %>
-              <% end %>
-              <% if @event.send_with_dwolla? %>
-                <%= link_to event_user_pay_text(@event_user, "Dwolla"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::DWOLLA } %>
-              <% end %>
-              <% if @event.send_with_wepay? %>
-                <%= link_to event_user_pay_text(@event_user, "WePay"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::WEPAY } %>
-              <% end %>
             <% end %>
           </div>
         <% end %>
