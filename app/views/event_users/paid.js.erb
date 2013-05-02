@@ -21,6 +21,11 @@
     $('#user-status-<%= @event_user.user.id %>').html('<%= humanized_money_with_symbol @event_user.paid_total %> of <%= humanized_money_with_symbol @event_user.event.split_amount %>');
   <% else %>
     $('#user-status-<%= @event_user.user.id %>').html('Unpaid');
+    var money_collected = <%= @event.money_collected %>;
+    if (money_collected === 0.00)
+    {
+      $('.progress').remove();
+    }
   <% end %>
 
   $('#payment-links-<%= @event_user.user.id %>').html('<%=j render "users/dashboard_user_form", event: @event_user.event, user: @event_user.user, event_user: @event_user %>');$('#payment-links-<%= @event_user.user.id %> input.input-xlarge').tooltip('hide');

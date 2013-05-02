@@ -30,9 +30,14 @@ class EventUsersController < ApplicationController
 
   def pay_fundraiser
     actual_amount_cents = (params[:amount_cents].to_f * 100).to_s
-    puts "\n\n\n\n\n\n\n\n\n YOOO #{params[:amount_cents]} \n\n\n\n\n\n\n\n\n"
-    payment = @event_user.create_payment(payment_method: params[:method], amount_cents: actual_amount_cents)
-    redirect_to payment.url
+
+    if @event_user.event.valid_donation? actual_amount_cents
+      payment = @event_user.create_payment(payment_method: params[:method], amount_cents: actual_amount_cents)
+      redirect_to payment.url
+    else
+      flash[:error] = "You must make a contribution of $#{@event_user.event.minimum_donation} or more"
+      redirect_to event_path(@event_user.event)
+    end
   end
 
   # Mark user as paid in admin dashboard
@@ -44,7 +49,7 @@ class EventUsersController < ApplicationController
         if params[:event_user][:paid_total].to_f < 0
           @error_message = "Enter a positive number."
         else
-          @event_user.payments.destroy_all
+          @event_user.unpay_cash_payments!
           paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
         end
       elsif (!@event.fundraiser? && (params[:event_user][:paid_total].to_f * 100.0) > @event.split_amount_cents)
@@ -58,7 +63,8 @@ class EventUsersController < ApplicationController
       payment = @event_user.create_payment(amount_cents: paid_total_cents)
       @event_user.pay!(payment)
     elsif !@error_message && params[:event_user][:paid_total].to_f == 0
-      @event_user.cash_set_to_zero
+      @event_user.unpay_cash_payments!
+      @event_user.set_to_zero!
     end
 
     respond_to do |format|

@@ -33,7 +33,7 @@
     <div class="span8">
       <h3>Quick Statistics</h3>
       <div class="well" id="quick-statistics">
-        <% if (@event.divide_total? || @event.divide_per_person?) && @event.paid_percentage > 0 %>
+        <% if @event.paid_percentage > 0 %>
           <div class="progress">
             <div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div>
           </div>

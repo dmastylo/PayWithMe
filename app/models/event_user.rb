@@ -156,13 +156,14 @@ class EventUser < ActiveRecord::Base
     end
   end
 
-  def cash_set_to_zero
-    self.payments.destroy_all
-    self.paid_at = nil
-    self.paid_total_cents = 0
-    self.paid_with_cash = false
-    self.status = 0
-    self.save
+  def set_to_zero!
+    if self.paid_total_cents == 0
+      self.paid_at = nil
+      self.paid_with_cash = false
+      self.status = 0
+      self.nudges_remaining = 0
+      self.save
+    end
   end
 
 private

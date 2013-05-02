@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(:version => 20130425191915) do
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.integer  "division_type"
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"

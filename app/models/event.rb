@@ -185,6 +185,10 @@ class Event < ActiveRecord::Base
     send_with_payment_method?(PaymentMethod::MethodType::WEPAY)
   end
 
+  def valid_donation? amount
+    amount.to_f >= minimum_donation_cents
+  end
+
   # Constants
   # ========================================================
   class DivisionType
