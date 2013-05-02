@@ -1,0 +1,27 @@
+.item-form
+{
+	padding: $smallMargin;
+	margin-bottom: $tinyMargin;
+	.item-quantity-yes { display: none; }
+	.bottom
+	{
+		input { margin-bottom: 0; }
+	}
+}
+
+#items
+{
+	a.btn.push-bottom
+	{
+		margin-bottom: 0;
+	}
+	.item
+	{
+		select
+		{
+			width: 75px;
+			vertical-align: middle;
+			margin-top: 5px;
+		}
+	}
+}

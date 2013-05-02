@@ -39,40 +39,8 @@
 
 
 <div class="container">
-  <!-- <div class="row">
-    <div class="span9">
-      <div class="page-header">
-        <h2>
-          <%= @event.title %>
-          <% if @event.public? %>
-            <i class="icon-globe" rel="tooltip" title="Public event" data-placement="right"></i>
-          <% else %>
-            <i class="icon-lock" rel="tooltip" title="Private event" data-placement="right"></i>
-          <% end %>
-        </h2>
-      </div>
-    </div>
-    <% if !signed_in? %>
-      <div class="span3">
-        <%= link_to "Register to join event", new_user_registration_path, class: "btn btn-primary btn-block push-top" %>
-      </div>
-    <% elsif current_user == @event.organizer %>
-      <div class="span3">
-        <%= link_to "Event dashboard", admin_event_path(@event), class: "btn btn-primary btn-block push-top-title", rel: "tooltip", title: "Manage your event and view statistics" %>
-      </div>
-    <% elsif @event.public? && !@event.members.include?(current_user) %>
-      <div class="span3">
-        <%= form_for [@event, @event_user] do |f| %>
-            <%= f.hidden_field :event_id, :value => @event.id %>
-            <%= f.hidden_field :user_id, :value => current_user.id %>
-            <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block pull-right push-top" %>
-        <% end %>
-      </div>
-    <% end %>
-  </div> -->
   <div class="row">
     <div class="span5">
-      
 
       <h3>Event Details</h3>
       <div class="underlayed-image-large <%= "default" if @event.image_type == :default_image %>" style="background-image: url('<%= event_image_path(@event, :full) %>');"></div>
@@ -82,7 +50,7 @@
           <div class="three-quarters"><%= @event.description %></div>
           <div class="clearfix"></div>
         <% end %>
-        <% unless @event.fundraiser? %>
+        <% unless @event.fundraiser? || @event.itemized? %>
           <div class="quarter"><strong>Total Goal</strong></div>
           <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
           <div class="quarter"><strong>Per User Goal</strong></div>
@@ -100,14 +68,38 @@
       <% elsif @event_user.paid? %>
         <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block push-bottom" %>
       <% else %>
-        <% if @event.send_with_paypal? %>
-          <%= event_user_pay_button(@event_user, "PayPal") %>
-        <% end %>
-        <% if @event.send_with_dwolla? %>
-          <%= event_user_pay_button(@event_user, "Dwolla") %>
-        <% end %>
-        <% if @event.send_with_wepay? %>
-          <%= event_user_pay_button(@event_user, "WePay") %>
+        <% if @event.divide_total? || @event.divide_per_person? %>
+          <% if @event.send_with_paypal? %>
+            <%= event_user_pay_button(@event_user, "PayPal") %>
+          <% end %>
+          <% if @event.send_with_dwolla? %>
+            <%= event_user_pay_button(@event_user, "Dwolla") %>
+          <% end %>
+          <% if @event.send_with_wepay? %>
+            <%= event_user_pay_button(@event_user, "WePay") %>
+          <% end %>
+        <% elsif @event.itemized? %>
+          <h3>Available Items</h3>
+          <div class="well" id="items">
+            <%= form_for @payment, url: items_payment_path(@payment) do |f| %>
+              <%= f.fields_for :item_users do |builder| %>
+                <%= render 'items/item', f: builder %>
+              <% end %>
+              <%= f.hidden_field :payment_method_id %>
+              <div class="push-bottom-small">
+                <strong>Total:</strong> <span class="items-total"></span>
+              </div>
+              <% if @event.send_with_paypal? %>
+                <%= link_to event_user_pay_text(@event_user, "PayPal"), "#", class: "btn btn-primary btn-block btn-pay", data: { method: PaymentMethod::MethodType::PAYPAL } %>
+              <% end %>
+              <% if @event.send_with_dwolla? %>
+                <%= link_to event_user_pay_text(@event_user, "Dwolla"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::DWOLLA } %>
+              <% end %>
+              <% if @event.send_with_wepay? %>
+                <%= link_to event_user_pay_text(@event_user, "WePay"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::WEPAY } %>
+              <% end %>
+            <% end %>
+          </div>
         <% end %>
       <% end %>
 
@@ -171,19 +163,6 @@
         fluid: '.body',
         offset: 1
       });
-
-      // $('.nudge').mouseenter(function()
-      // {
-      //   var $this = $(this);
-      //   var $overlay = $("<div></div>").addClass("overlay").html("<i class=\"icon-hand-up icon-white\"></i>");
-      //   $this.prepend($overlay);
-      // });
-
-      // $('.nudge').mouseleave(function()
-      // {
-      //   var $this = $(this);
-      //   $this.find('.overlay').remove();
-      // });
     });
   </script>
 <% end %>

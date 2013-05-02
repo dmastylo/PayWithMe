@@ -16,5 +16,6 @@
 //= require bootstrap-datepicker
 //= require bootstrap-timepicker
 //= require js-routes
+//= require jquery_nested_form
 //= require mustache
 //= require_tree .
