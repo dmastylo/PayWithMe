@@ -56,12 +56,9 @@ class TicketPdf < Prawn::Document
 		text_box "#{@event.title}", style: :bold, at: [@origin + 10, @height / 2], width: @stub_start_x - 20, overflow: :shrink_to_fit, align: :center
 
 		# Paid information, via, date, across bottom. Skim date to just show date not time
-		font_size 10
-		text_box "Admit #{@event_user.user.name || @event_user.user.email}", at: [@origin + 10, 60 ], width: 240
-
-		text_box "paid via #{@event_user.payments[0].payment_method.name}", at: [@origin + 10, 40], width: 240
-
-		text_box "on #{@event_user.paid_at.to_date}", at: [@origin + 10, 20], width: 240
+		font_size 12
+		text_box "Admit One", at: [@origin + 10, 60], width: @stub_start_x - 20, align: :center
+		text_box "#{@event_user.user.name || @event_user.user.email} paid via #{@event_user.payments[0].payment_method.name} on #{@event_user.paid_at.to_date}", at: [@origin + 10, 45], width: @stub_start_x - 20, align: :center
 	end
 
 	def draw_ticket_stub_2
@@ -73,7 +70,7 @@ class TicketPdf < Prawn::Document
 		text_box "#{@event_user.user.name || @event_user.user.email}", at: [@stub_start_x + 10, @height - 60], width: @width - @stub_start_x - 20, align: :center
 
 		# Fix later
-		text_box " paid #{@event_user.payments[0].payment_method.name} #{@event_user.paid_total_cents}", at: [@stub_start_x + 10, @height - 70], width: @width - @stub_start_x - 20, align: :center
+		text_box " paid #{@event_user.payments[0].payment_method.name} #{ActionController::Base.helpers.number_to_currency(@event_user.paid_total_cents / 100)}", at: [@stub_start_x + 10, @height - 70], width: @width - @stub_start_x - 20, align: :center
 
 		# Draws qr code
 		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 33, 10)
