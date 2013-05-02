@@ -25,6 +25,7 @@ default_run_options[:pty] = true
 ssh_options[:forward_agent] = true
 
 after "deploy", "deploy:cleanup" # keep only the last 5 releases
+after "deploy:update_code", "deploy:migrate"
 
 # set :scm, :git # You can set :scm explicitly or Capistrano will make an intelligent guess based on known version control directory names
 # Or: `accurev`, `bzr`, `cvs`, `darcs`, `git`, `mercurial`, `perforce`, `subversion` or `none`
@@ -100,6 +101,9 @@ namespace :deploy do
         end
         Dir.glob(File.join("public", "assets", "layout", "*")).each do |file|
           directory.files.create(key: File.join("assets", "layout", File.basename(file)), body: File.open(file)) unless File.directory?(file)
+        end
+        Dir.glob(File.join("public", "assets", "reps", "*")).each do |file|
+          directory.files.create(key: File.join("assets", "reps", File.basename(file)), body: File.open(file)) unless File.directory?(file)
         end
         Dir.glob(File.join("public", "assets", "icons", "*")).each do |file|
           directory.files.create(key: File.join("assets", "icons", File.basename(file)), body: File.open(file)) unless File.directory?(file)

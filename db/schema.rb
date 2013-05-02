@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130412212241) do
+ActiveRecord::Schema.define(:version => 20130430161321) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -86,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20130412212241) do
     t.datetime "image_updated_at"
     t.string   "image_url"
     t.boolean  "send_tickets",       :default => false
+    t.string   "guest_token"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -129,6 +130,13 @@ ActiveRecord::Schema.define(:version => 20130412212241) do
   end
 
   add_index "groups", ["slug"], :name => "index_groups_on_slug"
+
+  create_table "invitation_types", :force => true do |t|
+    t.integer  "invitation_type"
+    t.integer  "event_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
 
   create_table "linked_accounts", :force => true do |t|
     t.string   "provider"
@@ -290,6 +298,63 @@ ActiveRecord::Schema.define(:version => 20130412212241) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["slug"], :name => "index_users_on_slug"
+
+  create_table "vanity_conversions", :force => true do |t|
+    t.integer "vanity_experiment_id"
+    t.integer "alternative"
+    t.integer "conversions"
+  end
+
+  add_index "vanity_conversions", ["vanity_experiment_id", "alternative"], :name => "by_experiment_id_and_alternative"
+
+  create_table "vanity_experiments", :force => true do |t|
+    t.string   "experiment_id"
+    t.integer  "outcome"
+    t.datetime "created_at"
+    t.datetime "completed_at"
+    t.boolean  "enabled"
+  end
+
+  add_index "vanity_experiments", ["experiment_id"], :name => "index_vanity_experiments_on_experiment_id"
+
+  create_table "vanity_metric_counts", :force => true do |t|
+    t.integer "vanity_experiment_id"
+    t.integer "alternative"
+    t.string  "metric"
+    t.integer "count"
+  end
+
+  add_index "vanity_metric_counts", ["vanity_experiment_id", "alternative", "metric"], :name => "by_experiment_id_and_alternative_and_metric"
+
+  create_table "vanity_metric_values", :force => true do |t|
+    t.integer "vanity_metric_id"
+    t.integer "index"
+    t.integer "value"
+    t.string  "date"
+  end
+
+  add_index "vanity_metric_values", ["vanity_metric_id"], :name => "index_vanity_metric_values_on_vanity_metric_id"
+
+  create_table "vanity_metrics", :force => true do |t|
+    t.string   "metric_id"
+    t.datetime "updated_at"
+  end
+
+  add_index "vanity_metrics", ["metric_id"], :name => "index_vanity_metrics_on_metric_id"
+
+  create_table "vanity_participants", :force => true do |t|
+    t.string  "experiment_id"
+    t.string  "identity"
+    t.integer "shown"
+    t.integer "seen"
+    t.integer "converted"
+  end
+
+  add_index "vanity_participants", ["experiment_id", "converted"], :name => "by_experiment_id_and_converted"
+  add_index "vanity_participants", ["experiment_id", "identity"], :name => "by_experiment_id_and_identity"
+  add_index "vanity_participants", ["experiment_id", "seen"], :name => "by_experiment_id_and_seen"
+  add_index "vanity_participants", ["experiment_id", "shown"], :name => "by_experiment_id_and_shown"
+  add_index "vanity_participants", ["experiment_id"], :name => "index_vanity_participants_on_experiment_id"
 
   create_table "withdrawals", :force => true do |t|
     t.integer  "linked_account_id"

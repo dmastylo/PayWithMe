@@ -34,6 +34,14 @@ GIT
       omniauth-oauth2 (~> 1.0)
 
 GIT
+  remote: git://github.com/austingulati/vanity.git
+  revision: 7c4d03e8f7b684960826810a439c6096057673be
+  specs:
+    vanity (1.8.0)
+      redis (~> 2.0)
+      redis-namespace (~> 1.0.0)
+
+GIT
   remote: git://github.com/celic/prawn.git
   revision: e3f5b66ba32e7b5b520fcaf889ff20ba1d2c65e3
   submodules: true
@@ -80,6 +88,12 @@ GIT
     omniauth (1.1.3)
       hashie (>= 1.2, < 3)
       rack
+
+GIT
+  remote: git://github.com/mdeering/gravatar_image_tag.git
+  revision: 375c618d0400545ac1e54855a25ea39ae5b267f7
+  specs:
+    gravatar_image_tag (1.1.3)
 
 GIT
   remote: git://github.com/tenaciousflea/omniauth-wepay.git
@@ -218,7 +232,6 @@ GEM
       rails (>= 3, < 5)
     formatador (0.2.4)
     friendly_id (4.0.9)
-    gravatar_image_tag (1.1.3)
     guard (1.7.0)
       formatador (>= 0.2.4)
       listen (>= 0.6.0)
@@ -358,6 +371,9 @@ GEM
       ffi (>= 0.5.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    redis (2.2.2)
+    redis-namespace (1.0.3)
+      redis (< 3.0.0)
     rinku (1.7.2)
     roadie (2.3.4)
       actionmailer (> 3.0.0, < 3.3.0)
@@ -451,7 +467,7 @@ DEPENDENCIES
   figaro
   fog!
   friendly_id
-  gravatar_image_tag
+  gravatar_image_tag!
   guard-rspec
   guard-spork
   jquery-rails
@@ -486,5 +502,6 @@ DEPENDENCIES
   sqlite3
   thin
   uglifier (>= 1.0.3)
+  vanity!
   wepay!
   will_paginate
