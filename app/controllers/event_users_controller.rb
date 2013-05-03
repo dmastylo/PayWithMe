@@ -51,7 +51,7 @@ class EventUsersController < ApplicationController
           @error_message = "Enter a positive number."
         else
           @event_user.unpay_cash_payments!
-          paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
+          paid_total_cents = params[:event_user][:paid_total].to_f * 100.0# - @event_user.paid_total_cents
         end
       elsif (!@event.fundraiser? && (params[:event_user][:paid_total].to_f * 100.0) > @event.split_amount_cents)
         @error_message = "Enter an amount less than the required event amount."
