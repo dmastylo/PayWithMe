@@ -114,6 +114,7 @@ class EventUser < ActiveRecord::Base
     send_nudges
     update_nudges_remaining
     self.save
+
     true
   end
 
@@ -128,6 +129,7 @@ class EventUser < ActiveRecord::Base
     update_paid_total_cents
     update_paid_with_cash
     update_status
+
     self.save
   end
 
@@ -139,6 +141,7 @@ class EventUser < ActiveRecord::Base
     update_paid_with_cash
     update_status
     update_nudges_remaining
+
     self.save
   end
 
@@ -216,14 +219,20 @@ private
     self.payments.each do |payment|
       self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH || payment.paid_at.nil?
     end
+
     self.save
   end
 
   def update_paid_total_cents
-    self.paid_total_cents = 0
+    puts "\n\n\n\n\n\n\nUPDATING PAID TOTAL CENTS"
+    
+    paid_cents = 0
+    puts "AMOUNT OF PAYMENTS #{self.payments.count}"
     self.payments.each do |payment|
-      self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
+      puts "looping through payment"
+      paid_cents += payment.amount_cents if payment.paid_at.present?
     end
+    puts "PAIDTOTALCENTS = #{paid_cents} \n\n\n\n\n\n\n"
 
     if event.fundraiser?
       self.paid_at = Time.now
