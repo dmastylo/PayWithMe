@@ -41,6 +41,7 @@ class EventUsersController < ApplicationController
   end
 
   # Mark user as paid in admin dashboard
+  # TODO
   def paid
     if params[:event_user][:paid_total].present? && params[:event_user][:paid_total].to_f
       paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
@@ -60,6 +61,8 @@ class EventUsersController < ApplicationController
     end
 
     if !@error_message && params[:event_user][:paid_total].to_f > 0
+      # @event_user.unpay_cash_payments!
+      # @event_user.set_to_zero!
       payment = @event_user.create_payment(amount_cents: paid_total_cents)
       @event_user.pay!(payment)
     elsif !@error_message && params[:event_user][:paid_total].to_f == 0

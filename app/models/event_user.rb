@@ -179,6 +179,8 @@ class EventUser < ActiveRecord::Base
     else
       self.status = EventUser::Status::UNPAID
     end
+    
+    self.save
   end
 
   def set_to_zero!
@@ -199,12 +201,14 @@ private
     unless self.event.fundraiser? || self.event.itemized?
       self.amount_cents = self.event.split_amount_cents
     end
+    self.save
   end
 
   def copy_fundraiser_event_attributes
     if self.event.present? && self.member?
       self.due_at = self.event.due_at
     end
+    self.save
   end
 
   def update_paid_with_cash
@@ -212,6 +216,7 @@ private
     self.payments.each do |payment|
       self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH || payment.paid_at.nil?
     end
+    self.save
   end
 
   def update_paid_total_cents
@@ -229,6 +234,8 @@ private
         self.paid_at = nil
       end
     end
+    
+    self.save
   end
 
   def send_nudges

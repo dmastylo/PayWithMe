@@ -6,8 +6,15 @@
   setTimeout(function() { $('#payment-links-<%= @event_user.id %> input.input-xlarge').tooltip('hide'); }, 5000);
 <% else %>
   <% if @event_user.paid? %>
-    <% if @event_user.payments.count == 1 %>
-      $("#paid-members .row").append('<%=j render "users/dashboard_paid_user", event_user: @event_user, itemized: false %>')
+    <% if @event_user.payments.count === 1 %>
+      // if it's not already in #paid-members, then it's a new addition, otherwise
+      // the organizer is marking the event_user as paid with a lesser amount of cash
+      var replaceWithResult = null;
+      replaceWithResult = $("#paid-members .dashboard-user-<%= @event_user.id %>").replaceWith('<%=j render "users/dashboard_paid_user", event_user: @event_user, itemized: false %>');
+      if (replaceWithResult.length === 0)
+      {
+        $("#paid-members .row").append('<%=j render "users/dashboard_paid_user", event_user: @event_user, itemized: false %>');
+      }
       $("#unpaid-members .dashboard-user-<%= @event_user.id %>").remove();
       $("#paid-members").show();
     <% else %>

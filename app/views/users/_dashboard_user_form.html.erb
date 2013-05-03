@@ -2,12 +2,16 @@
   <div class="push-top-tiny" id="payment-links-<%= event_user.id %>">
     <%= form_for(event_user, method: :put, remote: true, url: paid_event_event_user_path(event_user.event, event_user)) do |f| %>
       <div class="input-append">
-        <% paid_total = event_user.paid_total %>
+        <% paid_total = event_user.paid_total_cents %>
         <% paid_total = nil unless paid_total > 0 %>
         <% if @event.fundraiser? %>
-          <%= f.text_field :paid_total, placeholder: "Enter amount donated", value: paid_total, class: "input-xlarge", "data-placement" => "left", "data-trigger" => "manual", "data-container" => "body" %>
+          <% if paid_total.nil? %>
+            <%= f.text_field :paid_total, placeholder: "Enter amount donated", value: paid_total, class: "input-xlarge", "data-placement" => "left", "data-trigger" => "manual", "data-container" => "body" %>
+          <% else %>
+            <%= f.text_field :paid_total, value: "#{event_user.paid_total}", class: "input-xlarge", "data-placement" => "left", "data-trigger" => "manual", "data-container" => "body" %>
+          <% end %>
         <% else %>
-          <%= f.text_field :paid_total, placeholder: "Enter amount unless fully paid", value: paid_total, class: "input-xlarge", "data-placement" => "left", "data-trigger" => "manual", "data-container" => "body" %>
+          <%= f.text_field :paid_total, value: "#{humanized_money_with_symbol event_user.paid_total}", placeholder: "Enter amount unless fully paid", class: "input-xlarge", "data-placement" => "left", "data-trigger" => "manual", "data-container" => "body" %>
         <% end %>
         <%= f.submit "Mark Paid", class: "btn btn-success", method: :put, remote: true %>
       </div>
