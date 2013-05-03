@@ -50,18 +50,18 @@
         <% end %>
         <% if @event.fundraiser? %>
           <div class="quarter"><strong>Fundraiser Goal</strong></div>
-          <div class="three-quarters"><%= number_to_currency @event.fundraiser_goal %></div>
+          <div class="three-quarters"><%= humanized_money_with_symbol @event.fundraiser_goal %></div>
           <div class="quarter"><strong>Current Progress</strong></div>
-          <div class="three-quarters" id="money-collected"><%= number_to_currency @event.money_collected %></div>
+          <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.money_collected %></div>
           <% if @event.minimum_donation.present? %>
             <div class="quarter"><strong>Minimum Donation</strong></div>
-            <div class="three-quarters" id="money-collected"><%= number_to_currency @event.minimum_donation %></div>
+            <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.minimum_donation %></div>
           <% end %>
         <% elsif !@event.fundraiser? || !@event.itemized? %>
           <div class="quarter"><strong>Total Goal</strong></div>
-          <div class="three-quarters"><%= number_to_currency(@event.total_amount) %></div>
+          <div class="three-quarters"><%= humanized_money_with_symbol(@event.total_amount) %></div>
           <div class="quarter"><strong>Per User Goal</strong></div>
-          <div class="three-quarters"><%= number_to_currency(@event.split_amount) %></div>
+          <div class="three-quarters"><%= humanized_money_with_symbol(@event.split_amount) %></div>
         <% end %>
         <div class="quarter"><strong>Money Due</strong></div>
         <div class="three-quarters"><%= @event.due_at.to_s(:ordinal) %></div>

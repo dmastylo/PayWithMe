@@ -47,6 +47,10 @@
           <div class="quarter"><strong>Goal:</strong></div>
           <div class="three-quarters"><%= humanized_money_with_symbol (@event.total_amount || @event.fundraiser_goal) %></div>
           <div class="clearfix"></div>
+          <% if @event.minimum_donation.present? %>
+            <div class="quarter"><strong>Minimum Donation:</strong></div>
+            <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.minimum_donation %></div>
+          <% end %>
         <% end %>
       </div>
     </div>
