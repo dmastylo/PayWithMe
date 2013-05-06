@@ -29,7 +29,7 @@ class LinkedAccountsController < ApplicationController
   end
 
   def payments
-    @payments = current_user.received_payments.where('status <> "new"').order('updated_at DESC').paginate(page: params[:page]).includes(:payer, :event)
+    @payments = current_user.received_payments.where(payment_method_id: PaymentMethod::MethodType::WEPAY, status_type: Payment::StatusType::PAID).order('updated_at DESC').paginate(page: params[:page]).includes(:payer, :event)
   end
 
   def balance
