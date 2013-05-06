@@ -219,12 +219,15 @@ private
         payment = current_user.sent_payments.find_by_event_id(@event.id)
       end
       return unless payment.present?
-      payment.update!
+      payment.update! 
       @event_user.update_status
       @event_user.save
 
-      if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event.event_user(current_user).status)
-        @display_nudge_modal = true
+      if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event_user.status)
+        @unpaid_event_users = @event.unpaid_event_users
+        if !@unpaid_event_users.empty? && @event.nudges_remaining(current_user) > 0
+          @display_nudge_modal = true
+        end
         @event_user.reload
       end
     end

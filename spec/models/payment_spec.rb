@@ -18,6 +18,7 @@
 #  our_fee_amount_cents       :integer
 #  payment_method_id          :integer
 #  status                     :string(255)      default("new")
+#  status_type                :integer
 #
 
 require 'spec_helper'

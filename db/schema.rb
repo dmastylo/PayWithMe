@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430161321) do
+ActiveRecord::Schema.define(:version => 20130506193243) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -262,6 +262,7 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.integer  "our_fee_amount_cents"
     t.integer  "payment_method_id"
     t.string   "status",                     :default => "new"
+    t.integer  "status_type"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
