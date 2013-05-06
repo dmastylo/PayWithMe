@@ -144,6 +144,7 @@
                             process(data);
                         }
                     });
+                    undefined
                 },
                 menu: '<ul class="typeahead dropdown-menu dropdown-menu-navigation"></ul>',
                 onselect: function(value) {
