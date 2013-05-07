@@ -24,13 +24,12 @@ class LinkedAccountsController < ApplicationController
   end
 
   def show
-    # TODO: Make this only WePay transactions
-    @payments = current_user.received_payments.where('status <> "new"').order('updated_at DESC').limit(10).includes(:payer, :event)
+    @payments = current_user.received_payments.where(payment_method_id: PaymentMethod::MethodType::WEPAY, status_type: Payment::StatusType::PAID).order('updated_at DESC').limit(10).includes(:payer, :event)
     @withdrawals = current_user.wepay_account.withdrawals.where('status <> "new"').order('updated_at DESC').limit(10)
   end
 
   def payments
-    @payments = current_user.received_payments.where('status <> "new"').order('updated_at DESC').paginate(page: params[:page]).includes(:payer, :event)
+    @payments = current_user.received_payments.where(payment_method_id: PaymentMethod::MethodType::WEPAY, status_type: Payment::StatusType::PAID).order('updated_at DESC').paginate(page: params[:page]).includes(:payer, :event)
   end
 
   def balance

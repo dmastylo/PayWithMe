@@ -22,6 +22,7 @@
 #  fundraiser_goal_cents  :integer
 #  minimum_donation       :integer
 #  minimum_donation_cents :integer
+#  guest_token            :string(255)
 #
 
 class Event < ActiveRecord::Base

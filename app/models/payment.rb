@@ -18,6 +18,7 @@
 #  our_fee_amount_cents       :integer
 #  payment_method_id          :integer
 #  status                     :string(255)      default("new")
+#  status_type                :integer
 #
 
 class Payment < ActiveRecord::Base
@@ -153,7 +154,7 @@ class Payment < ActiveRecord::Base
   # updating the payment information from the processor
   # to marking the event_user as paid
   def update!
-    return unless self.transaction_id.present?
+    return unless self.transaction_id.present? && self.event_user.present?
 
     if self.payment_method_id == PaymentMethod::MethodType::WEPAY
       gateway = Payment.wepay_gateway
@@ -163,6 +164,7 @@ class Payment < ActiveRecord::Base
         # Handle error
       else
         self.status = response["state"]
+        update_status_type
         self.save
 
         if ["captured", "authorized"].include?(self.status)
@@ -180,6 +182,7 @@ class Payment < ActiveRecord::Base
         # Handle error
       else
         self.status = response.status.downcase
+        update_status_type
         self.save
 
         if self.status == "completed"
@@ -191,6 +194,8 @@ class Payment < ActiveRecord::Base
       end
 
     elsif self.payment_method_id == PaymentMethod::MethodType::DWOLLA
+      # Dwolla will soon be removed
+
       dwolla_user = Dwolla::User.me(self.payer.dwolla_account.token)
 
       begin
@@ -207,6 +212,30 @@ class Payment < ActiveRecord::Base
         end
       rescue Exception => e
         # Handle error
+      end
+    end
+  end
+
+  def update_status_type
+    if self.payment_method_id == PaymentMethod::MethodType::WEPAY
+      if self.status == "new"
+        self.status_type = StatusType::PENDING
+      elsif ["authorized", "captured", "settled"].include?(self.status)
+        self.status_type = StatusType::PAID
+      elsif ["cancelled", "refunded", "charged back", "failed"].include?(self.status)
+        self.status_type = StatusType::CANCELLED
+      elsif self.status == "expired"
+        self.status_type = StatusType::EXPIRED
+      end
+    elsif self.payment_method_id == PaymentMethod::MethodType::PAYPAL
+      if self.status == "created"
+        self.status_type = StatusType::PENDING
+      elsif self.status == "approved"
+        self.status_Type = StatusType::PAID
+      elsif ["failed", "cancelled"].include?(self.status)
+        self.status_type = StatusType::CANCELLED
+      elsif self.status == "expired"
+        self.status_type = StatusType::EXPIRED
       end
     end
   end
@@ -263,6 +292,14 @@ class Payment < ActiveRecord::Base
     else
       Figaro.env.wepay_sandbox_access_token
     end
+  end
+
+  # Constants
+  class StatusType
+    PENDING = 1
+    PAID = 2
+    CANCELLED = 3
+    EXPIRED = 4
   end
 
 private
