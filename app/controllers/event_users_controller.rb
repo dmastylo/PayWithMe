@@ -24,6 +24,7 @@ class EventUsersController < ApplicationController
   end
 
   def pay
+    @event_user.clean_up_payments!
     payment = @event_user.create_payment(payment_method: params[:method])
     redirect_to payment.url
   end
@@ -50,7 +51,6 @@ class EventUsersController < ApplicationController
         if params[:event_user][:paid_total].to_f < 0
           @error_message = "Enter a positive number."
         else
-          @event_user.unpay_cash_payments!
           paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
         end
       elsif (!@event.fundraiser? && (params[:event_user][:paid_total].to_f * 100.0) > @event.split_amount_cents)
@@ -61,8 +61,7 @@ class EventUsersController < ApplicationController
     end
 
     if !@error_message && params[:event_user][:paid_total].to_f > 0
-      # @event_user.unpay_cash_payments!
-      # @event_user.set_to_zero!
+      @event_user.unpay_cash_payments!
       payment = @event_user.create_payment(amount_cents: paid_total_cents)
       @event_user.pay!(payment)
     elsif !@error_message && params[:event_user][:paid_total].to_f == 0

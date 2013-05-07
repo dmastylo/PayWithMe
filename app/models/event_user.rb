@@ -113,7 +113,9 @@ class EventUser < ActiveRecord::Base
     update_status
     send_nudges
     update_nudges_remaining
+
     self.save
+
     true
   end
 
@@ -128,6 +130,7 @@ class EventUser < ActiveRecord::Base
     update_paid_total_cents
     update_paid_with_cash
     update_status
+
     self.save
   end
 
@@ -139,6 +142,7 @@ class EventUser < ActiveRecord::Base
     update_paid_with_cash
     update_status
     update_nudges_remaining
+
     self.save
   end
 
@@ -164,8 +168,6 @@ class EventUser < ActiveRecord::Base
     else
       self.nudges_remaining = 0
     end
-
-    self.save
   end
 
   def update_status
@@ -179,14 +181,12 @@ class EventUser < ActiveRecord::Base
     else
       self.status = EventUser::Status::UNPAID
     end
-    
-    self.save
   end
 
   def set_to_zero!
     if self.paid_total_cents == 0
       self.paid_at = nil
-      self.paid_with_cash = false
+      self.paid_with_cash = true
       self.status = 0
       self.nudges_remaining = 0
       self.save
@@ -201,14 +201,12 @@ private
     unless self.event.fundraiser? || self.event.itemized?
       self.amount_cents = self.event.split_amount_cents
     end
-    self.save
   end
 
   def copy_fundraiser_event_attributes
     if self.event.present? && self.member?
       self.due_at = self.event.due_at
     end
-    self.save
   end
 
   def update_paid_with_cash
@@ -216,14 +214,18 @@ private
     self.payments.each do |payment|
       self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH || payment.paid_at.nil?
     end
-    self.save
   end
 
   def update_paid_total_cents
-    self.paid_total_cents = 0
-    self.payments.each do |payment|
-      self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
-    end
+    puts "\n\n\n\n\n\n\nUPDATING PAID TOTAL CENTS"
+    
+    self.paid_total_cents = self.payments.inject(0) { |sum, payment| sum + payment.amount_cents if payment.paid_at.present? }
+    puts "AMOUNT OF PAYMENTS #{self.payments.count}"
+
+    # self.payments.each do |payment|
+      # self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
+    # end
+    puts "PAID TOTAL CENTS = #{self.paid_total_cents} \n\n\n\n\n\n\n"
 
     if event.fundraiser?
       self.paid_at = Time.now
@@ -234,8 +236,6 @@ private
         self.paid_at = nil
       end
     end
-    
-    self.save
   end
 
   def send_nudges
