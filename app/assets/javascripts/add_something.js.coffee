@@ -47,6 +47,9 @@ jQuery ->
       error_message = this.onValidate something
       name = something[this.options.displayAttribute] || something[this.options.idAttribute]
 
+      console.log this.somethings
+      alert this.somethings
+
       if error_message
         this.$error.html(error_message).show()
       else if this.somethings.indexOf(something[this.options.idAttribute]) != -1
@@ -141,7 +144,6 @@ jQuery ->
             dataType: 'json'
             success: (data) ->
               process(data)
-              false
         menu: '<ul class="typeahead dropdown-menu dropdown-menu-navigation"></ul>'
         onselect: (value) ->
           value = $.parseJSON(value)
