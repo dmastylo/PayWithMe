@@ -24,6 +24,7 @@ class EventUsersController < ApplicationController
   end
 
   def pay
+    @event_user.clean_up_payments!
     payment = @event_user.create_payment(payment_method: params[:method])
     redirect_to payment.url
   end
