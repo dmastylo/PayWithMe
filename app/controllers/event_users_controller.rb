@@ -109,7 +109,7 @@ private
     
     if @event.organizer != current_user
       # If user doesn't organize event, it must be public and the user_id must be equal to current_user
-      if @event.public? 
+      if @event.public? || event_allows_guest?
         if (!@event.members.include?(current_user) && params[:event_user][:user_id].to_i != current_user.id)
           flash[:error] = "Trying to hack...?" #{params[:event_user][:user_id]} #{current_user.id}"
           redirect_to root_path

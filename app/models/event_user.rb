@@ -168,6 +168,8 @@ class EventUser < ActiveRecord::Base
     else
       self.nudges_remaining = 0
     end
+
+    self.save
   end
 
   def update_status
@@ -219,12 +221,13 @@ private
   def update_paid_total_cents
     puts "\n\n\n\n\n\n\nUPDATING PAID TOTAL CENTS"
     
-    self.paid_total_cents = self.payments.inject(0) { |sum, payment| sum + payment.amount_cents if payment.paid_at.present? }
+    # self.paid_total_cents = self.payments.inject(0) { |sum, payment| sum + payment.amount_cents if payment.paid_at.present? }
+    self.paid_total_cents = 0
     puts "AMOUNT OF PAYMENTS #{self.payments.count}"
 
-    # self.payments.each do |payment|
-      # self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
-    # end
+    self.payments.each do |payment|
+      self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
+    end
     puts "PAID TOTAL CENTS = #{self.paid_total_cents} \n\n\n\n\n\n\n"
 
     if event.fundraiser?
