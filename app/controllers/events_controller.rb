@@ -222,6 +222,7 @@ private
       payment.update! 
       @event_user.update_status
       @event_user.save
+      @event_user.reload
 
       if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event_user.status)
         @unpaid_event_users = @event.unpaid_event_users
