@@ -74,6 +74,8 @@ PayWithMe::Application.routes.draw do
     member do
       get 'pay'
       get 'pay_fundraiser'
+      put 'accept_invite'
+      put 'reject_invite'
     end
   end
 

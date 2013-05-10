@@ -31,6 +31,9 @@
             <%= f.hidden_field :user_id, :value => current_user.id %>
             <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block push-top-title-multiline" %>
           <% end %>
+        <% elsif !@event_user.accepted_invite %>
+          <%= link_to "Accept Invite", accept_invite_event_user_path(@event_user), class: "btn btn-primary btn-block push-top-title-multiline" %>
+          <%= link_to "Reject Invite", reject_invite_event_user_path(@event_user), class: "btn btn-primary btn-block push-top-title-multiline" %>
         <% end %>
       </div>
     </div>

@@ -1,7 +1,7 @@
 class EventUsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :event_public_or_user_organizes_event, only: [:create]
-  before_filter :user_owns_event_user, only: [:pay, :pay_fundraiser, :pin]
+  before_filter :user_owns_event_user, only: [:pay, :pay_fundraiser, :accept_invite, :reject_invite, :pin]
   before_filter :valid_payment_method, only: [:pay, :pay_fundraiser]
   before_filter :user_organizes_event, only: [:paid, :unpaid]
   before_filter :user_in_event, only: [:nudge]
@@ -83,6 +83,14 @@ class EventUsersController < ApplicationController
       format.js
       format.html { redirect_to admin_event_path(@event) }
     end
+  end
+
+  def accept_invite
+    
+  end
+
+  def reject_invite
+
   end
 
   def nudge
