@@ -479,7 +479,6 @@ class Event < ActiveRecord::Base
       nudger_event_user.status == EventUser::Status::UNPAID ||
       nudgee_event_user.paid_at.present? ||
       nudgee == self.organizer ||
-      nudger.stub? ||
       nudger_event_user.nudges_remaining <= 0 ||
       self.nudges.where(nudgee_id: nudgee.id, nudger_id: nudger.id).count > 0
       false
