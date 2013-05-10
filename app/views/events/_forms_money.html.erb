@@ -28,16 +28,16 @@
         </div>
 
         <div class="event_division_type_option btn_group_option push-bottom-small" id="event_division_type_3">
-          <%= f.label :fundraiser_goal, "Fundraiser Goal" %>
-          <div class="input-prepend autosize">
+          <%= f.label :fundraiser_goal, "What is the goal amount for the fundraiser? (required)" %>
+          <div class="input-prepend autosize push-bottom-small">
             <span class="add-on">$</span>
             <%= f.text_field :fundraiser_goal, class: "input-block-level" %>
           </div>
 
-          <%= f.label :minimum_donation, "Minimum Donation" %>
+          <%= f.label :minimum_donation, "What is the minimum amount that someone can donate? (optional)" %>
           <div class="input-prepend autosize">
             <span class="add-on">$</span>
-            <%= f.text_field :minimum_donation, class: "input-block-level", placeholder: "optional" %>
+            <%= f.text_field :minimum_donation, class: "input-block-level" %>
           </div>
         </div>
 

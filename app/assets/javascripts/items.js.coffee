@@ -54,7 +54,7 @@ jQuery ->
       html = $(this).html()
       value = html.replace("$", "")
       sum += parseFloat(value)
-    $(".items-total").html("$" + sum.toFixed(2))
+    $(".pay-total").html("$" + sum.toFixed(2))
     if sum == 0
       $(".pay-buttons").hide()
     else
