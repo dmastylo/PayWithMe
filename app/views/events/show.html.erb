@@ -75,26 +75,28 @@
       <% elsif @event_user.paid? && !@event.fundraiser? %>
         <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block push-bottom" %>
       <% else %>
-        <% if @event.fundraiser? %>
-          <h3>Contribution</h3>
-          <% if @event_user.paid? %>
-            <div class="well">
-              You have contributed <%= number_to_currency @event_user.paid_total %>
-            </div>
-          <% end %>
-          <div class="input-prepend autosize">
-            <span class="add-on">$</span>
-            <%= text_field_tag 'contribution_amount', nil, placeholder: "Enter amount equal to or greater than #{number_to_currency @event.minimum_donation}", class: "input-block-level" %>
+        <% if @event.fundraiser? && !@event_user.paid? %>
+          <h3>Make Your Contribution</h3>
+          <div id="fundraiser">
+            <%= form_for @payment, url: fundraiser_payment_path(@payment) do |f| %>
+              <div class="input-prepend autosize">
+                <span class="add-on">$</span>
+                <%= f.text_field :amount, value: nil, placeholder: (@event.minimum_donation.present? ? "Enter amount equal to or greater than #{humanized_money_with_symbol @event.minimum_donation}" : "Enter donation amount"), class: "input-block-level" %> 
+              </div>
+              <%= f.hidden_field :payment_method_id %>
+              <div class="pay-buttons push-top-small push-bottom-small">
+                <% if @event.send_with_paypal? %>
+                  <%= link_to event_user_pay_text(@event_user, "PayPal", fundraiser: true), "#", class: "btn btn-primary btn-block btn-pay", data: { method: PaymentMethod::MethodType::PAYPAL } %>
+                <% end %>
+                <% if @event.send_with_dwolla? %>
+                  <%= link_to event_user_pay_text(@event_user, "Dwolla", fundraiser: true), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::DWOLLA } %>
+                <% end %>
+                <% if @event.send_with_wepay? %>
+                  <%= link_to event_user_pay_text(@event_user, "WePay", fundraiser: true), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::WEPAY } %>
+                <% end %>
+              </div>
+            <% end %>
           </div>
-          <% if @event.send_with_paypal? %>
-            <%= event_user_pay_fundraiser_button(@event_user, "PayPal") %>
-          <% end %>
-          <% if @event.send_with_dwolla? %>
-            <%= event_user_pay_fundraiser_button(@event_user, "Dwolla") %>
-          <% end %>
-          <% if @event.send_with_wepay? %>
-            <%= event_user_pay_fundraiser_button(@event_user, "WePay") %>
-          <% end %>
         <% elsif @event.divide_total? || @event.divide_per_person? %>
           <% if @event.send_with_paypal? %>
             <%= event_user_pay_button(@event_user, "PayPal") %>
@@ -189,24 +191,6 @@
         fixed: '.profile-image',
         fluid: '.body',
         offset: 1
-      });
-
-      var content = $('#contribution_amount').val();
-      $('#contribution_amount').keyup(function()
-      { 
-        if ($('#contribution_amount').val() !== content)
-        {
-          content = $('#contribution_amount').val();
-          var regEx = /([?&]amount_cents)=([^#&]*)/g;
-          $('.payment-link').each(function()
-          {
-            $this = $(this);
-            thisUrl = $this.attr("href");
-            console.log(content);
-            var newUrl = thisUrl.replace(regEx, '$1=' + content);
-            $this.prop("href", newUrl);
-          });
-        }
       });
     });
   </script>

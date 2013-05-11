@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430161321) do
+ActiveRecord::Schema.define(:version => 20130506193243) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -84,10 +84,9 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "image_url"
-    t.integer  "fundraiser_goal_cents"
-    t.integer  "minimum_donation"
-    t.integer  "minimum_donation_cents"
     t.string   "guest_token"
+    t.integer  "fundraiser_goal_cents"
+    t.integer  "minimum_donation_cents"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -265,6 +264,7 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.integer  "our_fee_amount_cents"
     t.integer  "payment_method_id"
     t.string   "status",                     :default => "new"
+    t.integer  "status_type"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
@@ -315,8 +315,8 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
-    t.integer  "referrer_id"
     t.boolean  "using_cash",                 :default => false
+    t.integer  "referrer_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

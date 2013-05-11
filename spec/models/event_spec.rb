@@ -19,8 +19,8 @@
 #  image_file_size        :integer
 #  image_updated_at       :datetime
 #  image_url              :string(255)
+#  guest_token            :string(255)
 #  fundraiser_goal_cents  :integer
-#  minimum_donation       :integer
 #  minimum_donation_cents :integer
 #
 

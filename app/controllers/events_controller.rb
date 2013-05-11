@@ -38,7 +38,7 @@ class EventsController < ApplicationController
     @message = Message.new
     @event_user = @event.event_user(current_user)
     if @event_user.present?
-      @payment = @event_user.create_payment if @event.itemized? && !@event_user.paid_at.present?
+      @payment = @event_user.create_payment if (@event.itemized? || @event.fundraiser?) && !@event_user.paid_at.present?
     else
       @event_user = EventUser.new
     end
@@ -219,12 +219,16 @@ private
         payment = current_user.sent_payments.find_by_event_id(@event.id)
       end
       return unless payment.present?
-      payment.update!
+      payment.update! 
       @event_user.update_status
       @event_user.save
+      @event_user.reload
 
-      if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event.event_user(current_user).status)
-        @display_nudge_modal = true
+      if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event_user.status)
+        @unpaid_event_users = @event.unpaid_event_users
+        if !@unpaid_event_users.empty? && @event.nudges_remaining(current_user) > 0
+          @display_nudge_modal = true
+        end
         @event_user.reload
       end
     end

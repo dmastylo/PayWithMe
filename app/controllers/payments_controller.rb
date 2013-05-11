@@ -2,7 +2,10 @@ class PaymentsController < ApplicationController
   before_filter :authenticate_user!, except: [:ipn]
   before_filter :user_owns_payment, except: [:ipn]
   before_filter :valid_payment_method_for_pin, only: [:pin]
-  before_filter :valid_payment_method_for_items, only: [:items]
+  before_filter :valid_payment_method_for_items_or_fundraiser, only: [:items, :fundraiser]
+  before_filter :payment_is_unpaid, only: [:items, :fundraiser]
+  before_filter :event_is_itemized, only: [:items]
+  before_filter :event_is_fundraiser, only: [:fundraiser]
 
   def pin
   end
@@ -42,6 +45,22 @@ class PaymentsController < ApplicationController
     end
   end
 
+  def fundraiser
+    @payment.event_user.clean_up_payments!(@payment.id)
+
+    if @payment.update_attributes(params[:payment].slice(:amount, :payment_method_id))
+      if @payment.event.valid_donation? @payment.amount_cents
+        redirect_to @payment.url
+      else
+        flash[:error] = "You must make a contribution of $#{@payment.event.minimum_donation} or more."
+        redirect_to event_path(@payment.event)
+      end
+    else
+      flash[:error] = "Please enter a valid contribution amont."
+      redirect_to event_path(@payment.event)
+    end
+  end
+
   def ipn
     @payment = Payment.find_by_id(params[:id])
     return unless @payment.present?
@@ -75,11 +94,23 @@ private
     end
   end
 
-  def valid_payment_method_for_items
+  def valid_payment_method_for_items_or_fundraiser
     if !@payment.event.accepts_payment_method?(params[:payment][:payment_method_id].to_i) || params[:payment][:payment_method_id].to_i == PaymentMethod::MethodType::CASH
       flash[:error] = "Please select a valid payment method."
       redirect_to event_path(@payment.event)
     end
+  end
+
+  def payment_is_unpaid
+    redirect_to root_path unless @payment.paid_at.nil?
+  end
+
+  def event_is_itemized
+    redirect_to root_path unless @payment.event.itemized?
+  end
+
+  def event_is_fundraiser
+    redirect_to root_path unless @payment.event.fundraiser?
   end
 
 end

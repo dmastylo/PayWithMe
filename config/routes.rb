@@ -83,6 +83,7 @@ PayWithMe::Application.routes.draw do
       post 'pay'
       post 'ipn'
       put 'items'
+      put 'fundraiser'
     end
   end
 
