@@ -85,10 +85,9 @@ ActiveRecord::Schema.define(:version => 20130509231529) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "image_url"
-    t.integer  "fundraiser_goal_cents"
-    t.integer  "minimum_donation"
-    t.integer  "minimum_donation_cents"
     t.string   "guest_token"
+    t.integer  "fundraiser_goal_cents"
+    t.integer  "minimum_donation_cents"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -317,8 +316,8 @@ ActiveRecord::Schema.define(:version => 20130509231529) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
-    t.integer  "referrer_id"
     t.boolean  "using_cash",                 :default => false
+    t.integer  "referrer_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

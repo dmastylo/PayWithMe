@@ -38,7 +38,7 @@ class EventsController < ApplicationController
     @message = Message.new
     @event_user = @event.event_user(current_user)
     if @event_user.present?
-      @payment = @event_user.create_payment if @event.itemized? && !@event_user.paid_at.present?
+      @payment = @event_user.create_payment if (@event.itemized? || @event.fundraiser?) && !@event_user.paid_at.present?
     else
       @event_user = EventUser.new
     end
@@ -222,6 +222,7 @@ private
       payment.update! 
       @event_user.update_status
       @event_user.save
+      @event_user.reload
 
       if [EventUser::Status::PAID, EventUser::Status::PENDING].include?(@event_user.status)
         @unpaid_event_users = @event.unpaid_event_users

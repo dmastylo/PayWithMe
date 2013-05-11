@@ -19,10 +19,9 @@
 #  image_file_size        :integer
 #  image_updated_at       :datetime
 #  image_url              :string(255)
-#  fundraiser_goal_cents  :integer
-#  minimum_donation       :integer
-#  minimum_donation_cents :integer
 #  guest_token            :string(255)
+#  fundraiser_goal_cents  :integer
+#  minimum_donation_cents :integer
 #
 
 class Event < ActiveRecord::Base
@@ -487,7 +486,6 @@ class Event < ActiveRecord::Base
       nudger_event_user.status == EventUser::Status::UNPAID ||
       nudgee_event_user.paid_at.present? ||
       nudgee == self.organizer ||
-      nudger.stub? ||
       nudger_event_user.nudges_remaining <= 0 ||
       self.nudges.where(nudgee_id: nudgee.id, nudger_id: nudger.id).count > 0
       false

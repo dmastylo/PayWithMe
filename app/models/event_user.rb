@@ -217,11 +217,7 @@ class EventUser < ActiveRecord::Base
 private
   def set_accepted_invite
     puts "\n\n\n\n\n\n\n\n\n\n changing accepted_invite state \n\n\n\n\n\n\n\n\n\n "
-    if self.event.divide_total?
-      self.accepted_invite = true
-    else
-      self.accepted_invite = false
-    end
+    self.accepted_invite = self.event.divide_total?
     puts "#{self.accepted_invite}"
   end
 
@@ -248,16 +244,10 @@ private
   end
 
   def update_paid_total_cents
-    puts "\n\n\n\n\n\n\nUPDATING PAID TOTAL CENTS"
-    
-    # self.paid_total_cents = self.payments.inject(0) { |sum, payment| sum + payment.amount_cents if payment.paid_at.present? }
     self.paid_total_cents = 0
-    puts "AMOUNT OF PAYMENTS #{self.payments.count}"
-
     self.payments.each do |payment|
       self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
     end
-    puts "PAID TOTAL CENTS = #{self.paid_total_cents} \n\n\n\n\n\n\n"
 
     if event.fundraiser?
       self.paid_at = Time.now
