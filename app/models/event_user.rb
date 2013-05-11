@@ -42,6 +42,7 @@ class EventUser < ActiveRecord::Base
   # before_validation :copy_event_attributes
   # after_initialize :copy_event_attributes
   # after_save :copy_event_attributes
+  before_create :set_accepted_invite
 
   def paid?
   	paid_at.present?
@@ -196,7 +197,34 @@ class EventUser < ActiveRecord::Base
     end
   end
 
+  def accept_invite!
+    self.accepted_invite = true
+    self.save
+  end
+
+  def reject_invite!
+    # Send email to orgainzer
+    # TODO
+
+    # Send notification to organizer
+    # TODO
+
+
+    # Delete event_user
+    self.destroy
+  end
+
 private
+  def set_accepted_invite
+    puts "\n\n\n\n\n\n\n\n\n\n changing accepted_invite state \n\n\n\n\n\n\n\n\n\n "
+    if self.event.divide_total?
+      self.accepted_invite = true
+    else
+      self.accepted_invite = false
+    end
+    puts "#{self.accepted_invite}"
+  end
+
   def copy_event_attributes
     if self.event.present? && self.member?
       self.due_at = self.event.due_at

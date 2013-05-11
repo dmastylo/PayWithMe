@@ -32,8 +32,8 @@
             <%= f.submit "Join Event", id: "join-event-button", class: "btn btn-primary btn-block push-top-title-multiline" %>
           <% end %>
         <% elsif !@event_user.accepted_invite %>
-          <%= link_to "Accept Invite", accept_invite_event_user_path(@event_user), class: "btn btn-primary btn-block push-top-title-multiline" %>
-          <%= link_to "Reject Invite", reject_invite_event_user_path(@event_user), class: "btn btn-primary btn-block push-top-title-multiline" %>
+          <%= link_to "Participate", accept_invite_event_user_path(@event_user), class: "btn btn-primary btn-block push-top-title" %>
+          <%= link_to "Don't Participate", reject_invite_event_user_path(@event_user), class: "btn btn-danger btn-block push-top-title-second" %>
         <% end %>
       </div>
     </div>
@@ -140,24 +140,38 @@
         </ul>
       </div>
 
-      <h3>Guest List</h3>
-      <div class="well">
-        <% if @event.paid?(current_user) %>
-          <div class="push-bottom-small">
-            <em><small>Nudges remaining: <strong class="nudges-remaining"><%= @event_user.nudges_remaining %></strong></small></em>
-          </div>
-        <% end %>
-        <% if @event.paying_members.any? %>
-          <ul class="members">
-            <%= render partial: 'users/user', collection: @event.paying_event_users, as: :event_user %>
-          </ul>
-        <% else %>
-          There are no members. Add some!
-        <% end %>
-        <% if current_user == @event.organizer %>
-          <%= link_to "Invite more guests", edit_event_path(@event), class: "btn btn-primary btn-block push-top-small" %>
-        <% end %>
-      </div>
+      <% if @event.accepted_invite_event_users.any? %>
+        <h3>Attending</h3>
+        <div class="well">
+          <% if @event.paid?(current_user) %>
+            <div class="push-bottom-small">
+              <em><small>Nudges remaining: <strong class="nudges-remaining"><%= @event_user.nudges_remaining %></strong></small></em>
+            </div>
+          <% end %>
+          <% if @event.paying_members.any? %>
+            <ul class="members">
+              <%= render partial: 'users/user', collection: @event.accepted_invite_event_users, as: :event_user %>
+            </ul>
+          <% else %>
+            There are no members. Add some!
+          <% end %>
+          <% if current_user == @event.organizer %>
+            <%= link_to "Invite more guests", edit_event_path(@event), class: "btn btn-primary btn-block push-top-small" %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @event.not_accepted_invite_event_users.any? %>
+        <h3>Not Replied</h3>
+        <div class="well">
+            <ul class="members">
+              <%= render partial: 'users/not_accepted_invite_user', collection: @event.not_accepted_invite_event_users, as: :event_user %>
+            </ul>
+          <% if current_user == @event.organizer %>
+            <%= link_to "Invite more guests", edit_event_path(@event), class: "btn btn-primary btn-block push-top-small" %>
+          <% end %>
+        </div>
+      <% end %>
     </div>
 
     <div class="span7">

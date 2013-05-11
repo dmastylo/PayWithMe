@@ -86,11 +86,15 @@ class EventUsersController < ApplicationController
   end
 
   def accept_invite
-    
+    @event_user.accept_invite!
+    # TODO ajax
+    redirect_to event_path @event_user.event
   end
 
   def reject_invite
-
+    @event_user.reject_invite!
+    flash[:success] = "You have rejected the invite and left the event!"
+    redirect_to root_path
   end
 
   def nudge

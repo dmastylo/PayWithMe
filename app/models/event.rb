@@ -279,6 +279,14 @@ class Event < ActiveRecord::Base
     self.event_users.reject { |event_user| event_user.user_id == self.organizer_id }
   end
 
+  def accepted_invite_event_users
+    self.event_users.reject { |event_user| event_user.user_id == self.organizer_id || !event_user.accepted_invite }
+  end
+
+  def not_accepted_invite_event_users
+    self.event_users.reject { |event_user| event_user.user_id == self.organizer_id || event_user.accepted_invite }
+  end
+
   def paying_members
     self.members.reject { |user| user.id == self.organizer_id }
   end
