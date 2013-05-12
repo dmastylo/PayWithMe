@@ -22,7 +22,7 @@
 class EventUser < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :event_id, :user_id
+  attr_accessible :event_id, :user_id, :accepted_invite
   monetize :amount_cents, allow_nil: true
   monetize :paid_total_cents, allow_nil: true
 
@@ -42,7 +42,6 @@ class EventUser < ActiveRecord::Base
   # before_validation :copy_event_attributes
   # after_initialize :copy_event_attributes
   # after_save :copy_event_attributes
-  before_create :set_accepted_invite
 
   def paid?
   	paid_at.present?
@@ -215,12 +214,6 @@ class EventUser < ActiveRecord::Base
   end
 
 private
-  def set_accepted_invite
-    puts "\n\n\n\n\n\n\n\n\n\n changing accepted_invite state \n\n\n\n\n\n\n\n\n\n "
-    self.accepted_invite = self.event.divide_total?
-    puts "#{self.accepted_invite}"
-  end
-
   def copy_event_attributes
     if self.event.present? && self.member?
       self.due_at = self.event.due_at

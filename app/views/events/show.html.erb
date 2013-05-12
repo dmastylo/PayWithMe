@@ -178,7 +178,15 @@
 
     <div class="span7">
       <h3>Chat Board</h3>
-      <div class="well">
+      <div class="well chat-board">
+        <% if !@event_user.accepted_invite && current_user != @event.organizer %>
+          <div class="overlay">
+            <div class="call-to-action">
+              To view discussion and particpate, please click the button below!
+              <%= link_to "Participate", accept_invite_event_user_path(@event_user), class: "btn btn-primary btn-block push-top-title" %>
+            </div>
+          </div>
+        <% end %>
         <%= render 'messages/form', event: @event, message: @message if signed_in? && @event.members.include?(current_user) %>
         <ul class="messages" data-id="<%= @event.id %>" data-count="<%= @messages_count %>" data-limit="<%= Figaro.env.chat_msg_per_page.to_i %>">
           <% if @messages.any? %>

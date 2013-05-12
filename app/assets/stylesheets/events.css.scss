@@ -83,9 +83,38 @@
   }
 }
 
+.chat-board
+{
+  position: relative;
+
+  .overlay
+  {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: $lighterGray;
+    opacity: 0.8;
+    z-index: 1000;
+
+    .call-to-action
+    {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 100%;
+      width: 410px;
+      margin-left: -205px;
+    }
+  }
+}
+
 .new-message { margin-bottom: $smallMargin; }
+
 .messages
 {
+  position: relative;
   list-style-type: none;
   margin: 0;
   height: 380px;

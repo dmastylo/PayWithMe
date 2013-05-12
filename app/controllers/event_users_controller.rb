@@ -83,7 +83,7 @@ class EventUsersController < ApplicationController
 
   def accept_invite
     @event_user.accept_invite!
-    # TODO ajax
+    flash[:success] = "You have accepted the invite and are now participating in the event!"
     redirect_to event_path @event_user.event
   end
 

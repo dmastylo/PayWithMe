@@ -346,13 +346,14 @@ class Event < ActiveRecord::Base
     event_update_notifications = []
     event_invite_notifications = []
     event_new_member_news = []
+    accepted_invite = self.divide_total?
 
     members_to_add.each do |member|
       if member.valid?
         if self.members.include?(member)
           event_update_notifications.push(member.id) unless member == exclude_from_notifications
         else
-          event_users.push EventUser.new(user_id: member.id, event_id: self.id)
+          event_users.push EventUser.new(user_id: member.id, event_id: self.id, accepted_invite: accepted_invite)
           event_invite_notifications.push member.id unless member == exclude_from_notifications
           if editing_event
             event_new_member_news.push member.id unless member == exclude_from_notifications
