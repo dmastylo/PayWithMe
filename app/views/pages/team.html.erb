@@ -1,72 +1,64 @@
 <% provide(:title, "Our Team") %>
 
 <% content_for(:wrapper_top) do %>
-	<div class="container">
-		<div class="page-header">
-			<h2>Our Team</h2>
-		</div>
-	</div>
+  <div class="container">
+    <div class="page-header">
+      <h2>Our Team</h2>
+    </div>
+  </div>
 <% end %>
 
 <div class="container">
-	<div class="row">
-		<%= render partial: "team_member", 
-			locals: {
-				name: "Jake Schonberger", 
-				picture: "jake.png",
-				rollover: "twister.png", 
-				description: "Jake is a Product Design and Business student at RPI, a skier, lacrosse player and an awesome chef. He enjoys making sandwiches, building things and spending time with his most beautiful girlfriend, Gwen."
-			}
-		%>
-		<%= render partial: "team_member", 
-			locals: {
-				name: "Austin Gulati", 
-				picture: "austin.png",
-				rollover: "bender.png", 
-				description: "Austin is a Computer Science student at RPI. Before PayWithMe, he worked on Amazon affiliate software. He has a passion for making great software and enjoys playing guitar in his free time.",
-				}
-		%>
-		<%= render partial: "team_member", 
-			locals: {
-				name: "Kyle Brody", 
-				picture: "kyle.png",
-				rollover: "quailman.png", 
-				description: "Kyle is a Business and Economics student at RPI. He is a big fan of country music and is the proud owner of a cowboy hat. Investing, soccer, tennis and eating are some of his favorite activities. Kyle is a wanna-be entrepreneur with a desire to innovate."
-			}
-		%>
-	</div>
-	<div class="row">
-		<%= render partial: "team_member", 
-			locals: {
-				name: "Damian Mastylo", 
-				picture: "damian.png",
-				rollover: "johnny-bravo.jpg", 
-				description: "The most fashionable, handsome, and \"bro\" of the team, Damian brings an extraordinary level of intelligence and style to the development team. He also captains a soccer team with Chris Celi."
-				}
-			%>
-		<%= render partial: "team_member", 
-			locals: {
-				name: "Chris Celi", 
-				picture: "chris.png",
-				rollover: "spongebob.png", 
-				description: "A Computer Science major from RPI, Chris loves hockey, and will try any sport once. He curls (yes, the one on ice with the brooms) and has played soccer all his life. Chris helped on the development of the front-end of the site."
-			}
-		%>
-	</div>
-	<div class="row">
-		<div class="span12">
-			<h3>Campus Representatives</h3>
-			<p>Our campus reps are the face of PayWithMe on college campuses all across the country. These reps go door to door pitching our product, spreading awareness, and having a great time doing it! If you like to become a rep yourself - find more info <%= link_to "here", jobs_path %>.</p>
-		</div>
-	</div>
-	<div class="row">
-		<%= render partial: "team_member", 
-			locals: {
-				name: "Ghedalia Gold-Pastor", 
-				picture: "reps/ghedalia.jpg",
-				rollover: "reps/ghedalia-cartoon.jpg", 
-				description: "Ghedalia is a mechanical engineering student at the University of Maryland. He has a passion for basketball, chipotle, and entrepreneurship. Ghedalia is committed to creating useful and successful products."
-			}
-		%>
-	</div>
+  <div class="row">
+    <%= render partial: "team_member", 
+      locals: {
+        name: "Jake Schonberger", 
+        picture: "jake.png",
+        rollover: "twister.png", 
+        description: "Jake is a Product Design and Business student at RPI, a skier, lacrosse player and an awesome chef. He enjoys making sandwiches, building things and spending time with his most beautiful girlfriend, Gwen."
+      }
+    %>
+    <%= render partial: "team_member", 
+      locals: {
+        name: "Austin Gulati", 
+        picture: "austin.png",
+        rollover: "bender.png", 
+        description: "Austin is a Computer Science student at RPI. Before PayWithMe, he worked on Amazon affiliate software. He has a passion for making great software and enjoys playing guitar in his free time.",
+        }
+    %>
+    <%= render partial: "team_member", 
+      locals: {
+        name: "Kyle Brody", 
+        picture: "kyle.png",
+        rollover: "quailman.png", 
+        description: "Kyle is a Business and Economics student at RPI. He is a big fan of country music and is the proud owner of a cowboy hat. Investing, soccer, tennis and eating are some of his favorite activities. Kyle is a wanna-be entrepreneur with a desire to innovate."
+      }
+    %>
+  </div>
+  <div class="row">
+    <%= render partial: "team_member", 
+      locals: {
+        name: "Damian Mastylo", 
+        picture: "damian.png",
+        rollover: "johnny-bravo.jpg", 
+        description: "The most fashionable, handsome, and \"bro\" of the team, Damian brings an extraordinary level of intelligence and style to the development team. He also captains a soccer team with Chris Celi."
+        }
+      %>
+  </div>
+ <div class="row">
+    <div class="span12">
+      <h3>Campus Representatives</h3>
+      <p>Our campus reps are the face of PayWithMe on college campuses all across the country. These reps go door to door pitching our product, spreading awareness, and having a great time doing it! If you like to become a rep yourself - find more info <%= link_to "here", jobs_path %>.</p>
+    </div>
+  </div>
+  <div class="row">
+    <%= render partial: "team_member", 
+      locals: {
+        name: "Jonathan Ross", 
+        picture: "jon-ross.png",
+        rollover: false,
+        description: "Jonathan is a Biology and Psychology student at Muhlenberg College. He has a passion for any extreme sport, most notable snowboarding and longboarding. Jon loves burritos, math, and spending time with his girlfriend, Andrea."
+      }
+    %>
+  </div>
 </div>
