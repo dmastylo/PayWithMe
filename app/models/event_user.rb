@@ -179,6 +179,7 @@ class EventUser < ActiveRecord::Base
     elsif paid_at.present?
       self.status = EventUser::Status::PAID
       clean_up_payments!
+      try_sending_ticket
     else
       self.status = EventUser::Status::UNPAID
     end
@@ -222,23 +223,25 @@ private
     end
   end
 
-<<<<<<< HEAD
-  def send_ticket
-    EventUser.delay.send_ticket(self.id)
+  def try_sending_ticket
+    if !ticket_sent?
+      EventUser.delay.send_ticket(self.id)
+    end
   end
 
   def self.send_ticket(event_user_id)
-    event_user = EventUser.find(event_user_id)
+    event_user = EventUser.find(event_user_id, include: [:event, :user])
 
-    @event = event_user.event
-    @user = event_user.user
-    pdf = TicketPdf.new(@event, event_user).render
+    if !event_user.ticket_sent?
 
-    UserMailer.ticket_notification(@user, @event, pdf).deliver
-    ticket_sent = true
-    event_user.save
+      @event = event_user.event
+      @user = event_user.user
+      pdf = TicketPdf.new(@event, event_user).render
+
+      UserMailer.ticket_notification(@user, @event, pdf).deliver
+      event_user.ticket_sent = true
+      event_user.save
+
+    end
   end
 end
-=======
-end
->>>>>>> master

@@ -2,7 +2,7 @@ class TicketPdf < Prawn::Document
 
 	# Initializes the document
 	def initialize(event, event_user)
-		super(:page_layout => :landscape)
+		super(page_layout: :landscape)
 
 		# Set font
 		font_families.update(
@@ -43,13 +43,21 @@ class TicketPdf < Prawn::Document
 	def draw_information_2
 		# Draws large event image along top
 		move_cursor_to @height - 5
-		table [[ { image: event_image, fit: [@stub_start_x - 20, @height / 2 - 10],
-																	 position: :center,
-																	 padding: [0, 0, 0, 20]
-					} ]],
-					cell_style: { width: @stub_start_x - 20,
-								        height: @height / 2 - 10,
-								        borders: [] }
+		table [
+				[
+					{
+						image: event_image,
+						fit: [@stub_start_x - 20, @height / 2 - 10],
+						position: :center,
+						padding: [0, 0, 0, 20]
+					}
+				]
+			],
+			cell_style: {
+				width: @stub_start_x - 20,
+				height: @height / 2 - 10,
+				borders: []
+			}
 
 		# Draws information below image
 		font_size 24
