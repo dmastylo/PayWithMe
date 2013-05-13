@@ -1,0 +1,26 @@
+<div class="item-form well">
+  <strong class="item-title">Item #<span class="number"><%= form_counter %></span> (<%= f.link_to_remove "remove" %>)</strong>
+  <div class="clearfix"></div>
+  <div class="half">
+    <%= f.label :title, "What is the name of the item? (required)" %>
+    <%= f.text_field :title, placeholder: "Formal Ticket", class: "input-block-level" %>
+  </div>
+  <div class="half last">
+    <%= f.label :amount, "How much does the item cost? (required)" %>
+    <%= f.text_field :amount, placeholder: "50.00", class: "input-block-level" %>
+  </div>
+  <div class="half bottom">
+    <%= f.label :allow_quantity, "Can people select a quantity? (required)" %>
+    <%= f.hidden_field :allow_quantity, class: "item-quantity-hidden" %>
+    <div class="btn-group input-block-level item-quantity" data-toggle="buttons-radio">
+      <button type="button" class="btn half" data-name="allow" data-value="t">Yes, different quantities.</button>
+      <button type="button" class="btn half" data-name="disallow" data-value="f">No, just one quantity.</button>
+    </div>
+  </div>
+  <div class="half last bottom item-quantity-yes">
+    <%= f.label :allow_quantity, "What are the minimum and maximum quantities? (required)" %>
+    <%= f.text_field :quantity_min, placeholder: "1", class: "input-block-level half" %>
+    <%= f.text_field :quantity_max, placeholder: "5", class: "input-block-level half last" %>
+  </div>
+  <div class="clearfix"></div>
+</div>

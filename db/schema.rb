@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430161321) do
+ActiveRecord::Schema.define(:version => 20130506193243) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -62,7 +62,6 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.integer  "paid_total_cents", :default => 0
     t.integer  "status",           :default => 0
     t.integer  "nudges_remaining", :default => 0
-    t.boolean  "ticket_sent",      :default => false
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -72,8 +71,8 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",                            :null => false
-    t.datetime "updated_at",                            :null => false
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
     t.integer  "division_type"
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
@@ -85,7 +84,6 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "image_url"
-    t.boolean  "send_tickets",       :default => false
     t.string   "guest_token"
   end
 
@@ -136,6 +134,29 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.integer  "event_id"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+  end
+
+  create_table "item_users", :force => true do |t|
+    t.integer  "item_id"
+    t.integer  "user_id"
+    t.integer  "event_user_id"
+    t.integer  "payment_id"
+    t.integer  "event_id"
+    t.integer  "quantity"
+    t.integer  "total_amount_cents"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  create_table "items", :force => true do |t|
+    t.string   "title"
+    t.integer  "event_id"
+    t.integer  "amount_cents"
+    t.boolean  "allow_quantity"
+    t.integer  "quantity_min"
+    t.integer  "quantity_max"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   create_table "linked_accounts", :force => true do |t|
@@ -241,6 +262,7 @@ ActiveRecord::Schema.define(:version => 20130430161321) do
     t.integer  "our_fee_amount_cents"
     t.integer  "payment_method_id"
     t.string   "status",                     :default => "new"
+    t.integer  "status_type"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"

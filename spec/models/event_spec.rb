@@ -20,6 +20,7 @@
 #  image_updated_at   :datetime
 #  image_url          :string(255)
 #  send_tickets       :boolean          default(FALSE)
+#  guest_token        :string(255)
 #
 
 require 'spec_helper'

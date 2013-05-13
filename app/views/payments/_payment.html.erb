@@ -6,12 +6,14 @@
 		<%= link_to user_name(payment.payer), payment.payer %>
 	</td>
 	<td>
-		<%=l payment.updated_at %>
+		<%= payment.updated_at.to_s(:ordinal) %>
 	</td>
 	<td>
 		<%= humanized_money_with_symbol payment.amount %>
 	</td>
 	<td>
-		<%= payment.status %>
+		<% if payment.status_type == Payment::StatusType::PAID %>
+			Complete
+		<% end %>
 	</td>
 </tr>
