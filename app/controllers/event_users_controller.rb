@@ -1,7 +1,7 @@
 class EventUsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :event_public_or_user_organizes_event, only: [:create]
-  before_filter :user_owns_event_user, only: [:pay, :pin]
+  before_filter :user_owns_event_user, only: [:pay, :pin, :ticket]
   before_filter :valid_payment_method, only: [:pay]
   before_filter :user_organizes_event, only: [:paid, :unpaid]
   before_filter :user_in_event, only: [:nudge]
@@ -77,6 +77,17 @@ class EventUsersController < ApplicationController
     respond_to do |format|
       format.js
       format.html { redirect_to event_path(@event) }
+    end
+  end
+
+  def ticket
+    @event = @event_user.event
+
+    respond_to do |format|
+      format.pdf do
+        pdf = TicketPdf.new(@event, @event_user)
+        send_data pdf.render, filename: "#{@event.title}.pdf", type: "application/pdf", disposition: "inline"
+      end
     end
   end
 

@@ -1,207 +1,234 @@
 class TicketPdf < Prawn::Document
 
-	# Initializes the document
-	def initialize(event, event_user)
-		super(page_layout: :landscape)
+  # Initializes the document
+  def initialize(event, event_user)
+    @options = {
+      width: 650,
+      height: 200,
+      padding: 25,
+      stub: 500,
+      margin: 0
+    }
 
-		# Set font
-		font_families.update(
-		  "Lato" => {
-		    bold: "#{Rails.root}/app/assets/fonts/Lato-Bold.ttf",
-		    normal: "#{Rails.root}/app/assets/fonts/Lato-Regular.ttf"
-		  }
-		)
+    super(page_size: [@options[:width], @options[:height]], margin: @options[:margin])
 
-		font("Lato")
+    # Set font
+    font_families.update(
+      "Lato" => {
+        bold: "#{Rails.root}/app/assets/fonts/Lato-Bold.ttf",
+        normal: "#{Rails.root}/app/assets/fonts/Lato-Regular.ttf"
+      }
+    )
 
-		# Variable declarations
-		@event = event
-		@event_user = event_user
+    font("Lato")
 
-		@width = 600
-		@height = 200
-		@origin = 0
-		@stub_start_x = 450
+    # Variable declarations
+    @event = event
+    @event_user = event_user
 
-		# draw_ticket
-		draw_ticket_2
-	end
+    # draw_ticket
+    draw_ticket
+  end
 
-	def draw_ticket_2
-		# Draws border
-		rectangle [@origin, @height + @origin], @width, @height
+  def draw_ticket
+    
+    # Draw background
+    fill_color "B3E1E9"
+    fill { rectangle [0, @options[:height]], @options[:width], @options[:height] }
 
-		draw_vertical_dashed_line @stub_start_x
+    # Draw border
+    self.line_width = 5
+    stroke_color "000000"
+    stroke { rectangle [0, @options[:height]], @options[:width], @options[:height] }
 
-		# Draws left side
-		draw_information_2
+    # Draw bordered line
+    self.line_width = 2
+    draw_vertical_dashed_line(@options[:stub])
 
-		# Draws right side
-		draw_ticket_stub_2
-	end
+    # Draw main ticket
+    fill_color "000000"
+    image event_image, fit: [180, 150], padding: @options[:padding], at: [@options[:padding], @options[:height] - @options[:padding]]
+    
+    move_cursor_to @options[:height] - @options[:padding]
+    font_size 24
+    text_box @event.title, at: [180, cursor], style: :bold
 
-	def draw_information_2
-		# Draws large event image along top
-		move_cursor_to @height - 5
-		table [
-				[
-					{
-						image: event_image,
-						fit: [@stub_start_x - 20, @height / 2 - 10],
-						position: :center,
-						padding: [0, 0, 0, 20]
-					}
-				]
-			],
-			cell_style: {
-				width: @stub_start_x - 20,
-				height: @height / 2 - 10,
-				borders: []
-			}
+  end
 
-		# Draws information below image
-		font_size 24
-		text_box "#{@event.title}", style: :bold, at: [@origin + 10, @height / 2], width: @stub_start_x - 20, overflow: :shrink_to_fit, align: :center
+  # def draw_ticket_2
+  #   # Draws border
+  #   # rectangle [@origin, @height + @origin], @width, @height
 
-		# Paid information, via, date, across bottom. Skim date to just show date not time
-		font_size 12
-		text_box "Admit One", at: [@origin + 10, 60], width: @stub_start_x - 20, align: :center
-		text_box "#{@event_user.user.name || @event_user.user.email} paid via #{@event_user.payments[0].payment_method.name} on #{@event_user.paid_at.to_date}", at: [@origin + 10, 45], width: @stub_start_x - 20, align: :center
-	end
+  #   # draw_vertical_dashed_line @stub_start_x
 
-	def draw_ticket_stub_2
-		# Draws PayWithMe logo
-		image pwm_image, at: [@stub_start_x + 10, 186], fit: [130, 100]
+  #   # # Draws left side
+  #   # draw_information_2
 
-		# Draws some event_user information
-		font_size 10
-		text_box "#{@event_user.user.name || @event_user.user.email}", at: [@stub_start_x + 10, @height - 60], width: @width - @stub_start_x - 20, align: :center
+  #   # # Draws right side
+  #   # draw_ticket_stub_2
+  # end
 
-		# Fix later
-		text_box " paid #{@event_user.payments[0].payment_method.name} #{ActionController::Base.helpers.number_to_currency(@event_user.paid_total_cents / 100)}", at: [@stub_start_x + 10, @height - 70], width: @width - @stub_start_x - 20, align: :center
+  # def draw_information_2
+  #   # Draws large event image along top
+  #   move_cursor_to @height - 5
+  #   table [
+  #       [
+  #         {
+  #           image: event_image,
+  #           fit: [@stub_start_x - 20, @height / 2 - 10],
+  #           position: :center,
+  #           padding: [0, 0, 0, 20]
+  #         }
+  #       ]
+  #     ],
+  #     cell_style: {
+  #       width: @stub_start_x - 20,
+  #       height: @height / 2 - 10,
+  #       borders: []
+  #     }
 
-		# Draws qr code
-		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 33, 10)
-	end
+  #   # Draws information below image
+  #   font_size 24
+  #   text_box "#{@event.title}", style: :bold, at: [@origin + 10, @height / 2], width: @stub_start_x - 20, overflow: :shrink_to_fit, align: :center
 
-	def draw_ticket
-		# Draws border
-		rectangle [@origin, @height], @width, @height
+  #   # Paid information, via, date, across bottom. Skim date to just show date not time
+  #   font_size 12
+  #   text_box "Admit One", at: [@origin + 10, 60], width: @stub_start_x - 20, align: :center
+  #   text_box "#{@event_user.user.name || @event_user.user.email} paid via #{@event_user.payments[0].payment_method.name} on #{@event_user.paid_at.to_date}", at: [@origin + 10, 45], width: @stub_start_x - 20, align: :center
+  # end
 
-		draw_vertical_dashed_line @stub_start_x
+  # def draw_ticket_stub_2
+  #   # Draws PayWithMe logo
+  #   image pwm_image, at: [@stub_start_x + 10, 186], fit: [130, 100]
 
-		# Draws left side
-		draw_information
+  #   # Draws some event_user information
+  #   font_size 10
+  #   text_box "#{@event_user.user.name || @event_user.user.email}", at: [@stub_start_x + 10, @height - 60], width: @width - @stub_start_x - 20, align: :center
 
-		# Draws right side
-		draw_ticket_stub
-	end
+  #   # Fix later
+  #   text_box " paid #{@event_user.payments[0].payment_method.name} #{ActionController::Base.helpers.number_to_currency(@event_user.paid_total_cents / 100)}", at: [@stub_start_x + 10, @height - 70], width: @width - @stub_start_x - 20, align: :center
 
-	# Draws text based information on left side
-	def draw_information
-		standard_size = font_size
-		x_pos = 10
-		y_pos = 180
-		gap_size = 15
+  #   # Draws qr code
+  #   generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 33, 10)
+  # end
 
-		font_size 10
-		text_box "Your ticket to:", at: [x_pos, y_pos]
+  # def draw_ticket
+  #   # Draws border
+  #   rectangle [@origin, @height], @width, @height
 
-		y_pos -= gap_size
+  #   draw_vertical_dashed_line @stub_start_x
 
-		# Draws event title
-		font_size 24
-		text_box "#{@event.title}", style: :bold, at: [x_pos, y_pos], width: 430, overflow: :truncate
+  #   # Draws left side
+  #   draw_information
 
-		y_pos -= 2*gap_size
+  #   # Draws right side
+  #   draw_ticket_stub
+  # end
 
-		font_size standard_size
+  # # Draws text based information on left side
+  # def draw_information
+  #   standard_size = font_size
+  #   x_pos = 10
+  #   y_pos = 180
+  #   gap_size = 15
 
-		# Draws user name
-		text_box "Name: #{@event_user.user.name || @event_user.user.email}", at: [x_pos, y_pos], width: 240
-		y_pos -= gap_size
+  #   font_size 10
+  #   text_box "Your ticket to:", at: [x_pos, y_pos]
 
-		# Draws payment method
-		text_box "Payment Method: #{@event_user.payments[0].payment_method.name}", at: [x_pos, y_pos], width: 240
-		y_pos -= gap_size
+  #   y_pos -= gap_size
 
-		# Draws paid at
-		text_box "Date Paid: #{@event_user.paid_at}", at: [x_pos, y_pos], width: 240
-		y_pos -= gap_size
+  #   # Draws event title
+  #   font_size 24
+  #   text_box "#{@event.title}", style: :bold, at: [x_pos, y_pos], width: 430, overflow: :truncate
 
-		# Draws event description
-		text_box "Event Details: #{@event.description}", at: [x_pos, y_pos], width: 240, height: 70, overflow: :truncate
+  #   y_pos -= 2*gap_size
 
-		# Draws event image on ticket
-		image event_image, at: [280, 170], fit: [160, 160]
-	end
+  #   font_size standard_size
 
-	# Draws ticket stub, right portion
-	def draw_ticket_stub
-		image pwm_image, at: [@stub_start_x + 10, 186], fit: [130, 100]
-		generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 5, 15)
-	end
+  #   # Draws user name
+  #   text_box "Name: #{@event_user.user.name || @event_user.user.email}", at: [x_pos, y_pos], width: 240
+  #   y_pos -= gap_size
 
-	# Displays qr code as grid
-	def generate_and_display_qr(link_to_embed, x_start, y_start)
+  #   # Draws payment method
+  #   text_box "Payment Method: #{@event_user.payments[0].payment_method.name}", at: [x_pos, y_pos], width: 240
+  #   y_pos -= gap_size
 
-		@qr = RQRCode::QRCode.new(link_to_embed, size: 6)
+  #   # Draws paid at
+  #   text_box "Date Paid: #{@event_user.paid_at}", at: [x_pos, y_pos], width: 240
+  #   y_pos -= gap_size
 
-		x_pos = x_start
-		y_pos = y_start
-		width = 2
+  #   # Draws event description
+  #   text_box "Event Details: #{@event.description}", at: [x_pos, y_pos], width: 240, height: 70, overflow: :truncate
 
-		@qr.modules.each_index do |x|
-		 	x_pos += width
-		 	@qr.modules.each_index do |y|
-				y_pos += width
-	    	if @qr.dark?(x,y)
-	    		fill_color "000000"
-	    		fill_rectangle [x_pos, y_pos], width, width
-	   		else
-	   			fill_color "FFFFFF"
-	   			fill_rectangle [x_pos, y_pos], width, width
-	   		end
-		  end
-		  y_pos = y_start
-		end
-	end
+  #   # Draws event image on ticket
+  #   image event_image, at: [280, 170], fit: [160, 160]
+  # end
 
-	# Returns image path as string
-	def event_image
-	  if @event.image_type == :upload
-	    open(@event.image.url)
-	  elsif @event.image_type == :url
-	    open(@event.image_url)
-	  elsif @event.image_type == :default_image
-	    m_image
-	  end
-	end
+  # # Draws ticket stub, right portion
+  # def draw_ticket_stub
+  #   image pwm_image, at: [@stub_start_x + 10, 186], fit: [130, 100]
+  #   generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 5, 15)
+  # end
 
-	# Return vertical paywithme image path as string
-	def pwm_image_rotated
-		"#{Rails.root}/app/assets/images/logo_black_rotated.png"
-	end
+  # # Displays qr code as grid
+  # def generate_and_display_qr(link_to_embed, x_start, y_start)
 
-	# Return paywithme image path as string
-	def pwm_image
-		"#{Rails.root}/app/assets/images/ticket_logo.png"
-	end
+  #   @qr = RQRCode::QRCode.new(link_to_embed, size: 6)
 
-	# Return m image path as string
-	def m_image
-		"#{Rails.root}/app/assets/images/default_event_image.png"
-	end
+  #   x_pos = x_start
+  #   y_pos = y_start
+  #   width = 2
 
-	def draw_vertical_dashed_line(x)
-		# Value for size of line and space in between
-		size = 10
+  #   @qr.modules.each_index do |x|
+  #     x_pos += width
+  #     @qr.modules.each_index do |y|
+  #       y_pos += width
+  #       if @qr.dark?(x,y)
+  #         fill_color "000000"
+  #         fill_rectangle [x_pos, y_pos], width, width
+  #       else
+  #         fill_color "FFFFFF"
+  #         fill_rectangle [x_pos, y_pos], width, width
+  #       end
+  #     end
+  #     y_pos = y_start
+  #   end
+  # end
 
-		y = 0
+  # Returns image path as string
+  def event_image
+    if @event.image_type == :upload
+      open(@event.image.url)
+    elsif @event.image_type == :url
+      open(@event.image_url)
+    elsif @event.image_type == :default_image
+      default_image
+    end
+  end
 
-		(@height/(size*2)).times do
-			stroke_vertical_line y, y+size, at: x
-			y += size*2
-		end
-	end
+  # Return vertical paywithme image path as string
+  def logo_rotated
+    "#{Rails.root}/app/assets/images/logo_black_rotated.png"
+  end
+
+  # Return paywithme image path as string
+  def logo
+    "#{Rails.root}/app/assets/images/ticket_logo.png"
+  end
+
+  # Return m image path as string
+  def default_image
+    "#{Rails.root}/app/assets/images/default_event_image_ticket.png"
+  end
+
+  def draw_vertical_dashed_line(x)
+    # Value for size of line and space in between
+    size = 5
+    y = 0
+
+    (@options[:height]/(size*2)).times do
+      stroke_vertical_line y, y+size, at: x
+      y += size*2
+    end
+  end
 end
