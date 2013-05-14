@@ -70,6 +70,10 @@ gem 'friendly_id'
 
 # PDF Generation
 gem 'prawn', git: 'git://github.com/celic/prawn.git', submodules: true
+gem 'prawnto'
+
+# QR Code Generation
+gem 'rqrcode'
 
 # ActiveRecord extensions
 gem "activerecord-import"

@@ -339,6 +339,9 @@ GEM
     polyamorous (0.5.0)
       activerecord (~> 3.0)
     polyglot (0.3.3)
+    prawnto (0.1.1)
+      prawn
+      rails (>= 2.1)
     pry (0.9.12)
       coderay (~> 1.0.5)
       method_source (~> 0.8)
@@ -385,6 +388,7 @@ GEM
       css_parser
       nokogiri (>= 1.4.4)
       sprockets
+    rqrcode (0.4.2)
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -492,12 +496,14 @@ DEPENDENCIES
   paperclip
   passenger
   prawn!
+  prawnto
   quiet_assets
   rails (= 3.2.13)
   ransack
   rb-inotify (~> 0.8.8)
   rinku
   roadie
+  rqrcode
   rspec-rails
   rvm-capistrano
   sass-rails (~> 3.2.3)

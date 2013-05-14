@@ -43,7 +43,7 @@ class EventsController < ApplicationController
       @event_user = EventUser.new
     end
   end
-  
+
   def new
     @event = current_user.organized_events.new
     @event.items.new
@@ -132,12 +132,12 @@ class EventsController < ApplicationController
   end
 
   def guests
-    event = Event.find(params[:id])
+    @event = Event.find(params[:id])
 
     respond_to do |format|
       format.pdf do
-        pdf = EventPdf.new(event, view_context)
-        send_data pdf.render, filename: "#{event.title}.pdf", type: "application/pdf", disposition: "inline"
+        pdf = EventPdf.new(@event, view_context)
+        send_data pdf.render, filename: "#{@event.title}.pdf", type: "application/pdf", disposition: "inline"
       end
     end
   end

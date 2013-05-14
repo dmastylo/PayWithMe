@@ -41,6 +41,12 @@
         </div>
       </div>
     </div>
+    <div class="control-group required push-top-small">
+      <%= f.label :send_tickets, "Do you want members to be emailed a ticket to the event when they pay?" %>
+      <div class="controls autosize">
+        <%= f.check_box :send_tickets %>
+      </div>
+    </div>
 
     <%= f.submit "#{submit_text(@event)} event and send invitations", class: "btn btn-primary btn-block push-top-small" %>
   </div>

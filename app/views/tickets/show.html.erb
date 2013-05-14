@@ -1,0 +1,24 @@
+<%= provide(:title, "Paid") %>
+
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<h2><%= @event_user.paid?  ? 'Paid!' : 'Not Paid!' %></h2>
+			<div class="well">
+				<p>
+					<%= @event_user.user.name || @event_user.user.email %> has
+					<% if @event_user.paid? %>
+						paid via <%= @event_user.payments[0].payment_method.name %>
+					<% else %>
+						not paid
+					<% end %>
+					to attend <%= @event_user.event.title %>.
+				</p>
+
+				<% if @event_user.paid? %>
+					<p><%= @event_user.user.name || @event_user.user.email %> paid a total of <%= humanized_money_with_symbol @event_user.paid_total_cents / 100 %> on <%= @event_user.paid_at.to_date %>.</p>
+				<% end %>
+			</div>
+		</div>
+	</div>
+</div>

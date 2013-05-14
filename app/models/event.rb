@@ -19,6 +19,7 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  image_url          :string(255)
+#  send_tickets       :boolean          default(FALSE)
 #  guest_token        :string(255)
 #
 
@@ -26,7 +27,7 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types, :items_attributes
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types, :items_attributes, :send_tickets
   attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
@@ -261,7 +262,7 @@ class Event < ActiveRecord::Base
   #     invitation_types
   #   end
   # end
-        
+
   # Member definitions
   # ========================================================
   def paying_event_users
@@ -312,7 +313,7 @@ class Event < ActiveRecord::Base
       0
     end
   end
-  
+
   def add_member(member, exclude_from_notifications=nil)
     add_members([member], exclude_from_notifications)
   end
@@ -485,7 +486,7 @@ class Event < ActiveRecord::Base
   def has_nudged?(nudger, nudgee)
     self.nudges.where(nudgee_id: nudgee.id, nudger_id: nudger.id).count > 0
   end
-  
+
   def is_past?
     Time.now > self.due_at
   end
@@ -547,7 +548,7 @@ private
 
     image_type = nil
   end
-  
+
   def add_organizer_to_members
     if !members.include?(organizer)
       members << organizer
@@ -563,7 +564,7 @@ private
       errors.add(:split_amount, "cannot be changed after a member has paid")
     end
   end
-  
+
   def clear_notifications_and_news_items
     Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all

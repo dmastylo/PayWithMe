@@ -16,10 +16,11 @@
 #  paid_total_cents :integer          default(0)
 #  status           :integer          default(0)
 #  nudges_remaining :integer          default(0)
+#  ticket_sent      :boolean          default(FALSE)
 #
 
 class EventUser < ActiveRecord::Base
-  
+
   # Accessible attributes
   attr_accessible :event_id, :user_id
   monetize :amount_cents, allow_nil: true
@@ -100,12 +101,19 @@ class EventUser < ActiveRecord::Base
   end
 
   def pay!(payment, options={})
+
     copy_event_attributes
     payment.pay!(options)
 
     update_paid_total_cents
     update_paid_with_cash
     update_status
+
+    # Only send ticket if total amount is paid, if a ticket hasn't been sent yet and if the organizer wants tickets
+    if self.paid_total_cents == self.amount_cents && !self.event.send_tickets? && self.event.send_tickets?
+      send_ticket
+    end
+
     send_nudges
     update_nudges_remaining
     self.save
@@ -115,7 +123,7 @@ class EventUser < ActiveRecord::Base
   # def paid_with_cash?
   #   self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
   # end
-  
+
   def unpay_cash_payments!
     copy_event_attributes
     self.payments.where(payment_method_id: PaymentMethod::MethodType::CASH).destroy_all
@@ -171,6 +179,7 @@ class EventUser < ActiveRecord::Base
     elsif paid_at.present?
       self.status = EventUser::Status::PAID
       clean_up_payments!
+      try_sending_ticket
     else
       self.status = EventUser::Status::UNPAID
     end
@@ -214,4 +223,25 @@ private
     end
   end
 
+  def try_sending_ticket
+    if !ticket_sent?
+      EventUser.delay.send_ticket(self.id)
+    end
+  end
+
+  def self.send_ticket(event_user_id)
+    event_user = EventUser.find(event_user_id, include: [:event, :user])
+
+    if !event_user.ticket_sent?
+
+      @event = event_user.event
+      @user = event_user.user
+      pdf = TicketPdf.new(@event, event_user).render
+
+      UserMailer.ticket_notification(@user, @event, pdf).deliver
+      event_user.ticket_sent = true
+      event_user.save
+
+    end
+  end
 end

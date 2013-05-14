@@ -6,6 +6,7 @@ PayWithMe::Application.routes.draw do
   match '/privacy_policy', to: "pages#privacy_policy"
   match '/faq', to: "pages#faq"
   match '/jobs', to: "pages#jobs"
+  match '/restaurants', to: "pages#restaurants"
 
   resources :admin, only: :index do
     collection do
@@ -29,6 +30,7 @@ PayWithMe::Application.routes.draw do
         put 'paid'
         put 'unpaid'
         put 'nudge'
+        get 'ticket'
       end
     end
     member do
@@ -94,6 +96,8 @@ PayWithMe::Application.routes.draw do
   resources :organizations, only: [:new, :create]
 
   resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
+
+  resources :tickets
 
   match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
 
