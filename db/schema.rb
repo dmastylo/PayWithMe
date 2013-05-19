@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506193243) do
+ActiveRecord::Schema.define(:version => 20130519073117) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.integer  "paid_total_cents", :default => 0
     t.integer  "status",           :default => 0
     t.integer  "nudges_remaining", :default => 0
+    t.boolean  "accepted_invite"
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -71,8 +72,8 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.integer  "division_type"
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
@@ -84,6 +85,9 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "image_url"
+    t.integer  "fundraiser_goal_cents"
+    t.integer  "minimum_donation"
+    t.integer  "minimum_donation_cents"
     t.string   "guest_token"
   end
 
@@ -220,6 +224,7 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.datetime "sent_at"
+    t.integer  "rating"
   end
 
   create_table "organizations", :force => true do |t|
@@ -313,8 +318,8 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
-    t.boolean  "using_cash",                 :default => false
     t.integer  "referrer_id"
+    t.boolean  "using_cash",                 :default => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

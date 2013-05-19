@@ -116,6 +116,12 @@
           <div class="push-bottom-small">
             <em><small>Nudges remaining: <strong class="nudges-remaining"><%= @event_user.nudges_remaining %></strong></small></em>
           </div>
+          <div class="push-bottom-small">
+            Type of nudge:
+            <a href="#" id="G">G</a>
+            <a href="#" id="PG13">PG13</a>
+            <a href="#" id="R">R</a>
+          </div>
         <% end %>
         <% if @event.paying_members.any? %>
           <ul class="members">
@@ -162,6 +168,45 @@
         fixed: '.profile-image',
         fluid: '.body',
         offset: 1
+      });
+
+      $('#G').click(function(e)
+      {
+        e.preventDefault();
+        var regEx = /([?&]rating)=([^#&]*)/g;
+        $('.btn-nudge').each(function()
+        {
+          $this = $(this);
+          thisUrl = $this.attr("href");
+          var newUrl = thisUrl.replace(regEx, '$1=' + "G");
+          $this.prop("href", newUrl);
+        });
+      });
+
+      $('#PG13').click(function(e)
+      {
+        e.preventDefault();
+        var regEx = /([?&]rating)=([^#&]*)/g;
+        $('.btn-nudge').each(function()
+        {
+          $this = $(this);
+          thisUrl = $this.attr("href");
+          var newUrl = thisUrl.replace(regEx, '$1=' + "PG-13");
+          $this.prop("href", newUrl);
+        });
+      });
+
+      $('#R').click(function(e)
+      {
+        e.preventDefault();
+        var regEx = /([?&]rating)=([^#&]*)/g;
+        $('.btn-nudge').each(function()
+        {
+          $this = $(this);
+          thisUrl = $this.attr("href");
+          var newUrl = thisUrl.replace(regEx, '$1=' + "R");
+          $this.prop("href", newUrl);
+        });
       });
     });
   </script>

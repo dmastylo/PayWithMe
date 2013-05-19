@@ -9,12 +9,13 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  sent_at    :datetime
+#  rating     :integer
 #
 
 class Nudge < ActiveRecord::Base
 
   # Accessible attributes
-  attr_accessible :event_id, :nudgee_id, :nudger_id
+  attr_accessible :event_id, :nudgee_id, :nudger_id, :rating
 
   # Validations
   validates :event_id, presence: true
@@ -33,6 +34,26 @@ class Nudge < ActiveRecord::Base
     if self.event.event_user(self.nudger).status == EventUser::Status::PAID
       send_nudge_email
     end
+  end
+
+  def G?
+    rating == NudgeRating::G
+  end
+
+  def PG13?
+    rating == NudgeRating::PG13
+  end
+
+  def R?
+    rating == NudgeRating::R
+  end
+
+  # Constants
+  # ========================================================
+  class NudgeRating
+    G = 1
+    PG13 = 2
+    R = 3
   end
 
 private

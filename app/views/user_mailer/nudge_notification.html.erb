@@ -1,8 +1,18 @@
 <tr>
   <td colspan="2">
-    <p>Hi <%= (@user.first_name.empty?) ? "there" : @user.first_name %>,</p>
+    <% if @nudge.G? %>
+      <p>Hi <%= (@user.first_name.empty?) ? "there" : @user.first_name %>,</p>
 
-    <p>You've been nudged! <%= @nudge.nudger.first_name %> wants you to get your money in for <%= @nudge.event.title %>. What are you waiting for?</p>
+      <p>You've been nudged! <%= @nudge.nudger.first_name %> wants you to get your money in for <%= @nudge.event.title %>. What are you waiting for?</p>
+    <% elsif @nudge.PG13? %>
+      <p>Hey <%= (@user.first_name.empty?) ? "there" : @user.first_name %>,</p>
+
+      <p>You're screwing the group over! <%= @nudge.nudger.first_name %> needs you to pay up for <%= @nudge.event.title %>. What the hell are you waiting for?</p>
+    <% elsif @nudge.R? %>
+      <p>Hey <%= (@user.first_name.empty?) ? "there" : @user.first_name %>,</p>
+
+      <p>You're fucking the group over! You have to pay <%= @nudge.nudger.first_name %> for <%= @nudge.event.title %> because you're holding us all the hell back. Pay up jackass.</p>
+    <% end %>
 
     <p><%= link_to image_tag(asset_path('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
   </td>
