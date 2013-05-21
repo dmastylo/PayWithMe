@@ -33,26 +33,45 @@ class TicketPdf < Prawn::Document
   def draw_ticket
     
     # Draw background
-    fill_color "B3E1E9"
-    fill { rectangle [0, @options[:height]], @options[:width], @options[:height] }
+    self.fill_color "B3E1E9"
+    self.fill { rectangle [0, @options[:height]], @options[:width], @options[:height] }
 
     # Draw border
     self.line_width = 5
-    stroke_color "000000"
-    stroke { rectangle [0, @options[:height]], @options[:width], @options[:height] }
+    self.stroke_color "000000"
+    self.stroke { rectangle [0, @options[:height]], @options[:width], @options[:height] }
 
     # Draw bordered line
     self.line_width = 2
-    draw_vertical_dashed_line(@options[:stub])
+    self.draw_vertical_dashed_line(@options[:stub])
 
     # Draw main ticket
-    fill_color "000000"
-    image event_image, fit: [180, 150], padding: @options[:padding], at: [@options[:padding], @options[:height] - @options[:padding]]
+    self.fill_color "000000"
+    self.image event_image, fit: [180, 150], padding: @options[:padding], at: [@options[:padding], @options[:height] - @options[:padding]]
     
-    move_cursor_to @options[:height] - @options[:padding]
-    font_size 24
-    text_box @event.title, at: [180, cursor], style: :bold
+    self.y = @options[:height] - @options[:padding]
+    self.text_box @event.title, at: [180, self.y], width: 290, height: 30, align: :center, overflow: :shrink_to_fit, min_font_size: 20, size: 26, style: :bold, valign: :center
+    self.y -= 30
 
+    self.text_box "Organized by: #{@event.organizer.name}", at: [180, self.y], align: :center, width: 290, height: 16, size: 14, min_font_size: 12, valign: :center
+    self.y -= 30
+    
+    self.text_box @event.due_at.to_s(:ordinal), at: [180, self.y], width: 290, height: 30, align: :center, overflow: :shrink_to_fit, min_font_size: 20, size: 20, style: :bold, valign: :center
+    self.y -= 45
+
+    self.text_box "<b>Attendee:</b> #{UsersController.helpers.user_name(@event_user.user)}", at: [180, self.y], width: 290, align: :center, inline_format: true, height: 16, size: 14, min_font_size: 12, valign: :center
+    self.y -= 20
+    self.text_box "<b>Date Paid:</b> #{@event_user.paid_at.to_date.to_s(:default)}", at: [180, self.y], width: 290, align: :center, inline_format: true, height: 16, size: 14, min_font_size: 12, valign: :center
+
+    # Draw ticket stub
+    self.image logo, at: [510, @options[:height] - @options[:padding] + 10]
+    generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", 533, 20)
+
+    self.fill_color "000000"
+    self.y = 145
+    self.text_box "#{UsersController.helpers.user_name(@event_user.user)}", at: [510, self.y], width: 130, align: :center, inline_format: true, height: 16, size: 14, min_font_size: 12, valign: :center
+    self.y -= 20
+    self.text_box "Paid on #{@event_user.paid_at.to_date.to_s(:default)}", at: [510, self.y], width: 130, align: :center, inline_format: true, height: 16, size: 14, min_font_size: 12, valign: :center
   end
 
   # def draw_ticket_2
@@ -170,30 +189,30 @@ class TicketPdf < Prawn::Document
   #   generate_and_display_qr("http://www.paywith.me/tickets/paid?event_user_id=#{@event_user.id}", @stub_start_x + 5, 15)
   # end
 
-  # # Displays qr code as grid
-  # def generate_and_display_qr(link_to_embed, x_start, y_start)
+  # Displays qr code as grid
+  def generate_and_display_qr(link_to_embed, x_start, y_start)
 
-  #   @qr = RQRCode::QRCode.new(link_to_embed, size: 6)
+    @qr = RQRCode::QRCode.new(link_to_embed, size: 6)
 
-  #   x_pos = x_start
-  #   y_pos = y_start
-  #   width = 2
+    x_pos = x_start
+    y_pos = y_start
+    width = 2
 
-  #   @qr.modules.each_index do |x|
-  #     x_pos += width
-  #     @qr.modules.each_index do |y|
-  #       y_pos += width
-  #       if @qr.dark?(x,y)
-  #         fill_color "000000"
-  #         fill_rectangle [x_pos, y_pos], width, width
-  #       else
-  #         fill_color "FFFFFF"
-  #         fill_rectangle [x_pos, y_pos], width, width
-  #       end
-  #     end
-  #     y_pos = y_start
-  #   end
-  # end
+    @qr.modules.each_index do |x|
+      x_pos += width
+      @qr.modules.each_index do |y|
+        y_pos += width
+        if @qr.dark?(x,y)
+          fill_color "000000"
+          fill_rectangle [x_pos, y_pos], width, width
+        else
+          fill_color "FFFFFF"
+          fill_rectangle [x_pos, y_pos], width, width
+        end
+      end
+      y_pos = y_start
+    end
+  end
 
   # Returns image path as string
   def event_image
