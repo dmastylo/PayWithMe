@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130509231529) do
+ActiveRecord::Schema.define(:version => 20130525221841) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(:version => 20130509231529) do
     t.integer  "paid_total_cents", :default => 0
     t.integer  "status",           :default => 0
     t.integer  "nudges_remaining", :default => 0
-    t.boolean  "accepted_invite"
+    t.boolean  "accepted_invite",  :default => false
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -85,10 +85,9 @@ ActiveRecord::Schema.define(:version => 20130509231529) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "image_url"
-    t.integer  "fundraiser_goal_cents"
-    t.integer  "minimum_donation"
-    t.integer  "minimum_donation_cents"
     t.string   "guest_token"
+    t.integer  "fundraiser_goal_cents"
+    t.integer  "minimum_donation_cents"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -224,6 +223,7 @@ ActiveRecord::Schema.define(:version => 20130509231529) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.datetime "sent_at"
+    t.integer  "rating"
   end
 
   create_table "organizations", :force => true do |t|
@@ -317,8 +317,8 @@ ActiveRecord::Schema.define(:version => 20130509231529) do
     t.datetime "completed_at"
     t.boolean  "admin"
     t.boolean  "send_emails",                :default => true
-    t.integer  "referrer_id"
     t.boolean  "using_cash",                 :default => false
+    t.integer  "referrer_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

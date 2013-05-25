@@ -46,6 +46,14 @@ class UserMailer < ActionMailer::Base
     mail to: format_address_to(user), subject: "#{@nudge.event.title}: #{@nudge.nudger.first_name} Nudged You"
   end
 
+  def not_participating_notification(event_user, organizer)
+    @event_user = event_user
+    @user = event_user.user
+    @event = event_user.event
+
+    mail to: format_address_to(organizer), subject: "#{@event.title}: #{@user.first_name} is Not Participating"
+  end
+
 private
   def format_address_to(user)
     require 'mail'

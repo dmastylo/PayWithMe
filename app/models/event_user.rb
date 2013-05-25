@@ -16,7 +16,7 @@
 #  paid_total_cents :integer          default(0)
 #  status           :integer          default(0)
 #  nudges_remaining :integer          default(0)
-#  accepted_invite  :boolean
+#  accepted_invite  :boolean          default(FALSE)
 #
 
 class EventUser < ActiveRecord::Base
@@ -203,13 +203,11 @@ class EventUser < ActiveRecord::Base
 
   def reject_invite!
     # Send email to orgainzer
-    # TODO
-
+    UserMailer.delay.not_participating_notification(self, self.event.organizer).deliver
+    
     # Send notification to organizer
-    # TODO
+    Notification.delay.create_for_not_participating(self.event, self.user)
 
-
-    # Delete event_user
     self.destroy
   end
 
