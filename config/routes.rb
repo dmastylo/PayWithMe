@@ -6,6 +6,8 @@ PayWithMe::Application.routes.draw do
   match '/privacy_policy', to: "pages#privacy_policy"
   match '/faq', to: "pages#faq"
   match '/jobs', to: "pages#jobs"
+  match '/terms', to: "pages#terms"
+  match '/about', to: "pages#about"
 
   resources :admin, only: :index do
     collection do
