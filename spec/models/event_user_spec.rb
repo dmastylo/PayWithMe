@@ -16,7 +16,7 @@
 #  paid_total_cents :integer          default(0)
 #  status           :integer          default(0)
 #  nudges_remaining :integer          default(0)
-#  accepted_invite  :boolean
+#  accepted_invite  :boolean          default(FALSE)
 #
 
 require 'spec_helper'
