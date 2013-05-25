@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",             :null => false
+    t.datetime "updated_at",             :null => false
     t.integer  "division_type"
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
@@ -85,6 +85,8 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.datetime "image_updated_at"
     t.string   "image_url"
     t.string   "guest_token"
+    t.integer  "fundraiser_goal_cents"
+    t.integer  "minimum_donation_cents"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
