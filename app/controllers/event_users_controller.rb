@@ -59,6 +59,7 @@ class EventUsersController < ApplicationController
         end
 
         @event_user.pay!(payment)
+        @event_user.update_attributes(accepted_invite: true)
       else params[:event_user][:paid_total].to_f == 0
         @event_user.unpay_cash_payments!
         @event_user.set_to_zero!
