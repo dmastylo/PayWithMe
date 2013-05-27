@@ -1,8 +1,8 @@
 $("#unpaid-members .row").append('<%=j render "users/dashboard_unpaid_user", event_user: @event_user, itemized: false %>')
 $("#paid-members .dashboard-user-<%= @event_user.id %>").remove();
-
 $("#unpaid-members").show();
-if($("#paid-members .row .dashboard-paid-user").length === 0)
+
+if ($("#paid-members .row .dashboard-paid-user").length === 0)
 {
   $("#paid-members").hide(); 
 }

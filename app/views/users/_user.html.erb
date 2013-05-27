@@ -14,12 +14,22 @@
   </div>
   <div class="status">
     <% if @event.present? %>
-      <% if user == @event.organizer %>
-        Event Organizer
-      <% elsif event_user.paid? %>
-        Paid
+      <% if @event.fundraiser? %>
+        <% if user == @event.organizer %>
+          Event Organizer
+        <% elsif event_user.paid? %>
+          Contributed <%= number_to_currency event_user.paid_total %>
+        <% else %>
+          Has Not Contributed
+        <% end %>
       <% else %>
-        Unpaid
+        <% if user == @event.organizer %>
+          Event Organizer
+        <% elsif event_user.paid? %>
+          Paid
+        <% else %>
+          Unpaid
+        <% end %>
       <% end %>
     <% elsif @group.present? %>
       <% if @group.is_admin?(user) %>

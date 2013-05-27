@@ -26,7 +26,7 @@ class Payment < ActiveRecord::Base
   # Accessible attributes
   # There is no available create route right now so we
   # can get away with things that shouldn't be accessible
-  attr_accessible :error_message, :payer_id, :payee_id, :event_id, :payment_method_id, :amount_cents, :processor_fee_amount_cents, :our_fee_amount_cents, :due_at, :requested_at, :event_user_id, :paid_at, :item_users_attributes
+  attr_accessible :error_message, :payer_id, :payee_id, :event_id, :payment_method_id, :amount, :amount_cents, :processor_fee_amount_cents, :our_fee_amount_cents, :due_at, :requested_at, :event_user_id, :paid_at, :item_users_attributes
   attr_accessor :error_message
   monetize :amount_cents, allow_nil: true
   monetize :processor_fee_amount_cents, allow_nil: true
