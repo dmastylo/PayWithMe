@@ -19,6 +19,8 @@
 #  payment_method_id          :integer
 #  status                     :string(255)      default("new")
 #  status_type                :integer
+#  is_preapproval             :boolean          default(FALSE)
+#  preapproval_id             :string(255)
 #
 
 class Payment < ActiveRecord::Base
@@ -121,22 +123,34 @@ class Payment < ActiveRecord::Base
       gateway.redirect_url_for(response["payKey"])
     elsif payment_method_id == PaymentMethod::MethodType::WEPAY
       gateway = Payment.wepay_gateway
-      response = gateway.call('/checkout/create', payee.wepay_account.token_secret,
-      {
+      attributes = {
         account_id: payee.wepay_account.token,
         amount: self.amount.to_s,
         app_fee: self.our_fee_amount.to_s,
         fee_payer: "Payer",
         short_description: "Payment for #{self.event.title}",
-        type: "EVENT",
         redirect_uri: Rails.application.routes.url_helpers.event_url(self.event, success: 1),
         callback_uri: Rails.env.development?? nil : Rails.application.routes.url_helpers.ipn_payment_url(self)
-      })
+      }
 
-      self.transaction_id = response["checkout_id"]
+      if self.is_preapproval?
+        attributes[:period] = "once"
+        type = "preapproval"
+      else
+        attributes[:type] = "EVENT"
+        type = "checkout"
+      end
+
+      response = gateway.call("/#{type}/create", payee.wepay_account.token_secret, attributes)
+  
+      if self.is_preapproval?
+        self.preapproval_id = response["#{type}_id"]
+      else
+        self.transaction_id = response["#{type}_id"]
+      end
       self.save
 
-      response["checkout_uri"]
+      response["#{type}_uri"]
     end
   end
 
@@ -154,24 +168,30 @@ class Payment < ActiveRecord::Base
   # updating the payment information from the processor
   # to marking the event_user as paid
   def update!
-    return unless self.transaction_id.present? && self.event_user.present?
+    return unless (self.transaction_id.present? || self.preapproval_id.present?) && self.event_user.present?
 
     if self.payment_method_id == PaymentMethod::MethodType::WEPAY
       gateway = Payment.wepay_gateway
-      response = gateway.call('/checkout', self.payee.wepay_account.token_secret, { checkout_id: self.transaction_id })
+      if self.is_preapproval?
+        response = gateway.call('/preapproval', self.payee.wepay_account.token_secret, { preapproval_id: self.preapproval_id })
 
-      if response["error"].present?
-        # Handle error
+        raise response.to_yaml
       else
-        self.status = response["state"]
-        update_status_type
-        self.save
+        response = gateway.call('/checkout', self.payee.wepay_account.token_secret, { checkout_id: self.transaction_id })
 
-        if ["captured", "authorized"].include?(self.status)
-          self.event_user.pay!(self, transaction_id: self.transaction_id)
+        if response["error"].present?
+          # Handle error
         else
-          # Something needs to be done here to handle cancelled and other states
-          # self.event_user.unpay!(self)
+          self.status = response["state"]
+          update_status_type
+          self.save
+
+          if ["captured", "authorized"].include?(self.status)
+            self.event_user.pay!(self, transaction_id: self.transaction_id)
+          else
+            # Something needs to be done here to handle cancelled and other states
+            # self.event_user.unpay!(self)
+          end
         end
       end
     elsif self.payment_method_id == PaymentMethod::MethodType::PAYPAL
@@ -325,6 +345,10 @@ private
     if self.event.present?
       self.requested_at = self.event.created_at
       self.due_at = self.event.due_at
+
+      unless self.paid?
+        self.is_preapproval = self.event.use_preapprovals
+      end
     end
 
     update_fees

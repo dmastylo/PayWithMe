@@ -19,6 +19,8 @@
 #  payment_method_id          :integer
 #  status                     :string(255)      default("new")
 #  status_type                :integer
+#  is_preapproval             :boolean          default(FALSE)
+#  preapproval_id             :string(255)
 #
 
 require 'spec_helper'

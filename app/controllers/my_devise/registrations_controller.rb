@@ -53,6 +53,11 @@ class MyDevise::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def edit
+    super
+    session["user_return_to"] = edit_registration_path(current_user)
+  end
+
   def sign_up(resource_name, resource)
     sign_in(resource_name, resource)
   end

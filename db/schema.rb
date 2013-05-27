@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506193243) do
+ActiveRecord::Schema.define(:version => 20130527193205) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -71,8 +71,8 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.integer  "division_type"
     t.integer  "total_amount_cents"
     t.integer  "split_amount_cents"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.datetime "image_updated_at"
     t.string   "image_url"
     t.string   "guest_token"
+    t.boolean  "use_preapprovals",   :default => false
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -263,6 +264,8 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.integer  "payment_method_id"
     t.string   "status",                     :default => "new"
     t.integer  "status_type"
+    t.boolean  "is_preapproval",             :default => false
+    t.string   "preapproval_id"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"

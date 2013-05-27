@@ -148,7 +148,7 @@ class EventUser < ActiveRecord::Base
 
   class Status
     UNPAID = 0
-    PENDING = 1
+    PENDING = 1 # Includes preapproved state
     PAID = 2
   end
 

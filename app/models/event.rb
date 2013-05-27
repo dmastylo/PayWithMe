@@ -20,13 +20,14 @@
 #  image_updated_at   :datetime
 #  image_url          :string(255)
 #  guest_token        :string(255)
+#  use_preapprovals   :boolean          default(FALSE)
 #
 
 class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types, :items_attributes
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types, :items_attributes, :use_preapprovals
   attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true

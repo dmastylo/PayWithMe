@@ -42,6 +42,13 @@
       </div>
     </div>
 
+    <div class="control-group required">
+      <%= f.label :use_preapprovals, "Do you want money to not be collected until everyone has agreed to pay?" %>
+      <div class="controls">
+        <%= f.check_box :use_preapprovals %>
+      </div>
+    </div>
+
     <%= f.submit "#{submit_text(@event)} event and send invitations", class: "btn btn-primary btn-block push-top-small" %>
   </div>
 </div>
