@@ -7,16 +7,62 @@
 <% end %>
 
 <div class="container">
-  <div class="row push-bottom">
+  <div class="row push-bottom-small">
     <div class="span12">
       <h3>Where should your money go?</h3>
       <p>
-        We use third party payment processors that you already know to ensure security and satisfaction. All the money collected will go into your processor account, so you can take it out whenever you want. Simply connect your processor to your PayWithMe account by clicking on the logo below. We support the following processors:
+        We use third party payment processors that you already know to ensure security and satisfaction. All the money collected will go into your processor account, so you can take it out whenever you want. Simply answer the following questions and PayWithMe will select the payment processor that is best for you.
       </p>
     </div>
   </div>
   <div class="row push-bottom">
+    <div class="span12">
+      <h3>Do you want to to allow users to pay with credit cards?</h3>
+    </div>
+    <div class="span6">
+      <%= link_to "Yes, I want to accept <strong>credit cards</strong>.".html_safe, "#", class: "btn btn-block btn-primary btn-block", id: "btn-credit" %>
+    </div>
+    <div class="span6">
+      <%= link_to "No, I only want <strong>cash and checks</strong>.".html_safe, cash_linked_accounts_path, method: :post, class: "btn btn-block btn-primary btn-block" %>
+    </div>
+  </div>
+  <div class="row hidden push-bottom" id="option-paypal">
+    <div class="span12 push-bottom-small">
+      <h3>Do you have a verified PayPal account?</h3>
+      A verified PayPal account has a linked bank account.
+    </div>
+    <div class="span6">
+      <%= link_to "Yes, I have a <strong>verified PayPal account</strong>.".html_safe, "#", class: "btn btn-block btn-primary btn-block", id: "btn-paypal" %>
+    </div>
+    <div class="span6">
+      <%= link_to "No, I don't.", "#", class: "btn btn-block btn-primary btn-block", id: "btn-wepay" %>
+    </div>
+  </div>
+  <div class="row hidden push-bottom" id="option-use-paypal">
+    <div class="span9 push-bottom-small">
+      <h3>You should use PayPal!</h3>
+      If you already have a verified PayPal account, getting started with PayWithMe is even quicker. Click below to link your PayPal account.
+    </div>
     <div class="span3">
+      <%= link_to image_tag("paypal.png", class: "img-polaroid push-bottom-small img-full"), user_omniauth_authorize_path(:paypal) %>
+    </div>
+    <div class="span12">
+      <%= link_to "Use <strong>PayPal</strong>".html_safe, user_omniauth_authorize_path(:paypal), class: "btn btn-block btn-primary btn-block" %>
+    </div>
+  </div>
+  <div class="row hidden push-bottom" id="option-use-wepay">
+    <div class="span9 push-bottom-small">
+      <h3>You should use WePay!</h3>
+      WePay is the easiest want to use PayWithMe. Once you create your WePay account, you can view your balance and manage withdrawals directly from PayWithMe. Click below to create your WePay account.
+    </div>
+    <div class="span3">
+      <%= link_to image_tag("wepay.png", class: "img-polaroid push-bottom-small img-full"), user_omniauth_authorize_path(:wepay) %>
+    </div>
+    <div class="span12">
+      <%= link_to "Use <strong>WePay</strong>".html_safe, user_omniauth_authorize_path(:wepay), class: "btn btn-block btn-primary btn-block" %>
+    </div>
+  </div>
+<!--     <div class="span3">
       <%= link_to image_tag("wepay.png", class: "img-polaroid push-bottom-small img-full"), user_omniauth_authorize_path(:wepay) %>
       <%= link_to "Use <strong>WePay</strong>".html_safe, user_omniauth_authorize_path(:wepay), class: "btn btn-block btn-primary btn-block" %>
     </div>
@@ -30,7 +76,17 @@
     </div>
     <div class="span3">
       <%= link_to image_tag("cash.png", class: "img-polaroid push-bottom-small img-full"), cash_linked_accounts_path, method: :post %>
-      <%= link_to "Use <strong>Cash</strong>".html_safe, cash_linked_accounts_path, method: :post, class: "btn btn-block btn-primary btn-block" %>
-    </div>
+    </div> -->
   </div>
 </div>
+
+<% content_for(:before_body_end) do %>
+  <script type="text/javascript">
+    $(document).ready(function()
+    {
+      $("#btn-credit").click(function() { $("#option-paypal").show(); });
+      $("#btn-paypal").click(function() { $("#option-use-paypal").show(); $("#option-use-wepay").hide(); });
+      $("#btn-wepay").click(function() { $("#option-use-wepay").show(); $("#option-use-paypal").hide(); });
+    });
+  </script>
+<% end %>

@@ -28,10 +28,12 @@ class Event < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types, :items_attributes
+  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :division_type, :total_amount_cents, :total_amount, :split_amount_cents, :split_amount, :fundraiser_goal_cents, :fundraiser_goal, :minimum_donation, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :payment_methods_raw, :invitation_types, :items_attributes
   attr_accessor :due_at_date, :due_at_time, :image_type, :payment_methods_raw
   monetize :total_amount_cents, allow_nil: true
   monetize :split_amount_cents, allow_nil: true
+  monetize :fundraiser_goal_cents, allow_nil: true
+  monetize :minimum_donation_cents, allow_nil: true
   monetize :money_collected_cents, allow_nil: true
   has_attached_file :image
 
@@ -45,6 +47,8 @@ class Event < ActiveRecord::Base
   validates :due_at, date: { after: Proc.new { Time.now }, message: "can't be in the past" }, if: :due_at_changed?
   validates :total_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_total?
   validates :split_amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :divide_per_person?
+  validates :fundraiser_goal, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :fundraiser?
+  validates :minimum_donation, numericality: { greater_than_or_equal_to: 0, message: "must have be 0 or higher dollar amount" }, :allow_nil => true, if: :fundraiser?
   validate :amounts_not_changed, on: :update, if: :received_money?
 
   # Relationships
@@ -195,6 +199,10 @@ class Event < ActiveRecord::Base
     send_with_payment_method?(PaymentMethod::MethodType::WEPAY)
   end
 
+  def valid_donation? amount
+    amount.to_f >= minimum_donation_cents
+  end
+
   # Constants
   # ========================================================
   class DivisionType
@@ -309,7 +317,11 @@ class Event < ActiveRecord::Base
 
   def paid_percentage
     if self.money_collected > 0
-      self.money_collected * 100.0 / self.total_amount
+      if self.fundraiser?
+        self.money_collected * 100.0 / self.fundraiser_goal
+      else
+        self.money_collected * 100.0 / self.total_amount
+      end
     else
       0
     end
@@ -357,15 +369,16 @@ class Event < ActiveRecord::Base
     end
     self.members -= members_to_delete
 
-    add_members(members_to_set, exclude_from_notifications)
+    self.add_members(members_to_set, exclude_from_notifications)
+    self.reload
   end
 
   def remove_members(members_to_remove)
-    set_members(self.members - members_to_remove)
+    self.set_members(self.members - members_to_remove)
   end
 
   def remove_member(member_to_remove)
-    remove_members([member_to_remove])
+    self.remove_members([member_to_remove])
   end
 
   def self.send_invitation_emails(event_id)
@@ -512,6 +525,10 @@ private
       total_amount = nil
     end
 
+    if division_type != DivisionType::FUNDRAISE
+      fundraiser_goal = nil
+    end
+    
     if division_type != DivisionType::ITEMIZED
       self.items = []
     end
@@ -573,7 +590,7 @@ private
       errors.add(:split_amount, "cannot be changed after a member has paid")
     end
   end
-  
+
   def clear_notifications_and_news_items
     Notification.where(foreign_id: self.id, foreign_type: Notification::ForeignType::EVENT).destroy_all
     NewsItem.where(foreign_id: self.id, foreign_type: NewsItem::ForeignType::EVENT).destroy_all

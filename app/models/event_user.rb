@@ -77,6 +77,11 @@ class EventUser < ActiveRecord::Base
     copy_event_attributes
     current_cents = options[:amount_cents] || amount_cents
     payment_method = PaymentMethod.find_by_id(options[:payment_method] || PaymentMethod::MethodType::CASH)
+# <<<<<<< HEAD
+#     if !event.fundraiser? && current_cents > amount_cents
+#       return false
+#     end
+# =======
     unless self.event.fundraiser? || self.event.itemized?
       if current_cents > amount_cents
         return false
@@ -109,7 +114,9 @@ class EventUser < ActiveRecord::Base
     update_status
     send_nudges
     update_nudges_remaining
+
     self.save
+
     true
   end
 
@@ -124,6 +131,7 @@ class EventUser < ActiveRecord::Base
     update_paid_total_cents
     update_paid_with_cash
     update_status
+
     self.save
   end
 
@@ -135,6 +143,7 @@ class EventUser < ActiveRecord::Base
     update_paid_with_cash
     update_status
     update_nudges_remaining
+
     self.save
   end
 
@@ -160,8 +169,6 @@ class EventUser < ActiveRecord::Base
     else
       self.nudges_remaining = 0
     end
-
-    self.save
   end
 
   def update_status
@@ -177,6 +184,16 @@ class EventUser < ActiveRecord::Base
     end
   end
 
+  def set_to_zero!
+    if self.paid_total_cents == 0
+      self.paid_at = nil
+      self.paid_with_cash = true
+      self.status = 0
+      self.nudges_remaining = 0
+      self.save
+    end
+  end
+
 private
   def copy_event_attributes
     if self.event.present? && self.member?
@@ -184,6 +201,12 @@ private
     end
     unless self.event.fundraiser? || self.event.itemized?
       self.amount_cents = self.event.split_amount_cents
+    end
+  end
+
+  def copy_fundraiser_event_attributes
+    if self.event.present? && self.member?
+      self.due_at = self.event.due_at
     end
   end
 
@@ -200,10 +223,14 @@ private
       self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
     end
 
-    if self.paid_total_cents >= self.amount_cents
+    if event.fundraiser?
       self.paid_at = Time.now
     else
-      self.paid_at = nil
+      if self.paid_total_cents >= self.amount_cents
+        self.paid_at = Time.now
+      else
+        self.paid_at = nil
+      end
     end
   end
 

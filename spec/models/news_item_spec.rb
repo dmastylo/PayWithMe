@@ -19,7 +19,7 @@ describe NewsItem do
   before do
     event = FactoryGirl.create(:event)
     event.add_members(FactoryGirl.create_list(:user, 10))
-    NewsItem.create_for_new_event_member(event, FactoryGirl.create(:user))
+    NewsItem.create_for_new_event_member(event.id, [FactoryGirl.create(:user).id])
     @news_item = NewsItem.last
   end
   subject { @news_item }
@@ -60,7 +60,7 @@ describe NewsItem do
       describe "new members" do
         before do
           @members.each do |member|
-            NewsItem.create_for_new_event_member(@event, member)
+            NewsItem.create_for_new_event_member(@event.id, [member.id])
           end
           @news_item = @members.last.news_items.last
         end
@@ -76,7 +76,7 @@ describe NewsItem do
         before do
           @members.each do |member|
             message = FactoryGirl.create(:message, user: member, event: @event)
-            NewsItem.create_for_new_messages(@event, member)
+            NewsItem.create_for_new_messages(@event.id, member.id)
           end
           @news_item = @members.last.news_items.last
         end
@@ -100,7 +100,7 @@ describe NewsItem do
       describe "new members" do
         before do
           @members.each do |member|
-            NewsItem.create_for_new_group_member(@group, member)
+            NewsItem.create_for_new_group_member(@group.id, [member.id])
           end
           @news_item = @members.last.news_items.last
         end

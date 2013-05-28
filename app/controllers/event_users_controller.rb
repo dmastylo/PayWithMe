@@ -1,8 +1,8 @@
 class EventUsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :event_public_or_user_organizes_event, only: [:create]
-  before_filter :user_owns_event_user, only: [:pay, :pin]
-  before_filter :valid_payment_method, only: [:pay]
+  before_filter :user_owns_event_user, only: [:pay, :pay_fundraiser, :pin]
+  before_filter :valid_payment_method, only: [:pay, :pay_fundraiser]
   before_filter :user_organizes_event, only: [:paid, :unpaid]
   before_filter :user_in_event, only: [:nudge]
   before_filter :event_owns_event_user, only: [:paid, :unpaid, :nudge]
@@ -29,6 +29,8 @@ class EventUsersController < ApplicationController
     redirect_to payment.url
   end
 
+  # Mark user as paid in admin dashboard
+  # TODO
   def paid
     if params[:event_user][:paid_total].present? && params[:event_user][:paid_total].to_f
       paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
@@ -37,19 +39,30 @@ class EventUsersController < ApplicationController
         if params[:event_user][:paid_total].to_f < 0
           @error_message = "Enter a positive number."
         else
-          @event_user.payments.destroy_all
           paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
         end
-      elsif (params[:event_user][:paid_total].to_f * 100.0) > @event.split_amount_cents
+      elsif (!@event.fundraiser? && (params[:event_user][:paid_total].to_f * 100.0) > @event.split_amount_cents)
         @error_message = "Enter an amount less than the required event amount."
       end
     else
       paid_total_cents = nil
     end
 
-    unless @error_message
-      payment = @event_user.create_payment(amount_cents: paid_total_cents)
-      @event_user.pay!(payment)
+    if !@error_message
+      if params[:event_user][:paid_total].to_f > 0
+        if paid_total_cents < 0
+          @event_user.unpay_cash_payments!
+          @event_user.reload
+          payment = @event_user.create_payment(amount_cents: params[:event_user][:paid_total].to_f * 100.0)
+        else
+          payment = @event_user.create_payment(amount_cents: paid_total_cents)
+        end
+
+        @event_user.pay!(payment)
+      else params[:event_user][:paid_total].to_f == 0
+        @event_user.unpay_cash_payments!
+        @event_user.set_to_zero!
+      end
     end
 
     respond_to do |format|
@@ -92,7 +105,7 @@ private
     
     if @event.organizer != current_user
       # If user doesn't organize event, it must be public and the user_id must be equal to current_user
-      if @event.public? || event_allows_guest?
+      if @event.public? 
         if (!@event.members.include?(current_user) && params[:event_user][:user_id].to_i != current_user.id)
           flash[:error] = "Trying to hack...?" #{params[:event_user][:user_id]} #{current_user.id}"
           redirect_to root_path
