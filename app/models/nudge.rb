@@ -37,20 +37,20 @@ class Nudge < ActiveRecord::Base
   end
 
   def G?
-    rating == NudgeRating::G
+    rating == Rating::G
   end
 
   def PG13?
-    rating == NudgeRating::PG13
+    rating == Rating::PG13
   end
 
   def R?
-    rating == NudgeRating::R
+    rating == Rating::R
   end
 
   # Constants
   # ========================================================
-  class NudgeRating
+  class Rating
     G = 1
     PG13 = 2
     R = 3
