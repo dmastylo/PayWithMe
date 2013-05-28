@@ -147,9 +147,9 @@
           </div>
           <div class="push-bottom-small">
             Type of nudge:
-            <a href="#" id="G" class="btn">G</a>
-            <a href="#" id="PG13" class="btn">PG13</a>
-            <a href="#" id="R" class="btn">R</a>
+            <a href="#" class="btn rating-button" data-rating="G">G</a>
+            <a href="#" class="btn rating-button" data-rating="PG13">PG13</a>
+            <a href="#" class="btn rating-button" data-rating="R">R</a>
           </div>
         <% end %>
         <% if @event.paying_members.any? %>
@@ -188,6 +188,8 @@
   <script type="text/javascript">
     $(document).ready(function()
     {
+      var ratingRegEx = /([?&]rating)=([^#&]*)/g;
+
       $('.message').autoSize({
         fixed: '.profile-image',
         fluid: '.body'
@@ -199,41 +201,16 @@
         offset: 1
       });
 
-      $('#G').click(function(e)
+      $('.rating-button').click(function(e)
       {
         e.preventDefault();
-        var regEx = /([?&]rating)=([^#&]*)/g;
-        $('.btn-nudge').each(function()
-        {
-          $this = $(this);
-          thisUrl = $this.attr("href");
-          var newUrl = thisUrl.replace(regEx, '$1=' + "G");
-          $this.prop("href", newUrl);
-        });
-      });
+        var rating = $(this).data("rating");
 
-      $('#PG13').click(function(e)
-      {
-        e.preventDefault();
-        var regEx = /([?&]rating)=([^#&]*)/g;
         $('.btn-nudge').each(function()
         {
           $this = $(this);
           thisUrl = $this.attr("href");
-          var newUrl = thisUrl.replace(regEx, '$1=' + "PG-13");
-          $this.prop("href", newUrl);
-        });
-      });
-
-      $('#R').click(function(e)
-      {
-        e.preventDefault();
-        var regEx = /([?&]rating)=([^#&]*)/g;
-        $('.btn-nudge').each(function()
-        {
-          $this = $(this);
-          thisUrl = $this.attr("href");
-          var newUrl = thisUrl.replace(regEx, '$1=' + "R");
+          var newUrl = thisUrl.replace(ratingRegEx, '$1=' + rating);
           $this.prop("href", newUrl);
         });
       });
