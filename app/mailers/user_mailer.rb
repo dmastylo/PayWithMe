@@ -1,6 +1,7 @@
 class UserMailer < ActionMailer::Base
   default from: "PayWithMe <#{Figaro.env.gmail_username}>"
   helper :application
+  include UsersHelper
   layout 'mail'
 
   def signup_confirmation(user)
@@ -51,7 +52,7 @@ class UserMailer < ActionMailer::Base
     @user = event_user.user
     @event = event_user.event
 
-    mail to: format_address_to(organizer), subject: "#{@event.title}: #{@user.first_name} is Not Participating"
+    mail to: format_address_to(organizer), subject: "#{@event.title}: #{user_name @user} is Not Participating"
   end
 
 private

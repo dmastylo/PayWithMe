@@ -202,11 +202,8 @@ class EventUser < ActiveRecord::Base
   end
 
   def reject_invite!
-    # Send email to orgainzer
-    UserMailer.delay.not_participating_notification(self, self.event.organizer).deliver
-    
-    # Send notification to organizer
-    Notification.delay.create_for_not_participating(self.event, self.user)
+    UserMailer.not_participating_notification(self, self.event.organizer).deliver
+    Notification.create_for_not_participating(self.event, self.user)
 
     self.destroy
   end
