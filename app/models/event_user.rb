@@ -202,10 +202,10 @@ class EventUser < ActiveRecord::Base
   end
 
   def reject_invite!
-    UserMailer.not_participating_notification(self, self.event.organizer).deliver
-    Notification.create_for_not_participating(self.event, self.user)
+    EventUser.delay.send_reject_invitation_email(self)
+    Notification.delay.create_for_not_participating(self.event, self.user)
 
-    self.destroy
+    self.delay.destroy
   end
 
 private
@@ -254,6 +254,10 @@ private
         nudge.send_nudge_email_if_paid
       end
     end
+  end
+
+  def self.send_reject_invitation_email(event_user)
+    UserMailer.not_participating_notification(event_user, event_user.event.organizer).deliver
   end
 
 end
