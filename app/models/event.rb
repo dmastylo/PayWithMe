@@ -379,15 +379,16 @@ class Event < ActiveRecord::Base
     end
     self.members -= members_to_delete
 
-    add_members(members_to_set, exclude_from_notifications)
+    self.add_members(members_to_set, exclude_from_notifications)
+    self.reload
   end
 
   def remove_members(members_to_remove)
-    set_members(self.members - members_to_remove)
+    self.set_members(self.members - members_to_remove)
   end
 
   def remove_member(member_to_remove)
-    remove_members([member_to_remove])
+    self.remove_members([member_to_remove])
   end
 
   def self.send_invitation_emails(event_id)
