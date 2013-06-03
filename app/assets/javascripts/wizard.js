@@ -29,6 +29,19 @@
       $("#event_division_type_"+$("#event_division_type").val()).show();
       $("#event_division_type_"+$("#event_division_type").val()).addClass("selected");
 
+      // Later make this more general
+      $("#event_send_tickets").change(function()
+      {
+        if($(this).is(":checked"))
+        {
+          $("#event_send_tickets_option").show();
+        }
+        else
+        {
+          $("#event_send_tickets_option").hide();
+        }
+      })
+
       var found_error = false;
       var that = this;
       this.$element.find('.wizard-card').each(function()

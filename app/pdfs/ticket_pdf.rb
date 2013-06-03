@@ -48,16 +48,43 @@ class TicketPdf < Prawn::Document
     # Draw main ticket
     self.fill_color "000000"
     self.image event_image, fit: [180, 150], padding: @options[:padding], at: [@options[:padding], @options[:height] - @options[:padding]]
-    
+
     self.y = @options[:height] - @options[:padding]
+    if @event.location_address.present? && @event.location_title.present?
+      self.y += 15
+    elsif @event.location_address.present? || @event.location_address.present?
+      self.y += 10
+    end
     self.text_box @event.title, at: [180, self.y], width: 290, height: 30, align: :center, overflow: :shrink_to_fit, min_font_size: 20, size: 26, style: :bold, valign: :center
     self.y -= 30
 
     self.text_box "Organized by: #{@event.organizer.name}", at: [180, self.y], align: :center, width: 290, height: 16, size: 14, min_font_size: 12, valign: :center
-    self.y -= 30
+    if @event.location_address.present? || @event.location_title.present?
+      self.y -= 30
+    else
+      self.y -= 35
+    end
     
-    self.text_box @event.due_at.to_s(:ordinal), at: [180, self.y], width: 290, height: 30, align: :center, overflow: :shrink_to_fit, min_font_size: 20, size: 20, style: :bold, valign: :center
-    self.y -= 45
+    if @event.location_address.present? || @event.location_title.present?
+      y_after = 50
+      if @event.location_title.present?
+        self.text_box "<b>Location:</b> #{@event.location_title}", at: [180, self.y], width: 290, height: 16, size: 14, min_font_size: 12, overflow: :shrink_to_fit, valign: :center, align: :center, inline_format: true
+        self.y -= 15
+        y_after -= 5
+      end
+      if @event.location_address.present?
+        self.text_box "<b>Address:</b> #{@event.location_address}", at: [180, self.y], width: 290, height: 16, size: 14, min_font_size: 12, overflow: :shrink_to_fit, valign: :center, align: :center, inline_format: true
+        self.y -= 15
+        y_after -= 5
+      end
+      self.y -= 10
+
+      self.text_box @event.due_at.to_s(:ordinal), at: [180, self.y], width: 290, height: 30, align: :center, overflow: :shrink_to_fit, min_font_size: 20, size: 16, style: :bold, valign: :center
+      self.y -= y_after
+    else
+      self.text_box @event.due_at.to_s(:ordinal), at: [180, self.y], width: 290, height: 30, align: :center, overflow: :shrink_to_fit, min_font_size: 20, size: 20, style: :bold, valign: :center
+      self.y -= 50
+    end
 
     self.text_box "<b>Attendee:</b> #{UsersController.helpers.user_name(@event_user.user)}", at: [180, self.y], width: 290, align: :center, inline_format: true, height: 16, size: 14, min_font_size: 12, valign: :center
     self.y -= 20
@@ -216,13 +243,13 @@ class TicketPdf < Prawn::Document
 
   # Returns image path as string
   def event_image
-    if @event.image_type == :upload
-      open(@event.image.url)
-    elsif @event.image_type == :url
-      open(@event.image_url)
-    elsif @event.image_type == :default_image
+    # if @event.image_type == :upload
+    #  open(@event.image.url)
+    # elsif @event.image_type == :url
+      # open(@event.image_url)
+    # elsif @event.image_type == :default_image
       default_image
-    end
+    # end
   end
 
   # Return vertical paywithme image path as string

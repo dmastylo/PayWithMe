@@ -19,8 +19,10 @@
 #  image_file_size    :integer
 #  image_updated_at   :datetime
 #  image_url          :string(255)
-#  send_tickets       :boolean          default(FALSE)
 #  guest_token        :string(255)
+#  send_tickets       :boolean          default(FALSE)
+#  location_title     :string(255)
+#  location_address   :string(255)
 #
 
 require 'spec_helper'

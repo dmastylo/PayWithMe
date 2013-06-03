@@ -1,0 +1,31 @@
+<div class="wizard-card" id="wizard-card-4">
+  <div class="wizard-card-title"><h3>Step 4: Extra Features</h3></div>
+  <div class="wizard-card-body">
+    <div class="control-group required">
+      <div class="controls">
+        <label class="checkbox">
+          <%= f.check_box :send_tickets %> Do you want members to be emailed a ticket to the event when they pay? (optional)
+        </label>
+      </div>
+
+      <div class="btn_group_option" id="event_send_tickets_option">
+        <div class="control-group optional push-top-small">
+          <%= f.label :location_title, "What is the name of the location of the event? (optional)" %>
+          <div class="controls">
+            <%= f.text_field :location_title, class: "input-block-level", placeholder: "My House" %>
+          </div>
+        </div>
+
+        <div class="control-group optional">
+          <%= f.label :location_address, "What is the address of the location of the event? (optional)" %>
+          <div class="controls">
+            <%= f.text_field :location_address, class: "input-block-level", placeholder: "125 Main Street, Troy NY, 12180" %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <%= f.submit "#{submit_text(@event)} event and send invitations", class: "btn btn-primary btn-block push-top-small" %>
+  </div>
+</div>

@@ -2,6 +2,7 @@ class EventUsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :event_public_or_user_organizes_event, only: [:create]
   before_filter :user_owns_event_user, only: [:pay, :pin, :ticket]
+  before_filter :event_user_has_paid, only: [:ticket]
   before_filter :valid_payment_method, only: [:pay]
   before_filter :user_organizes_event, only: [:paid, :unpaid]
   before_filter :user_in_event, only: [:nudge]
@@ -137,6 +138,13 @@ private
   def valid_payment_method
     if PaymentMethod.find_by_id(params[:method]).nil? || !@event_user.event.send_with_payment_method?(params[:method].to_i)
       flash[:error] = "That payment method is no longer accepted."
+      redirect_to root_path
+    end
+  end
+
+  def event_user_has_paid
+    if !@event_user.paid?
+      flash[:error] = "You cannot view your ticket until you have paid for the event. If you have recently paid, it may take a few minutes for your payment to be recognized. If a few minutes have passed, please contact Support at <a href=\"mailto:support@paywith.me\">support@paywith.me</a>".html_safe
       redirect_to root_path
     end
   end

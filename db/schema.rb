@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130513170616) do
+ActiveRecord::Schema.define(:version => 20130602160050) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -87,6 +87,8 @@ ActiveRecord::Schema.define(:version => 20130513170616) do
     t.string   "image_url"
     t.string   "guest_token"
     t.boolean  "send_tickets",       :default => false
+    t.string   "location_title"
+    t.string   "location_address"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
