@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130605050955) do
+ActiveRecord::Schema.define(:version => 20130605221434) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -74,9 +74,9 @@ ActiveRecord::Schema.define(:version => 20130605050955) do
     t.datetime "due_at"
     t.datetime "created_at",                                :null => false
     t.datetime "updated_at",                                :null => false
-    t.integer  "division_type"
+    t.integer  "collection_type"
     t.integer  "total_cents"
-    t.integer  "split_cents"
+    t.integer  "per_person_cents"
     t.integer  "organizer_id"
     t.integer  "privacy_type"
     t.string   "slug"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(:version => 20130605050955) do
     t.boolean  "send_tickets",           :default => false
     t.string   "location_title"
     t.string   "location_address"
-    t.integer  "fundraiser_cents"
+    t.integer  "donation_goal_cents"
     t.integer  "minimum_donation_cents"
   end
 

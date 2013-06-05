@@ -1,6 +1,6 @@
 class RemindersController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :user_organizes_event
+  before_filter :ensure_user_organizes_event!
 
   def new
     @reminder = @event.reminders.new

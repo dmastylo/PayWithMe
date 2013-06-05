@@ -1,9 +1,9 @@
 class EventUsersController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :event_public_or_user_organizes_event, only: [:create]
+  before_filter :event_public_or_ensure_user_organizes_event!, only: [:create]
   before_filter :user_owns_event_user, only: [:pay, :pay_fundraiser, :pin]
   before_filter :valid_payment_method, only: [:pay, :pay_fundraiser]
-  before_filter :user_organizes_event, only: [:paid, :unpaid]
+  before_filter :ensure_user_organizes_event!, only: [:paid, :unpaid]
   before_filter :user_in_event, only: [:nudge]
   before_filter :event_owns_event_user, only: [:paid, :unpaid, :nudge]
   before_filter :can_nudge_user, only: [:nudge]
@@ -41,7 +41,7 @@ class EventUsersController < ApplicationController
         else
           paid_total_cents = params[:event_user][:paid_total].to_f * 100.0 - @event_user.paid_total_cents
         end
-      elsif (!@event.fundraiser? && (params[:event_user][:paid_total].to_f * 100.0) > @event.split_cents)
+      elsif (!@event.fundraiser? && (params[:event_user][:paid_total].to_f * 100.0) > @event.per_person_cents)
         @error_message = "Enter an amount less than the required event amount."
       end
     else
@@ -99,7 +99,7 @@ private
     redirect_to root_path unless @event_user.present?
   end
 
-  def event_public_or_user_organizes_event
+  def event_public_or_ensure_user_organizes_event!
     @event = Event.find(params[:event_id] || params[:id])
     @user = User.find(params[:event_user][:user_id])
     

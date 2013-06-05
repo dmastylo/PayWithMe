@@ -1,9 +1,13 @@
+# Ensure before_filters make sure that something is true, exclamation indicates that they redirect if condition fails
+# Set before_filters set any properties
+# Check before_filters (none here) check for global conditions, such as a global parameter appearing
+
 class ApplicationController < ActionController::Base
   protect_from_forgery
   before_filter :check_for_stub_token
   before_filter :check_for_event_token
-  after_filter :user_activity, if: :signed_in?
-  around_filter :user_time_zone, if: :signed_in?
+  after_filter :set_user_last_seen_to_now, if: :signed_in?
+  around_filter :wrapper_if_signed_in, if: :signed_in?
   use_vanity :current_user
 
   def default_url_options
@@ -45,12 +49,12 @@ protected
     end
   end
 
-  def user_in_event_or_public
+  def ensure_user_can_view_event!
     @event = Event.find(params[:event_id] || params[:id])
     (@event.present? && @event.public?) || user_in_event
   end
 
-  def user_organizes_event
+  def ensure_user_organizes_event!
     @event = current_user.organized_events.find(params[:event_id] || params[:id])
 
     if @event.nil?
@@ -58,7 +62,7 @@ protected
     end
   end
 
-  def user_not_stub
+  def ensure_user_is_not_stub!
     if current_user.stub?
       flash[:error] = "A full account is required in order to make an event."
       session[:user_return_to] = url_for(port: false)
@@ -104,11 +108,11 @@ private
     end
   end
 
-  def user_activity
+  def set_user_last_seen_to_now
     current_user.update_attribute(:last_seen, Time.now)
   end
 
-  def user_time_zone(&block)
+  def wrapper_if_signed_in(&block)
     Time.use_zone(current_user.time_zone, &block)
   end
 

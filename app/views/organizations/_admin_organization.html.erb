@@ -1,7 +1,7 @@
 <tr>
 	<td><%= organization.name %></td>
 	<td><%= organization.contact %></td>
-	<td><%= organization.split? ? "Yes" : "No" %></td>
+	<td><%= organization.per_person? ? "Yes" : "No" %></td>
 	<td><%= organization.deal? ? "Yes" : "No" %></td>
 	<td><%= organization.email %></td>
 	<% if full %>

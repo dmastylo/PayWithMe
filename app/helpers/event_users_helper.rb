@@ -15,6 +15,6 @@ module EventUsersHelper
     else
       payment_verb = "Pay"
     end
-    "#{payment_verb} <span class=\"pay-total\">#{humanized_money_with_symbol event_user.event.split}</span> With Credit or Debit Card".html_safe
+    "#{payment_verb} <span class=\"pay-total\">#{humanized_money_with_symbol event_user.event.per_person}</span> With Credit or Debit Card".html_safe
   end
 end

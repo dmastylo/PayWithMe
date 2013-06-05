@@ -1,7 +1,7 @@
 class MessagesController < ApplicationController
   before_filter :user_in_event
   before_filter :user_on_page
-  before_filter :clear_relevant_notifications
+  before_filter :set_notification_status_to_read
 
   def index
     if params[:event_id] && params[:after]
@@ -42,7 +42,7 @@ private
     end
   end
 
-  def clear_relevant_notifications
+  def set_notification_status_to_read
     current_user.notifications.where('foreign_id = ?', @event.id).each do |notification|
       notification.read! if notification.message?
     end

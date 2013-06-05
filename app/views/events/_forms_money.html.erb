@@ -2,14 +2,14 @@
   <div class="wizard-card-title"><h3>Step 1: Money Collection</h3></div>
   <div class="wizard-card-body">
     <div class="control-group required">
-      <%= f.label :division_type, "What is easiest for describing how much you are collecting? (required)" %>
+      <%= f.label :collection_type, "What is easiest for describing how much you are collecting? (required)" %>
       <div class="controls">
-        <%= f.select :division_type, options_for_select([
+        <%= f.select :collection_type, options_for_select([
           ["I need a total amount of money. For example: $500 for a new stereo.", 1],
           ["I need a certain amount from each person. For example: $30 for new uniforms.", 2],
           ["Anyone can pay as much as they want. For example, a fundraiser.", 3],
           ["People choose which items and how many they want. For example: concert tickets, t-shirts, hats.", 4]
-        ], @event.division_type), {}, { class: 'input-block-level' } %>
+        ], @event.collection_type), {}, { class: 'input-block-level' } %>
         
         <div class="event_division_type_option btn_group_option" id="event_division_type_1">
           <%= f.label :total, "How much do you need in total? (required)" %>
@@ -20,18 +20,18 @@
         </div>
 
         <div class="event_division_type_option btn_group_option" id="event_division_type_2">
-          <%= f.label :split, "How much do you need each person to pay? (required)" %>
+          <%= f.label :per_person, "How much do you need each person to pay? (required)" %>
           <div class="input-prepend autosize">
             <span class="add-on">$</span>
-            <%= f.text_field :split, class: "input-block-level" %>
+            <%= f.text_field :per_person, class: "input-block-level" %>
           </div>
         </div>
 
         <div class="event_division_type_option btn_group_option push-bottom-small" id="event_division_type_3">
-          <%= f.label :goal, "What is the goal amount for the fundraiser? (required)" %>
+          <%= f.label :donation_goal, "What is the goal amount for the fundraiser? (required)" %>
           <div class="input-prepend autosize push-bottom-small">
             <span class="add-on">$</span>
-            <%= f.text_field :goal, class: "input-block-level" %>
+            <%= f.text_field :donation_goal, class: "input-block-level" %>
           </div>
 
           <%= f.label :minimum_donation, "What is the minimum amount that someone can donate? (optional)" %>

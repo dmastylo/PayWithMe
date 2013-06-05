@@ -13,7 +13,7 @@
   </td>
   <% if full %>
     <td>
-      <% if event.divide_total? %>
+      <% if event.collecting_by_total?? %>
         <span rel="tooltip" title="Divide Total">DT</span>
       <% elsif event.divide_per_person? %>
         <span rel="tooltip" title="Divide Per Person">DPP</span>
@@ -35,7 +35,7 @@
       <% if event.fundraiser? %>
         n/a
       <% else %>
-        <%= humanized_money_with_symbol event.split %>
+        <%= humanized_money_with_symbol event.per_person %>
       <% end %>
     </td>
   <% end %>

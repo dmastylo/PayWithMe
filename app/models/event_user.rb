@@ -189,7 +189,7 @@ private
       self.due_at = self.event.due_at
     end
     unless self.event.fundraiser? || self.event.itemized?
-      self.amount_cents = self.event.split_cents
+      self.amount_cents = self.event.per_person_cents
     end
   end
 

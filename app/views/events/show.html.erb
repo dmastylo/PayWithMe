@@ -61,7 +61,7 @@
           <div class="quarter"><strong>Total Goal</strong></div>
           <div class="three-quarters"><%= humanized_money_with_symbol(@event.total) %></div>
           <div class="quarter"><strong>Per User Goal</strong></div>
-          <div class="three-quarters"><%= humanized_money_with_symbol(@event.split) %></div>
+          <div class="three-quarters"><%= humanized_money_with_symbol(@event.per_person) %></div>
         <% end %>
         <div class="quarter"><strong>Money Due</strong></div>
         <div class="three-quarters"><%= @event.due_at.to_s(:ordinal) %></div>
@@ -85,7 +85,7 @@
               </div>
             <% end %>
           </div>
-        <% elsif @event.divide_total? || @event.divide_per_person? %>
+        <% elsif @event.collecting_by_total?? || @event.divide_per_person? %>
           <%= event_user_pay_button(@event_user) %>
         <% elsif @event.itemized? %>
           <h3>Available Items</h3>

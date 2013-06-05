@@ -10,7 +10,7 @@
 #  updated_at             :datetime         not null
 #  division_type          :integer
 #  total_cents            :integer
-#  split_cents            :integer
+#  per_person_cents            :integer
 #  organizer_id           :integer
 #  privacy_type           :integer
 #  slug                   :string(255)
@@ -43,8 +43,8 @@ describe Event do
      :updated_at,
      :total_cents,
      :total,
-     :split_cents,
-     :split,
+     :per_person_cents,
+     :per_person,
      :organizer,
      :members,
      :division_type,
@@ -61,17 +61,17 @@ describe Event do
     describe "using total division_type" do
       it { should allow_value("$1234").for(:total) }
       it { should_not allow_value("abcd").for(:total) }
-      it { should allow_value("$1234").for(:split) }
-      it { should allow_value("abcd").for(:split) }
+      it { should allow_value("$1234").for(:per_person) }
+      it { should allow_value("abcd").for(:per_person) }
     end
 
-    describe "using split division_type" do
-      before { @event.division_type = Event::DivisionType::SPLIT }
+    describe "using per_person division_type" do
+      before { @event.division_type = Event::DivisionType::per_person }
 
       it { should allow_value("$1234").for(:total) }
       it { should allow_value("abcd").for(:total) }
-      it { should allow_value("$1234").for(:split) }
-      it { should_not allow_value("abcd").for(:split) }
+      it { should allow_value("$1234").for(:per_person) }
+      it { should_not allow_value("abcd").for(:per_person) }
     end
 
     [:division_type, :privacy_type].each do |attribute|
@@ -315,16 +315,16 @@ describe Event do
 
     describe "when setting amount per person" do
       before do
-        @event = FactoryGirl.create(:event, division_type: Event::DivisionType::SPLIT, split: amount)
+        @event = FactoryGirl.create(:event, division_type: Event::DivisionType::per_person, per_person: amount)
         @event.add_members FactoryGirl.create_list(:user, 10)
       end
 
-      it "should have the correct split_cents" do
-        @event.split.should == amount / @event.paying_member_count
+      it "should have the correct per_person_cents" do
+        @event.per_person.should == amount / @event.paying_member_count
       end
 
-      # it "should have the correct split_cents" do
-        # receive_amount = ((@event.split_cents - Figaro.env.fee_static.to_f * 100.0) * (1.0 - Figaro.env.fee_rate.to_f)).round / 100.0
+      # it "should have the correct per_person_cents" do
+        # receive_amount = ((@event.per_person_cents - Figaro.env.fee_static.to_f * 100.0) * (1.0 - Figaro.env.fee_rate.to_f)).round / 100.0
         # receive_amount.should == amount
       # end
     end
@@ -374,8 +374,8 @@ describe Event do
   #   it { should respond_to(:fee_type) }
   #   it { should respond_to(:total) }
   #   it { should respond_to(:total_cents) }
-  #   it { should respond_to(:split) }
-  #   it { should respond_to(:split_cents) }
+  #   it { should respond_to(:per_person) }
+  #   it { should respond_to(:per_person_cents) }
 
   #   describe "without modifications" do
   #     before do
@@ -392,8 +392,8 @@ describe Event do
   #         end
 
   #         it "should have nonzero entries" do
-  #           @event.split_cents.should_not be_nil
-  #           @event.split_cents.should_not == 0
+  #           @event.per_person_cents.should_not be_nil
+  #           @event.per_person_cents.should_not == 0
   #           @event.total_cents.should_not be_nil
   #           @event.total_cents.should_not == 0
   #           @event.receive_amount_cents.should_not be_nil
@@ -402,13 +402,13 @@ describe Event do
   #           @event.send_amount_cents.should_not == 0
   #         end
 
-  #         it "should have correct split" do
-  #           @event.split_cents.should == @event.total_cents / @event.paying_members.count
+  #         it "should have correct per_person" do
+  #           @event.per_person_cents.should == @event.total_cents / @event.paying_members.count
   #         end
 
-  #         it "should have equal split and send_amount" do
-  #           @event.split.should == @event.send_amount
-  #           @event.split_cents.should == @event.send_amount_cents
+  #         it "should have equal per_person and send_amount" do
+  #           @event.per_person.should == @event.send_amount
+  #           @event.per_person_cents.should == @event.send_amount_cents
   #         end
 
   #         it "should have correct receive_amount" do
@@ -424,8 +424,8 @@ describe Event do
   #           @event.save
   #         end
 
-  #         it "should have correct split" do
-  #           @event.split_cents.should == @event.total_cents / @event.paying_members.count
+  #         it "should have correct per_person" do
+  #           @event.per_person_cents.should == @event.total_cents / @event.paying_members.count
   #         end
 
   #         it "should have correct send_amount" do
@@ -440,10 +440,10 @@ describe Event do
   #         end
 
   #         # it "should have equal total calculated from send_amount and receive_amount" do
-  #         #   split = @event.members.count * @event.send_amount_cents
+  #         #   per_person = @event.members.count * @event.send_amount_cents
   #         #   total = @event.receive_amount_cents
             
-  #         #   split.should == total
+  #         #   per_person.should == total
   #         # end
   #       end
   #     end
@@ -457,10 +457,10 @@ describe Event do
   #       it_behaves_like "division_type calculations"
   #     end
 
-  #     describe "with split amount set" do
+  #     describe "with per_person amount set" do
   #       before do
-  #         @event.split = "$10.00"
-  #         @event.division_type = Event::DivisionType::Split
+  #         @event.per_person = "$10.00"
+  #         @event.division_type = Event::DivisionType::per_person
   #       end
 
   #       it_behaves_like "division_type calculations"

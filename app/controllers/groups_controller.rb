@@ -1,9 +1,9 @@
 class GroupsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :user_not_stub, only: [:new, :create]
+  before_filter :ensure_user_is_not_stub!, only: [:new, :create]
   before_filter :user_in_group, only: [:show]
   before_filter :user_organizes_group, only: [:edit, :update, :delete, :destroy]
-  before_filter :clear_relevant_notifications, only: [:show], if: :current_user
+  before_filter :set_notification_status_to_read, only: [:show], if: :current_user
 
   def index
     @groups = current_user.member_groups
@@ -81,7 +81,7 @@ class GroupsController < ApplicationController
   end
 
 private
-  def clear_relevant_notifications
+  def set_notification_status_to_read
     current_user.notifications.where('foreign_id = ?', @group.id).each do |notification|
       notification.read!
     end

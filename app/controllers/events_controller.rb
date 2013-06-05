@@ -1,12 +1,12 @@
 class EventsController < ApplicationController
   before_filter :authenticate_user!, except: [:show]
-  before_filter :user_not_stub, only: [:new, :create]
-  before_filter :user_in_event_or_public, only: [:show]
-  before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin, :guests]
-  before_filter :event_user_visit_true, only: [:show]
-  before_filter :check_for_payers, only: [:destroy]
-  before_filter :clear_relevant_notifications, only: [:show], if: :current_user
-  before_filter :update_event_user_status, only: [:show]
+  before_filter :ensure_user_is_not_stub!, only: [:new, :create]
+  before_filter :ensure_user_can_view_event!, only: [:show]
+  before_filter :ensure_user_organizes_event!, only: [:edit, :delete, :destroy, :update, :admin, :guests]
+  before_filter :ensure_event_is_empty!, only: [:destroy]
+  before_filter :set_event_user_visit_to_true, only: [:show]
+  before_filter :set_notification_status_to_read, only: [:show], if: :current_user
+  before_filter :set_event_user_status, only: [:show]
 
   def index
     @upcoming_events = current_user.upcoming_events
@@ -27,9 +27,9 @@ class EventsController < ApplicationController
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.count
     @message = Message.new
-    @event_user = @event.event_user(current_user)
+    @event_user = @event.event_user_of(current_user)
     if @event_user.present?
-      @payment = @event_user.create_payment if (@event.itemized? || @event.fundraiser?) && !@event_user.paid_at.present?
+      @payment = @event_user.create_payment if @event.collecting_by_item? or @event.collecting_by_donation? or event_user.unpaid?
     else
       @event_user = EventUser.new
     end
@@ -101,8 +101,7 @@ class EventsController < ApplicationController
   def admin
     @event = Event.find_by_id(@event.id, include: [{ event_users: :user }] )
 
-    if @event.itemized?
-      @items = {}
+    if @event.collecting_by_item?
       @event.items.each do |item|
         item.total_quantity = 0
         @items[item.id] = item
@@ -134,21 +133,21 @@ class EventsController < ApplicationController
   end
 
 private
-  def event_user_visit_true
+  def set_event_user_visit_to_true
     if @event.members.include?(current_user)
       @event_user = @event.event_users.find_by_user_id(current_user.id)
       @event_user.visit_event!
     end
   end
 
-  def check_for_payers
+  def ensure_event_is_empty!
     unless @event.paid_members.empty?
       flash[:error] = "You can't delete an event with paid members!"
       redirect_to admin_event_path(@event)
     end
   end
 
-  def clear_relevant_notifications
+  def set_notification_status_to_read
     current_user.notifications.where('foreign_id = ?', @event.id).each do |notification|
       notification.read!
     end
@@ -158,7 +157,7 @@ private
     end
   end
 
-  def update_event_user_status
+  def set_event_user_status
     if params[:success] == '1' && signed_in?
       if params[:checkout_id]
         payment = current_user.sent_payments.find_by_transaction_id_and_event_id(params[:checkout_id], @event.id)

@@ -51,7 +51,7 @@ class Payment < ActiveRecord::Base
       payer_id: event_user.user.id,
       payee_id: event_user.event.organizer.id,
       event_id: event_user.event.id,
-      amount_cents: event_user.event.split_cents
+      amount_cents: event_user.event.per_person_cents
     }
     payment_attributes[:cash] = options[:cash].present? && options[:cash]
     

@@ -37,31 +37,23 @@
 
 class User < ActiveRecord::Base
 
-  # Devise modules
-  # ========================================================
+  # Attributes
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
-
-  # Accessible attributes
-  # ========================================================
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone, :send_emails, :referrer_id, :referrer
   attr_accessor :profile_image_type
   has_attached_file :profile_image
 
   # Validations
-  # ========================================================
   validates :name, presence: true, length: { minimum: 2, maximum: 50, message: "has to be between 2 and 50 characters long" }, unless: :stub?
   validates :password, length: { minimum: 8, message: "has to be at least 8 characters long (for your safety!)" }, if: :password_required?, unless: :stub?
-  # validates :guest_token, presence: true, if: :stub?
   validates_inclusion_of :time_zone, in: ActiveSupport::TimeZone.zones_map(&:name)
   
   # Callbacks
-  # ========================================================
   before_save :set_profile_image
   before_save :set_stub
   after_create :set_last_seen
 
   # Relationships
-  # ========================================================
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
   has_many :event_users, dependent: :destroy
   has_many :member_events, class_name: "Event", through: :event_users, source: :event, dependent: :destroy
@@ -225,7 +217,7 @@ class User < ActiveRecord::Base
 
   def first_name
     if name.present?
-      name.split(" ").first
+      name.per_person(" ").first
     else
       ""
     end
