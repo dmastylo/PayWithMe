@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   before_filter :check_for_event_token
   after_filter :user_activity, if: :signed_in?
   around_filter :user_time_zone, if: :signed_in?
-  after_filter :update_user_balance, if: :signed_in?
   use_vanity :current_user
 
   def default_url_options
@@ -120,15 +119,6 @@ private
     else
       flash[:error] = "You're not on the list."
       redirect_to root_path
-    end
-  end
-
-  def update_user_balance
-    wepay_account = current_user.wepay_account
-    if wepay_account.present?
-      if wepay_account.balanced_at.nil? || (Time.now - wepay_account.balanced_at) > Figaro.env.balance_update.to_i
-        wepay_account.update_balance
-      end
     end
   end
 end

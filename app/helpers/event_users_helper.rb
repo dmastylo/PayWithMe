@@ -10,18 +10,11 @@ module EventUsersHelper
   end
 
   def event_user_pay_text(event_user, payment_method, options={})
-    if payment_method == "PayPal"
-      payment_options = "Credit Card or PayPal Account"
-    elsif payment_method == "WePay"
-      payment_options = "Credit Card"
-    elsif payment_method == "Dwolla"
-      payment_options = "Dwolla Account"
-    end
     if options[:fundraiser]
       payment_verb = "Contribute"
     else
       payment_verb = "Pay"
     end
-    "#{payment_verb} <span class=\"pay-total\">#{humanized_money_with_symbol event_user.event.split_amount}</span> With #{payment_options}".html_safe
+    "#{payment_verb} <span class=\"pay-total\">#{humanized_money_with_symbol event_user.event.split}</span> With Credit or Debit Card".html_safe
   end
 end

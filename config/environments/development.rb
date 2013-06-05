@@ -51,9 +51,6 @@ PayWithMe::Application.configure do
   # Default URL
   routes.default_url_options[:host] = "local.paywith.me:3000"
 
-  # Active merchant and PayPal
-  ActiveMerchant::Billing::Base.mode = :test
-
   # Run A/B tests in development
   Vanity.playground.collecting = true
 end

@@ -1,11 +1,9 @@
 <li class="desktop">
   <%= link_to user_name_with_spacing(current_user), user_path(current_user), class: current_page_link(user_path(current_user)) %>
 </li>
-<% if current_user.wepay_account.present? %>
-  <li class="desktop">
-    <%= link_to humanized_money_with_symbol(current_user.wepay_account.balance), linked_account_path(current_user.wepay_account) %>
-  </li>
-<% end %>
+<li class="desktop">
+  <a href="#">$520.23</a>
+</li>
 <li class="dropdown desktop">
   <a href="#" class="dropdown-toggle" id="notifications-dropdown-toggle" data-toggle="dropdown">
     <i class="icon-white icon-globe"></i>

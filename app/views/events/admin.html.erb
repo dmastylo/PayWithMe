@@ -42,10 +42,10 @@
             </div>
           <% end %>
           <div class="quarter"><strong>Collected:</strong></div>
-          <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.money_collected %></div>
+          <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.collected %></div>
           <div class="clearfix"></div>
           <div class="quarter"><strong>Goal:</strong></div>
-          <div class="three-quarters"><%= humanized_money_with_symbol (@event.total_amount || @event.fundraiser_goal) %></div>
+          <div class="three-quarters"><%= humanized_money_with_symbol (@event.total || @event.goal) %></div>
           <div class="clearfix"></div>
           <% if @event.minimum_donation.present? %>
             <div class="quarter"><strong>Minimum Donation:</strong></div>

@@ -2,37 +2,29 @@
 #
 # Table name: payments
 #
-#  id                         :integer          not null, primary key
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  requested_at               :datetime
-#  paid_at                    :datetime
-#  due_at                     :datetime
-#  payer_id                   :integer
-#  payee_id                   :integer
-#  event_id                   :integer
-#  amount_cents               :integer
-#  event_user_id              :integer
-#  transaction_id             :string(255)
-#  processor_fee_amount_cents :integer
-#  our_fee_amount_cents       :integer
-#  payment_method_id          :integer
-#  status                     :string(255)      default("new")
-#  status_type                :integer
+#  id                  :integer          not null, primary key
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  requested_at        :datetime
+#  paid_at             :datetime
+#  due_at              :datetime
+#  payer_id            :integer
+#  payee_id            :integer
+#  event_id            :integer
+#  amount_cents        :integer
+#  event_user_id       :integer
+#  processor_fee_cents :integer
+#  our_fee_cents       :integer
+#  cash                :boolean
 #
 
 class Payment < ActiveRecord::Base
   
-  # Accessible attributes
-  # There is no available create route right now so we
-  # can get away with things that shouldn't be accessible
-  attr_accessible :error_message, :payer_id, :payee_id, :event_id, :amount, :amount_cents, :processor_fee_amount_cents, :our_fee_amount_cents, :due_at, :requested_at, :event_user_id, :paid_at, :item_users_attributes
-  attr_accessor :error_message
-  monetize :amount_cents, allow_nil: true
-  monetize :processor_fee_amount_cents, allow_nil: true
-  monetize :our_fee_amount_cents, allow_nil: true
-  monetize :total_amount_cents, allow_nil: true
-
+  # Attributes
+  attr_accessible :payer_id, :payee_id, :event_id, :event_user_id, :amount, :due_at, :requested_at
+  [:amount, :total, :processor_fee, :our_fee].each do |field| monetize "#{field}_cents", allow_nil: true
+  end
+  
   # Relationships
   belongs_to :payer, class_name: "User"
   belongs_to :payee, class_name: "User"
@@ -48,25 +40,22 @@ class Payment < ActiveRecord::Base
   validates :requested_at, presence: true
   validates :due_at, presence: true
   validates :event_user_id, presence: true
+  # TODO: Box this validation up somewhere else and make it simpler here
   validates :amount, presence: true, numericality: { greater_than: 0, message: "must have a positive dollar amount" }, if: :paid?
-  validates :processor_fee_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
-  validates :our_fee_amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :processor_fee, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :our_fee, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :transaction_id, presence: true, if: :paid_and_not_cash?
 
-  # Callbacks
-  before_validation :copy_event_attributes
-
-  def self.create_or_find_from_event_user(event_user)
+  def self.find_or_create_from_event_user(event_user, options={})
     payment_attributes = {
       payer_id: event_user.user.id,
       payee_id: event_user.event.organizer.id,
       event_id: event_user.event.id,
-      amount_cents: event_user.event.split_amount_cents
+      amount_cents: event_user.event.split_cents
     }
+    payment_attributes[:cash] = options[:cash].present? && options[:cash]
     
-    Payment.where(
-      payment_attributes
-    ).first || create(payment_attributes.merge(
+    Payment.where(payment_attributes).first || create(payment_attributes.merge(
       due_at: event_user.due_at,
       requested_at: event_user.event.created_at,
       event_user_id: event_user.id
@@ -77,8 +66,8 @@ class Payment < ActiveRecord::Base
     paid_at.present?
   end
 
-  def total_amount_cents
-    (amount_cents || 0) + (processor_fee_amount_cents || 0) + (our_fee_amount_cents || 0)
+  def total_cents
+    (amount_cents || 0) + (processor_fee_cents || 0) + (our_fee_cents || 0)
   end
 
   def pay!(options={})
@@ -99,28 +88,29 @@ class Payment < ActiveRecord::Base
 
   # Returns truthy value if update works, otherwise falsey
   def update_for_items!
-    total_amount_cents = 0
+    # TODO: Completely rewrite this
+    total_cents = 0
     self.item_users.each do |item_user|
       item = item_user.item
       if item.allow_quantity?
         if item_user.quantity >= item.quantity_min && item_user.quantity <= item.quantity_max
-          item_user.total_amount_cents = item.amount_cents * item_user.quantity
+          item_user.total_cents = item.amount_cents * item_user.quantity
         else
           return false
         end
       else
-        item_user.total_amount_cents = item.amount_cents
+        item_user.total_cents = item.amount_cents
         item_user.quantity = 1
       end
-      total_amount_cents += item_user.total_amount_cents
+      total_cents += item_user.total_cents
       item_user.save
     end
 
-    if total_amount_cents == 0
+    if total_cents == 0
       return false
     end
 
-    self.amount_cents = total_amount_cents
+    self.amount_cents = total_cents
     update_fees
     self.save
     self.reload
@@ -128,11 +118,8 @@ class Payment < ActiveRecord::Base
   end
 
   # Constants
-  class StatusType
-    PENDING = 1
-    PAID = 2
-    CANCELLED = 3
-    EXPIRED = 4
+  class Status
+    # TODO: Model this off of Balanced
   end
 
 private

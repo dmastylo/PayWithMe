@@ -2,23 +2,20 @@
 #
 # Table name: payments
 #
-#  id                         :integer          not null, primary key
-#  created_at                 :datetime         not null
-#  updated_at                 :datetime         not null
-#  requested_at               :datetime
-#  paid_at                    :datetime
-#  due_at                     :datetime
-#  payer_id                   :integer
-#  payee_id                   :integer
-#  event_id                   :integer
-#  amount_cents               :integer
-#  event_user_id              :integer
-#  transaction_id             :string(255)
-#  processor_fee_amount_cents :integer
-#  our_fee_amount_cents       :integer
-#  payment_method_id          :integer
-#  status                     :string(255)      default("new")
-#  status_type                :integer
+#  id                  :integer          not null, primary key
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  requested_at        :datetime
+#  paid_at             :datetime
+#  due_at              :datetime
+#  payer_id            :integer
+#  payee_id            :integer
+#  event_id            :integer
+#  amount_cents        :integer
+#  event_user_id       :integer
+#  processor_fee_cents :integer
+#  our_fee_cents       :integer
+#  cash                :boolean
 #
 
 require 'spec_helper'
@@ -38,8 +35,7 @@ describe Payment do
      :event_id,
      :amount_cents,
      :event_user_id,
-     :transaction_id,
-     :payment_method].each do |attribute|
+     :transaction_id].each do |attribute|
       it { should respond_to(attribute) }
     end
   end
@@ -53,20 +49,13 @@ describe Payment do
     it { should validate_presence_of(:amount) }
     it { should allow_value("$1234").for(:amount) }
     it { should_not allow_value("abcd").for(:amount) }
-    it { should_not validate_presence_of(:payment_method) }
 
     describe "after paid with cash" do
       before { @payment.pay! }
-      it { should validate_presence_of(:payment_method) }
       it { should_not validate_presence_of(:transaction_id) }
     end
 
     describe "after paid with other method" do
-      before do
-        @payment.payment_method_id = PaymentMethod::MethodType::PAYPAL
-        @payment.pay!
-      end
-      it { should validate_presence_of(:payment_method) }
       it { should validate_presence_of(:transaction_id) }
     end
   end
@@ -90,7 +79,6 @@ describe Payment do
     it { should belong_to(:payee).class_name("User") }
     it { should belong_to(:event) }
     it { should belong_to(:event_user) }
-    it { should belong_to(:payment_method) }
   end
 
   describe "callbacks" do

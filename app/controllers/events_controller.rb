@@ -3,11 +3,8 @@ class EventsController < ApplicationController
   before_filter :user_not_stub, only: [:new, :create]
   before_filter :user_in_event_or_public, only: [:show]
   before_filter :user_organizes_event, only: [:edit, :delete, :destroy, :update, :admin, :guests]
-  before_filter :check_organizer_accounts, only: [:show, :admin]
-  before_filter :check_user_accounts, only: [:new, :create]
   before_filter :event_user_visit_true, only: [:show]
   before_filter :check_for_payers, only: [:destroy]
-  # before_filter :check_event_past, only: [:edit, :update]
   before_filter :clear_relevant_notifications, only: [:show], if: :current_user
   before_filter :update_event_user_status, only: [:show]
 
@@ -22,12 +19,6 @@ class EventsController < ApplicationController
     end
 
     @event = Event.find_by_id(@event.id, include: { event_users: :user } )
-
-    if params[:success]
-      flash.now[:success] = "Payment received! If everything went well, you should be marked as paid shortly (if not already)."
-    elsif params[:cancel]
-      flash.now[:error] = "Payment cancelled!"
-    end
 
     if !signed_in?
       session["user_return_to"] = event_path(@event)
@@ -108,7 +99,7 @@ class EventsController < ApplicationController
   end
 
   def admin
-    @event = Event.find_by_id(@event.id, include: [{ event_users: :user }, :payment_methods] )
+    @event = Event.find_by_id(@event.id, include: [{ event_users: :user }] )
 
     if @event.itemized?
       @items = {}
@@ -166,50 +157,6 @@ private
       news_item.read!
     end
   end
-
-  def check_organizer_accounts
-    return unless current_user == @event.organizer
-    if @event.accepts_paypal? && @event.organizer.paypal_account.nil?
-      flash.now[:error] = "Hey! You have to add a PayPal account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
-    end
-
-    if @event.accepts_dwolla? && @event.organizer.dwolla_account.nil?
-      if flash.now[:error].present?
-        flash.now[:error] << "<br>"
-      else
-        flash.now[:error] = ""
-      end
-      flash.now[:error] << "Hey! You have to add a Dwolla account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
-    end
-
-    if @event.accepts_wepay? && @event.organizer.wepay_account.nil?
-      if flash.now[:error].present?
-        flash.now[:error] << "<br>"
-      else
-        flash.now[:error] = ""
-      end
-      flash.now[:error] << "Hey! You have to add a WePay account before users can pay for this event. You can do that in <a href=\"#{url_for edit_user_registration_path}\">Account Settings</a>."
-    end
-
-    if @event.payment_methods.empty?
-      flash.now[:error] = "Hey! You haven't set any payment methods so no one can pay for this event. You can do that by <a href=\"#{url_for edit_event_path(@event)}\">editing the event</a>."
-    end
-    flash.now[:error] = flash.now[:error].html_safe unless flash.now[:error].nil?
-  end
-
-  def check_user_accounts
-    if current_user.linked_accounts.where(provider: [:wepay, :paypal, :dwolla]).empty? && !current_user.using_cash?
-      flash[:error] = "You need to set up payment options before creating an event."
-      redirect_to linked_accounts_path
-    end
-  end
-
-  # def check_event_past
-  #   if @event.is_past?
-  #     flash[:error] = "You can't edit an event that has already happened."
-  #     redirect_to event_path(@event)
-  #   end
-  # end
 
   def update_event_user_status
     if params[:success] == '1' && signed_in?

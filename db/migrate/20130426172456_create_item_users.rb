@@ -7,7 +7,7 @@ class CreateItemUsers < ActiveRecord::Migration
       t.integer :payment_id
       t.integer :event_id
       t.integer :quantity
-      t.integer :total_amount_cents
+      t.integer :total_cents
 
       t.timestamps
     end

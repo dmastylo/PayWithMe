@@ -44,36 +44,7 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
       end
       linked_account.email = request.env["omniauth.auth"].info.email if request.env["omniauth.auth"].info.email
 
-      if request.env["omniauth.auth"].provider == "dwolla"
-        token = Payment.dwolla_gateway.request_token(params[:code], user_omniauth_callback_url(:dwolla, port: nil))
-        if token.present?
-          linked_account.token = token
-          linked_account.save
-        end
-      elsif request.env["omniauth.auth"].provider == "wepay"
-        linked_account.token_secret = request.env["omniauth.auth"].credentials.token
-
-        gateway = Payment.wepay_gateway
-        response = gateway.call('/account/find', linked_account.token_secret)
-
-        if response.empty?
-          response = gateway.call('/account/create', linked_account.token_secret, {
-            name: "PayWithMe Account",
-            description: "The account for use with PayWithMe events."
-          })
-          response = gateway.call('/account/find', linked_account.token_secret)
-          flash[:notice] = "A new WePay account has been created for you to use with PayWithMe. You need to activate it #{view_context.link_to "here", response.first["verification_uri"]}.".html_safe
-        end
-
-
-        linked_account.token = response.first["account_id"]
-        linked_account.save
-      elsif request.env["omniauth.auth"].provider == "paypal"
-        linked_account.uid = request.env["omniauth.auth"].uid
-        linked_account.token = request.env["omniauth.auth"].credentials.token
-
-        linked_account.save
-      elsif request.env["omniauth.auth"].provider == "facebook"
+      if request.env["omniauth.auth"].provider == "facebook"
         # Set profile image
         if user.profile_image_type == :gravatar
           user.profile_image_type = :url
@@ -122,11 +93,6 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
 
   def failure
     if signed_in?
-      # Convert to error messages that make more sense
-      if failed_strategy.name == "dwolla" && failure_message == "Invalid account status for user of this access token."
-        failure_message = "Please verify your email address before linking your account."
-      end
-
       flash[:error] = "#{OmniAuth::Utils.camelize(failed_strategy.name)} reported the following error: #{failure_message}"
       redirect_to edit_user_registration_path
     else
@@ -139,7 +105,4 @@ class MyDevise::OmniauthCallbacksController < Devise::OmniauthCallbacksControlle
 
   alias_method :twitter, :all
   alias_method :facebook, :all
-  alias_method :paypal, :all
-  alias_method :dwolla, :all
-  alias_method :wepay, :all
 end

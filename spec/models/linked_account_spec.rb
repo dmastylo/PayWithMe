@@ -2,17 +2,15 @@
 #
 # Table name: linked_accounts
 #
-#  id            :integer          not null, primary key
-#  provider      :string(255)
-#  token         :string(255)
-#  user_id       :integer
-#  uid           :string(255)
-#  token_secret  :string(255)
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  email         :string(255)
-#  balance_cents :integer
-#  balanced_at   :datetime
+#  id           :integer          not null, primary key
+#  provider     :string(255)
+#  token        :string(255)
+#  user_id      :integer
+#  uid          :string(255)
+#  token_secret :string(255)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  email        :string(255)
 #
 
 require 'spec_helper'

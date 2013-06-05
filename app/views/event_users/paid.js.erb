@@ -48,7 +48,7 @@
   });
 
   $('#payment-links-<%= @event_user.id %> input.input-xlarge').tooltip('hide');
-  $('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
+  $('#money-collected').html('<%= humanized_money_with_symbol @event.collected %>');
 
   if ($('.progress').length === 0)
   {

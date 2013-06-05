@@ -13,7 +13,7 @@
         <div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div>
       <% end %>
     </div>
-    <% if !itemized && @event.send_with_cash? %>
+    <% if !itemized %>
       <%= render "users/dashboard_user_form", event: @event, user: user, event_user: event_user %>
     <% end %>
   </div>

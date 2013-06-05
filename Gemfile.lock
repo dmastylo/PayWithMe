@@ -1,37 +1,9 @@
 GIT
-  remote: git://github.com/austingulati/active_paypal_adaptive_payment.git
-  revision: f0608557a3a4d64459b8e8dc895517c7c2584ad3
-  specs:
-    active_paypal_adaptive_payment (0.3.16)
-      activemerchant (>= 1.5.1)
-      hashie (>= 1.2.0)
-      mocha (>= 0.10.0)
-      money (>= 3.6.0)
-      multi_json (>= 1.0.0)
-
-GIT
   remote: git://github.com/austingulati/bootstrap-sass.git
   revision: 3560e5eb20023243a41ea11989d8fe64909f159e
   specs:
     bootstrap-sass (2.2.1.1)
       sass (~> 3.2)
-
-GIT
-  remote: git://github.com/austingulati/dwolla-ruby.git
-  revision: b182f811cbf5252b786da7e2a48872b2cebda334
-  specs:
-    dwolla-ruby (1.1.0)
-      faraday (~> 0.8)
-      multi_json (~> 1.3)
-
-GIT
-  remote: git://github.com/austingulati/omniauth-dwolla.git
-  revision: 38b3ba3e10ef99212bd6e1d5b6b07c48f245066c
-  specs:
-    omniauth-dwolla (0.0.13)
-      dwolla (>= 0.0.13)
-      omniauth (~> 1.0)
-      omniauth-oauth2 (~> 1.0)
 
 GIT
   remote: git://github.com/austingulati/vanity.git
@@ -58,13 +30,6 @@ GIT
   specs:
     date_validator (0.6.4)
       activemodel (>= 3)
-
-GIT
-  remote: git://github.com/datariot/omniauth-paypal.git
-  revision: 04d14f311d1ada93733485281ef5904f97f84747
-  specs:
-    omniauth-paypal (1.0)
-      omniauth-oauth2 (~> 1.1.0)
 
 GIT
   remote: git://github.com/fog/fog.git
@@ -95,20 +60,6 @@ GIT
   specs:
     gravatar_image_tag (1.1.3)
 
-GIT
-  remote: git://github.com/tenaciousflea/omniauth-wepay.git
-  revision: cddd6b1ce296048c0d1158c11b0adbb1bca75d8b
-  specs:
-    omniauth-wepay (0.1.0)
-      omniauth (~> 1.0)
-      omniauth-oauth2 (~> 1.1)
-
-GIT
-  remote: git://github.com/wepay/Ruby-SDK.git
-  revision: eb5ffbd4e7de52ecf84117ec939da3781a821fef
-  specs:
-    wepay (0.0.1)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -129,17 +80,6 @@ GEM
       rack-cache (~> 1.2)
       rack-test (~> 0.6.1)
       sprockets (~> 2.2.1)
-    active_utils (1.0.5)
-      activesupport (>= 2.3.11)
-      i18n
-    activemerchant (1.32.1)
-      active_utils (>= 1.0.2)
-      activesupport (>= 2.3.14)
-      builder (>= 2.0.0)
-      i18n
-      json (>= 1.5.1)
-      money
-      nokogiri
     activemodel (3.2.13)
       activesupport (= 3.2.13)
       builder (~> 3.0.0)
@@ -217,9 +157,6 @@ GEM
       railties (~> 3.1)
       warden (~> 1.2.1)
     diff-lcs (1.2.2)
-    dwolla (0.0.14)
-      faraday (>= 0.7.6)
-      multi_json (~> 1.0)
     erubis (2.7.0)
     eventmachine (1.0.3)
     excon (0.20.1)
@@ -452,7 +389,6 @@ PLATFORMS
 
 DEPENDENCIES
   actionmailer-callbacks
-  active_paypal_adaptive_payment!
   activerecord-import
   american_date
   annotate
@@ -467,7 +403,6 @@ DEPENDENCIES
   delayed_job_active_record
   delorean
   devise
-  dwolla-ruby!
   factory_girl_rails
   figaro
   fog!
@@ -484,11 +419,8 @@ DEPENDENCIES
   nested_form
   newrelic_rpm
   omniauth!
-  omniauth-dwolla!
   omniauth-facebook
-  omniauth-paypal!
   omniauth-twitter
-  omniauth-wepay!
   paperclip
   passenger
   prawn!
@@ -507,5 +439,4 @@ DEPENDENCIES
   thin
   uglifier (>= 1.0.3)
   vanity!
-  wepay!
   will_paginate

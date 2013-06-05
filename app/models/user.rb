@@ -282,18 +282,6 @@ class User < ActiveRecord::Base
     self.linked_accounts.where(provider: :twitter).first
   end
 
-  def paypal_account
-    self.linked_accounts.where(provider: :paypal).first
-  end
-
-  def dwolla_account
-    self.linked_accounts.where(provider: :dwolla).first
-  end
-
-  def wepay_account
-    self.linked_accounts.where(provider: :wepay).first
-  end
-
   def upcoming_invited_events
     self.member_events.where('events.due_at > ?', Time.now).order("events.due_at ASC").delete_if { |event| event.organizer == self }
   end

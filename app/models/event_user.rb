@@ -16,6 +16,7 @@
 #  paid_total_cents :integer          default(0)
 #  status           :integer          default(0)
 #  nudges_remaining :integer          default(0)
+#  ticket_sent      :boolean          default(FALSE)
 #
 
 class EventUser < ActiveRecord::Base
@@ -75,12 +76,6 @@ class EventUser < ActiveRecord::Base
   def create_payment(options={})
     copy_event_attributes
     current_cents = options[:amount_cents] || amount_cents
-    payment_method = PaymentMethod.find_by_id(options[:payment_method] || PaymentMethod::MethodType::CASH)
-# <<<<<<< HEAD
-#     if !event.fundraiser? && current_cents > amount_cents
-#       return false
-#     end
-# =======
     unless self.event.fundraiser? || self.event.itemized?
       if current_cents > amount_cents
         return false
@@ -119,13 +114,8 @@ class EventUser < ActiveRecord::Base
     true
   end
 
-  # def paid_with_cash?
-  #   self.payments.where('payment_method_id != ?', PaymentMethod::MethodType::CASH).count > 0
-  # end
-  
   def unpay_cash_payments!
     copy_event_attributes
-    self.payments.where(payment_method_id: PaymentMethod::MethodType::CASH).destroy_all
 
     update_paid_total_cents
     update_paid_with_cash
@@ -199,7 +189,7 @@ private
       self.due_at = self.event.due_at
     end
     unless self.event.fundraiser? || self.event.itemized?
-      self.amount_cents = self.event.split_amount_cents
+      self.amount_cents = self.event.split_cents
     end
   end
 
@@ -211,8 +201,9 @@ private
 
   def update_paid_with_cash
     self.paid_with_cash = true
+    # TODO: Make this pattern easier, it happens a lot
     self.payments.each do |payment|
-      self.paid_with_cash = false unless payment.payment_method_id == PaymentMethod::MethodType::CASH || payment.paid_at.nil?
+      self.paid_with_cash = false unless payment.cash?
     end
   end
 

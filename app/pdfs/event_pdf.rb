@@ -35,8 +35,8 @@ class EventPdf < Prawn::Document
       ["<font size='24'><b>#{@event.title}</b></font>"], 
       ["Organized By: #{User.find_by_id(@event.organizer_id).name}"],
       [privacy_setting],
-      ["Amount Per Person: #{price_cents(@event.split_amount_cents)}"],
-      ["Total Collected: #{price_cents(@event.money_collected_cents)}"],
+      ["Amount Per Person: #{price_cents(@event.split_cents)}"],
+      ["Total Collected: #{price_cents(@event.collected_cents)}"],
       ["Money Due: #{@event.due_at_time}, #{@event.due_at_date}"]
     ]
 

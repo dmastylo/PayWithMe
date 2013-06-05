@@ -12,10 +12,10 @@ $('#payment-links-<%= @event_user.id %> .input-append').autoSize({
   fluid: 'input[type=text]'
 });
 
-$('#money-collected').html('<%= humanized_money_with_symbol @event.money_collected %>');
+$('#money-collected').html('<%= humanized_money_with_symbol @event.collected %>');
 
-var money_collected = <%= @event.money_collected %>;
-if (money_collected === 0)
+var collected = <%= @event.collected %>;
+if (collected === 0)
 {
   $('.progress').remove();
 }

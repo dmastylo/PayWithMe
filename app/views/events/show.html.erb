@@ -50,24 +50,21 @@
         <% end %>
         <% if @event.fundraiser? %>
           <div class="quarter"><strong>Fundraiser Goal</strong></div>
-          <div class="three-quarters"><%= humanized_money_with_symbol @event.fundraiser_goal %></div>
+          <div class="three-quarters"><%= humanized_money_with_symbol @event.goal %></div>
           <div class="quarter"><strong>Current Progress</strong></div>
-          <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.money_collected %></div>
+          <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.collected %></div>
           <% if @event.minimum_donation.present? %>
             <div class="quarter"><strong>Minimum Donation</strong></div>
             <div class="three-quarters" id="money-collected"><%= humanized_money_with_symbol @event.minimum_donation %></div>
           <% end %>
         <% elsif !@event.fundraiser? || !@event.itemized? %>
           <div class="quarter"><strong>Total Goal</strong></div>
-          <div class="three-quarters"><%= humanized_money_with_symbol(@event.total_amount) %></div>
+          <div class="three-quarters"><%= humanized_money_with_symbol(@event.total) %></div>
           <div class="quarter"><strong>Per User Goal</strong></div>
-          <div class="three-quarters"><%= humanized_money_with_symbol(@event.split_amount) %></div>
+          <div class="three-quarters"><%= humanized_money_with_symbol(@event.split) %></div>
         <% end %>
         <div class="quarter"><strong>Money Due</strong></div>
         <div class="three-quarters"><%= @event.due_at.to_s(:ordinal) %></div>
-        <div class="clearfix"></div>
-        <div class="quarter"><strong>Accepted Payment Methods</strong></div>
-        <div class="three-quarters"><%= @event.payment_methods.collect(&:name).join(", ") %></div>
         <div class="clearfix"></div>
       </div>
       
@@ -83,30 +80,13 @@
                 <span class="add-on">$</span>
                 <%= f.text_field :amount, value: nil, placeholder: (@event.minimum_donation.present? ? "Enter amount equal to or greater than #{humanized_money_with_symbol @event.minimum_donation}" : "Enter donation amount"), class: "input-block-level" %> 
               </div>
-              <%= f.hidden_field :payment_method_id %>
               <div class="pay-buttons push-top-small push-bottom-small">
-                <% if @event.send_with_paypal? %>
-                  <%= link_to event_user_pay_text(@event_user, "PayPal", fundraiser: true), "#", class: "btn btn-primary btn-block btn-pay", data: { method: PaymentMethod::MethodType::PAYPAL } %>
-                <% end %>
-                <% if @event.send_with_dwolla? %>
-                  <%= link_to event_user_pay_text(@event_user, "Dwolla", fundraiser: true), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::DWOLLA } %>
-                <% end %>
-                <% if @event.send_with_wepay? %>
-                  <%= link_to event_user_pay_text(@event_user, "WePay", fundraiser: true), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::WEPAY } %>
-                <% end %>
+                <%= link_to event_user_pay_text(@event_user, fundraiser: true), "#", class: "btn btn-primary btn-block btn-pay" %>
               </div>
             <% end %>
           </div>
         <% elsif @event.divide_total? || @event.divide_per_person? %>
-          <% if @event.send_with_paypal? %>
-            <%= event_user_pay_button(@event_user, "PayPal") %>
-          <% end %>
-          <% if @event.send_with_dwolla? %>
-            <%= event_user_pay_button(@event_user, "Dwolla") %>
-          <% end %>
-          <% if @event.send_with_wepay? %>
-            <%= event_user_pay_button(@event_user, "WePay") %>
-          <% end %>
+          <%= event_user_pay_button(@event_user) %>
         <% elsif @event.itemized? %>
           <h3>Available Items</h3>
           <div class="well" id="items">
@@ -114,18 +94,9 @@
               <%= f.fields_for :item_users do |builder| %>
                 <%= render 'items/item', f: builder %>
               <% end %>
-              <%= f.hidden_field :payment_method_id %>
               <strong>Total:</strong> <span class="items-total"></span>
               <div class="pay-buttons push-top-small">
-                <% if @event.send_with_paypal? %>
-                  <%= link_to event_user_pay_text(@event_user, "PayPal"), "#", class: "btn btn-primary btn-block btn-pay", data: { method: PaymentMethod::MethodType::PAYPAL } %>
-                <% end %>
-                <% if @event.send_with_dwolla? %>
-                  <%= link_to event_user_pay_text(@event_user, "Dwolla"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::DWOLLA } %>
-                <% end %>
-                <% if @event.send_with_wepay? %>
-                  <%= link_to event_user_pay_text(@event_user, "WePay"), "#", class: "btn btn-primary btn-block btn-pay",  data: { method: PaymentMethod::MethodType::WEPAY } %>
-                <% end %>
+                <%= link_to event_user_pay_text(@event_user), "#", class: "btn btn-primary btn-block btn-pay" %>
               </div>
             <% end %>
           </div>

@@ -16,6 +16,7 @@
 #  paid_total_cents :integer          default(0)
 #  status           :integer          default(0)
 #  nudges_remaining :integer          default(0)
+#  ticket_sent      :boolean          default(FALSE)
 #
 
 require 'spec_helper'
@@ -71,7 +72,7 @@ describe EventUser do
       @event_user.due_at.should == @event.due_at
     end
     it "should have set the amount" do
-      @event_user.amount_cents.should == @event.split_amount_cents
+      @event_user.amount_cents.should == @event.split_cents
     end
   end
 
@@ -95,7 +96,7 @@ describe EventUser do
     end
 
     describe "specific amount" do
-      before { @payment = @event_user.create_payment(amount_cents: @event.split_amount_cents / 2) }
+      before { @payment = @event_user.create_payment(amount_cents: @event.split_cents / 2) }
       it "should use that amount" do
         @payment.amount_cents.should == (@event_user.amount_cents / 2)
       end
@@ -111,7 +112,7 @@ describe EventUser do
     end
 
     describe "paid with cash" do
-      before { @payment = @event_user.create_payment(amount_cents: @event.split_amount_cents / 2) }
+      before { @payment = @event_user.create_payment(amount_cents: @event.split_cents / 2) }
 
       it "should initially be true" do
         @event_user.paid_with_cash.should be_true

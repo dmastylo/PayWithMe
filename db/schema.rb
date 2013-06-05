@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506193243) do
+ActiveRecord::Schema.define(:version => 20130605050955) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.integer  "paid_total_cents", :default => 0
     t.integer  "status",           :default => 0
     t.integer  "nudges_remaining", :default => 0
+    t.boolean  "ticket_sent",      :default => false
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -71,11 +72,11 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.string   "title"
     t.text     "description"
     t.datetime "due_at"
-    t.datetime "created_at",             :null => false
-    t.datetime "updated_at",             :null => false
+    t.datetime "created_at",                                :null => false
+    t.datetime "updated_at",                                :null => false
     t.integer  "division_type"
-    t.integer  "total_amount_cents"
-    t.integer  "split_amount_cents"
+    t.integer  "total_cents"
+    t.integer  "split_cents"
     t.integer  "organizer_id"
     t.integer  "privacy_type"
     t.string   "slug"
@@ -85,7 +86,10 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.datetime "image_updated_at"
     t.string   "image_url"
     t.string   "guest_token"
-    t.integer  "fundraiser_goal_cents"
+    t.boolean  "send_tickets",           :default => false
+    t.string   "location_title"
+    t.string   "location_address"
+    t.integer  "fundraiser_cents"
     t.integer  "minimum_donation_cents"
   end
 
@@ -167,11 +171,9 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.integer  "user_id"
     t.string   "uid"
     t.string   "token_secret"
-    t.datetime "created_at",    :null => false
-    t.datetime "updated_at",    :null => false
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
     t.string   "email"
-    t.integer  "balance_cents"
-    t.datetime "balanced_at"
   end
 
   create_table "messages", :force => true do |t|
@@ -236,21 +238,9 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.string   "type"
   end
 
-  create_table "payment_methods", :force => true do |t|
-    t.datetime "created_at",                                        :null => false
-    t.datetime "updated_at",                                        :null => false
-    t.integer  "static_fee_cents"
-    t.decimal  "percent_fee",         :precision => 8, :scale => 4
-    t.integer  "minimum_fee_cents"
-    t.integer  "fee_threshold_cents"
-    t.string   "name"
-  end
-
-  add_index "payment_methods", ["name"], :name => "index_payment_methods_on_name"
-
   create_table "payments", :force => true do |t|
-    t.datetime "created_at",                                    :null => false
-    t.datetime "updated_at",                                    :null => false
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
     t.datetime "requested_at"
     t.datetime "paid_at"
     t.datetime "due_at"
@@ -259,12 +249,9 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.integer  "event_id"
     t.integer  "amount_cents"
     t.integer  "event_user_id"
-    t.string   "transaction_id"
-    t.integer  "processor_fee_amount_cents"
-    t.integer  "our_fee_amount_cents"
-    t.integer  "payment_method_id"
-    t.string   "status",                     :default => "new"
-    t.integer  "status_type"
+    t.integer  "processor_fee_cents"
+    t.integer  "our_fee_cents"
+    t.boolean  "cash"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
