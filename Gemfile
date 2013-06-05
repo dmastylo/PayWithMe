@@ -1,94 +1,63 @@
 source 'https://rubygems.org'
 
+# Core
 gem 'rails', '3.2.13'
+gem 'thin'
+gem 'figaro'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
+# Data
 group :production do
   gem 'mysql2'
   gem 'passenger'
-  # gem 'activerecord-mysql2-adapter'
 end
+group :development, :test do
+  gem 'sqlite3'
+end
+gem 'ransack'
 
-# User authentication
+# Localization
+gem 'american_date'
+
+# Authentication
 gem 'devise'
 gem 'omniauth', git: 'git://github.com/intridea/omniauth.git'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
-gem 'omniauth-paypal', git: 'git://github.com/datariot/omniauth-paypal.git'
-gem 'omniauth-dwolla', git: 'git://github.com/austingulati/omniauth-dwolla.git'
-gem 'omniauth-wepay', git: 'git://github.com/tenaciousflea/omniauth-wepay.git'
 
-# User profiles
+# Helpers
 gem 'gravatar_image_tag', git: 'git://github.com/mdeering/gravatar_image_tag.git'
-gem 'paperclip'
-
-# Configuration
-gem 'figaro'
-
-# Transactions
-gem 'money-rails'
-
-# Validations
-gem 'date_validator', git: 'git://github.com/codegram/date_validator.git'
-
-# Dates
-gem 'american_date'
-
-# Searching
-gem 'ransack'
 gem 'will_paginate'
 gem 'bootstrap-will_paginate'
+gem 'rinku'
+gem 'nested_form'
 
-# Web server
-gem 'thin'
+# Model
+gem 'paperclip'
+gem 'money-rails'
+gem 'date_validator', git: 'git://github.com/codegram/date_validator.git'
+gem "activerecord-import"
 
-# Emails
+# Mailers
 gem 'roadie'
 gem 'delayed_job_active_record'
 gem 'daemons'
 gem 'actionmailer-callbacks'
 gem 'mail_form'
 
-# Linking chat urls
-gem 'rinku'
-
 # Javascript
 gem 'js-routes'
 
-# Payments
-gem 'active_paypal_adaptive_payment', git: 'git://github.com/austingulati/active_paypal_adaptive_payment.git'
-gem 'dwolla-ruby', git: 'git://github.com/austingulati/dwolla-ruby.git'
-gem 'wepay', git: 'git://github.com/wepay/Ruby-SDK.git'
-
-# Monitoring
+# Util
 gem 'newrelic_rpm'
-
-# Pretty URLs
 gem 'friendly_id'
-
-# PDF Generation
-gem 'prawn', git: 'git://github.com/celic/prawn.git', submodules: true
-
-# ActiveRecord extensions
-gem "activerecord-import"
-
-# AB testing
 gem 'vanity', git: 'git://github.com/austingulati/vanity.git'
-
-# Nested forms
-gem 'nested_form'
-
-group :development, :test do
-  gem 'sqlite3'
-end
-
+gem 'prawn', git: 'git://github.com/celic/prawn.git', submodules: true
 group :development do
   gem 'annotate'
   gem 'quiet_assets'
 end
 
+# Test
 group :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
@@ -101,36 +70,16 @@ group :test do
   gem 'shoulda-matchers', '1.5.2'
 end
 
-# Gems used only for assets and not required
-# in production environments by default.
-# group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'bourbon'
-  gem 'bootstrap-sass', git: 'git://github.com/austingulati/bootstrap-sass.git' # path: '/var/www/bootstrap-sass'
-  gem 'mustache'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platforms => :ruby
-
-  gem 'uglifier', '>= 1.0.3'
-# end
-
+# Frontend
+gem 'sass-rails',   '~> 3.2.3'
+gem 'bourbon'
+gem 'bootstrap-sass', git: 'git://github.com/austingulati/bootstrap-sass.git'
+gem 'mustache'
+gem 'coffee-rails', '~> 3.2.1'
+gem 'uglifier', '>= 1.0.3'
 gem 'jquery-rails'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
+# Deployment
 gem 'capistrano'
 gem 'rvm-capistrano'
 gem 'fog', git: 'git://github.com/fog/fog.git'
-
-# To use debugger
-# gem 'debugger'
