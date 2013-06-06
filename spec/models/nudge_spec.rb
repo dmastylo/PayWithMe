@@ -9,6 +9,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  sent_at    :datetime
+#  rating     :integer
 #
 
 require 'spec_helper'

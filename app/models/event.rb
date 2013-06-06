@@ -22,6 +22,7 @@
 #  guest_token            :string(255)
 #  fundraiser_goal_cents  :integer
 #  minimum_donation_cents :integer
+#  last_auto_email_sent   :datetime
 #
 
 class Event < ActiveRecord::Base
@@ -79,6 +80,7 @@ class Event < ActiveRecord::Base
   before_destroy :clear_notifications_and_news_items
   after_save :create_payment_methods
   after_save :create_guest_token
+  after_create :set_last_emails_sent
 
   # Pretty URLs
   # ========================================================
@@ -505,6 +507,55 @@ class Event < ActiveRecord::Base
     Time.now > self.due_at
   end
 
+  # Cron jobs
+  # ========================================================
+  def self.send_auto_emails
+    three_day_reminder_events = Event.where("last_auto_email_sent <= ? AND due_at BETWEEN ? AND ?", Time.now - 3.days, (Time.now + 3.days).beginning_of_day, (Time.now + 3.days).end_of_day).all
+    one_day_reminder_events = Event.where("last_auto_email_sent <= ? AND due_at BETWEEN ? AND ?", Time.now - 1.day, (Time.now + 1.day).beginning_of_day, (Time.now + 1.day).end_of_day).all
+    events_in_progress = Event.where("due_at > ? AND last_daily_email_sent < due_at AND last_daily_email_sent <= ?", Time.now, Time.now - 1.day)
+    ended_events = Event.where("due_at < ? AND last_daily_email_sent < due_at", Time.now)
+
+    three_day_reminder_events.each do |event|
+      event.unpaid_members.each do |user|
+        Event.delay.send_unpaid_three_days_auto_email(user, event)
+      end
+
+      event.paid_members.each do |user|
+        Event.delay.send_paid_three_days_auto_email(user, event)
+      end
+
+      event.last_auto_email_sent = Time.now
+      event.save
+    end
+
+    one_day_reminder_events.each do |event|
+      event.unpaid_members.each do |user|
+        Event.delay.send_unpaid_one_day_auto_email(user, event)
+      end
+
+      event.paid_members.each do |user|
+        Event.delay.send_paid_one_day_auto_email(user, event)
+      end
+
+      event.last_auto_email_sent = Time.now
+      event.save
+    end
+
+    events_in_progress.each do |event|
+      Event.delay.send_daily_update_to_organizer(event.organizer, event)
+
+      event.last_daily_email_sent = Time.now
+      event.save
+    end
+
+    ended_events.each do |event|
+      Event.delay.send_event_end_to_organizer(event.organizer, event)
+
+      event.last_daily_email_sent = Time.now
+      event.save
+    end
+  end
+
 private
   def clear_amounts
     if division_type != DivisionType::SPLIT
@@ -594,4 +645,35 @@ private
       self.save
     end
   end
+
+  def set_last_emails_sent
+    self.last_daily_email_sent = Time.now
+    self.last_auto_email_sent = Time.now
+    self.save
+  end
+
+  def self.send_unpaid_three_days_auto_email(user, event)
+    UserMailer.unpaid_three_days_auto_email(user, event).deliver
+  end
+
+  def self.send_unpaid_one_day_auto_email(user, event)
+    UserMailer.unpaid_one_day_auto_email(user, event).deliver
+  end
+
+  def self.send_paid_three_days_auto_email(user, event)
+    UserMailer.paid_three_days_auto_email(user, event).deliver
+  end
+
+  def self.send_paid_one_day_auto_email(user, event)
+    UserMailer.paid_one_day_auto_email(user, event).deliver
+  end
+
+  def send_daily_update_to_organizer(organizer, event)
+    UserMailer.daily_update_to_organizer(organizer, event).deliver
+  end
+
+  def send_event_end_to_organizer(organizer, event)
+    UserMailer.event_end_to_organizer(organizer, event).deliver
+  end
+
 end

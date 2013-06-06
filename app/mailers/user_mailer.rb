@@ -46,6 +46,48 @@ class UserMailer < ActionMailer::Base
     mail to: format_address_to(user), subject: "#{@nudge.event.title}: #{@nudge.nudger.first_name} Nudged You"
   end
 
+  def unpaid_three_days_auto_email(user, event)
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "There are three days left to pay for #{@event.title}."
+  end
+
+  def unpaid_one_day_auto_email(user, event)
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "There is only one day left to pay for #{@event.title}!!"
+  end
+
+  def paid_three_days_auto_email(user, event)
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "Help #{@event.organizer.first_name} get people to pay for #{@event.title}. There's three days left!"
+  end
+
+  def paid_one_day_auto_email(user, event)
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "Help #{@event.organizer.first_name} get people to pay for #{@event.title}!! There's only one day left!"
+  end
+
+  def daily_update_to_organizer(organizer, event)
+    @organizer = organizer
+    @event = event
+    
+    mail to: format_address_to(organizer), subject: "Daily PayWithMe update on #{@event.title}"
+  end
+
+  def event_end_to_organizer(organizer, event)
+    @organizer = organizer
+    @event = event
+    
+    mail to: format_address_to(organizer), subject: "#{@event.title} has been completed!"
+  end
+
 private
   def format_address_to(user)
     require 'mail'

@@ -22,6 +22,7 @@
 #  guest_token            :string(255)
 #  fundraiser_goal_cents  :integer
 #  minimum_donation_cents :integer
+#  last_auto_email_sent   :datetime
 #
 
 require 'spec_helper'
