@@ -18,20 +18,10 @@
 
     init: function()
     {
-      // Later make this more general
-      $("#event_division_type").change(function()
-      {
-        $(".event_division_type_option").hide();
-        $(".event_division_type_option").removeClass("selected");
-        $("#event_division_type_"+$(this).val()).show();
-        $("#event_division_type_"+$(this).val()).addClass("selected");
-      });
-      $("#event_division_type_"+$("#event_division_type").val()).show();
-      $("#event_division_type_"+$("#event_division_type").val()).addClass("selected");
-
+      return;
       var found_error = false;
       var that = this;
-      this.$element.find('.wizard-card').each(function()
+      this.$element.wizard('.find-card').each(function()
       {
         var errors = $(this).find('.field_with_error');
         if(errors.length > 0)

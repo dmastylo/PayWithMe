@@ -103,23 +103,35 @@ class Event < ActiveRecord::Base
     Payment.where("event_user_id IN (?) AND paid_at IS NOT NULL", self.event_user_ids).sum(&:amount_cents)
   end
 
-  # Division types
-  # ========================================================
-  def collecting_by_total?
-    collection_type == Collection::TOTAL
+  def method_missing(name, *arguments, &block)
+    if name =~ /^collecting_by_([a-z]+)/
+      return collection_type == Collection.const_get("#{$1}".upcase)
+    end
   end
 
-  def collecting_by_person?
-    collection_type == Collection::PERSON
+  def respond_to?(name, include_private=false)
+    if name =~ /^collecting_by/
+      true
+    else
+      super
+    end
   end
 
-  def collecting_by_donation?
-    collection_type == Collection::DONATION
-  end
+  # def collecting_by_total?
+  #   collection_type == Collection::TOTAL
+  # end
 
-  def collecting_by_item?
-    collection_type == Collection::ITEMIZED
-  end
+  # def collecting_by_person?
+  #   collection_type == Collection::PERSON
+  # end
+
+  # def collecting_by_donation?
+  #   collection_type == Collection::DONATION
+  # end
+
+  # def collecting_by_item?
+  #   collection_type == Collection::ITEM
+  # end
 
   # Disactivates attributes total and per_person for these  collection types
   def not_using_total?
@@ -150,7 +162,7 @@ class Event < ActiveRecord::Base
     TOTAL = 1
     PERSON = 2
     DONATION = 3
-    ITEMIZED = 4
+    ITEM = 4
   end
   class Privacy
     PUBLIC = 1
@@ -409,7 +421,7 @@ private
       donation_goal = nil
     end
     
-    if collection_type != Collection::ITEMIZED
+    if collection_type != Collection::ITEM
       self.items = []
     end
   end

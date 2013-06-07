@@ -9,9 +9,9 @@
           ["I need a certain amount from each person. For example: $30 for new uniforms.", 2],
           ["Anyone can pay as much as they want. For example, a fundraiser.", 3],
           ["People choose which items and how many they want. For example: concert tickets, t-shirts, hats.", 4]
-        ], @event.collection_type), {}, { class: 'input-block-level' } %>
+        ], @event.collection_type), {}, { class: 'input-block-level js-block-controller', data: { group: 'collection-type' } } %>
         
-        <div class="event_division_type_option btn_group_option" id="event_division_type_1">
+        <div class="js-block" data-group="collection-type" data-id="1">
           <%= f.label :total, "How much do you need in total? (required)" %>
           <div class="input-prepend autosize">
             <span class="add-on">$</span>
@@ -19,7 +19,7 @@
           </div>
         </div>
 
-        <div class="event_division_type_option btn_group_option" id="event_division_type_2">
+        <div class="js-block" data-group="collection-type" data-id="2">
           <%= f.label :per_person, "How much do you need each person to pay? (required)" %>
           <div class="input-prepend autosize">
             <span class="add-on">$</span>
@@ -27,7 +27,7 @@
           </div>
         </div>
 
-        <div class="event_division_type_option btn_group_option push-bottom-small" id="event_division_type_3">
+        <div class="js-block" data-group="collection-type" data-id="3">
           <%= f.label :donation_goal, "What is the goal amount for the fundraiser? (required)" %>
           <div class="input-prepend autosize push-bottom-small">
             <span class="add-on">$</span>
@@ -41,7 +41,7 @@
           </div>
         </div>
 
-        <div class="event_division_type_option btn_group_option" id="event_division_type_4">
+        <div class="js-block" data-group="collection-type" data-id="4">
           <div id="items">
             <% form_counter = 0 %>
             <%= f.fields_for :items do |builder| %>

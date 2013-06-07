@@ -29,7 +29,7 @@ class EventsController < ApplicationController
     @message = Message.new
     @event_user = @event.event_user_of(current_user)
     if @event_user.present?
-      @payment = @event_user.create_payment if @event.collecting_by_item? or @event.collecting_by_donation? or event_user.unpaid?
+      @payment = @event_user.create_payment if @event.collecting_by_item? || @event.collecting_by_donation? || event_user.unpaid?
     else
       @event_user = EventUser.new
     end
