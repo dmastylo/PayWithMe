@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506193243) do
+ActiveRecord::Schema.define(:version => 20130606231544) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.integer  "paid_total_cents", :default => 0
     t.integer  "status",           :default => 0
     t.integer  "nudges_remaining", :default => 0
+    t.boolean  "accepted_invite",  :default => false
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -87,6 +88,8 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.string   "guest_token"
     t.integer  "fundraiser_goal_cents"
     t.integer  "minimum_donation_cents"
+    t.datetime "last_auto_email_sent"
+    t.datetime "last_daily_email_sent"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -222,6 +225,7 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.datetime "sent_at"
+    t.integer  "rating"
   end
 
   create_table "organizations", :force => true do |t|
@@ -268,6 +272,14 @@ ActiveRecord::Schema.define(:version => 20130506193243) do
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
+
+  create_table "posts", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.boolean  "published"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "reminder_users", :force => true do |t|
     t.integer  "reminder_id"
