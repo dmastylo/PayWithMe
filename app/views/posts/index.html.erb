@@ -25,6 +25,7 @@
       <% if @posts.any? %>
         <ul class="list-styling">
           <%= render @posts %>
+          <%= will_paginate @posts %>
         </ul>
       <% else %>
         No posts yet!

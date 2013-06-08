@@ -3,7 +3,7 @@ class PostsController < ApplicationController
   before_filter :user_is_admin, only: [:new, :create, :edit, :update]
 
   def index
-    @posts = Post.published.paginate(page: params[:page], :per_page => 15)
+    @posts = Post.published.paginate(page: params[:page], :per_page => 5)
   end
 
   def show
