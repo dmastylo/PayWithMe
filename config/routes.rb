@@ -19,6 +19,7 @@ PayWithMe::Application.routes.draw do
       get 'payments'
       get 'nudges'
       get 'campus_reps'
+      get 'posts'
     end
   end
 
