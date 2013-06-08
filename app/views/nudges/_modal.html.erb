@@ -12,20 +12,20 @@
     <div class="push-bottom-small">
       Nudge Rating:
       <div class="btn-group">
-        <a href="#" class="btn rating-button disabled" data-rating="G">G</a>
-        <a href="#" class="btn rating-button" data-rating="PG13">PG13</a>
-        <a href="#" class="btn rating-button" data-rating="R">R</a>
+        <a href="#" class="btn rating-modal-button disabled" data-rating="G">G</a>
+        <a href="#" class="btn rating-modal-button" data-rating="PG13">PG13</a>
+        <a href="#" class="btn rating-modal-button" data-rating="R">R</a>
       </div>
     </div>
 
     Sample nudge message:
-    <div id="sample-modal-G-nudge" class="sample-nudge-text">
+    <div id="sample-modal-G-nudge" class="sample-modal-nudge-text">
       <textarea rows="3" class="input-block-level" disabled>Hi there, You've been nudged! <%= current_user.first_name %> wants you to get your money in for <%= @event.title %>. What are you waiting for?</textarea>
     </div>
-    <div id="sample-modal-PG13-nudge" class="sample-nudge-text">
+    <div id="sample-modal-PG13-nudge" class="sample-modal-nudge-text">
       <textarea rows="3" class="input-block-level" disabled>Hurry up!! You need to get your shit together and make your payment to <%= @event.organizer.first_name %> for <%= @event.title %>. You are holding up the group and it’s annoying everyone!</textarea>
     </div>
-    <div id="sample-modal-R-nudge" class="sample-nudge-text">
+    <div id="sample-modal-R-nudge" class="sample-modal-nudge-text">
       <textarea rows="3" class="input-block-level" disabled>Stop f-ing around!! You agreed to pay for <%= @event.title %> and you are just sitting on your ass. Everyone is waiting for you to pay, so just do it!</textarea>
     </div>
 
@@ -47,13 +47,13 @@
     $("#nudge-modal").modal();
     $("#nudge-modal .members").show();
 
-    $('.rating-button').click(function(e)
+    $('.rating-modal-button').click(function(e)
     {
       e.preventDefault();
       $clicked = $(this);
       var rating = $clicked.data("rating");
 
-      $('.rating-button').each(function()
+      $('.rating-modal-button').each(function()
       {
         $(this).removeClass('disabled');
       });
@@ -66,7 +66,7 @@
         $this.prop("href", newUrl);
       });
 
-      $('.sample-nudge-text').hide();
+      $('.sample-modal-nudge-text').hide();
       $('#sample-modal-' + rating + '-nudge').show();
 
       $clicked.addClass('disabled');

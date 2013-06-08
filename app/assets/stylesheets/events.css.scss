@@ -46,6 +46,11 @@
   display: none;
 }
 
+.sample-modal-nudge-text ~ .sample-modal-nudge-text
+{
+  display: none;
+}
+
 .members
 {
   list-style-type: none;
