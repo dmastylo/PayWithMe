@@ -15,20 +15,38 @@
 class Nudge < ActiveRecord::Base
 
   # Accessible attributes
+  # ========================================================
   attr_accessible :event_id, :nudgee_id, :nudger_id, :rating
 
   # Validations
+  # ========================================================
   validates :event_id, presence: true
   validates :nudgee_id, presence: true
   validates :nudger_id, presence: true
 
   # Associations
+  # ========================================================
   belongs_to :nudgee, class_name: "User"
   belongs_to :nudger, class_name: "User"
   belongs_to :event
 
   # Callbacks
+  # ========================================================
   after_create :send_nudge_email_if_paid
+
+  # Scopes
+  # ========================================================
+  def self.nudges_rated_G
+    Nudge.where(rating: 1)
+  end
+
+  def self.nudges_rated_PG13
+    Nudge.where(rating: 2)
+  end
+
+  def self.nudges_rated_R
+    Nudge.where(rating: 3)
+  end
 
   def send_nudge_email_if_paid
     if self.event.event_user(self.nudger).status == EventUser::Status::PAID
@@ -46,6 +64,10 @@ class Nudge < ActiveRecord::Base
 
   def R?
     rating == Rating::R
+  end
+
+  def rating_in_words
+    { 1 => "G", 2 => "PG13", 3 => "R" }[self.rating]
   end
 
   # Constants

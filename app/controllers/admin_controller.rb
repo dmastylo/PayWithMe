@@ -20,6 +20,9 @@ class AdminController < ApplicationController
     @recent_payments = Payment.where('paid_at IS NOT NULL').order('created_at DESC').limit(10)
 
     @nudges_count = Nudge.count
+    @nudges_rated_G_count = Nudge.nudges_rated_G.count
+    @nudges_rated_PG13_count = Nudge.nudges_rated_PG13.count
+    @nudges_rated_R_count = Nudge.nudges_rated_R.count
     @recent_nudges = Nudge.find(:all, order: 'created_at DESC', limit: 10)
 
     @campus_reps_count = CampusRep.count
