@@ -85,7 +85,7 @@ class EventUsersController < ApplicationController
     @nudgee_event_user = @event_user
     @nudger_event_user = @event.event_user(current_user)
 
-    @event.nudge!(current_user, @nudgee_event_user.user)
+    @event.nudge!(current_user, @nudgee_event_user.user, params[:rating])
     @nudger_event_user.update_nudges_remaining
     respond_to do |format|
       format.js

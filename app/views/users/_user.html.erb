@@ -42,7 +42,7 @@
   <% if signed_in? && @event.present? %>
     <% if @event.can_nudge?(current_user, user, @event_user, event_user) %>
       <div class="nudge">
-        <span class="link-user-<%= user.id %>"><%= link_to "Nudge!", nudge_event_event_user_path(@event, @event.event_user(user)), class: "btn btn-primary btn-nudge", method: :put, remote: true %></span>
+        <span class="link-user-<%= user.id %>"><%= link_to "Nudge!", nudge_event_event_user_path(@event, @event.event_user(user), rating: "G"), class: "btn btn-primary btn-nudge", method: :put, remote: true %></span>
       </div>
     <% elsif @event.has_nudged?(current_user, user) %>
       <div class="nudge">
