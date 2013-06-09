@@ -493,9 +493,17 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def nudge!(nudger, nudgee)
+  def nudge!(nudger, nudgee, rating="G")
     if can_nudge?(nudger, nudgee)
-      nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id, event_id: self.id)
+      if rating == "G"
+        rating = 1 
+      elsif rating == "PG"
+        rating = 2
+      elsif rating == "R"
+        rating = 3
+      end
+
+      nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id, event_id: self.id, rating: rating)
     end
   end
 

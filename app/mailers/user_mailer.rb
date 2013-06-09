@@ -42,8 +42,9 @@ class UserMailer < ActionMailer::Base
     @user = user
     @nudge = nudge
     @event = @nudge.event
+    @organizer = @event.organizer
 
-    mail to: format_address_to(user), subject: "#{@nudge.event.title}: #{@nudge.nudger.first_name} Nudged You"
+    mail to: format_address_to(user), subject: "#{@nudge.nudger.first_name} wants you to pay for #{@nudge.event.title}"
   end
 
 private
