@@ -26,6 +26,7 @@ class Payment < ActiveRecord::Base
   # Accessible attributes
   # There is no available create route right now so we
   # can get away with things that shouldn't be accessible
+  # ========================================================
   attr_accessible :error_message, :payer_id, :payee_id, :event_id, :payment_method_id, :amount, :amount_cents, :processor_fee_amount_cents, :our_fee_amount_cents, :due_at, :requested_at, :event_user_id, :paid_at, :item_users_attributes
   attr_accessor :error_message
   monetize :amount_cents, allow_nil: true
@@ -34,6 +35,7 @@ class Payment < ActiveRecord::Base
   monetize :total_amount_cents, allow_nil: true
 
   # Relationships
+  # ========================================================
   belongs_to :payer, class_name: "User"
   belongs_to :payee, class_name: "User"
   belongs_to :event
@@ -43,6 +45,7 @@ class Payment < ActiveRecord::Base
   accepts_nested_attributes_for :item_users, allow_destroy: true
 
   # Validations
+  # ========================================================
   validates :payer_id, presence: true
   validates :payee_id, presence: true
   validates :event_id, presence: true
@@ -56,7 +59,18 @@ class Payment < ActiveRecord::Base
   validates :transaction_id, presence: true, if: :paid_and_not_cash?
 
   # Callbacks
+  # ========================================================
   before_validation :copy_event_attributes
+
+  # Scopes
+  # ========================================================
+  def self.electronic
+    Payment.where("payment_method_id != ?", PaymentMethod::MethodType::CASH)
+  end
+
+  def self.cash
+    Payment.where(payment_method_id: PaymentMethod::MethodType::CASH)
+  end
 
   def self.create_or_find_from_event_user(event_user, payment_method)
     payment_attributes = {
@@ -295,6 +309,7 @@ class Payment < ActiveRecord::Base
   end
 
   # Constants
+  # ========================================================
   class StatusType
     PENDING = 1
     PAID = 2

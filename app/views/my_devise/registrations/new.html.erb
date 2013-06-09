@@ -60,7 +60,7 @@
           <div class="control-group">
             <%= f.label :referrer_id, class: 'control-label' %>
             <div class="controls">
-              <%= f.select :referrer_id, CampusRep.list_of_reps, { :prompt => 'Were you referred by a campus rep?' }, class: "input-block-level" %>
+              <%= f.select :referrer_id, Affiliate.list_of_reps, { :prompt => 'Were you referred by a campus rep or company?' }, class: "input-block-level" %>
             </div>
           </div>
 

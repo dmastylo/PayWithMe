@@ -1,9 +1,9 @@
-<% provide(:title, "New Campus Rep") %>
+<% provide(:title, "Edit Affiliate") %>
 
 <% content_for(:wrapper_top) do %>
   <div class="container">
     <div class="page-header">
-      <h2>New Campus Rep</h2>
+      <h2>Edit Affiliate</h2>
     </div>
   </div>
 <% end %>
@@ -11,7 +11,7 @@
 <div class="container">
   <div class="span12 no-margin">
     <div class="well">
-      <%= form_for @campus_rep do |f| %>
+      <%= form_for @affiliate do |f| %>
         <%= render 'shared/error_messages', object: f.object %>
 
         <div class="control-group">

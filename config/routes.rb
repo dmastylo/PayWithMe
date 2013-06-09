@@ -17,7 +17,7 @@ PayWithMe::Application.routes.draw do
       get 'organizations'
       get 'payments'
       get 'nudges'
-      get 'campus_reps'
+      get 'affiliates'
     end
   end
 
@@ -97,7 +97,7 @@ PayWithMe::Application.routes.draw do
 
   resources :organizations, only: [:new, :create]
 
-  resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
+  resources :affiliates, only: [:show, :new, :create, :edit, :update, :destroy]
 
   match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
 

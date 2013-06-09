@@ -90,17 +90,18 @@
         <%= render collection: @recent_nudges, partial: "nudges/admin_nudge", as: :nudge %>
       </table>
 
-      <h3 class="pull-left">Recent Campus Reps</h3>
-      <%= link_to "View All Campus Reps", campus_reps_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
-      <%= link_to "Add New Campus Rep", new_campus_rep_path, class: "btn btn-primary pull-right push-top-small" %>
+      <h3 class="pull-left">Recent Affiliates</h3>
+      <%= link_to "View All Affiliates", affiliates_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
+      <%= link_to "Add New Affiliate", new_affiliate_path, class: "btn btn-primary pull-right push-top-small" %>
       <table class="table table-bordered table-striped">
         <tr>
-          <th><a rel="tooltip" title="Click name to edit">Name<a></th>
+          <th><a rel="tooltip" title="Click name to view details">Name<a></th>
           <th>School</th>
           <th>Referrals</th>
           <th>Created</th>
+          <th>Delete</th>
         </tr>
-        <%= render collection: @recent_campus_reps, partial: "campus_reps/admin_campus_rep", as: :campus_rep %>
+        <%= render collection: @recent_affiliates, partial: "affiliates/admin_affiliate", as: :affiliate %>
       </table>
     </div>
     <div class="span4">
@@ -119,13 +120,13 @@
           <span class="count"><%= @organizations_count %></span> restaurant contacts
         </div>
         <div class="large-statistic">
-          <span class="count"><%= @payments_count %></span> payments
+          <span class="count"><%= @payments_count %></span> payments / <span class="count"><%= @electronic_payments_count %></span> electronic / <span class="count"><%= @cash_payments_count %></span> cash
         </div>
         <div class="large-statistic">
           <span class="count"><%= @nudges_count %></span> nudges / <span class="count"><%= @nudges_rated_G_count %></span> G / <span class="count"><%= @nudges_rated_PG13_count %></span> PG13 / <span class="count"><%= @nudges_rated_R_count %></span> R
         </div>
         <div class="large-statistic">
-          <span class="count"><%= @campus_reps_count %></span> campus reps
+          <span class="count"><%= @affiliates_count %></span> affiliates
         </div>
       </div>
     </div>

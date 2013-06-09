@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: campus_reps
+# Table name: affiliates
 #
 #  id         :integer          not null, primary key
 #  name       :string(255)
@@ -9,7 +9,7 @@
 #  updated_at :datetime         not null
 #
 
-class CampusRep < ActiveRecord::Base
+class Affiliate < ActiveRecord::Base
 
   # Accessible attributes
   # ========================================================
@@ -22,7 +22,7 @@ class CampusRep < ActiveRecord::Base
   # Static functions
   # ========================================================
   def self.list_of_reps
-    CampusRep.all.collect { |c| [c.name + " from " + c.school, c.id] }
+    Affiliate.all.collect { |c| [c.name + " from " + c.school, c.id] }
   end
 
 end

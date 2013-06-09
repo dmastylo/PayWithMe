@@ -1,0 +1,26 @@
+<% provide(:title, "Show Affiliate") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span12">
+        <div class="page-header">
+          <h2>Show Affiliate</h2>
+        </div>
+      </div>
+
+      <div class="span3">
+        <%= link_to "Return to index", affiliates_admin_index_path, class: "btn btn-primary btn-block push-top-title" %>
+        <%= link_to "Edit Affiliate", edit_affiliate_path(@affiliate), class: "btn btn-primary btn-block push-top-title-second" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="span12 no-margin">
+    <div class="well">
+      
+    </div>
+  </div>
+</div>

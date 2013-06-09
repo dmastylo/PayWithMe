@@ -17,6 +17,8 @@ class AdminController < ApplicationController
     @recent_organizations = Organization.find(:all, order: 'created_at DESC', limit: 10)
 
     @payments_count = Payment.count
+    @electronic_payments_count = Payment.electronic.count
+    @cash_payments_count = Payment.cash.count
     @recent_payments = Payment.where('paid_at IS NOT NULL').order('created_at DESC').limit(10)
 
     @nudges_count = Nudge.count
@@ -25,8 +27,8 @@ class AdminController < ApplicationController
     @nudges_rated_R_count = Nudge.nudges_rated_R.count
     @recent_nudges = Nudge.find(:all, order: 'created_at DESC', limit: 10)
 
-    @campus_reps_count = CampusRep.count
-    @recent_campus_reps = CampusRep.find(:all, order: 'created_at DESC', limit: 10)
+    @affiliates_count = Affiliate.count
+    @recent_affiliates = Affiliate.find(:all, order: 'created_at DESC', limit: 10)
   end
 
   def users
@@ -57,7 +59,7 @@ class AdminController < ApplicationController
     @nudges = Nudge.paginate(page: params[:page], order: 'created_at DESC')
   end
 
-  def campus_reps
-    @campus_reps = CampusRep.paginate(page: params[:page], order: 'created_at DESC')
+  def affiliates
+    @affiliates = Affiliate.paginate(page: params[:page], order: 'created_at DESC')
   end
 end
