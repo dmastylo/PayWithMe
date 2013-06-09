@@ -7,6 +7,7 @@ class AdminController < ApplicationController
     @recent_users = User.where(stub: false).order('created_at DESC').limit(10)
 
     @events_count = Event.count
+    @active_events_count = Event.active_events.count
     @recent_events = Event.find(:all, order: 'created_at DESC', limit: 10)
 
     @groups_count = Group.count
@@ -27,10 +28,14 @@ class AdminController < ApplicationController
 
   def users
     @users = User.paginate(page: params[:page], order: 'created_at DESC')
+    @online_users = User.online
+    @all_active_last_30_days = User.all_active_last_30_days
+    @all_active_last_24_hours = User.all_active_last_24_hours
   end
 
   def events
     @events = Event.paginate(page: params[:page], order: 'created_at DESC', include: [:payment_methods, :organizer])
+    @active_events = Event.active_events
   end
 
   def groups

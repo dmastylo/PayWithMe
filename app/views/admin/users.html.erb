@@ -19,6 +19,8 @@
       <ul class="nav nav-tabs" id="myTab" data-tabs="tabs">
         <li class="active"><a href="#all_users" data-toggle="tab">All Users</a></li>
         <li><a href="#online_users" data-toggle="tab">Online Users</a></li>
+        <li><a href="#monthly_active" data-toggle="tab">Active Last 30 Days</a></li>
+        <li><a href="#daily_active" data-toggle="tab">Active Last 24 Hours</a></li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane active" id="all_users">
@@ -48,7 +50,41 @@
               <th><a rel="tooltip" title="Organized Events">OE</a></th>
               <th><a rel="tooltip" title="Member Events">ME</a></th>
             </tr>
-            <%= render collection: User.online, partial: "users/admin_user", as: :user, locals: { full: true } %>
+            <%= render collection: @online_users, partial: "users/admin_user", as: :user, locals: { full: true } %>
+          </table>
+
+          <%= will_paginate @users %>
+        </div>
+
+        <div class="tab-pane" id="monthly_active">
+          <table class="table table-bordered table-striped">
+            <tr>
+              <th>Name</th>
+              <th><a rel="tooltip" title="Online Users">On</a></th>
+              <th>Email</th>
+              <th>Registered</th>
+              <th><a rel="tooltip" title="Linked Accounts">LA</a></th>
+              <th><a rel="tooltip" title="Organized Events">OE</a></th>
+              <th><a rel="tooltip" title="Member Events">ME</a></th>
+            </tr>
+            <%= render collection: @all_active_last_30_days, partial: "users/admin_user", as: :user, locals: { full: true } %>
+          </table>
+
+          <%= will_paginate @users %>
+        </div>
+
+        <div class="tab-pane" id="daily_active">
+          <table class="table table-bordered table-striped">
+            <tr>
+              <th>Name</th>
+              <th><a rel="tooltip" title="Online Users">On</a></th>
+              <th>Email</th>
+              <th>Registered</th>
+              <th><a rel="tooltip" title="Linked Accounts">LA</a></th>
+              <th><a rel="tooltip" title="Organized Events">OE</a></th>
+              <th><a rel="tooltip" title="Member Events">ME</a></th>
+            </tr>
+            <%= render collection: @all_active_last_24_hours, partial: "users/admin_user", as: :user, locals: { full: true } %>
           </table>
 
           <%= will_paginate @users %>

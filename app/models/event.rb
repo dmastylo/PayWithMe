@@ -85,6 +85,12 @@ class Event < ActiveRecord::Base
   extend FriendlyId
   friendly_id :title, use: [:slugged, :history]
 
+  # Scopes
+  # ========================================================
+  def self.active_events
+    Event.where("due_at > ?", Time.now)
+  end
+
   # Money definitions
   # ========================================================
   def total_amount_cents

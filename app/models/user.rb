@@ -85,6 +85,14 @@ class User < ActiveRecord::Base
   # ========================================================
   scope :online, lambda { where("last_seen > ?", 3.minutes.ago) }
 
+  def self.all_active_last_30_days
+    User.where("last_seen > ?", Time.now - 1.month)
+  end
+
+  def self.all_active_last_24_hours
+    User.where("last_seen > ?", Time.now - 1.day)
+  end
+
   # Pretty URLs
   # ========================================================
   extend FriendlyId
