@@ -1,4 +1,4 @@
-<% if !event_user.paid? || @event.fundraiser? %>
+<% if !event_user.paid? || event_user.event.fundraiser? %>
   <div class="push-top-tiny" id="payment-links-<%= event_user.id %>">
     <%= form_for(event_user.payment, method: :put, remote: true, url: paid_payment_path(event_user.payment), html: { class: "js-catch-errors js-catch-success"} ) do |f| %>
       <%= f.hidden_field :cash, value: true %>
@@ -10,6 +10,6 @@
   </div>
 <% elsif event_user.paid_with_cash? %>
   <div class="push-top-tiny" id="payment-links-<%= event_user.id %>">
-    <%= link_to "Mark Unpaid", unpaid_event_event_user_path(event_user.event, event_user), class: "btn btn-danger btn-block", method: :put, remote: true %>
+    <%= link_to "Mark Unpaid", unpaid_payment_path(event_user.payment), class: "btn btn-danger btn-block", method: :put, remote: true %>
   </div>
 <% end %>

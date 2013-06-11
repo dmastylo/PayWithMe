@@ -49,8 +49,19 @@ class Payment < ActiveRecord::Base
   # validates :our_fee, presence: true, numericality: { greater_than_or_equal_to: 0 }
   # validates :transaction_id, presence: true, if: :paid_and_not_cash?
 
+  def reset!
+    reset
+    save
+  end
+
+  def reset
+    self.paid_amount = self.paid_at = self.cash = nil
+    # raise self.to_yaml
+  end
+
   def set_status!
-    set_status; save
+    set_status
+    save
   end
 
   def set_status

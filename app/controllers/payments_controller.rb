@@ -2,8 +2,8 @@ class PaymentsController < ApplicationController
   before_filter :authenticate_user!, except: [:ipn]
   before_filter :ensure_payment_is_unpaid!, only: [:pay, :paid]
   before_filter :ensure_user_can_pay_payment!, only: [:pay, :paid]
-  before_filter :ensure_payment_is_paid!, only: [:unpay]
-  before_filter :ensure_payment_is_cash!, only: [:unpay]
+  before_filter :ensure_payment_is_paid!, only: [:unpaid]
+  before_filter :ensure_payment_is_cash!, only: [:unpaid]
   # before_filter :ensure_user_owns_payment!, except: [:ipn]
 
   def paid
@@ -26,6 +26,12 @@ class PaymentsController < ApplicationController
         render json: @payment.errors, status: :unprocessable_entity
       end
     end
+  end
+
+  def unpaid
+    @payment.reset!
+    @payment.event_user.set_status!
+    render json: { html: render_to_string("unpaid", layout: false), method: "replace", destination: "js-unpaid" }
   end
 
   # def items
