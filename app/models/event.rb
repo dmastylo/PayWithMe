@@ -8,9 +8,9 @@
 #  due_at                 :datetime
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  collection_type          :integer
-#  total_cents     :integer
-#  per_person_cents     :integer
+#  collection_type        :integer
+#  total_cents            :integer
+#  per_person_cents       :integer
 #  organizer_id           :integer
 #  privacy_type           :integer
 #  slug                   :string(255)
@@ -23,15 +23,19 @@
 #  send_tickets           :boolean          default(FALSE)
 #  location_title         :string(255)
 #  location_address       :string(255)
-#  donation_goal_cents  :integer
+#  donation_goal_cents    :integer
 #  minimum_donation_cents :integer
 #
 
 class Event < ActiveRecord::Base
 
   # Attributes
-  attr_accessible :amount_cents, :amount, :description, :due_at, :title, :collection_type, :total_cents, :total, :per_person_cents, :per_person, :donation_goal_cents, :donation_goal, :minimum_donation, :privacy_type, :due_at_date, :due_at_time, :image, :image_type, :image_url, :invitation_types, :items_attributes
-  attr_accessor :due_at_date, :due_at_time, :image_type
+  attr_accessible :title, :description, :due_at, :collection_type, :privacy_type, :image_url,
+    # Currency attributes - don't touch *_cents
+    :total, :per_person, :donation_goal, :minimum_donation,
+    # Virtual attributes
+    :due_at_date, :due_at_time, :image_type, :items_attributes
+  attr_accessor :due_at_date, :due_at_time, :image_type, :invitation_group
   [:total, :per_person, :donation_goal, :collected, :minimum_donation].each do |field| monetize "#{field}_cents", allow_nil: true end
   has_attached_file :image
 
@@ -51,7 +55,7 @@ class Event < ActiveRecord::Base
   # Relationships
   belongs_to :organizer, class_name: "User"
   has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :user
+  has_many :members, class_name: "User", through: :event_users, source: :user, before_add: :handle_member_add, before_remove: :handle_member_remove
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
@@ -73,42 +77,16 @@ class Event < ActiveRecord::Base
   after_save :create_guest_token
 
   # Pretty URLs
-  # ========================================================
   extend FriendlyId
   friendly_id :title, use: [:slugged, :history]
 
-  # Money definitions
-  # ========================================================
-  def total_cents
-    if collecting_by_total?
-      super # Retrieve from the database
-    elsif empty? || per_person_cents_missing? || not_using_total?
-      nil
-    else
-      per_person_cents * paying_member_count
-    end
-  end
-
-  def per_person_cents
-    if collecting_by_person?
-      super # Retrieve from the database
-    elsif empty? || total_cents_missing? || not_using_total?
-      nil
-    else
-      total_cents / paying_member_count
-    end
-  end
-
-  def collected_cents
-    Payment.where("event_user_id IN (?) AND paid_at IS NOT NULL", self.event_user_ids).sum(&:amount_cents)
-  end
-
+  # Dynamic methods
   def method_missing(name, *arguments, &block)
-    if name =~ /^collecting_by_([a-z]+)/
+    if name =~ /^collecting_by_([a-z]+)\?/
+      # Defines colleciton_by_total?, collection_by_person?, collecting_by_donation?, collecting_by_item?
       return collection_type == Collection.const_get("#{$1}".upcase)
     end
   end
-
   def respond_to?(name, include_private=false)
     if name =~ /^collecting_by/
       true
@@ -117,47 +95,59 @@ class Event < ActiveRecord::Base
     end
   end
 
-  # def collecting_by_total?
-  #   collection_type == Collection::TOTAL
-  # end
-
-  # def collecting_by_person?
-  #   collection_type == Collection::PERSON
-  # end
-
-  # def collecting_by_donation?
-  #   collection_type == Collection::DONATION
-  # end
-
-  # def collecting_by_item?
-  #   collection_type == Collection::ITEM
-  # end
-
-  # Disactivates attributes total and per_person for these  collection types
-  def not_using_total?
+  # Money definitions
+  def total_cents
+    if collecting_by_total?
+      super # Retrieve from the database
+    elsif empty? || per_person_cents_missing? || not_using_total?
+      nil
+    else
+      per_person_cents * paying_members.count
+    end
+  end
+  def per_person_cents
+    if collecting_by_person?
+      super # Retrieve from the database
+    elsif empty? || total_cents_missing? || not_using_total?
+      nil
+    else
+      total_cents / paying_members.count
+    end
+  end
+  def collected_cents
+    # TODO: Payments are linked to events, use that instead
+    Payment.where("event_user_id IN (?) AND paid_at IS NOT NULL", self.event_user_ids).sum(&:amount_cents)
+  end
+  def accepts_donation?(amount_cents) # Should this be in cents or dollars?
+    amount_cents >= minimum_donation_cents
+  end
+  def paid_percent
+    if self.collected > 0
+      if self.collecting_by_donation?
+        100.0 * (self.collected / self.donation_goal)
+      else
+        100.0 * (self.collected / self.total)
+      end
+    else
+      0
+    end
+  end
+  
+  # Collection/privacy types
+  def not_using_total? # Disactivates attributes total and per_person for these collection types
     collecting_by_donation? || collection_by_items?
   end
-
-  # Privacy types
-  # ========================================================
   def public?
     privacy_type == Privacy::PUBLIC
   end
-
   def private?
     privacy_type == Privacy::PRIVATE
   end
-
   def share_link?
     self.invitation_type_ids.include?(InvitationType::Type::LINK)
   end
 
-  def accepts_donation? amount_cents
-    amount_cents >= minimum_donation_cents
-  end
-
   # Constants
-  # ========================================================
   class Collection
     TOTAL = 1
     PERSON = 2
@@ -170,7 +160,6 @@ class Event < ActiveRecord::Base
   end
 
   # Virtual attributes
-  # ========================================================
   def due_at_date
     if @due_at_date.present?
       @due_at_date
@@ -178,7 +167,6 @@ class Event < ActiveRecord::Base
       due_at.to_date.to_s
     end
   end
-
   def due_at_time
     if @due_at_time.present?
       @due_at_time
@@ -186,9 +174,6 @@ class Event < ActiveRecord::Base
       due_at.strftime('%I:%M%p')
     end
   end
-
-  # Event image
-  # ========================================================
   def image_type
     if @image_type.present?
       @image_type
@@ -202,126 +187,62 @@ class Event < ActiveRecord::Base
   end
 
   # Member definitions
-  # ========================================================
   # Three states: paying, paid, unpaid
   has_many :paying_event_users, class_name: "EventUser", conditions: proc { ["event_users.user_id <> ? ", organizer_id ]}
   has_many :paying_members, class_name: "User", through: :paying_event_users, source: :user
-  has_many :paid_event_users, class_name: "EventUser", conditions: proc { ["event_users.paid_at IS NOT NULL" ]}
+  has_many :paid_event_users, class_name: "EventUser", conditions: proc { ["event_users.paid_at IS NOT NULL AND event_users.user_id <> ?", organizer_id ]}
   has_many :paid_members, class_name: "User", through: :paid_event_users, source: :user
-  has_many :unpaid_event_users, class_name: "EventUser", conditions: proc { ["event_users.paid_at IS NULL"] }
+  has_many :unpaid_event_users, class_name: "EventUser", conditions: proc { ["event_users.paid_at IS NULL AND event_users.user_id <> ?", organizer_id] }
   has_many :unpaid_members, class_name: "User", through: :unpaid_event_users, source: :user
 
   def empty?
     self.paying_event_users.empty?
   end
-
-  def paid_percentage
-    if self.collected > 0
-      if self.collecting_by_donation?
-        100.0 * self.collected / self.donation_goal
-      else
-        100.0 * self.collected / self.total
-      end
-    else
-      0
-    end
-  end
-  
-  def add_member(member, exclude_from_notifications=nil)
-    add_members([member], exclude_from_notifications)
+  def invited?(user)
+    members.include?(user)
   end
 
-  def add_members(members_to_add, exclude_from_notifications=nil)
-    editing_event = true if self.members.length != 0
-    event_users = []
-    event_update_notifications = []
-    event_invite_notifications = []
-    event_new_member_news = []
-
-    members_to_add.each do |member|
-      if member.valid?
-        if self.members.include?(member)
-          event_update_notifications.push(member.id) unless member == exclude_from_notifications
-        else
-          event_users.push EventUser.new(user_id: member.id, event_id: self.id)
-          event_invite_notifications.push member.id unless member == exclude_from_notifications
-          if editing_event
-            event_new_member_news.push member.id unless member == exclude_from_notifications
-          end
-        end
-      end
-    end
-
-    EventUser.import event_users, validate: false unless event_users.empty?
-    Event.delay.send_invitation_emails(self.id) unless event_users.empty?
-    Notification.delay.create_or_update_for_event_update(self.id, event_update_notifications) unless event_update_notifications.empty?
-    Notification.delay.create_for_event(self.id, event_invite_notifications) unless event_invite_notifications.empty?
-    NewsItem.delay.create_for_new_event_member(self.id, event_new_member_news) unless event_new_member_news.empty? || !editing_event
+  # Notifications, emails, and news items
+  def update_members(&block)
+    self.invitation_group = event_users.maximum(:invitation_group) + 1
+    block.call
   end
-
-  # Adds members and deletes any not in the set
-  def set_members(members_to_set, exclude_from_notifications=nil)
-    members_to_delete = []
-    self.members.each do |member|
-      if !members_to_set.include?(member)
-        members_to_delete.push member
-      end
-    end
-    self.members -= members_to_delete
-
-    self.add_members(members_to_set, exclude_from_notifications)
-    self.reload
-  end
-
-  def remove_members(members_to_remove)
-    self.set_members(self.members - members_to_remove)
-  end
-
-  def remove_member(member_to_remove)
-    self.remove_members([member_to_remove])
-  end
-
-  def self.send_invitation_emails(event_id)
+  def self.queue_broadcasts(event_id, broadcasts=[:invitations, :tickets, :guests, :messages])
     event = Event.find_by_id(event_id, include: { event_users: :user })
-    event.event_users.each do |event_user|
-      if !event_user.invitation_sent? && event_user.user_id != event.organizer_id
-        if event_user.user.stub?
-          event_user.user.create_guest_token
-        end
-        UserMailer.event_notification(event_user.user, event).deliver
-        event_user.toggle(:invitation_sent).save
+    if event.present?
+      broadcasts.each do |method| event.send("broadcast_#{method}") end
+    end
+  end
+  def broadcast_invitations
+    event_users.each do |event_user|
+      if !event_user.sent_invitation_email? && event_user.user_id != organizer_id
+        event_user.user.create_guest_token if event_user.user.stub?
+        UserMailer.send_for_event_invitation(self, event_user.user).deliver
+        Notification.create_for_event_invitation(self.id, event_user.user_id)
+        event_user.toggle(:sent_invitation_email).save
       end
     end
   end
-
-  def self.send_message_notifications(event_id)
-    event = Event.find_by_id(event_id, include: :members)
-    Notification.create_or_update_for_event_message(event, event.member_ids)
+  def broadcast_tickets
+    # event_users.each do |event_user|
+    #   if !event_user.sent_ticket_email? && event_user.paid?
+    #   end
+    # end
   end
-
-  def add_groups(groups_to_add)
-    groups_to_add.each do |group|
-      self.groups << group unless self.groups.include?(group)
-    end
-  end
-
-  def set_groups(groups_to_set)
-    self.groups.each do |group|
-      if !groups_to_set.include?(group)
-        self.groups.delete(group)
+  def broadcast_guests
+    event_users.each do |event_user|
+      if !event_user.sent_guest_broadcast?
+        event_user.toggle(:sent_guest_broadcast)
       end
     end
-
-    add_groups(groups_to_set)
+  end
+  def broadcast_messages
   end
 
-  def remove_groups(groups_to_remove)
-    self.set_groups(self.groups - groups_to_remove)
-  end
-
-  def remove_group(group_to_remove)
-    self.remove_groups([group_to_remove])
-  end
+  # def send_message_notifications
+  #   event = Event.find_by_id(event_id, include: :members)
+  #   Notification.create_or_update_for_event_message(event, event.member_ids)
+  # end
 
   def independent_members
     nfgdi_members = self.paying_members
@@ -333,14 +254,11 @@ class Event < ActiveRecord::Base
     nfgdi_members
   end
 
-  def invited?(user)
-    members.include?(user)
-  end
-
   def invitation_type_ids
     self.invitation_types.collect { |invitation_type| invitation_type.invitation_type }
   end
 
+  # TODO: Refactor these methods
   def event_user_of(user)
     event_users.find_by_user_id(user)
   end
@@ -364,7 +282,6 @@ class Event < ActiveRecord::Base
   end
 
   # Nudges
-  # ========================================================
   def can_nudge?(nudger, nudgee, nudger_event_user=nil, nudgee_event_user=nil)
     if nudger_event_user.nil?
       nudger_event_user = self.event_user_of(nudger)
@@ -407,23 +324,11 @@ class Event < ActiveRecord::Base
 
 private
   def clear_amounts
-    if collection_type != Collection::PERSON
-      per_person_cents = nil
-      per_person = nil
-    end
-
-    if collection_type != Collection::TOTAL
-      total_cents = nil
-      total = nil
-    end
-
-    if collection_type != Collection::DONATION
-      donation_goal = nil
-    end
-    
-    if collection_type != Collection::ITEM
-      self.items = []
-    end
+    self.per_person = nil unless collecting_by_person?
+    self.total = nil unless collecting_by_total?
+    self.donation_goal = nil unless collecting_by_donation?
+    self.items = [] unless collecting_by_item?
+    self.items_attributes = [] unless collecting_by_item?
   end
 
   def concatenate_dates

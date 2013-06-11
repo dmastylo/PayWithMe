@@ -16,18 +16,5 @@
       <strong>Paid:</strong> <%= distance_of_time_in_words_to_now event_user.paid_at %> ago
     </div>
     <div class="clearfix"></div>
-    <% if itemized %>
-      <div class="push-top-tiny">
-        <% event_user.item_users.each do |item_user| %>
-          <% item = @items[item_user.item_id] %>
-          <strong><%= item.title %>:</strong>
-          <%= item_user.quantity %>
-          <br />
-        <% end %>
-        <div class="push-top-tiny">
-          <em><strong>Total:</strong> <%= humanized_money_with_symbol event_user.paid_total %></em>
-        </div>
-      </div>
-    <% end %>
   </div>
 </div>

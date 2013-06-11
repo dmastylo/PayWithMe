@@ -27,17 +27,13 @@ class Notification < ActiveRecord::Base
   belongs_to :user
 
   # Creation methods
-  def self.create_for_event(event_id, user_ids)
-    notifications = []
-    user_ids.each do |user_id|
-      notifications.push Notification.new(
-        notification_type: NotificationType::INVITE,
-        foreign_type: ForeignType::EVENT,
-        foreign_id: event_id,
-        user_id: user_id
-      )
-    end
-    Notification.import notifications
+  def self.create_for_event_invitation(event_id, user_id)
+    Notification.create(
+      notification_type: NotificationType::INVITE,
+      foreign_type: ForeignType::EVENT,
+      foreign_id: event_id,
+      user_id: user_id
+    )
   end
 
   def self.create_for_group(group_id, user_ids)

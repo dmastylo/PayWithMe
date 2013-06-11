@@ -2,21 +2,23 @@
 #
 # Table name: event_users
 #
-#  id               :integer          not null, primary key
-#  event_id         :integer
-#  user_id          :integer
-#  amount_cents     :integer          default(0)
-#  due_at           :datetime
-#  paid_at          :datetime
-#  invitation_sent  :boolean          default(FALSE)
-#  payment_id       :integer
-#  visited_event    :boolean          default(FALSE)
-#  last_seen        :datetime
-#  paid_with_cash   :boolean          default(TRUE)
-#  paid_total_cents :integer          default(0)
-#  status           :integer          default(0)
-#  nudges_remaining :integer          default(0)
-#  ticket_sent      :boolean          default(FALSE)
+#  id                           :integer          not null, primary key
+#  event_id                     :integer
+#  user_id                      :integer
+#  amount_cents                 :integer          default(0)
+#  due_at                       :datetime
+#  paid_at                      :datetime
+#  sent_invitation_email        :boolean          default(FALSE)
+#  visited_event                :boolean          default(FALSE)
+#  last_seen                    :datetime
+#  paid_with_cash               :boolean          default(TRUE)
+#  paid_total_cents             :integer          default(0)
+#  status                       :integer          default(0)
+#  nudges_remaining             :integer          default(0)
+#  sent_ticket_email            :boolean          default(FALSE)
+#  sent_invitation_notification :boolean          default(FALSE)
+#  sent_guest_broadcast         :boolean          default(FALSE)
+#  invitation_group             :integer          default(0)
 #
 
 class EventUser < ActiveRecord::Base
@@ -29,22 +31,25 @@ class EventUser < ActiveRecord::Base
   # Validations
   validates :event_id, presence: true
   validates :user_id, presence: true
-  # validates :amount_cents, presence: true
 
   # Relationships
   belongs_to :user, class_name: "User", foreign_key: "user_id"
   belongs_to :event
-  has_many :payments
+  has_one :payment
   has_many :nudges
   has_many :item_users
 
   # Callbacks
-  # before_validation :copy_event_attributes
-  # after_initialize :copy_event_attributes
-  # after_save :copy_event_attributes
+  after_create :check_event
+  after_create :update_payment!
+  before_save :set_status
 
   def paid?
-  	paid_at.present?
+    status == Status::PAID
+  end
+
+  def unpaid?
+    paid_at.nil?
   end
 
   def on_page?
@@ -57,92 +62,12 @@ class EventUser < ActiveRecord::Base
     end
   end
 
-  def amount_present?
-    self.amount.present?
-  end
-
-  def member?
+  def is_member?
     self.event.present? && self.event.organizer != self.user
   end
 
-  def organizer?
+  def is_organizer?
     self.event.present? && self.event.organizer == self.user
-  end
-
-  # def paid_total_cents
-  #   payments.where("paid_at IS NOT NULL").sum(&:amount_cents)
-  # end
-
-  def create_payment(options={})
-    copy_event_attributes
-    current_cents = options[:amount_cents] || amount_cents
-    unless self.event.fundraiser? || self.event.itemized?
-      if current_cents > amount_cents
-        return false
-      end
-    end
-
-    payment = user.sent_payments.find_or_create_by_payee_id_and_event_id_and_event_user_id_and_amount_cents_and_payment_method_id_and_paid_at(
-      payee_id: event.organizer.id,
-      event_id: event.id,
-      event_user_id: self.id,
-      amount_cents: current_cents,
-      payment_method_id: payment_method.id,
-      paid_at: nil
-    )
-
-    if self.event.itemized?
-      self.event.items.each do |item|
-        payment.item_users.find_or_create_by_event_id_and_event_user_id_and_item_id_and_user_id(event_id: payment.event_id, event_user_id: payment.event_user_id, item_id: item.id, user_id: payment.event_user.user_id)
-      end
-    end
-    payment
-  end
-
-  def pay!(payment, options={})
-    copy_event_attributes
-    payment.pay!(options)
-
-    update_paid_total_cents
-    update_paid_with_cash
-    update_status
-    send_nudges
-    update_nudges_remaining
-
-    self.save
-
-    true
-  end
-
-  def unpay_cash_payments!
-    copy_event_attributes
-
-    update_paid_total_cents
-    update_paid_with_cash
-    update_status
-
-    self.save
-  end
-
-  def unpay!(payment)
-    copy_event_attributes
-    payment.unpay!
-
-    update_paid_total_cents
-    update_paid_with_cash
-    update_status
-    update_nudges_remaining
-
-    self.save
-  end
-
-  # Deletes all unfinished payments except for keep_payment
-  def clean_up_payments!(keep_payment_id=nil)
-    self.payments.each do |payment|
-      if payment.id != keep_payment_id && payment.paid_at.nil?
-        payment.destroy
-      end
-    end
   end
 
   class Status
@@ -160,67 +85,46 @@ class EventUser < ActiveRecord::Base
     end
   end
 
-  def update_status
-    statuses = self.payments.collect(&:status).uniq
-
-    if statuses.include?("new") && paid_at.nil?
-      self.status = EventUser::Status::PENDING
-    elsif paid_at.present?
-      self.status = EventUser::Status::PAID
-      clean_up_payments!
+  # Ensures that all payment information is updated
+  # :remote specifies to update payment information from Balanced
+  def update_payment!(options={ remote: false })
+    attributes = { payer_id: self.user_id, payee_id: self.event.organizer_id, event_id: self.event_id, amount: self.amount }
+    unless self.payment.present?
+      self.build_payment(attributes, without_protection: true).save
     else
-      self.status = EventUser::Status::UNPAID
+      self.payment.update_attributes!(attributes, without_protection: true)
+    end
+    if options[:remote]
+
     end
   end
 
-  def set_to_zero!
-    if self.paid_total_cents == 0
+  def set_status!
+    set_status
+    self.save
+  end
+
+  def set_status
+    if payment.paid?
+      self.status = Status::PAID
+      self.paid_at = payment.paid_at
+    else
+      self.status = Status::UNPAID
       self.paid_at = nil
-      self.paid_with_cash = true
-      self.status = 0
-      self.nudges_remaining = 0
-      self.save
     end
   end
 
-private
-  def copy_event_attributes
-    if self.event.present? && self.member?
-      self.due_at = self.event.due_at
-    end
-    unless self.event.fundraiser? || self.event.itemized?
+# private
+  # TODO: This seems like a common pattern that we need
+  def check_event!
+    check_event
+    save
+  end
+
+  def check_event
+    self.due_at = self.event.due_at
+    unless self.event.not_using_total?
       self.amount_cents = self.event.per_person_cents
-    end
-  end
-
-  def copy_fundraiser_event_attributes
-    if self.event.present? && self.member?
-      self.due_at = self.event.due_at
-    end
-  end
-
-  def update_paid_with_cash
-    self.paid_with_cash = true
-    # TODO: Make this pattern easier, it happens a lot
-    self.payments.each do |payment|
-      self.paid_with_cash = false unless payment.cash?
-    end
-  end
-
-  def update_paid_total_cents
-    self.paid_total_cents = 0
-    self.payments.each do |payment|
-      self.paid_total_cents += payment.amount_cents if payment.paid_at.present?
-    end
-
-    if event.fundraiser?
-      self.paid_at = Time.now
-    else
-      if self.paid_total_cents >= self.amount_cents
-        self.paid_at = Time.now
-      else
-        self.paid_at = nil
-      end
     end
   end
 

@@ -5,9 +5,7 @@
 #  id                  :integer          not null, primary key
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
-#  requested_at        :datetime
 #  paid_at             :datetime
-#  due_at              :datetime
 #  payer_id            :integer
 #  payee_id            :integer
 #  event_id            :integer
@@ -16,6 +14,7 @@
 #  processor_fee_cents :integer
 #  our_fee_cents       :integer
 #  cash                :boolean
+#  paid_total_cents    :integer
 #
 
 require 'spec_helper'

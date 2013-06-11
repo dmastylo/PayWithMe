@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Core
-gem 'rails', '3.2.13'
+gem 'rails', '3.2.13.rc2'
 gem 'thin'
 gem 'figaro'
 
@@ -14,6 +14,9 @@ group :development, :test do
   gem 'sqlite3'
 end
 gem 'ransack'
+
+# Payments
+gem 'balanced'
 
 # Localization
 gem 'american_date'
@@ -65,7 +68,7 @@ group :test do
   gem 'spork'
   gem 'guard-spork'
   gem 'guard-rspec'
-  gem 'rb-inotify', '~> 0.8.8'
+  gem 'rb-inotify', '~> 0.9'
   gem 'delorean'
   gem 'shoulda-matchers', '1.5.2'
 end

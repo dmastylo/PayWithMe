@@ -67,7 +67,7 @@ describe "Event pages" do
   describe "show page" do
     before do
       @public_event = FactoryGirl.create(:event)
-      @private_event = FactoryGirl.create(:event, privacy_type: Event::PrivacyType::PRIVATE)
+      @private_event = FactoryGirl.create(:event, privacy_type: Event::Privacy::PRIVATE)
     end
     
     describe "not signed in" do

@@ -2,21 +2,23 @@
 #
 # Table name: event_users
 #
-#  id               :integer          not null, primary key
-#  event_id         :integer
-#  user_id          :integer
-#  amount_cents     :integer          default(0)
-#  due_at           :datetime
-#  paid_at          :datetime
-#  invitation_sent  :boolean          default(FALSE)
-#  payment_id       :integer
-#  visited_event    :boolean          default(FALSE)
-#  last_seen        :datetime
-#  paid_with_cash   :boolean          default(TRUE)
-#  paid_total_cents :integer          default(0)
-#  status           :integer          default(0)
-#  nudges_remaining :integer          default(0)
-#  ticket_sent      :boolean          default(FALSE)
+#  id                           :integer          not null, primary key
+#  event_id                     :integer
+#  user_id                      :integer
+#  amount_cents                 :integer          default(0)
+#  due_at                       :datetime
+#  paid_at                      :datetime
+#  sent_invitation_email        :boolean          default(FALSE)
+#  visited_event                :boolean          default(FALSE)
+#  last_seen                    :datetime
+#  paid_with_cash               :boolean          default(TRUE)
+#  paid_total_cents             :integer          default(0)
+#  status                       :integer          default(0)
+#  nudges_remaining             :integer          default(0)
+#  sent_ticket_email            :boolean          default(FALSE)
+#  sent_invitation_notification :boolean          default(FALSE)
+#  sent_guest_broadcast         :boolean          default(FALSE)
+#  invitation_group             :integer          default(0)
 #
 
 require 'spec_helper'
@@ -27,7 +29,7 @@ describe EventUser do
     @event = FactoryGirl.create(:event)
     @user = FactoryGirl.create(:user)
     @event.add_member(@user)
-    @event_user = @event.event_user(@user)
+    @event_user = @event.event_user_of(@user)
   end
 
   subject { @event_user }

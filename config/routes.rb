@@ -26,13 +26,7 @@ PayWithMe::Application.routes.draw do
   resources :events do
     resources :messages, only: :create
     resources :reminders, only: [:new, :create]
-    resources :event_users, only: [:create] do
-      member do
-        put 'paid'
-        put 'unpaid'
-        put 'nudge'
-      end
-    end
+    resources :event_users, only: [:create]
     member do
       get 'admin'
       scope '/admin' do
@@ -73,19 +67,14 @@ PayWithMe::Application.routes.draw do
   end
 
   resources :event_users, only: [] do
-    member do
-      get 'pay'
-      get 'pay_fundraiser'
-    end
   end
 
   resources :payments, only: [] do
     member do
-      get 'pin'
-      post 'pay'
-      post 'ipn'
-      put 'items'
-      put 'fundraiser'
+      get 'pay'
+      put 'paid'
+      put 'unpaid'
+      # post 'ipn'
     end
   end
 

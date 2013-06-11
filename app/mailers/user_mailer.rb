@@ -9,12 +9,10 @@ class UserMailer < ActionMailer::Base
     mail to: format_address_to(user)
   end
 
-  def event_notification(user, event)
+  def send_for_event_invitation(event, user)
     return unless user.send_emails?
-
     @user = user
     @event = event
-
     mail to: format_address_to(user), subject: "You're invited: #{@event.title}"
   end
 

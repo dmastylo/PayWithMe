@@ -11,16 +11,17 @@
 // - none
 
 !function($) {
-  $(".js-block-controller").change(function() {
+  function blockControllerChange() {
     var group = $(this).data("group"),
       id = $(this).val(),
-      $controlled_blocks = $(this).parent().find(".js-block[data-group="+group+"]");
+      $controlled_blocks = $(this).parent().find(".js-block[data-group="+group+"]"); // If necessary, make this selector more general
     $controlled_blocks.hide();
     $controlled_blocks.each(function() {
       if($(this).data("id").toString() === id) {
         $(this).show();
       }
-    })
-  });
-  $(".js-selected-block").hide();
+    });
+  }
+  $(".js-block-controller").change(blockControllerChange);
+  $(".js-block-controller").each(blockControllerChange);
 }(window.jQuery);

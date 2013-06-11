@@ -4,7 +4,7 @@
 #
 #  id         :integer          not null, primary key
 #  email      :string(255)
-#  per_person      :boolean          default(TRUE)
+#  split      :boolean          default(TRUE)
 #  deal       :boolean          default(TRUE)
 #  comment    :string(255)
 #  name       :string(255)

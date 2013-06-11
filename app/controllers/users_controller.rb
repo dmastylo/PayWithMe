@@ -7,7 +7,7 @@ class UsersController < ApplicationController
       redirect_to user_path(@user), status: :moved_permanently
     end
 
-    @your_organized_and_public_events = current_user.upcoming_organized_events.where(privacy_type: Event::PrivacyType::PRIVATE) + current_user.upcoming_events.where(privacy_type: Event::PrivacyType::PUBLIC)
+    @your_organized_and_public_events = current_user.upcoming_organized_events.where(privacy_type: Event::Privacy::PRIVATE) + current_user.upcoming_events.where(privacy_type: Event::Privacy::PUBLIC)
 
     if @user == current_user
       @upcoming_public_and_shared_events = current_user.upcoming_events
@@ -18,12 +18,12 @@ class UsersController < ApplicationController
       @combined_organized_events = @combined_member_events.select { |event| event.organizer == @user }
     else
       # Upcoming Events
-      upcoming_public_events = @user.upcoming_events.where(privacy_type: Event::PrivacyType::PUBLIC)
+      upcoming_public_events = @user.upcoming_events.where(privacy_type: Event::Privacy::PUBLIC)
       upcoming_shared_events = @user.upcoming_events.merge current_user.upcoming_events.select { |your_member_event| @user.upcoming_events.include? your_member_event }
       @upcoming_public_and_shared_events = upcoming_public_events | upcoming_shared_events
 
       # Past Events
-      past_public_events = @user.past_events.where(privacy_type: Event::PrivacyType::PUBLIC)
+      past_public_events = @user.past_events.where(privacy_type: Event::Privacy::PUBLIC)
       past_shared_events = @user.past_events.merge current_user.past_events.select { |your_member_event| @user.past_events.include? your_member_event }
       @past_public_and_shared_events = past_public_events | past_shared_events
 

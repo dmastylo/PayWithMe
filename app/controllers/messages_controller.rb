@@ -20,7 +20,7 @@ class MessagesController < ApplicationController
       @message = @event.messages.create(params[:message])
       @message.user = current_user
       if @message.save
-        Event.delay.send_message_notifications(@event.id)
+        Event.delay.queue_broadcasts(@event.id, :messages)
         respond_to do |format|
           format.html { redirect_to event_path(@event) }
           format.js

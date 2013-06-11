@@ -2,7 +2,7 @@
   # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
 %>
 <% user = event_user.user %>
-<div class="span4 dashboard-unpaid-user dashboard-user-<%= event_user.id %>">
+<div class="span4 js-success dashboard-unpaid-user dashboard-user-<%= event_user.id %>">
   <div class="well">
     <div class="profile-image image-user-<%= user.id %>">
       <%= profile_image_tag user, :thumb %> 

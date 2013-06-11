@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130605221434) do
+ActiveRecord::Schema.define(:version => 20130610045518) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -51,18 +51,20 @@ ActiveRecord::Schema.define(:version => 20130605221434) do
   create_table "event_users", :force => true do |t|
     t.integer  "event_id"
     t.integer  "user_id"
-    t.integer  "amount_cents",     :default => 0
+    t.integer  "amount_cents",                 :default => 0
     t.datetime "due_at"
     t.datetime "paid_at"
-    t.boolean  "invitation_sent",  :default => false
-    t.integer  "payment_id"
-    t.boolean  "visited_event",    :default => false
+    t.boolean  "sent_invitation_email",        :default => false
+    t.boolean  "visited_event",                :default => false
     t.datetime "last_seen"
-    t.boolean  "paid_with_cash",   :default => true
-    t.integer  "paid_total_cents", :default => 0
-    t.integer  "status",           :default => 0
-    t.integer  "nudges_remaining", :default => 0
-    t.boolean  "ticket_sent",      :default => false
+    t.boolean  "paid_with_cash",               :default => true
+    t.integer  "paid_total_cents",             :default => 0
+    t.integer  "status",                       :default => 0
+    t.integer  "nudges_remaining",             :default => 0
+    t.boolean  "sent_ticket_email",            :default => false
+    t.boolean  "sent_invitation_notification", :default => false
+    t.boolean  "sent_guest_broadcast",         :default => false
+    t.integer  "invitation_group",             :default => 0
   end
 
   add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
@@ -241,9 +243,7 @@ ActiveRecord::Schema.define(:version => 20130605221434) do
   create_table "payments", :force => true do |t|
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
-    t.datetime "requested_at"
     t.datetime "paid_at"
-    t.datetime "due_at"
     t.integer  "payer_id"
     t.integer  "payee_id"
     t.integer  "event_id"
@@ -252,6 +252,7 @@ ActiveRecord::Schema.define(:version => 20130605221434) do
     t.integer  "processor_fee_cents"
     t.integer  "our_fee_cents"
     t.boolean  "cash"
+    t.integer  "paid_amount_cents"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"

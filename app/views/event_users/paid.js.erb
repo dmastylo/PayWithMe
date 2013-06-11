@@ -52,10 +52,10 @@
 
   if ($('.progress').length === 0)
   {
-    $('#quick-statistics').prepend('<div class="progress"><div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div></div>');
+    $('#quick-statistics').prepend('<div class="progress"><div class="bar" style="width: <%= @event.paid_percent %>%;"><%= number_with_precision @event.paid_percent, precision: 2 %>%</div></div>');
   }
   else
   {
-    $('.progress').html('<div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div>');
+    $('.progress').html('<div class="bar" style="width: <%= @event.paid_percent %>%;"><%= number_with_precision @event.paid_percent, precision: 2 %>%</div>');
   }
 <% end %>

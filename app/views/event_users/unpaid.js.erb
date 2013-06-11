@@ -21,5 +21,5 @@ if (collected === 0)
 }
 else
 {
-  $('.progress').html('<div class="bar" style="width: <%= @event.paid_percentage %>%;"><%= number_with_precision @event.paid_percentage, precision: 2 %>%</div>');
+  $('.progress').html('<div class="bar" style="width: <%= @event.paid_percent %>%;"><%= number_with_precision @event.paid_percent, precision: 2 %>%</div>');
 }

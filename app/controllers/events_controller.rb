@@ -29,7 +29,7 @@ class EventsController < ApplicationController
     @message = Message.new
     @event_user = @event.event_user_of(current_user)
     if @event_user.present?
-      @payment = @event_user.create_payment if @event.collecting_by_item? || @event.collecting_by_donation? || event_user.unpaid?
+      # @payment = @event_user.create_payment if @event.collecting_by_item? || @event.collecting_by_donation? || event_user.unpaid?
     else
       @event_user = EventUser.new
     end
@@ -49,8 +49,11 @@ class EventsController < ApplicationController
     if @event.save
       flash[:success] = "Event created!"
 
-      @event.add_members(members_from_users + members_from_groups + [current_user], current_user)
-      @event.add_groups(groups)
+      @event.update_members do
+        @event.members << members_from_users
+        @event.members << members_from_groups
+      end
+      # @event.add_groups(groups)
       @event.invitation_types = invitation_types
 
       # For some reason, redirect_to @event doesn't work
