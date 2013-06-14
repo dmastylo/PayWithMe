@@ -88,6 +88,8 @@ PayWithMe::Application.routes.draw do
 
   resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
 
+  resources :cards, only: [:create]
+
   match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
 
   # Error Handling

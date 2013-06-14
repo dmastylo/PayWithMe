@@ -55,11 +55,16 @@ class User < ActiveRecord::Base
 
   # Relationships
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
-  has_many :event_users, dependent: :destroy
   has_many :member_events, class_name: "Event", through: :event_users, source: :event, dependent: :destroy
+  has_many :event_users, dependent: :destroy
+
   has_many :organized_groups, class_name: "Group", foreign_key: "organizer_id"
-  has_many :group_users, dependent: :destroy
   has_many :member_groups, class_name: "Group", through: :group_users, source: :group
+  has_many :group_users, dependent: :destroy
+  
+  has_one :account
+  has_many :cards, dependent: :destroy
+  
   has_many :messages, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :linked_accounts, dependent: :destroy

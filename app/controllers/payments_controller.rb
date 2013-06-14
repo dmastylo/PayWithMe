@@ -6,6 +6,11 @@ class PaymentsController < ApplicationController
   before_filter :ensure_payment_is_cash!, only: [:unpaid]
   # before_filter :ensure_user_owns_payment!, except: [:ipn]
 
+  def pay
+    @event_user = @payment.event_user
+    @event = @event_user.event
+  end
+
   def paid
     params[:payment][:paid_amount] = @payment.amount if params[:payment][:paid_amount].empty? # blank form is full payment
     if @payment.update_attributes!(params[:payment])
@@ -74,7 +79,7 @@ private
   def ensure_user_can_pay_payment!
     # User can pay (electronic/cash) if they own the payment (electronic) or if they organize the event (cash)
     @payment ||= Payment.find_by_id(params[:id])
-    using_cash = params[:payment][:cash].present?
+    using_cash = params[:payment].present? && params[:payment][:cash]
     redirect_to root_path unless (@payment.payer_id == current_user.id && !using_cash) || (@payment.event.organizer_id = current_user.id && using_cash)
   end
 end

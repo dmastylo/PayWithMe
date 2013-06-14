@@ -14,7 +14,7 @@
 #  processor_fee_cents :integer
 #  our_fee_cents       :integer
 #  cash                :boolean
-#  paid_total_cents    :integer
+#  paid_amount_cents   :integer
 #
 
 require 'spec_helper'

@@ -9,12 +9,12 @@
 #  payer_id            :integer
 #  payee_id            :integer
 #  event_id            :integer
-#  event_user_id       :integer
 #  amount_cents        :integer
+#  event_user_id       :integer
 #  processor_fee_cents :integer
 #  our_fee_cents       :integer
-#  paid_total_cents    :integer
 #  cash                :boolean
+#  paid_amount_cents   :integer
 #
 
 class Payment < ActiveRecord::Base

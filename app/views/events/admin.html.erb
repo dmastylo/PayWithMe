@@ -79,14 +79,14 @@
     </div>
   </div>
 
-  <div class="js-hide-empty" <% if @paid_event_users.empty? %>style="display: none;"<% end %>>
+  <div <% if @paid_event_users.empty? %>style="display: none;"<% end %>>
     <h3>Paid Members</h3>
     <div class="row" id="js-paid">
       <%= render collection: @paid_event_users, partial: "users/dashboard_paid_user", as: :event_user, locals: { itemized: @event.itemized? } %>
     </div>
   </div>
 
-  <div class="js-hide-empty" <% if @unpaid_event_users.empty? %>style="display: none;"<% end %>>
+  <div <% if @unpaid_event_users.empty? %>style="display: none;"<% end %>>
     <h3>Unpaid Members</h3>
     <div class="row" id="js-unpaid">
       <%= render collection: @unpaid_event_users, partial: "users/dashboard_unpaid_user", as: :event_user, locals: { itemized: @event.itemized? } %>
