@@ -1,0 +1,84 @@
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span9">
+        <div class="page-header">
+          <h2>
+            Pay for <%= @event.title %>
+          </h2>
+          <em>
+            <small>
+              Money will be sent to <%= @event.organizer.name %>
+            </small>
+          </em>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="span6">
+      <div class="well">
+        <form id="credit-card-form" class="form">
+          <label>
+            Card Number
+            <input type="text" autocomplete="off" placeholder="Card Number" class="cc-number input-block-level push-top-tiny">
+          </label>
+          <label>
+            Expiration<br />
+            <input type="text" autocomplete="off" placeholder="Expiration Month" class="cc-em input-block-level push-top-tiny" style="width: 40%; display: inline-block">
+            <div style="width: 10%; display: inline-block">/</div>
+            <input type="text" autocomplete="off" placeholder="Expiration Year" class="cc-ey input-block-level push-top-tiny" style="width: 40%; display: inline-block">
+          </label>
+          <label>
+            Security Code (CSC)
+            <input type="text" autocomplete="off" placeholder="CSC" class="cc-csc input-block-level push-top-tiny">
+          </label>
+          <button type="submit" class="btn btn-block btn-primary">
+            Use Card
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% content_for(:before_body_end) do %>
+  <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
+  <script type="text/javascript">
+    balanced.init('/v1/marketplaces/TEST-MP2edcOz75u0cdKsDK7FWcFG');
+
+    $("#credit-card-form").submit(function(e) {
+      e.preventDefault();
+      var $form = $(this);
+
+      var cardData = {
+        card_number: $form.find('.cc-number').val(),
+        expiration_month: $form.find('.cc-em').val(),
+        expiration_year: $form.find('.cc-ey').val(),
+        security_code: $form.find('cc-csc').val()
+      };
+
+      balanced.card.create(cardData, function(response) {
+        switch(response.status) {
+          case 400:
+            // missing or invalid field - check response.error for details
+            console.log(response.error);
+            break;
+          case 404:
+            // your marketplace URI is incorrect
+            console.log(response.error);
+            break;
+           case 201:
+            // WOO HOO! MONEY!
+            // response.data.uri == URI of the card resource
+            // you should store this returned card URI to later charge it
+            console.log(response.data);
+            $.post('/cards', response.data);
+        }
+      });
+    });
+  </script>
+<% end %>

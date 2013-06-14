@@ -105,7 +105,7 @@ class EventUser < ActiveRecord::Base
   end
 
   def set_status
-    if payment.paid?
+    if payment.present? && payment.paid?
       self.status = Status::PAID
       self.paid_at = payment.paid_at
     else
