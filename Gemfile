@@ -86,3 +86,6 @@ gem 'jquery-rails'
 gem 'capistrano'
 gem 'rvm-capistrano'
 gem 'fog', git: 'git://github.com/fog/fog.git'
+
+# Sellers
+gem 'ordrin', path: '../api-ruby' # git: 'git@github.com:austingulati/api-ruby.git'
