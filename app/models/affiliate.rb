@@ -57,6 +57,10 @@ class Affiliate < ActiveRecord::Base
   # Statistics
   # ========================================================
   # TODO: These need to be optimized at some point
+  def referrals_this_month_count
+    referrals.where("created_at >= ?", Time.now.beginning_of_month).count
+  end
+
   def amount_of_referred_events
     referred_events_count = 0
     referrals.each do |referral|
@@ -66,13 +70,22 @@ class Affiliate < ActiveRecord::Base
     referred_events_count
   end
 
-  def amount_of_electronic_payments
-    total_amount_made = 0
+  def amount_of_referred_events_this_month
+    referred_events_this_month_count = 0
     referrals.each do |referral|
-      total_amount_made += Payment.where("payee_id = ? AND payment_method_id != ?", referral.id, PaymentMethod::MethodType::CASH).count
+      referred_events_this_month_count += referral.organized_events.where("created_at >= ?", Time.now.beginning_of_month).count
     end
 
-    total_amount_made
+    referred_events_this_month_count
+  end
+
+  def amount_of_electronic_payments
+    total_electronic_payments_made = 0
+    referrals.each do |referral|
+      total_electronic_payments_made += Payment.where("payee_id = ? AND payment_method_id != ?", referral.id, PaymentMethod::MethodType::CASH).count
+    end
+
+    total_electronic_payments_made
   end
 
   def value_of_electronic_payments
@@ -90,11 +103,24 @@ class Affiliate < ActiveRecord::Base
     # Payment.count(:conditions => "payment_method_id != #{PaymentMethod::MethodType::CASH} AND payee.referrer_id = #{self.id}", :include => :payee)
 
     total_value_made_this_month = 0
+    total_electronic_payments_made_this_month = 0
     referrals.each do |referral|
-      total_value_made_this_month += Payment.where("payee_id = ? AND payment_method_id != ?", referral.id, PaymentMethod::MethodType::CASH).sum('amount_cents')
+      total_value_made_this_month += Payment.where("paid_at >= ? AND payee_id = ? AND payment_method_id != ?", Time.now.beginning_of_month, referral.id, PaymentMethod::MethodType::CASH).sum('amount_cents')
+      total_electronic_payments_made_this_month += Payment.where("paid_at >= ? AND payee_id = ? AND payment_method_id != ?", Time.now.beginning_of_month, referral.id, PaymentMethod::MethodType::CASH).count
     end
 
-    total_value_made_this_month
+    {
+      "payment_count" => total_electronic_payments_made_this_month,
+      "value_made" => total_value_made_this_month
+    }
+  end
+
+  def money_owed
+    if self.campus_rep?
+      ((self.made_this_month["payment_count"] * 0.80) + (self.made_this_month["value_made"] * 0.04)) * 0.35
+    else
+      ((self.made_this_month["payment_count"] * 0.80) + (self.made_this_month["value_made"] * 0.04)) * 0.5
+    end
   end
 
 end
