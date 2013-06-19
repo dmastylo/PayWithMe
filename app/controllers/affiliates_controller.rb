@@ -1,8 +1,8 @@
 class AffiliatesController < ApplicationController
   before_filter :user_is_admin
+  before_filter :find_affiliate, only: [:show, :edit, :update, :destroy]
 
   def show
-    @affiliate = Affiliate.find(params[:id])
     @referrals = @affiliate.referrals.paginate(page: params[:page], per_page: 20)
   end
 
@@ -22,11 +22,9 @@ class AffiliatesController < ApplicationController
   end
 
   def edit
-    @affiliate = Affiliate.find(params[:id])
   end
 
   def update
-    @affiliate = Affiliate.find(params[:id])
     
     if @affiliate.update_attributes(params[:affiliate])
       flash[:success] = "Affiliate updated."
@@ -37,9 +35,13 @@ class AffiliatesController < ApplicationController
   end
 
   def destroy
-    @affiliate = Affiliate.find(params[:id])
     @affiliate.destroy
     flash[:success] = "Affiliate deleted!"
     redirect_to admin_index_path
+  end
+
+private
+  def find_affiliate
+    @affiliate = Affiliate.find(params[:id])
   end
 end
