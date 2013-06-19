@@ -11,13 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130609053404) do
+ActiveRecord::Schema.define(:version => 20130619001755) do
 
   create_table "affiliates", :force => true do |t|
     t.string   "name"
     t.string   "school"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.integer  "affiliate_type"
   end
 
   create_table "contact_forms", :force => true do |t|

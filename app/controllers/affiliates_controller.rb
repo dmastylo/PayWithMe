@@ -3,6 +3,7 @@ class AffiliatesController < ApplicationController
 
   def show
     @affiliate = Affiliate.find(params[:id])
+    @referrals = @affiliate.referrals.paginate(page: params[:page], per_page: 20)
   end
 
   def new

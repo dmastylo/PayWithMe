@@ -3,9 +3,14 @@
 <% content_for(:wrapper_top) do %>
   <div class="container">
     <div class="row">
-      <div class="span12">
+      <div class="span9">
         <div class="page-header">
           <h2>Show Affiliate</h2>
+          <em>
+            <small>
+              <%= @affiliate.name %>
+            </small>
+          </em>
         </div>
       </div>
 
@@ -18,9 +23,57 @@
 <% end %>
 
 <div class="container">
-  <div class="span12 no-margin">
-    <div class="well">
-      
+  <div class="row">
+    <div class="span8">
+      <h3>Referrals</h3>
+    </div>
+
+    <div class="span4">
+      <div class="well">
+        <h3>Important Information</h3>
+        <h3>TODO</h3>
+
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol @affiliate.amount_of_referred_events %></span> owed
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol @affiliate. %></span> made this month
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span8">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Name</th>
+          <th>On?</th>
+          <th>Email</th>
+          <th>Registered</th>
+          <th>Events Organized</th>
+        </tr>
+        <%= render collection: @referrals, partial: "users/admin_referral", as: :user %>
+      </table>
+
+      <%= will_paginate @referrals %>
+    </div>
+
+    <div class="span4">
+      <div class="well">
+        <h3>Quick Statistics</h3>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.referrals.count %></span> referrals
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.amount_of_referred_events %></span> referred events
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.amount_of_electronic_payments %></span> referred electronic payments
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol @affiliate.value_of_electronic_payments %></span> electronic payments total value
+        </div>
+      </div>
     </div>
   </div>
 </div>
