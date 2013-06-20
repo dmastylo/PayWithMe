@@ -25,7 +25,6 @@ class AffiliatesController < ApplicationController
   end
 
   def update
-    
     if @affiliate.update_attributes(params[:affiliate])
       flash[:success] = "Affiliate updated."
       redirect_to affiliates_admin_index_path

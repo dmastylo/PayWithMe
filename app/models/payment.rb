@@ -317,6 +317,46 @@ class Payment < ActiveRecord::Base
     EXPIRED = 4
   end
 
+  # Statistics
+  # ========================================================
+  def self.total_revenue
+    payments = Payment.where("payment_method_id != ? AND status_type = ?", PaymentMethod::MethodType::CASH, StatusType::PAID)
+    (payments.count * 0.80) + (payments.sum('amount_cents') * 0.04) / 100 # since we are grabbing the cent values
+  end
+
+  def self.total_payments
+    payments = Payment.where("status_type = ?", StatusType::PAID)
+    total_payments_made_count = payments.count
+    total_payments_made_value = payments.sum('amount_cents')
+
+    {
+      "count" => total_payments_made_count,
+      "value" => total_payments_made_value / 100.0 # since we are grabbing the cent values
+    }
+  end
+
+  def self.total_cash_payments
+    payments = Payment.where("payment_method_id = ? AND status_type = ?", PaymentMethod::MethodType::CASH, StatusType::PAID)
+    total_payments_made_count = payments.count
+    total_payments_made_value = payments.sum('amount_cents')
+
+    {
+      "count" => total_payments_made_count,
+      "value" => total_payments_made_value / 100.0 # since we are grabbing the cent values
+    }
+  end
+
+  def self.total_electronic_payments
+    payments = Payment.where("payment_method_id != ? AND status_type = ?", PaymentMethod::MethodType::CASH, StatusType::PAID)
+    total_payments_made_count = payments.count
+    total_payments_made_value = payments.sum('amount_cents')
+
+    {
+      "count" => total_payments_made_count,
+      "value" => total_payments_made_value / 100.0 # since we are grabbing the cent values
+    }
+  end
+
 private
   def self.paypal_gateway
     if Rails.env.production?
