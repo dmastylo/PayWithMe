@@ -149,6 +149,25 @@
             <div class="push-bottom-small">
               <em><small>Nudges remaining: <strong class="nudges-remaining"><%= @event_user.nudges_remaining %></strong></small></em>
             </div>
+            <div class="push-bottom-small">
+              Nudge Rating:
+              <div class="btn-group">
+                <a href="#" class="btn rating-button disabled" data-rating="G">G</a>
+                <a href="#" class="btn rating-button" data-rating="PG13">PG13</a>
+                <a href="#" class="btn rating-button" data-rating="R">R</a>
+              </div>
+            </div>
+
+            Sample nudge message:
+            <div id="sample-G-nudge" class="sample-nudge-text">
+              <textarea rows="3" class="input-block-level" disabled>Hi there, You've been nudged! <%= current_user.first_name %> wants you to get your money in for <%= @event.title %>. What are you waiting for?</textarea>
+            </div>
+            <div id="sample-PG13-nudge" class="sample-nudge-text">
+              <textarea rows="3" class="input-block-level" disabled>Hurry up!! You need to get your shit together and make your payment to <%= @event.organizer.first_name %> for <%= @event.title %>. You are holding up the group and it’s annoying everyone!</textarea>
+            </div>
+            <div id="sample-R-nudge" class="sample-nudge-text">
+              <textarea rows="3" class="input-block-level" disabled>Stop f-ing around!! You agreed to pay for <%= @event.title %> and you are just sitting on your ass. Everyone is waiting for you to pay, so just do it!</textarea>
+            </div>
           <% end %>
           <% if @event.paying_members.any? %>
             <ul class="members">
@@ -207,6 +226,8 @@
   <script type="text/javascript">
     $(document).ready(function()
     {
+      var ratingRegEx = /([?&]rating)=([^#&]*)/g;
+
       $('.message').autoSize({
         fixed: '.profile-image',
         fluid: '.body'
@@ -216,6 +237,31 @@
         fixed: '.profile-image',
         fluid: '.body',
         offset: 1
+      });
+
+      $('.rating-button').click(function(e)
+      {
+        e.preventDefault();
+        $clicked = $(this);
+        var rating = $clicked.data("rating");
+
+        $('.rating-button').each(function()
+        {
+          $(this).removeClass('disabled');
+        });
+
+        $('.btn-nudge').each(function()
+        {
+          $this = $(this);
+          thisUrl = $this.attr("href");
+          var newUrl = thisUrl.replace(ratingRegEx, '$1=' + rating);
+          $this.prop("href", newUrl);
+        });
+
+        $('.sample-nudge-text').hide();
+        $('#sample-' + rating + '-nudge').show();
+
+        $clicked.addClass('disabled');
       });
     });
   </script>
