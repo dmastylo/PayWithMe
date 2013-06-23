@@ -1,0 +1,50 @@
+<% provide(:title, "New Post") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span12">
+        <div class="page-header">
+          <h2>
+            New Post
+          </h2>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <%= form_for @post do |f| %>
+        <%= render 'shared/error_messages', object: f.object %>
+
+        <div class="control-group">
+          <%= f.label :title, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :title, placeholder: "Title of post", class: "input-block-level" %>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <%= f.label :content, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_area :content, placeholder: "Blah blah blah", class: "input-block-level" %>
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <%= f.label :published, "Draft", class: "control-label" %>
+          <%= f.radio_button :published, "0" %>
+          <%= f.label :published, "Published", class: "control-label" %>
+          <%= f.radio_button :published, "1" %>
+        </div>
+
+        <div class="form-actions">
+          <%= f.submit "Submit", class: "btn btn-block btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

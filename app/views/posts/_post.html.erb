@@ -1,0 +1,15 @@
+<div class="well">
+  <li class="post">
+    <h3><%= link_to post.title, post %></h3>
+
+    <div class="timestamp">
+      Posted <%= post.created_at %>
+    </div>
+
+    <div class="content">
+      <%= post.content.truncate(1000) %>
+    </div>
+
+    <%= link_to "Read full post", post %>
+  </li>
+</div>

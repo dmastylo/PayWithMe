@@ -23,6 +23,8 @@
 #  minimum_donation       :integer
 #  minimum_donation_cents :integer
 #  guest_token            :string(255)
+#  last_auto_email_sent   :datetime
+#  last_daily_email_sent  :datetime
 #
 
 class Event < ActiveRecord::Base
