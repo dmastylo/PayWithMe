@@ -1,7 +1,0 @@
-<div class="new-message">
-  <h4>Leave Message</h4>
-  <%= form_for [event, message], remote: true do |f| %>
-    <%= f.text_area :message, class: "input-block-level", rows: "3", placeholder: "Compose a message..." %>
-    <%= f.submit "Post Message", class: "post-message btn btn-block" %>
-  <% end %>
-</div>
