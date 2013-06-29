@@ -1,6 +1,7 @@
 class UserMailer < ActionMailer::Base
   default from: "PayWithMe <#{Figaro.env.gmail_username}>"
   helper :application
+  include UsersHelper
   layout 'mail'
 
   def signup_confirmation(user)
@@ -42,8 +43,17 @@ class UserMailer < ActionMailer::Base
     @user = user
     @nudge = nudge
     @event = @nudge.event
+    @organizer = @event.organizer
 
-    mail to: format_address_to(user), subject: "#{@nudge.event.title}: #{@nudge.nudger.first_name} Nudged You"
+    mail to: format_address_to(user), subject: "#{@nudge.nudger.first_name} wants you to pay for #{@nudge.event.title}"
+  end
+
+  def not_participating_notification(event_user, organizer)
+    @event_user = event_user
+    @user = event_user.user
+    @event = event_user.event
+
+    mail to: format_address_to(organizer), subject: "#{@event.title}: #{user_name @user} is Not Participating"
   end
 
   def unpaid_three_days_auto_email(user, event)

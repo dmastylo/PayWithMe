@@ -108,6 +108,19 @@ class Notification < ActiveRecord::Base
     end
   end
 
+  def self.create_for_not_participating(event, user)
+    notification = event.organizer.notifications.new(
+      notification_type: NotificationType::NOT_PARTICIPATING,
+      foreign_type: ForeignType::EVENT,
+      foreign_id: event.id,
+      subject_id: user.id
+    )
+
+    # notification.body = "The details of #{event.title} have been updated."
+    notification.read = false
+    notification.save
+  end
+
   def read!
     if !read?
       update_column(:read, true)
@@ -130,6 +143,8 @@ class Notification < ActiveRecord::Base
         "#{TextHelper.pluralize(subject_id, 'new message has', 'new messages have')} been posted in #{event.title}."
       elsif update?
         "The details of #{event.title} have been updated."
+      elsif not_participating?
+        "#{subject.first_name || subject.email} has decided to not participate in #{event.title}"
       end
     elsif group?
       if invite?
@@ -154,8 +169,12 @@ class Notification < ActiveRecord::Base
     notification_type == NotificationType::INVITE
   end
 
-   def update?
+  def update?
     notification_type == NotificationType::UPDATE
+  end
+
+  def not_participating?
+    notification_type == NotificationType::NOT_PARTICIPATING
   end
 
   def event
@@ -180,6 +199,7 @@ class Notification < ActiveRecord::Base
     INVITE = 1
     MESSAGE = 2
     UPDATE = 3
+    NOT_PARTICIPATING = 4
   end
   class ForeignType
     EVENT = 1

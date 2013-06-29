@@ -23,6 +23,9 @@ class AdminController < ApplicationController
 
     @campus_reps_count = CampusRep.count
     @recent_campus_reps = CampusRep.find(:all, order: 'created_at DESC', limit: 10)
+
+    @posts_count = Post.count
+    @recent_posts = Post.find(:all, limit: 10)
   end
 
   def users
@@ -51,5 +54,9 @@ class AdminController < ApplicationController
 
   def campus_reps
     @campus_reps = CampusRep.paginate(page: params[:page], order: 'created_at DESC')
+  end
+
+  def posts
+    @posts = Post.paginate(page: params[:page])
   end
 end

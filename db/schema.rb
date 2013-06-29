@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130602225553) do
+ActiveRecord::Schema.define(:version => 20130606231544) do
 
   create_table "campus_reps", :force => true do |t|
     t.string   "name"
@@ -272,6 +272,14 @@ ActiveRecord::Schema.define(:version => 20130602225553) do
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
+
+  create_table "posts", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.boolean  "published"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "reminder_users", :force => true do |t|
     t.integer  "reminder_id"

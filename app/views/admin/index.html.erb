@@ -101,6 +101,18 @@
         </tr>
         <%= render collection: @recent_campus_reps, partial: "campus_reps/admin_campus_rep", as: :campus_rep %>
       </table>
+
+      <h3 class="pull-left">Recent Posts</h3>
+      <%= link_to "View All Posts", posts_admin_index_path, class: "btn btn-primary pull-right push-top-small" %>
+      <%= link_to "Add New Post", new_post_path, class: "btn btn-primary pull-right push-top-small" %>
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Title</th>
+          <th>Created</th>
+          <th>Delete</th>
+        </tr>
+        <%= render collection: @recent_posts, partial: "posts/admin_post", as: :post %>
+      </table>
     </div>
     <div class="span4">
       <div class="well">
@@ -125,6 +137,9 @@
         </div>
         <div class="large-statistic">
           <span class="count"><%= @campus_reps_count %></span> campus reps
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @posts_count %></span> posts
         </div>
       </div>
     </div>

@@ -19,10 +19,13 @@
 #  image_file_size        :integer
 #  image_updated_at       :datetime
 #  image_url              :string(255)
-#  guest_token            :string(255)
 #  fundraiser_goal_cents  :integer
+#  minimum_donation       :integer
 #  minimum_donation_cents :integer
 #  last_auto_email_sent   :datetime
+#  guest_token            :string(255)
+#  last_auto_email_sent   :datetime
+#  last_daily_email_sent  :datetime
 #
 
 class Event < ActiveRecord::Base
@@ -280,6 +283,14 @@ class Event < ActiveRecord::Base
     self.event_users.reject { |event_user| event_user.user_id == self.organizer_id }
   end
 
+  def accepted_invite_event_users
+    self.event_users.reject { |event_user| event_user.user_id == self.organizer_id || !event_user.accepted_invite }
+  end
+
+  def not_accepted_invite_event_users
+    self.event_users.reject { |event_user| event_user.user_id == self.organizer_id || event_user.accepted_invite }
+  end
+
   def paying_members
     self.members.reject { |user| user.id == self.organizer_id }
   end
@@ -339,13 +350,14 @@ class Event < ActiveRecord::Base
     event_update_notifications = []
     event_invite_notifications = []
     event_new_member_news = []
+    accepted_invite = self.divide_total?
 
     members_to_add.each do |member|
       if member.valid?
         if self.members.include?(member)
           event_update_notifications.push(member.id) unless member == exclude_from_notifications
         else
-          event_users.push EventUser.new(user_id: member.id, event_id: self.id)
+          event_users.push EventUser.new(user_id: member.id, event_id: self.id, accepted_invite: accepted_invite)
           event_invite_notifications.push member.id unless member == exclude_from_notifications
           if editing_event
             event_new_member_news.push member.id unless member == exclude_from_notifications
@@ -489,9 +501,17 @@ class Event < ActiveRecord::Base
     end
   end
 
-  def nudge!(nudger, nudgee)
+  def nudge!(nudger, nudgee, rating="G")
     if can_nudge?(nudger, nudgee)
-      nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id, event_id: self.id)
+      if rating == "G"
+        rating = 1 
+      elsif rating == "PG13"
+        rating = 2
+      elsif rating == "R"
+        rating = 3
+      end
+
+      nudges.create!(nudger_id: nudger.id, nudgee_id: nudgee.id, event_id: self.id, rating: rating)
     end
   end
 

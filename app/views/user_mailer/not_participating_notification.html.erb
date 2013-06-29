@@ -1,0 +1,7 @@
+<tr>
+  <td colspan="2">
+    <p><%= (@user.first_name.empty?)? @user.email : @user.first_name %> has decided he/she does not want to participate in <%= @event.title %>. You can re-invite them if you wish.</p>
+
+    <p><%= link_to image_tag(asset_path('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event) %></p>
+  </td>
+</tr>

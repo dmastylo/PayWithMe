@@ -1,7 +1,7 @@
 class EventUsersController < ApplicationController
   before_filter :authenticate_user!
   before_filter :event_public_or_user_organizes_event, only: [:create]
-  before_filter :user_owns_event_user, only: [:pay, :pay_fundraiser, :pin]
+  before_filter :user_owns_event_user, only: [:pay, :pay_fundraiser, :accept_invite, :reject_invite, :pin]
   before_filter :valid_payment_method, only: [:pay, :pay_fundraiser]
   before_filter :user_organizes_event, only: [:paid, :unpaid]
   before_filter :user_in_event, only: [:nudge]
@@ -59,6 +59,7 @@ class EventUsersController < ApplicationController
         end
 
         @event_user.pay!(payment)
+        @event_user.update_attributes(accepted_invite: true)
       else params[:event_user][:paid_total].to_f == 0
         @event_user.unpay_cash_payments!
         @event_user.set_to_zero!
@@ -81,11 +82,23 @@ class EventUsersController < ApplicationController
     end
   end
 
+  def accept_invite
+    @event_user.accept_invite!
+    flash[:success] = "You have accepted the invite and are now participating in the event!"
+    redirect_to event_path @event_user.event
+  end
+
+  def reject_invite
+    @event_user.reject_invite!
+    flash[:success] = "You have rejected the invite and left the event!"
+    redirect_to root_path
+  end
+
   def nudge
     @nudgee_event_user = @event_user
     @nudger_event_user = @event.event_user(current_user)
 
-    @event.nudge!(current_user, @nudgee_event_user.user)
+    @event.nudge!(current_user, @nudgee_event_user.user, params[:rating])
     @nudger_event_user.update_nudges_remaining
     respond_to do |format|
       format.js
@@ -105,7 +118,7 @@ private
     
     if @event.organizer != current_user
       # If user doesn't organize event, it must be public and the user_id must be equal to current_user
-      if @event.public? 
+      if @event.public? || event_allows_guest?
         if (!@event.members.include?(current_user) && params[:event_user][:user_id].to_i != current_user.id)
           flash[:error] = "Trying to hack...?" #{params[:event_user][:user_id]} #{current_user.id}"
           redirect_to root_path

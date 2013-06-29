@@ -23,6 +23,7 @@
 #  fundraiser_goal_cents  :integer
 #  minimum_donation_cents :integer
 #  last_auto_email_sent   :datetime
+#  last_daily_email_sent  :datetime
 #
 
 require 'spec_helper'
