@@ -1,0 +1,89 @@
+<% provide(:title, "Show Affiliate") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span9">
+        <div class="page-header">
+          <h2>Show Affiliate</h2>
+          <em>
+            <small>
+              <%= @affiliate.name %>
+            </small>
+          </em>
+        </div>
+      </div>
+
+      <div class="span3">
+        <%= link_to "Return to index", affiliates_admin_index_path, class: "btn btn-primary btn-block push-top-title" %>
+        <%= link_to "Edit Affiliate", edit_affiliate_path(@affiliate), class: "btn btn-primary btn-block push-top-title-second" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<div class="container">
+  <div class="row">
+    <div class="span8">
+      <h3>Referrals</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span8">
+      <table class="table table-bordered table-striped">
+        <tr>
+          <th>Name</th>
+          <th>On?</th>
+          <th>Email</th>
+          <th>Registered</th>
+          <th>Events Organized</th>
+        </tr>
+        <%= render collection: @referrals, partial: "users/admin_referral", as: :user %>
+      </table>
+
+      <%= will_paginate @referrals %>
+    </div>
+
+    <div class="span4">
+      <div class="well">
+        <h3>Quick Stats This Month</h3>
+        <h3>TODO: Test this</h3>
+
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol @affiliate.money_owed %></span> owed
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.referrals_this_month_count %></span> referrals
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.amount_of_referred_events_this_month %></span> referred events
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.made_this_month["value_made"] %></span> referred electronic payments
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol @affiliate.made_this_month["payment_count"] %></span> electronic payments value
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="offset8 span4">
+      <div class="well">
+        <h3>Quick Statistics All Time</h3>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.referrals.count %></span> referrals
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.amount_of_referred_events %></span> referred events
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= @affiliate.amount_of_electronic_payments %></span> referred electronic payments
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol @affiliate.value_of_electronic_payments %></span> electronic payments value
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

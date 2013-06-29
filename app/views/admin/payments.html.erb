@@ -15,7 +15,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="span12">
+    <div class="span8">
       <table class="table table-bordered table-striped">
         <tr>
           <th>Event</th>
@@ -28,6 +28,35 @@
       </table>
 
       <%= will_paginate @payments %>
+    </div>
+
+    <div class="span4">
+      <div class="well">
+        <h3>Quick Statistics All Time</h3>
+        <h3>TODO: Test this</h3>
+
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol Payment.total_revenue %></span> total revenue
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= Payment.total_payments["count"] %></span> total payments
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol Payment.total_payments["value"] %></span> total payments value
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= Payment.total_cash_payments["count"] %></span> total cash payments
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol Payment.total_cash_payments["value"] %></span> total cash payments value
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= Payment.total_electronic_payments["count"] %></span> total electronic payments
+        </div>
+        <div class="large-statistic">
+          <span class="count"><%= humanized_money_with_symbol Payment.total_electronic_payments["value"] %></span> total electronic payments value
+        </div>
+      </div>
     </div>
   </div>
 </div>
