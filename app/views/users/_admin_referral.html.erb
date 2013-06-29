@@ -1,0 +1,19 @@
+<tr>
+  <td>
+    <%= link_to user.name || "n/a", user %>
+  </td>
+  <td>
+    <% if user.online? %>
+      <center><div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div></center>
+    <% end %>
+  </td>
+  <td>
+    <%= user.email %>
+  </td>
+  <td>
+    <%= distance_of_time_in_words_to_now (user.completed_at || user.created_at) %> ago
+  </td>
+  <td>
+    <%= user.organized_events.count %>
+  </td>
+</tr>

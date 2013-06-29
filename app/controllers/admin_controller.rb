@@ -7,6 +7,7 @@ class AdminController < ApplicationController
     @recent_users = User.where(stub: false).order('created_at DESC').limit(10)
 
     @events_count = Event.count
+    @active_events_count = Event.active_events.count
     @recent_events = Event.find(:all, order: 'created_at DESC', limit: 10)
 
     @groups_count = Group.count
@@ -16,13 +17,18 @@ class AdminController < ApplicationController
     @recent_organizations = Organization.find(:all, order: 'created_at DESC', limit: 10)
 
     @payments_count = Payment.count
+    @electronic_payments_count = Payment.electronic.count
+    @cash_payments_count = Payment.cash.count
     @recent_payments = Payment.where('paid_at IS NOT NULL').order('created_at DESC').limit(10)
 
     @nudges_count = Nudge.count
+    @nudges_rated_G_count = Nudge.nudges_rated_G.count
+    @nudges_rated_PG13_count = Nudge.nudges_rated_PG13.count
+    @nudges_rated_R_count = Nudge.nudges_rated_R.count
     @recent_nudges = Nudge.find(:all, order: 'created_at DESC', limit: 10)
 
-    @campus_reps_count = CampusRep.count
-    @recent_campus_reps = CampusRep.find(:all, order: 'created_at DESC', limit: 10)
+    @affiliates_count = Affiliate.count
+    @recent_affiliates = Affiliate.find(:all, order: 'created_at DESC', limit: 10)
 
     @posts_count = Post.count
     @recent_posts = Post.find(:all, limit: 10)
@@ -30,10 +36,14 @@ class AdminController < ApplicationController
 
   def users
     @users = User.paginate(page: params[:page], order: 'created_at DESC')
+    @online_users = User.online
+    @all_active_last_30_days = User.all_active_last_30_days
+    @all_active_last_24_hours = User.all_active_last_24_hours
   end
 
   def events
     @events = Event.paginate(page: params[:page], order: 'created_at DESC', include: [:payment_methods, :organizer])
+    @active_events = Event.active_events
   end
 
   def groups
@@ -52,8 +62,8 @@ class AdminController < ApplicationController
     @nudges = Nudge.paginate(page: params[:page], order: 'created_at DESC')
   end
 
-  def campus_reps
-    @campus_reps = CampusRep.paginate(page: params[:page], order: 'created_at DESC')
+  def affiliates
+    @affiliates = Affiliate.paginate(page: params[:page], order: 'created_at DESC')
   end
 
   def posts

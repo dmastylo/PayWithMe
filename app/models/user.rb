@@ -79,11 +79,19 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :subject_news_items, class_name: "NewsItem"
   belongs_to :creator, class_name: "User"
   has_many :created_users, class_name: "User", foreign_key: "creator_id"
-  belongs_to :referrer, class_name: "CampusRep"
+  belongs_to :referrer, class_name: "Affiliate"
 
   # Scopes
   # ========================================================
   scope :online, lambda { where("last_seen > ?", 3.minutes.ago) }
+
+  def self.all_active_last_30_days
+    User.where("last_seen > ?", Time.now - 1.month)
+  end
+
+  def self.all_active_last_24_hours
+    User.where("last_seen > ?", Time.now - 1.day)
+  end
 
   # Pretty URLs
   # ========================================================
