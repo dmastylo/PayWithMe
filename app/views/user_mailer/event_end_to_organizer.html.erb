@@ -1,0 +1,12 @@
+<tr>
+  <td colspan="2">
+    <p>Dear <%= @organizer.first_name %>,</p>
+
+    <p>Your Paywithme Event, <%= @event.title %>, has been completed!</p>
+    <p><%= @event.paid_member_count %> of the <%= @event.paying_member_count %> total invited made their payments.</p>
+    <p>Follow the link below to cash out, view the final member list, extend your due date, or remind members.</p>
+    <p>Thanks for using Paywithme!</p>
+
+    <p><%= link_to image_tag(asset_path('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
+  </td>
+</tr>

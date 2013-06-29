@@ -1,0 +1,13 @@
+<tr>
+  <td colspan="2">
+    <p>Hi <%= (@user.first_name.empty?) ? "there" : @user.first_name %>,</p>
+
+    <p>Your payment to <%= @event.organizer.first_name %> for the event: <%= @event.title %>, is due in only one day!!! Please be sure to get your payment in immediately!</p>
+
+    <p>To pay with a credit or debit card – please visit the event page by clicking the link below!</p>
+
+    <p>Remember to help get <%= @event.organizer.first_name %> paid by everyone once you're done!</p>
+
+    <p><%= link_to image_tag(asset_path('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
+  </td>
+</tr>

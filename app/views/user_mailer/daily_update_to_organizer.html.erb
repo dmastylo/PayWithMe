@@ -1,0 +1,15 @@
+<tr>
+  <td colspan="2">
+    <p>Dear <%= @organizer.first_name %>,</p>
+
+    <p>This is an update on your PayWithMe Event, <%= @event.title %>, whose payment is due on <%= @event.due_at %>.</p>
+    <p>Event Metrics:</p>
+    <p><%= @event.title %></p>
+    <p><%= (@event.public?)? "Public" : "Private" %>,</p>
+    <p><%= @event.paid_member_count %> Paid / <%= @event.paying_member_count %> Total Invited</p>
+
+    <p>Follow the link below to view all of the metrics of your event and send reminders to members.</p>
+
+    <p><%= link_to image_tag(asset_path('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
+  </td>
+</tr>

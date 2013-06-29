@@ -80,6 +80,9 @@ gem 'vanity', git: 'git://github.com/austingulati/vanity.git'
 # Nested forms
 gem 'nested_form'
 
+# Cron jobs
+gem 'whenever', :require => false
+
 group :development, :test do
   gem 'sqlite3'
 end
