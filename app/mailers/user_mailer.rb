@@ -1,6 +1,7 @@
 class UserMailer < ActionMailer::Base
   default from: "PayWithMe <#{Figaro.env.gmail_username}>"
   helper :application
+  include UsersHelper
   layout 'mail'
 
   def signup_confirmation(user)
@@ -45,6 +46,56 @@ class UserMailer < ActionMailer::Base
     @organizer = @event.organizer
 
     mail to: format_address_to(user), subject: "#{@nudge.nudger.first_name} wants you to pay for #{@nudge.event.title}"
+  end
+
+  def not_participating_notification(event_user, organizer)
+    @event_user = event_user
+    @user = event_user.user
+    @event = event_user.event
+
+    mail to: format_address_to(organizer), subject: "#{@event.title}: #{user_name @user} is Not Participating"
+  end
+
+  def unpaid_three_days_auto_email(user, event)
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "There are three days left to pay for #{@event.title}."
+  end
+
+  def unpaid_one_day_auto_email(user, event)
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "There is only one day left to pay for #{@event.title}!!"
+  end
+
+  def paid_three_days_auto_email(user, event)
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "Help #{@event.organizer.first_name} get people to pay for #{@event.title}. There's three days left!"
+  end
+
+  def paid_one_day_auto_email(user, event)
+    @user = user
+    @event = event
+
+    mail to: format_address_to(user), subject: "Help #{@event.organizer.first_name} get people to pay for #{@event.title}!! There's only one day left!"
+  end
+
+  def daily_update_to_organizer(organizer, event)
+    @organizer = organizer
+    @event = event
+    
+    mail to: format_address_to(organizer), subject: "Daily PayWithMe update on #{@event.title}"
+  end
+
+  def event_end_to_organizer(organizer, event)
+    @organizer = organizer
+    @event = event
+    
+    mail to: format_address_to(organizer), subject: "#{@event.title} has been completed!"
   end
 
 private

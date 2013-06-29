@@ -29,6 +29,9 @@ class AdminController < ApplicationController
 
     @affiliates_count = Affiliate.count
     @recent_affiliates = Affiliate.find(:all, order: 'created_at DESC', limit: 10)
+
+    @posts_count = Post.count
+    @recent_posts = Post.find(:all, limit: 10)
   end
 
   def users
@@ -61,5 +64,9 @@ class AdminController < ApplicationController
 
   def affiliates
     @affiliates = Affiliate.paginate(page: params[:page], order: 'created_at DESC')
+  end
+
+  def posts
+    @posts = Post.paginate(page: params[:page])
   end
 end

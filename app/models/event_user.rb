@@ -21,7 +21,7 @@
 class EventUser < ActiveRecord::Base
   
   # Accessible attributes
-  attr_accessible :event_id, :user_id
+  attr_accessible :event_id, :user_id, :accepted_invite
   monetize :amount_cents, allow_nil: true
   monetize :paid_total_cents, allow_nil: true
 
@@ -168,6 +168,8 @@ class EventUser < ActiveRecord::Base
     else
       self.nudges_remaining = 0
     end
+
+    self.save
   end
 
   def update_status
@@ -191,6 +193,18 @@ class EventUser < ActiveRecord::Base
       self.nudges_remaining = 0
       self.save
     end
+  end
+
+  def accept_invite!
+    self.accepted_invite = true
+    self.save
+  end
+
+  def reject_invite!
+    EventUser.delay.send_reject_invitation_email(self)
+    Notification.delay.create_for_not_participating(self.event, self.user)
+
+    self.delay.destroy
   end
 
 private
@@ -239,6 +253,10 @@ private
         nudge.send_nudge_email_if_paid
       end
     end
+  end
+
+  def self.send_reject_invitation_email(event_user)
+    UserMailer.not_participating_notification(event_user, event_user.event.organizer).deliver
   end
 
 end

@@ -1,0 +1,13 @@
+<tr>
+  <td colspan="2">
+    <p>Hi <%= (@user.first_name.empty?) ? "there" : @user.first_name %>,</p>
+
+    <p>Help bug your friends to pay <%= @event.organizer.first_name %>!!</p>
+
+    <p><%= @event.organizer.first_name %> needs your help – click the link below to bug the unpaid members. There are three days left to pay!</p>
+
+    <p>Thanks for paying through Paywithme!!</p>
+
+    <p><%= link_to image_tag(asset_path('visit_event.png'), alt: "Visit #{@event.title}"), event_url(@event, guest_params(@user)) %></p>
+  </td>
+</tr>
