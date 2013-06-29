@@ -45,7 +45,8 @@ class EventUser < ActiveRecord::Base
   before_save :set_status
 
   def paid?
-    status == Status::PAID
+    # status == Status::PAID
+    self.payment.paid?
   end
 
   def unpaid?

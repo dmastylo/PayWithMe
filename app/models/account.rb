@@ -19,8 +19,8 @@ class Account < ActiveRecord::Base
   has_many :cards,    dependent: :destroy
 
   # Creates an Account object from card information
-  def self.new_from_card(card)
-    buyer = Balanced::Marketplace.mine.create_buyer(card_uri: card.uri)
+  def self.new_from_card(card, user)
+    buyer = Balanced::Marketplace.mine.create_buyer(card_uri: card.uri, name: current_user.name, email: current_user.email)
     account = self.new
     account.uri = buyer.uri
     return account

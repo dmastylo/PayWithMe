@@ -100,7 +100,15 @@ class Payment < ActiveRecord::Base
   end
 
   def pay!
-    self.payer.account.debit(self.amount)
+    hold = self.payer.account.debit(self.amount)
+    if hold.is_a?(Balanced::Hold)
+      self.debit_uri = hold.debit_uri
+      self.paid_at = Time.now
+      self.save
+      return true
+    else
+      # Something failed
+    end
   end
 
   # def total_cents
