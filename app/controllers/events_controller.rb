@@ -82,8 +82,10 @@ class EventsController < ApplicationController
     if @event.update_attributes(params[:event])
       flash[:success] = "Event updated!"
 
-      @event.set_members(members_from_users + members_from_groups + [current_user], current_user)
-      @event.set_groups(groups)
+      @event.update_members do
+        @event.members << members_from_users
+        @event.members << members_from_groups
+      end
       @event.invitation_types = invitation_types
 
       # For some reason, redirect_to @event doesn't work

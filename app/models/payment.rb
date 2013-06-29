@@ -13,8 +13,9 @@
 #  event_user_id       :integer
 #  processor_fee_cents :integer
 #  our_fee_cents       :integer
-#  cash                :boolean
+#  cash                :boolean          default(FALSE)
 #  paid_amount_cents   :integer
+#  debit_uri           :string(255)
 #
 
 class Payment < ActiveRecord::Base
@@ -92,6 +93,14 @@ class Payment < ActiveRecord::Base
 
   def paid?
     paid_at.present?
+  end
+
+  def unpaid?
+    !paid?
+  end
+
+  def pay!
+    self.payer.account.debit(self.amount)
   end
 
   # def total_cents

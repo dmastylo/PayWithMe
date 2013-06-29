@@ -72,6 +72,7 @@ PayWithMe::Application.routes.draw do
   resources :payments, only: [] do
     member do
       get 'pay'
+      get 'confirm'
       put 'paid'
       put 'unpaid'
       # post 'ipn'
@@ -88,7 +89,7 @@ PayWithMe::Application.routes.draw do
 
   resources :campus_reps, only: [:new, :create, :edit, :update, :destroy]
 
-  resources :cards, only: [:create]
+  resources :cards, only: [:index, :create, :show]
 
   match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
 

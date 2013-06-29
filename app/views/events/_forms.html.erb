@@ -5,8 +5,9 @@
     <div class="wizard-step active" id="wizard-step-1">Step 1: Details <i class="icon-chevron-right icon-white"></i></div>
     <div class="wizard-step" id="wizard-step-2">Step 2: Members <i class="icon-chevron-right"></i></div>
     <!-- <div class="wizard-step" id="wizard-step-3">Step 3: Details <i class="icon-chevron-right"></i></div> -->
-  </div>
-  <div class="span9">
+  <!-- </div> -->
+<div class="row wizard">
+  <div class="span12">
     <%= render 'forms_details', f: f %>
     <%= render 'forms_members', f: f %>
   </div>
@@ -19,60 +20,59 @@
 <script type="text/html" id="invited_group_template">
   <%= render 'groups/invited_group' %>
 </script>
- -->
 <% content_for(:before_body_end) do %>
   <!-- TODO: Move this elsewhere (please leave the image selection js)-->
   <script type="text/javascript">
-  //   $(document).ready(function()
-  //   {
-  //     $('.datepicker').datepicker({
-  //       disableFocus: true
-  //     });
+    $(document).ready(function()
+    {
+      $('.datepicker').datepicker({
+        disableFocus: true
+      });
 
-  //     $('.timepicker').timepicker({
-  //       disableFocus: true
-  //     });
+      // $('.timepicker').timepicker({
+      //   disableFocus: true
+      // });
 
-  //     $('.btn-group .btn').tooltip({
-  //       container: 'body'
-  //     });
+      $('.btn-group .btn').tooltip({
+        container: 'body'
+      });
 
-  //     $('.due_at').autoSize({
-  //       fixed: '#event_due_at_time',
-  //       fluid: '#event_due_at_date',
-  //       offset: 4
-  //     });
+      // $('.due_at').autoSize({
+      //   fixed: '#event_due_at_time',
+      //   fluid: '#event_due_at_date',
+      //   offset: 4
+      // });
 
-  //     $("#event_division_type").buttonGroup();
-  //     $("#event_fee_type").buttonGroup();
-  //     $("#event_privacy_type").buttonGroup();
-  //     $("#event_image_type").buttonGroup();
-  //     $("#event_payment_methods_raw").buttonGroup();
-  //     $("#event_invitation_types").buttonGroup();
+      // $("#event_division_type").buttonGroup();
+      // $("#event_fee_type").buttonGroup();
+      $("#event_privacy_type").buttonGroup();
+      // $("#event_image_type").buttonGroup();
+      // $("#event_payment_methods_raw").buttonGroup();
+      $("#event_invitation_types").buttonGroup();
 
-  //     $('#member_name').addSomething({
-  //       somethings: <%= @member_emails.to_json.html_safe || "[]" %>,
-  //       bulkEnabled: true
-  //     });
+      $('#member_name').addSomething({
+        somethings: <%= @member_emails.to_json.html_safe || "[]" %>,
+        bulkEnabled: true
+      });
 
-  //     $("#group_name").addSomething({
-  //       addButtonSelector: "#add_group",
-  //       somethingsInputSelector: "#event_groups",
-  //       somethingsSelector: "#invited_groups",
-  //       somethingsTemplateSelector: "#invited_group_template",
-  //       errorSelector: "#add_group_error",
-  //       source: "<%= search_groups_path(format: :json) %>",
-  //       idAttribute: "id",
-  //       displayAttribute: "title",
-  //       allowNameless: false,
-  //       somethings: <%= @group_ids.to_json.html_safe || "[]" %>,
-  //       onValidate: function(something)
-  //       {
-  //         return;
-  //       },
-  //     });
+      $("#group_name").addSomething({
+        addButtonSelector: "#add_group",
+        somethingsInputSelector: "#event_groups",
+        somethingsSelector: "#invited_groups",
+        somethingsTemplateSelector: "#invited_group_template",
+        errorSelector: "#add_group_error",
+        source: "<%= search_groups_path(format: :json) %>",
+        idAttribute: "id",
+        displayAttribute: "title",
+        allowNameless: false,
+        somethings: <%= @group_ids.to_json.html_safe || "[]" %>,
+        onValidate: function(something)
+        {
+          return;
+        },
+      });
 
-  //     $(".wizard").wizard();
-  //   });
+      $(".wizard").wizard();
+    });
   </script>
 <% end %>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130613033754) do
+ActiveRecord::Schema.define(:version => 20130629192104) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
@@ -28,11 +28,10 @@ ActiveRecord::Schema.define(:version => 20130613033754) do
   end
 
   create_table "cards", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "account_id"
     t.string   "uri"
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
-    t.integer  "account_id"
     t.string   "brand"
     t.integer  "expiration_month"
     t.integer  "expiration_year"
@@ -259,8 +258,8 @@ ActiveRecord::Schema.define(:version => 20130613033754) do
   end
 
   create_table "payments", :force => true do |t|
-    t.datetime "created_at",          :null => false
-    t.datetime "updated_at",          :null => false
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.datetime "paid_at"
     t.integer  "payer_id"
     t.integer  "payee_id"
@@ -269,8 +268,9 @@ ActiveRecord::Schema.define(:version => 20130613033754) do
     t.integer  "event_user_id"
     t.integer  "processor_fee_cents"
     t.integer  "our_fee_cents"
-    t.boolean  "cash"
+    t.boolean  "cash",                :default => false
     t.integer  "paid_amount_cents"
+    t.string   "debit_uri"
   end
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"

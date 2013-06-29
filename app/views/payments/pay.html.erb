@@ -24,17 +24,17 @@
         <form id="credit-card-form" class="form">
           <label>
             Card Number
-            <input type="text" autocomplete="off" placeholder="Card Number" class="cc-number input-block-level push-top-tiny">
+            <input type="text" autocomplete="off" placeholder="Card Number" class="cc-number input-block-level push-top-tiny" value="4111111111111111">
           </label>
           <label>
             Expiration<br />
-            <input type="text" autocomplete="off" placeholder="Expiration Month" class="cc-em input-block-level push-top-tiny" style="width: 40%; display: inline-block">
+            <input type="text" autocomplete="off" placeholder="Expiration Month" class="cc-em input-block-level push-top-tiny" style="width: 40%; display: inline-block" value="08">
             <div style="width: 10%; display: inline-block">/</div>
-            <input type="text" autocomplete="off" placeholder="Expiration Year" class="cc-ey input-block-level push-top-tiny" style="width: 40%; display: inline-block">
+            <input type="text" autocomplete="off" placeholder="Expiration Year" class="cc-ey input-block-level push-top-tiny" style="width: 40%; display: inline-block" value="2014">
           </label>
           <label>
             Security Code (CSC)
-            <input type="text" autocomplete="off" placeholder="CSC" class="cc-csc input-block-level push-top-tiny">
+            <input type="text" autocomplete="off" placeholder="CSC" class="cc-csc input-block-level push-top-tiny" value="123">
           </label>
           <button type="submit" class="btn btn-block btn-primary">
             Use Card
@@ -48,6 +48,7 @@
 <% content_for(:before_body_end) do %>
   <script type="text/javascript" src="https://js.balancedpayments.com/v1/balanced.js"></script>
   <script type="text/javascript">
+    // All of this frontend code should be moved into Backbone
     balanced.init('/v1/marketplaces/TEST-MP2edcOz75u0cdKsDK7FWcFG');
 
     $("#credit-card-form").submit(function(e) {
@@ -75,8 +76,12 @@
             // WOO HOO! MONEY!
             // response.data.uri == URI of the card resource
             // you should store this returned card URI to later charge it
-            console.log(response.data);
-            $.post('/cards', response.data);
+            $.post('/cards', response.data, function(data) {
+              if(data.account_id !== undefined) {
+                // Success state
+                window.location = "<%= confirm_payment_url(@payment) %>";
+              }
+            });
         }
       });
     });

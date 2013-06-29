@@ -13,8 +13,9 @@
 #  event_user_id       :integer
 #  processor_fee_cents :integer
 #  our_fee_cents       :integer
-#  cash                :boolean
+#  cash                :boolean          default(FALSE)
 #  paid_amount_cents   :integer
+#  debit_uri           :string(255)
 #
 
 require 'spec_helper'

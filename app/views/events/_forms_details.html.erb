@@ -1,5 +1,5 @@
 <div class="wizard-card" id="wizard-card-1" style="display: block;">
-  <div class="wizard-card-title"><h3>Step 3: Event Details</h3></div>
+  <div class="wizard-card-title"><h3>Step 1: Event Details</h3></div>
   <div class="wizard-card-body">
     <div class="control-group required">
       <%= f.label :title, "What is the title of your collection? (required)" %>
@@ -16,8 +16,7 @@
     <div class="control-group required">
       <%= f.label :due_at, "When do you want the money by? (required)" %>
       <div class="controls due_at autosize <%= "field_with_error" if @event.errors[:due_at].present? %>">
-        <%= f.text_field :due_at_date, class: "datepicker input-border-box", placeholder: "mm/dd/yyyy" %>
-        <%= f.text_field :due_at_time, class: "timepicker input-medium input-border-box", placeholder: "hh:mm" %>
+        <%= f.text_field :due_at, class: "datepicker input-block-level", placeholder: "mm/dd/yyyy" %>
       </div>
     </div>
     <div class="control-group optional">
@@ -96,6 +95,6 @@
       </div>
     </div>
 
-    <%= f.submit "#{submit_text(@event)} event and send invitations", class: "btn btn-primary btn-block push-top-small" %>
+    <%= link_to "Continue to next step".html_safe, "#", class: "btn btn-primary btn-block push-top-small wizard-submit", id: "wizard-submit-1" %>
   </div>
 </div>

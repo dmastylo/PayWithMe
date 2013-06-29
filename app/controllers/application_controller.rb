@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     if Rails.env.production?
       {host: "paywith.me"}.merge(super)
     else
-      {host: "local.paywith.me:3000"}.merge(super)
+      {host: "local.paywith.me"}.merge(super)
     end
   end
 
