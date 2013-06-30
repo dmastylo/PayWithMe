@@ -20,7 +20,7 @@
 
     Sample nudge message:
     <div id="sample-modal-G-nudge" class="sample-modal-nudge-text">
-      <textarea rows="3" class="input-block-level" disabled>Hi there, You've been nudged! <%= current_user.first_name %> wants you to get your money in for <%= @event.title %>. What are you waiting for?</textarea>
+      <textarea rows="3" class="input-block-level" disabled>Hi there, You've been nudged! <%= user_name(current_user) %> wants you to get your money in for <%= @event.title %>. What are you waiting for?</textarea>
     </div>
     <div id="sample-modal-PG13-nudge" class="sample-modal-nudge-text">
       <textarea rows="3" class="input-block-level" disabled>Hurry up!! You need to get your shit together and make your payment to <%= @event.organizer.first_name %> for <%= @event.title %>. You are holding up the group and it’s annoying everyone!</textarea>
