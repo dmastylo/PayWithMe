@@ -144,7 +144,7 @@ class Notification < ActiveRecord::Base
       elsif update?
         "The details of #{event.title} have been updated."
       elsif not_participating?
-        "#{subject.first_name || subject.email} has decided to not participate in #{event.title}"
+        "#{(subject.first_name.empty?)? subject.email : subject.first_name} has decided to not participate in #{event.title}"
       end
     elsif group?
       if invite?

@@ -160,10 +160,10 @@
 
             Sample nudge message:
             <div id="sample-G-nudge" class="sample-nudge-text">
-              <textarea rows="3" class="input-block-level" disabled>Hi there, You've been nudged! <%= current_user.first_name %> wants you to get your money in for <%= @event.title %>. What are you waiting for?</textarea>
+              <textarea rows="3" class="input-block-level" disabled>Hi there, you've been nudged! <%= user_name(current_user) %> wants you to get your money in for <%= @event.title %>. What are you waiting for?</textarea>
             </div>
             <div id="sample-PG13-nudge" class="sample-nudge-text">
-              <textarea rows="3" class="input-block-level" disabled>Hurry up!! You need to get your shit together and make your payment to <%= @event.organizer.first_name %> for <%= @event.title %>. You are holding up the group and it’s annoying everyone!</textarea>
+              <textarea rows="3" class="input-block-level" disabled>Hurry up!! You need to get your shit together and make your payment to <%= user_name(@event.organizer) %> for <%= @event.title %>. You are holding up the group and it’s annoying everyone!</textarea>
             </div>
             <div id="sample-R-nudge" class="sample-nudge-text">
               <textarea rows="3" class="input-block-level" disabled>Stop f-ing around!! You agreed to pay for <%= @event.title %> and you are just sitting on your ass. Everyone is waiting for you to pay, so just do it!</textarea>

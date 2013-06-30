@@ -3,7 +3,7 @@
     <% if @nudge.G? %>
       <p>Hi <%= (@user.first_name.empty?) ? "there" : @user.first_name %>,</p>
 
-      <p>You've been nudged! <%= @nudge.nudger.first_name %> wants you to get your money in for <%= @event.title %>. What are you waiting for?</p>
+      <p>You've been nudged! <%= user_name @nudger %> wants you to get your money in for <%= @event.title %>. What are you waiting for?</p>
     <% elsif @nudge.PG13? %>
       <% first_variable = ["C’mon!!", "Hurry up!!", "Hey!!", "Lets go!!", "Dude!!"].sample %>
       <% second_variable = ["make your frikken", "get your goddamn", "stop being lazy and make your", "stop messing around and make your", "get your shit together and make your"].sample %>

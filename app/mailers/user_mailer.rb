@@ -42,10 +42,11 @@ class UserMailer < ActionMailer::Base
     
     @user = user
     @nudge = nudge
+    @nudger = nudge.nudger
     @event = @nudge.event
     @organizer = @event.organizer
 
-    mail to: format_address_to(user), subject: "#{@nudge.nudger.first_name} wants you to pay for #{@nudge.event.title}"
+    mail to: format_address_to(user), subject: "#{user_name @nudger} wants you to pay for #{@nudge.event.title}"
   end
 
   def not_participating_notification(event_user, organizer)
