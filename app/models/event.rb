@@ -510,7 +510,7 @@ class Event < ActiveRecord::Base
   def nudge!(nudger, nudgee, rating="G")
     if can_nudge?(nudger, nudgee)
       if rating == "G"
-        rating = 1 
+        rating = 1
       elsif rating == "PG13"
         rating = 2
       elsif rating == "R"

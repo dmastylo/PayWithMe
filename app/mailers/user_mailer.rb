@@ -1,6 +1,7 @@
 class UserMailer < ActionMailer::Base
   default from: "PayWithMe <#{Figaro.env.gmail_username}>"
   helper :application
+  helper :users
   include UsersHelper
   layout 'mail'
 
