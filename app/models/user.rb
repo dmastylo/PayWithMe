@@ -55,8 +55,7 @@ class User < ActiveRecord::Base
 
   # Relationships
   has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
-  has_many :member_events, class_name: "Event", through: :event_users, source: :event, dependent: :destroy
-  has_many :event_users, dependent: :destroy
+  has_many :member_events, class_name: "Event", through: :outgoing_payments, source: :event, dependent: :destroy
 
   has_many :organized_groups, class_name: "Group", foreign_key: "organizer_id"
   has_many :member_groups, class_name: "Group", through: :group_users, source: :group
@@ -69,10 +68,10 @@ class User < ActiveRecord::Base
   has_many :notifications, dependent: :destroy
   has_many :linked_accounts, dependent: :destroy
   has_many :news_items, dependent: :destroy
-  has_many :received_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
-  has_many :sent_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
-  has_many :received_nudges, class_name: "Nudge", foreign_key: "nudgee_id"
-  has_many :sent_nudges, class_name: "Nudge", foreign_key: "nudger_id"
+  has_many :incoming_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
+  has_many :outgoing_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
+  has_many :incoming_nudges, class_name: "Nudge", foreign_key: "nudgee_id"
+  has_many :outgoing_nudges, class_name: "Nudge", foreign_key: "nudger_id"
   has_and_belongs_to_many :subject_news_items, class_name: "NewsItem"
   belongs_to :creator, class_name: "User"
   has_many :created_users, class_name: "User", foreign_key: "creator_id"

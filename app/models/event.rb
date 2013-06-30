@@ -54,8 +54,8 @@ class Event < ActiveRecord::Base
 
   # Relationships
   belongs_to :organizer, class_name: "User"
-  has_many :event_users, dependent: :destroy
-  has_many :members, class_name: "User", through: :event_users, source: :user, before_add: :handle_member_add, before_remove: :handle_member_remove
+  has_many :payments, dependent: :destroy
+  has_many :members, class_name: "User", through: :payments, source: :payer, before_add: :handle_member_add, before_remove: :handle_member_remove
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
@@ -83,7 +83,7 @@ class Event < ActiveRecord::Base
   # Dynamic methods
   def method_missing(name, *arguments, &block)
     if name =~ /^collecting_by_([a-z]+)\?/
-      # Defines colleciton_by_total?, collection_by_person?, collecting_by_donation?, collecting_by_item?
+      # Defines collection_by_total?, collection_by_person?, collecting_by_donation?, collecting_by_item?
       return collection_type == Collection.const_get("#{$1}".upcase)
     end
   end
@@ -102,7 +102,7 @@ class Event < ActiveRecord::Base
     elsif empty? || per_person_cents_missing? || not_using_total?
       nil
     else
-      per_person_cents * paying_members.count
+      per_person_cents * members.count
     end
   end
   def per_person_cents
@@ -111,12 +111,11 @@ class Event < ActiveRecord::Base
     elsif empty? || total_cents_missing? || not_using_total?
       nil
     else
-      total_cents / paying_members.count
+      total_cents / members.count
     end
   end
   def collected_cents
-    # TODO: Payments are linked to events, use that instead
-    Payment.where("event_user_id IN (?) AND paid_at IS NOT NULL", self.event_user_ids).sum(&:amount_cents)
+    self.payments.paid.sum(:amount_cents)
   end
   def accepts_donation?(amount_cents) # Should this be in cents or dollars?
     amount_cents >= minimum_donation_cents
@@ -186,17 +185,8 @@ class Event < ActiveRecord::Base
     end
   end
 
-  # Member definitions
-  # Three states: paying, paid, unpaid
-  has_many :paying_event_users, class_name: "EventUser", conditions: proc { ["event_users.user_id <> ? ", organizer_id ]}
-  has_many :paying_members, class_name: "User", through: :paying_event_users, source: :user
-  has_many :paid_event_users, class_name: "EventUser", conditions: proc { ["event_users.paid_at IS NOT NULL AND event_users.user_id <> ?", organizer_id ]}
-  has_many :paid_members, class_name: "User", through: :paid_event_users, source: :user
-  has_many :unpaid_event_users, class_name: "EventUser", conditions: proc { ["event_users.paid_at IS NULL AND event_users.user_id <> ?", organizer_id] }
-  has_many :unpaid_members, class_name: "User", through: :unpaid_event_users, source: :user
-
   def empty?
-    self.paying_event_users.empty?
+    self.payments.empty?
   end
   def invited?(user)
     members.include?(user)
@@ -245,7 +235,7 @@ class Event < ActiveRecord::Base
   # end
 
   def independent_members
-    nfgdi_members = self.paying_members
+    nfgdi_members = self.members
 
     self.groups.each do |group|
       nfgdi_members -= group.members
@@ -278,7 +268,7 @@ class Event < ActiveRecord::Base
   end
 
   def received_money?
-    paid_members.count > 0
+    payments.paid.count > 0
   end
 
   # Nudges
@@ -380,4 +370,5 @@ private
       self.save
     end
   end
+  
 end

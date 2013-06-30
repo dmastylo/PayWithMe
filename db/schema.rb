@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130629192104) do
+ActiveRecord::Schema.define(:version => 20130630001359) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
@@ -65,28 +65,6 @@ ActiveRecord::Schema.define(:version => 20130629192104) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "event_users", :force => true do |t|
-    t.integer  "event_id"
-    t.integer  "user_id"
-    t.integer  "amount_cents",                 :default => 0
-    t.datetime "due_at"
-    t.datetime "paid_at"
-    t.boolean  "sent_invitation_email",        :default => false
-    t.boolean  "visited_event",                :default => false
-    t.datetime "last_seen"
-    t.boolean  "paid_with_cash",               :default => true
-    t.integer  "paid_total_cents",             :default => 0
-    t.integer  "status",                       :default => 0
-    t.integer  "nudges_remaining",             :default => 0
-    t.boolean  "sent_ticket_email",            :default => false
-    t.boolean  "sent_invitation_notification", :default => false
-    t.boolean  "sent_guest_broadcast",         :default => false
-    t.integer  "invitation_group",             :default => 0
-  end
-
-  add_index "event_users", ["event_id", "user_id"], :name => "index_event_users_on_event_id_and_user_id"
-  add_index "event_users", ["event_id"], :name => "index_event_users_on_event_id"
-
   create_table "events", :force => true do |t|
     t.string   "title"
     t.text     "description"
@@ -110,6 +88,7 @@ ActiveRecord::Schema.define(:version => 20130629192104) do
     t.string   "location_address"
     t.integer  "donation_goal_cents"
     t.integer  "minimum_donation_cents"
+    t.string   "type"
   end
 
   add_index "events", ["slug"], :name => "index_events_on_slug"
@@ -262,18 +241,14 @@ ActiveRecord::Schema.define(:version => 20130629192104) do
     t.datetime "updated_at",                             :null => false
     t.datetime "paid_at"
     t.integer  "payer_id"
-    t.integer  "payee_id"
     t.integer  "event_id"
     t.integer  "amount_cents"
-    t.integer  "event_user_id"
     t.integer  "processor_fee_cents"
     t.integer  "our_fee_cents"
     t.boolean  "cash",                :default => false
     t.integer  "paid_amount_cents"
     t.string   "debit_uri"
   end
-
-  add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
 
   create_table "reminder_users", :force => true do |t|
     t.integer  "reminder_id"
