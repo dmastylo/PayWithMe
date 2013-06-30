@@ -31,7 +31,7 @@ module UsersHelper
   end
 
   def user_name(user, options = {})
-    options[:length] ||= 20
+    options[:length] ||= 18
     options[:use_you] ||= false
 
     if options[:use_you] && signed_in? && current_user == user
@@ -39,7 +39,7 @@ module UsersHelper
     elsif user.name
       user.name
     elsif options[:length] > 0
-      user.email.truncate(20)
+      user.email.truncate(18)
     else
       user.email
     end
