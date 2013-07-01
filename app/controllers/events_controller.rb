@@ -18,7 +18,7 @@ class EventsController < ApplicationController
       redirect_to event_path(@event), status: :moved_permanently
     end
 
-    @event = Event.find_by_id(@event.id, include: { event_users: :user } )
+    @event = Event.find_by_id(@event.id) #, include: { payments: :payer } )
 
     if !signed_in?
       session["user_return_to"] = event_path(@event)
@@ -27,12 +27,6 @@ class EventsController < ApplicationController
     @messages = @event.messages.limit(Figaro.env.chat_msg_per_page.to_i)
     @messages_count = @event.messages.count
     @message = Message.new
-    @event_user = @event.event_user_of(current_user)
-    if @event_user.present?
-      # @payment = @event_user.create_payment if @event.collecting_by_item? || @event.collecting_by_donation? || event_user.unpaid?
-    else
-      @event_user = EventUser.new
-    end
   end
   
   def new
@@ -104,7 +98,7 @@ class EventsController < ApplicationController
   end
 
   def admin
-    @event = Event.find_by_id(@event.id, include: [{ event_users: :user }] )
+    @event = Event.find_by_id(@event.id)
 
     if @event.collecting_by_item?
       @event.items.each do |item|
@@ -121,9 +115,6 @@ class EventsController < ApplicationController
         end
       end
     end
-
-    @paid_event_users = @event.paid_event_users(include_items: true)
-    @unpaid_event_users = @event.unpaid_event_users
   end
 
   def guests
@@ -139,10 +130,10 @@ class EventsController < ApplicationController
 
 private
   def set_event_user_visit_to_true
-    if @event.members.include?(current_user)
-      @event_user = @event.event_users.find_by_user_id(current_user.id)
-      @event_user.visit_event!
-    end
+    # if @event.members.include?(current_user)
+      # @event_user = @event.event_users.find_by_user_id(current_user.id)
+      # @event_user.visit_event!
+    # end
   end
 
   def ensure_event_is_empty!

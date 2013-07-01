@@ -55,7 +55,14 @@ class Event < ActiveRecord::Base
   # Relationships
   belongs_to :organizer, class_name: "User"
   has_many :payments, dependent: :destroy
-  has_many :members, class_name: "User", through: :payments, source: :payer, before_add: :handle_member_add, before_remove: :handle_member_remove
+  has_many :members, class_name: "User", through: :payments, source: :payer, before_add: :handle_member_add, before_remove: :handle_member_remove do
+    def paid
+      where("payments.paid_at IS NOT NULL")
+    end
+    def unpaid
+      where("payments.paid_at IS NULL")
+    end
+  end
   has_many :messages, dependent: :destroy
   has_many :event_groups, dependent: :destroy
   has_many :groups, through: :event_groups, source: :group
@@ -194,7 +201,7 @@ class Event < ActiveRecord::Base
 
   # Notifications, emails, and news items
   def update_members(&block)
-    self.invitation_group = event_users.maximum(:invitation_group) + 1
+    # self.invitation_group = event_users.maximum(:invitation_group) + 1
     block.call
   end
   def self.queue_broadcasts(event_id, broadcasts=[:invitations, :tickets, :guests, :messages])
@@ -204,14 +211,14 @@ class Event < ActiveRecord::Base
     end
   end
   def broadcast_invitations
-    event_users.each do |event_user|
-      if !event_user.sent_invitation_email? && event_user.user_id != organizer_id
-        event_user.user.create_guest_token if event_user.user.stub?
-        UserMailer.send_for_event_invitation(self, event_user.user).deliver
-        Notification.create_for_event_invitation(self.id, event_user.user_id)
-        event_user.toggle(:sent_invitation_email).save
-      end
-    end
+    # event_users.each do |event_user|
+    #   if !event_user.sent_invitation_email? && event_user.user_id != organizer_id
+    #     event_user.user.create_guest_token if event_user.user.stub?
+    #     UserMailer.send_for_event_invitation(self, event_user.user).deliver
+    #     Notification.create_for_event_invitation(self.id, event_user.user_id)
+    #     event_user.toggle(:sent_invitation_email).save
+    #   end
+    # end
   end
   def broadcast_tickets
     # event_users.each do |event_user|
@@ -220,11 +227,11 @@ class Event < ActiveRecord::Base
     # end
   end
   def broadcast_guests
-    event_users.each do |event_user|
-      if !event_user.sent_guest_broadcast?
-        event_user.toggle(:sent_guest_broadcast)
-      end
-    end
+    # event_users.each do |event_user|
+    #   if !event_user.sent_guest_broadcast?
+    #     event_user.toggle(:sent_guest_broadcast)
+    #   end
+    # end
   end
   def broadcast_messages
   end
@@ -246,29 +253,6 @@ class Event < ActiveRecord::Base
 
   def invitation_type_ids
     self.invitation_types.collect { |invitation_type| invitation_type.invitation_type }
-  end
-
-  # TODO: Refactor these methods
-  def event_user_of(user)
-    event_users.find_by_user_id(user)
-  end
-
-  def paid?(user)
-    event_user = event_user_of(user)
-    event_user.present? && event_user.paid?
-  end
-
-  def paid_with_cash?(user)
-    event_user = event_user_of(user)
-    event_user.paid_with_cash?
-  end
-
-  def paid_at(user)
-    event_user_of(user).paid_at
-  end
-
-  def received_money?
-    payments.paid.count > 0
   end
 
   # Nudges

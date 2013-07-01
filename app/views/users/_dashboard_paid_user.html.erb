@@ -1,7 +1,3 @@
-<%
-  # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
-%>
-<% user = event_user.user %>
 <div class="span4 js-catch-parent js-block">
   <div class="well dashboard-user dashboard-paid-user">
     <div class="profile-image image-user-<%= user.id %>">
@@ -13,10 +9,12 @@
         <div class="user-online" rel="tooltip" title="This user is online" data-placement="top"></div>
       <% end %>
       <br />
-      <strong>Paid:</strong> <%= distance_of_time_in_words_to_now event_user.paid_at %> ago
-      <% if event_user.payment.cash? %>
-        <%= render "users/dashboard_user_form", event: @event, user: user, event_user: event_user %>
-      <% end %>
+      <%
+      # <strong>Paid:</strong> <%= distance_of_time_in_words_to_now event_user.paid_at %> ago
+      #<% if event_user.payment.cash? %>
+      #  <%= render "users/dashboard_user_form", event: @event, user: user, event_user: event_user %>
+      #<% end %>
+      %>
     </div>
     <div class="clearfix"></div>
   </div>

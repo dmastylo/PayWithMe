@@ -1,7 +1,3 @@
-<%
-  # NOTE: This partial takes in an EventUser with name event_user (though a GroupUser with name event_user works as well) rather than a user.
-%>
-<% user = event_user.user %>
 <div class="span4 js-catch-parent js-block">
   <div class="well dashboard-user dashboard-unpaid-user">
     <div class="profile-image image-user-<%= user.id %>">
@@ -15,7 +11,8 @@
     </div>
     <% # if !itemized
     %>
-      <%= render "users/dashboard_user_form", event: @event, user: user, event_user: event_user %>
+      <%= #render "users/dashboard_user_form", event: @event, user: user, event_user: event_user 
+      %>
     <% # end
     %>
   </div>

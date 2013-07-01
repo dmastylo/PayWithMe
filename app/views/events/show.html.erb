@@ -106,7 +106,7 @@
       <h3>Organizer</h3>
       <div class="well">
         <ul class="members">
-          <%= render object: @event.event_user_of(@event.organizer_id), partial: 'users/user', as: :event_user %>
+          <%= render @event.organizer %>
         </ul>
       </div>
 
@@ -117,9 +117,9 @@
             <em><small>Nudges remaining: <strong class="nudges-remaining"><%= @event_user.nudges_remaining %></strong></small></em>
           </div>
         <% end %>
-        <% if @event.paying_members.any? %>
+        <% if @event.members.count > 1 %>
           <ul class="members">
-            <%= render partial: 'users/user', collection: @event.paying_event_users, as: :event_user %>
+            <%= render @event.members %>
           </ul>
         <% else %>
           There are no members. Add some!

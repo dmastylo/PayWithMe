@@ -17,7 +17,7 @@
       <%= link_to truncate(event.title, :length => 32, :separator => ' '), event %>
     </h4>
     <div class="count">
-      <%= pluralize(event.paying_members.count, "member") %>
+      <%= pluralize(event.members.count, "member") %>
     </div>
     <div class="due_at">
       <% if event.due_at < Time.now %>
