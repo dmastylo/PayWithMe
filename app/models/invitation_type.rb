@@ -18,7 +18,7 @@ class InvitationType < ActiveRecord::Base
   belongs_to :event
 
   def self.from_params(params)
-    invitation_types = ActiveSupport::JSON.decode(params)
+    invitation_types = ActiveSupport::JSON.decode(params || "[]")
     invitation_types.map { |i| InvitationType.new(invitation_type: i) }
   end
 

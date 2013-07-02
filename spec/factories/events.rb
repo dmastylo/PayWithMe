@@ -7,4 +7,8 @@ FactoryGirl.define do
     total 10.00
     association :organizer, factory: :user
   end
+
+  factory :invalid_event, parent: :event do
+    title ""
+  end
 end
