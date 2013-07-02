@@ -19,6 +19,7 @@ class EventsController < ApplicationController
     end
 
     @event = Event.find_by_id(@event.id) #, include: { payments: :payer } )
+    current_user.payment = @event.payments.find_by_payer_id(current_user.id)
 
     if !signed_in?
       session["user_return_to"] = event_path(@event)

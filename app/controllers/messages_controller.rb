@@ -36,10 +36,10 @@ class MessagesController < ApplicationController
 
 private
   def user_on_page
-    event_user = current_user.event_users.find_by_event_id(@event.id)
-    if event_user.present?
-      event_user.update_attribute(:last_seen, Time.now)
-    end
+#    event_user = current_user.event_users.find_by_event_id(@event.id)
+#    if event_user.present?
+#      event_user.update_attribute(:last_seen, Time.now)
+#    end
   end
 
   def set_notification_status_to_read

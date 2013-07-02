@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   # Attributes
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :trackable, :validatable, :omniauthable
   attr_accessible :email, :password, :password_confirmation, :remember_me, :name, :profile_image, :profile_image_type, :profile_image_url, :time_zone, :send_emails, :referrer_id, :referrer
-  attr_accessor :profile_image_type
+  attr_accessor :profile_image_type, :payment
   has_attached_file :profile_image
 
   # Validations

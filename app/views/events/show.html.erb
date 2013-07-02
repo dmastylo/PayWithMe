@@ -69,7 +69,7 @@
       </div>
       
       <% if current_user == @event.organizer || !@event.members.include?(current_user) %>
-      <% elsif @event_user.paid? && !@event.fundraiser? %>
+      <% elsif current_user.payment.paid? && !@event.fundraiser? %>
         <%= link_to "Paid", "#", class: "btn btn-primary disabled btn-block push-bottom" %>
       <% else %>
         <% if @event.fundraiser? && !@event_user.paid? %>
@@ -86,7 +86,7 @@
             <% end %>
           </div>
         <% elsif @event.collecting_by_total? || @event.divide_per_person? %>
-          <%= event_user_pay_button(@event_user) %>
+          <%= link_to "Pay <strong>#{user_name(@event.organizer)}</strong> Now".html_safe, pay_payment_path(current_user.payment), class: "btn btn-primary btn-block" %>
         <% elsif @event.itemized? %>
           <h3>Available Items</h3>
           <div class="well" id="items">

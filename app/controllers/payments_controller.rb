@@ -8,8 +8,7 @@ class PaymentsController < ApplicationController
   # before_filter :ensure_user_owns_payment!, except: [:ipn]
 
   def pay
-    @event_user = @payment.event_user
-    @event = @event_user.event
+    @event = @payment.event
   end
 
   def paid

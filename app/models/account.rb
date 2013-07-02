@@ -20,7 +20,7 @@ class Account < ActiveRecord::Base
 
   # Creates an Account object from card information
   def self.new_from_card(card, user)
-    buyer = Balanced::Marketplace.mine.create_buyer(card_uri: card.uri, name: current_user.name, email: current_user.email)
+    buyer = Balanced::Marketplace.mine.create_buyer(card_uri: card.uri, name: user.name, email: user.email)
     account = self.new
     account.uri = buyer.uri
     return account

@@ -50,6 +50,14 @@ class Payment < ActiveRecord::Base
   # validates :our_fee, presence: true, numericality: { greater_than_or_equal_to: 0 }
   # validates :transaction_id, presence: true, if: :paid_and_not_cash?
 
+  def paid?
+    paid_at.present?
+  end
+
+  def unpaid?
+    !paid?
+  end
+
   def payee
     self.event.organizer
   end
@@ -70,6 +78,8 @@ class Payment < ActiveRecord::Base
   end
 
   def set_status
+    self.amount = event.per_person
+
     if cash? && paid_amount.present?
       if paid_amount == amount && !paid?
         self.paid_at = Time.now
