@@ -69,7 +69,7 @@ describe EventsController do
     end
   end
 
-  describe :update do
+  describe "PUT #update" do
     before :each do
       @event = FactoryGirl.create(:event, organizer: current_user)
     end
@@ -100,6 +100,6 @@ describe EventsController do
     end
   end
 
-  describe :destroy do
+  describe "DELETE #destroy" do
   end
 end
