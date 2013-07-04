@@ -17,6 +17,7 @@ class Account < ActiveRecord::Base
 
   # Relationships
   has_many :cards,    dependent: :destroy
+  belongs_to :user
 
   # Creates an Account object from card information
   def self.new_from_card(card, user)

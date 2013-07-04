@@ -3,7 +3,8 @@ class CardsController < ApplicationController
   respond_to :json
 
   def create
-    card = Card.new(params.slice(:brand, :expiration_month, :expiration_year, :uri))
+    params[:card] ||= {}
+    card = Card.new(params[:card].slice(:brand, :expiration_month, :expiration_year, :uri))
     if current_user.account.present?
       logger.debug "Associated card for existing account for user #{current_user.id}"
       current_user.account.associate_card(card)
@@ -22,6 +23,22 @@ class CardsController < ApplicationController
     respond_with(card) do |format|
       format.js {render json: card, root: "card"}
     end
+  end
+
+  def show
+    respond_with_not_found
+  end
+
+  def index
+    respond_with_not_found
+  end
+
+  def delete
+    respond_with_not_found
+  end
+
+  def update
+    respond_with_not_found
   end
 
 end

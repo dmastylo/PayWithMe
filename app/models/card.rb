@@ -18,4 +18,7 @@ class Card < ActiveRecord::Base
   # Relationships
   belongs_to :account
 
+  # Validations
+  validates :uri, presence: true, uniqueness: true
+
 end
