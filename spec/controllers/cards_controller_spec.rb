@@ -34,14 +34,14 @@ describe CardsController do
     context "with valid attributes" do
       it "creates a new card" do
         expect {
-          post :create, card: FactoryGirl.attributes_for(:card)
+          post :create, card: FactoryGirl.attributes_for(:card, uri: test_card_uri)
         }.to change(Card, :count).by(1)
       end
 
       it "creates an account" do
         # Assumes that this is the users first card
         expect {
-          post :create, card: FactoryGirl.attributes_for(:card)
+          post :create, card: FactoryGirl.attributes_for(:card, uri: test_card_uri)
         }.to change(Account, :count).by(1)
       end
     end

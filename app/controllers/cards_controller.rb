@@ -10,11 +10,13 @@ class CardsController < ApplicationController
       current_user.account.associate_card(card)
     else
       # Creating a new account and immeadiately associating the card
-      current_user.account = Account.new_from_card(card, current_user)
-      if current_user.account.save
+      account = Account.new_from_card(card, current_user)
+      if account.valid?
         # Success state, the account has just been created
         logger.debug "Created account and card for user #{current_user.id}"
+        current_user.account = account
         current_user.account.cards << card
+        current_user.account.save
       else
         # Show an error response, card creation failed
       end
