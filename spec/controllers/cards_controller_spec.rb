@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+# Note that these are full integration tests, they do hit external APIs
+# These tests make take a while to run
 describe CardsController do
   include Devise::TestHelpers
   let(:current_user) { FactoryGirl.create(:user) }
