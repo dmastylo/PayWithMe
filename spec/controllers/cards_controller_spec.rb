@@ -9,6 +9,7 @@ describe CardsController do
   before { sign_in current_user }
 
   describe "GET #index" do
+    it "has not been implemented"
     # Disabled temporarily, do not delete
     # it "finds cards" do
     #   card = FactoryGirl.create(:card, account: FactoryGirl.create(:account, user: current_user))

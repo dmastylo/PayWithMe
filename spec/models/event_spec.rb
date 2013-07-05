@@ -25,6 +25,7 @@
 #  location_address       :string(255)
 #  donation_goal_cents    :integer
 #  minimum_donation_cents :integer
+#  type                   :string(255)
 #
 
 # Untested things that should be tested: (none)

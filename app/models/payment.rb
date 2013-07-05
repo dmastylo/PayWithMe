@@ -7,10 +7,8 @@
 #  updated_at          :datetime         not null
 #  paid_at             :datetime
 #  payer_id            :integer
-#  payee_id            :integer
 #  event_id            :integer
 #  amount_cents        :integer
-#  event_user_id       :integer
 #  processor_fee_cents :integer
 #  our_fee_cents       :integer
 #  cash                :boolean          default(FALSE)
