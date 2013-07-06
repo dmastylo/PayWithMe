@@ -1,4 +1,4 @@
-# PayWithMe Split Billing API Documentation
+# PayWithMe Group Billing API Documentation
 
 ## Getting Started
 
