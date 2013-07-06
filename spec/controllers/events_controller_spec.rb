@@ -25,7 +25,7 @@ describe EventsController do
       assigns(:event).should eq(event)
     end
 
-    it "renders the #show view" do
+    it "renders the :show view" do
       get :show, id: FactoryGirl.create(:event)
       response.should render_template :show
     end
