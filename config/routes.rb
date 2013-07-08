@@ -9,6 +9,7 @@ PayWithMe::Application.routes.draw do
   match '/terms', to: "pages#terms"
   match '/about', to: "pages#about"
   match '/blog', to: "posts#index"
+  match 'contacts_callback', to: "pages#contacts_callback"
 
   resources :admin, only: :index do
     collection do
@@ -104,6 +105,8 @@ PayWithMe::Application.routes.draw do
   resources :organizations, only: [:new, :create]
 
   resources :affiliates, only: [:show, :new, :create, :edit, :update, :destroy]
+
+  resources :contacts, only: [:create]
 
   match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
 

@@ -83,6 +83,9 @@ gem 'nested_form'
 # Cron jobs
 gem 'whenever', :require => false
 
+# OmniContacts for GMail Syncing
+gem "omnicontacts"
+
 group :development, :test do
   gem 'sqlite3'
 end
