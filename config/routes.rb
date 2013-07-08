@@ -8,7 +8,6 @@ PayWithMe::Application.routes.draw do
   match '/jobs', to: "pages#jobs"
   match '/terms', to: "pages#terms"
   match '/about', to: "pages#about"
-  match '/blog', to: "posts#index"
   match 'contacts_callback', to: "pages#contacts_callback"
 
   resources :admin, only: :index do
@@ -20,7 +19,6 @@ PayWithMe::Application.routes.draw do
       get 'payments'
       get 'nudges'
       get 'affiliates'
-      get 'posts'
     end
   end
 
@@ -99,8 +97,6 @@ PayWithMe::Application.routes.draw do
       post 'ipn'
     end
   end
-
-  resources :posts
 
   resources :organizations, only: [:new, :create]
 

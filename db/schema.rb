@@ -282,14 +282,6 @@ ActiveRecord::Schema.define(:version => 20130707203507) do
 
   add_index "payments", ["event_user_id"], :name => "index_payments_on_event_user_id"
 
-  create_table "posts", :force => true do |t|
-    t.string   "title"
-    t.text     "content"
-    t.boolean  "published"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "reminder_users", :force => true do |t|
     t.integer  "reminder_id"
     t.integer  "user_id"
