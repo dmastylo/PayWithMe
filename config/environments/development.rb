@@ -51,7 +51,4 @@ PayWithMe::Application.configure do
   # Default URL
   routes.default_url_options[:host] = "local.paywith.me"
   routes.default_url_options[:port] = 3000
-
-  # Run A/B tests in development
-  Vanity.playground.collecting = true
 end

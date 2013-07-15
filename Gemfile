@@ -53,7 +53,6 @@ gem 'js-routes'
 # Util
 gem 'newrelic_rpm'
 gem 'friendly_id'
-gem 'vanity', git: 'git://github.com/austingulati/vanity.git'
 gem 'prawn', git: 'git://github.com/celic/prawn.git', submodules: true
 group :development do
   gem 'annotate'

@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   before_filter :check_for_event_token
   after_filter :set_user_last_seen_to_now, if: :signed_in?
   around_filter :wrapper_if_signed_in, if: :signed_in?
-  use_vanity :current_user
 
   def default_url_options
     if Rails.env.production?

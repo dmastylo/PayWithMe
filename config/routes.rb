@@ -91,8 +91,6 @@ PayWithMe::Application.routes.draw do
 
   resources :cards, only: [:index, :create, :show]
 
-  match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
-
   # Error Handling
   # ===========================================================================
   match "/404", :to => "errors#not_found"
