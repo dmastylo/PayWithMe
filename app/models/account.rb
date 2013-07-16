@@ -17,12 +17,15 @@ class Account < ActiveRecord::Base
 
   # Relationships
   has_many :cards,    dependent: :destroy
+  belongs_to :user
 
   # Creates an Account object from card information
   def self.new_from_card(card, user)
+    return self.new if card.uri.blank?
     buyer = Balanced::Marketplace.mine.create_buyer(card_uri: card.uri, name: user.name, email: user.email)
     account = self.new
     account.uri = buyer.uri
+    account.user = user
     return account
   end
 

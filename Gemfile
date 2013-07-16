@@ -68,7 +68,6 @@ group :test do
   gem 'spork'
   gem 'guard-spork'
   gem 'guard-rspec'
-  gem 'rb-inotify', '~> 0.9'
   gem 'delorean'
   gem 'shoulda-matchers', '1.5.2'
 end

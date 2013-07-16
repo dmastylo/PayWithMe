@@ -76,7 +76,7 @@
             // WOO HOO! MONEY!
             // response.data.uri == URI of the card resource
             // you should store this returned card URI to later charge it
-            $.post('/cards', response.data, function(data) {
+            $.post('/cards', {card: response.data}, function(data) {
               if(data.account_id !== undefined) {
                 // Success state
                 window.location = "<%= confirm_payment_url(@payment) %>";

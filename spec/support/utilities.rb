@@ -1,8 +1,11 @@
 include ApplicationHelper
 
-def sign_in(user)
-  visit new_user_session_path 
-  fill_in "Email",    with: user.email
-  fill_in "Password", with: user.password
-  click_button "Sign in"
+def test_card_uri
+  marketplace = Balanced::Marketplace.mine
+  card = marketplace.create_card(
+    card_number: "4111111111111111",
+    expiration_month: "12",
+    expiration_year: "2016"
+  )
+  card.uri
 end

@@ -23,6 +23,10 @@ class ApplicationController < ActionController::Base
   end
 
 protected
+  def respond_with_not_found
+    raise ActionController::RoutingError.new('Not Found')
+  end
+
   def user_in_group
     @group = Group.find(params[:group_id] || params[:id])
 
