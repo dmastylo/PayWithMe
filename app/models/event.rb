@@ -55,7 +55,7 @@ class Event < ActiveRecord::Base
   # Relationships
   belongs_to :organizer, class_name: "User"
   has_many :payments, dependent: :destroy
-  has_many :members, class_name: "User", through: :payments, source: :payer, before_add: :handle_member_add, before_remove: :handle_member_remove do
+  has_many :members, class_name: "User", through: :payments, uniq: true, source: :payer, before_add: :handle_member_add, before_remove: :handle_member_remove do
     def paid
       where("payments.paid_at IS NOT NULL")
     end
@@ -82,6 +82,11 @@ class Event < ActiveRecord::Base
   before_save :add_organizer_to_members
   before_destroy :clear_notifications_and_news_items
   after_save :create_guest_token
+
+  # Scopes
+  scope :private, ->{ where("privacy_type = ?", Privacy::PRIVATE) }
+  scope :public, ->{ where("privacy_type = ?", Privacy::PUBLIC) }
+  # TODO: Events.visible_by(user)
 
   # Pretty URLs
   extend FriendlyId

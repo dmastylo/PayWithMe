@@ -64,6 +64,7 @@
 		{
 			var that = this;
 			this.$buttons.on('click', $.proxy(that.onClick, that));
+			console.log(this.$buttons);
 
 			if(this.val)
 			{

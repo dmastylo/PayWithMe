@@ -54,8 +54,8 @@ class User < ActiveRecord::Base
   after_create :set_last_seen
 
   # Relationships
-  has_many :organized_events, class_name: "Event", foreign_key: "organizer_id"
-  has_many :member_events, class_name: "Event", through: :outgoing_payments, source: :event, dependent: :destroy
+  has_many :organized_events, class_name: "Event", foreign_key: "organizer_id", uniq: true
+  has_many :member_events, class_name: "Event", through: :outgoing_payments, source: :event, dependent: :destroy, uniq: true
 
   has_many :organized_groups, class_name: "Group", foreign_key: "organizer_id"
   has_many :member_groups, class_name: "Group", through: :group_users, source: :group
@@ -78,16 +78,13 @@ class User < ActiveRecord::Base
   belongs_to :referrer, class_name: "CampusRep"
 
   # Scopes
-  # ========================================================
-  scope :online, lambda { where("last_seen > ?", 3.minutes.ago) }
+  scope :online, ->{ where("last_seen > ?", 3.minutes.ago) }
 
   # Pretty URLs
-  # ========================================================
   extend FriendlyId
   friendly_id :name, use: [:slugged, :history]
 
   # Profile Image
-  # ========================================================
   def profile_image_type
     if @profile_image_type.present?
       @profile_image_type

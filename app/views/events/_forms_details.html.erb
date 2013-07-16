@@ -16,7 +16,7 @@
     <div class="control-group required">
       <%= f.label :due_at, "When do you want the money by? (required)" %>
       <div class="controls due_at autosize <%= "field_with_error" if @event.errors[:due_at].present? %>">
-        <%= f.text_field :due_at, class: "datepicker input-block-level", placeholder: "mm/dd/yyyy" %>
+        <%= f.text_field :due_at, value: @event.due_at.to_date.to_s, class: "datepicker input-block-level", placeholder: "mm/dd/yyyy" %>
       </div>
     </div>
     <div class="control-group optional">
@@ -25,7 +25,7 @@
       <div class="btn-group input-block-level" id="event_image_type_btn_group" data-toggle="buttons-radio">
         <button type="button" class="btn third <%= "active" if @event.image_type == :default_image %>" data-value="default_image" data-name="default_image">No Image</button>
         <button type="button" class="btn third <%= "active" if @event.image_type == :url %>" data-value="url" data-name="url">URL</button>
-        <button type="button" class="btn third last <%= "active" if @event.image_type %>" data-value="upload" data-name="upload">Image Upload</button>
+        <button type="button" class="btn third last <%= "active" if @event.image_type == :upload %>" data-value="upload" data-name="upload">Image Upload</button>
       </div>
       <div class="event_image_type_option btn_group_option push-top-small" id="event_image_type_url">
         <div class="control-group optional">

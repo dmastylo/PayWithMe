@@ -31,7 +31,7 @@ class EventsController < ApplicationController
   end
   
   def new
-    @event = current_user.organized_events.new
+    @event = current_user.organized_events.new(privacy_type: Event::Privacy::PRIVATE, due_at: 1.day.from_now)
     @event.items.new
   end
 
@@ -76,10 +76,12 @@ class EventsController < ApplicationController
 
     if @event.update_attributes(params[:event])
       flash[:success] = "Event updated!"
-
       @event.update_members do
-        @event.members << members_from_users
-        @event.members << members_from_groups
+        [members_from_users, members_from_groups].flatten.each do |member|
+          unless @event.member_ids.include?(member.id)
+            @event.members << member
+          end
+        end
       end
       @event.invitation_types = invitation_types
 

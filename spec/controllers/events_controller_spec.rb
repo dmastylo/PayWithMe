@@ -69,7 +69,7 @@ describe EventsController do
     end
   end
 
-  describe :update do
+  describe "PUT #update" do
     before :each do
       @event = FactoryGirl.create(:event, organizer: current_user)
     end
@@ -83,6 +83,14 @@ describe EventsController do
         put :update, id: @event, event: FactoryGirl.attributes_for(:event, title: "New Event Title")
         @event.reload
         @event.title.should eq("New Event Title")
+      end
+
+      it "does not add members" do
+        members = FactoryGirl.create_list(:user, 2)
+        event = FactoryGirl.create(:event, members: members, title: "Old Event Title", organizer: current_user)
+        expect {
+          put :update, id: event, event: FactoryGirl.attributes_for(:event).merge(members: event.members.collect(&:email).to_json)
+        }.to_not change(Payment, :count) # Payment is the join table
       end
     end
 

@@ -12,55 +12,25 @@
       </div>
     </div>
 
-    <div class="control-group required">
-      <%= f.label :invitation_types, "How do you to invite members? (select all that apply, required)" %>
-      <%= f.hidden_field :invitation_types, value: @event.invitation_type_ids %>
-      <div class="btn-group input-block-level" id="event_invitation_types_btn_group" data-toggle="buttons-checkbox">
-        <button type="button" class="btn half push-bottom-tiny" data-name="members" data-value="1">I want to invite people by email or name.</button>
-        <button type="button" class="btn half push-bottom-tiny" data-name="link" data-value="2">I want to share a link on Facebook, email, etc.</button>
-        <div class="clearfix"></div>
-        <button type="button" class="btn half" data-name="groups" data-value="3">I have created a PayWithMe group to invite.</button>
-      </div>
-    </div>
+    <h3 style="float: left;">Invite members</h3>
+    <a href="#" id="btn-bulk-invite" class="btn btn-primary pull-right" rel="tooltip" title="Submit a comma-separated list of emails">Bulk invitation mode</a>
     <div class="clearfix"></div>
-
-    <div class="half event_invitation_types_option btn_group_option push-top-small <%= "selected" if @event.invitation_types.include?(1) %>" id="event_invitation_types_members">
-      <h3 style="float: left;">Invite members</h3>
-      <a href="#" id="btn-bulk-invite" class="btn btn-primary pull-right" rel="tooltip" title="Submit a comma-separated list of emails">Bulk invitation mode</a>
-      <div class="clearfix"></div>
-      <div class="alert alert-error hidden" id="add_member_error">
-      </div>
-      <div class="input-append autosize" id="single-invite">
-        <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
-        <%= link_to "Add", "#", class: "btn", id: "add_member" %>
-      </div>
-      <div id="bulk-invite" class="hidden">
-         <%= text_area :member, :names, placeholder: "Enter email addresses separated by commas, spaces, or new lines", class: "input-block-level", rows: 3 %>
-        <%= link_to "Add", "#", class: "btn btn-block", id: "add_members" %>
-      </div>
-      <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
-      <div id="invited_members">
-        <% @event.independent_members.each do |user| %>
-          <%= render 'users/invited_user', mustache: user_for_mustache(user) %>
-        <% end %>
-        <div class="clearfix"></div>
-      </div>
+    <div class="alert alert-error hidden" id="add_member_error">
     </div>
-
-    <div class="half last event_invitation_types_option btn_group_option push-top-small <%= "selected" if @event.invitation_types.include?(3) %>" id="event_invitation_types_groups">
-      <h3>Invite groups</h3>
-      <div class="alert alert-error hidden" id="add_group_error"></div>
-      <div class="input-append autosize">
-        <%= text_field :group, :name, placeholder: "Search for groups", class: "span4" %>
-        <%= link_to "Add", "#", class: "btn", id: "add_group" %>
-      </div>
-      <%= f.hidden_field :groups, value: (@group_ids.to_json if @group_ids) %>
-      <div id="invited_groups">
-        <% @event.groups.each do |group| %>
-          <%= render 'groups/invited_group', mustache: group_for_mustache(group) %>
-        <% end %>
-        <div class="clearfix"></div>
-      </div>
+    <div class="input-append" id="single-invite">
+      <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
+      <%= link_to "Add", "#", class: "btn", id: "add_member" %>
+    </div>
+    <div id="bulk-invite" class="hidden">
+       <%= text_area :member, :names, placeholder: "Enter email addresses separated by commas, spaces, or new lines", class: "input-block-level", rows: 3 %>
+      <%= link_to "Add", "#", class: "btn btn-block", id: "add_members" %>
+    </div>
+    <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
+    <div id="invited_members">
+      <% @event.independent_members.each do |user| %>
+        <%= render 'users/invited_user', mustache: user_for_mustache(user) %>
+      <% end %>
+      <div class="clearfix"></div>
     </div>
 
     <div class="clearfix"></div>

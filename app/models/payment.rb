@@ -35,6 +35,7 @@ class Payment < ActiveRecord::Base
   # Validations
   validates :payer_id, presence: true
   validates :event_id, presence: true
+  validates_uniqueness_of :payer_id, scope: :event_id
   validates_with PaymentAmountValidator
 
   # Callbacks
