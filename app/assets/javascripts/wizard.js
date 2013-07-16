@@ -62,6 +62,7 @@
       this.$element.find("#wizard-step-"+this.currentStep).addClass("active");
       this.$element.find("#wizard-step-"+this.currentStep+" i").addClass("icon-white");
       this.$element.find("#wizard-card-"+this.currentStep).show();
+      this.$element.find("#wizard-card-"+this.currentStep+" .wizard-card-body").show();
 
       this.$element.find("#wizard-card-"+this.currentStep+" .control-group").show();
       this.$element.find("#wizard-card-"+this.currentStep+" .autosize").trigger("show");

@@ -17,7 +17,7 @@
     <div class="clearfix"></div>
     <div class="alert alert-error hidden" id="add_member_error">
     </div>
-    <div class="input-append" id="single-invite">
+    <div class="input-append autosize" id="single-invite">
       <%= text_field :member, :name, placeholder: "Search for friends or enter email", class: "span4" %>
       <%= link_to "Add", "#", class: "btn", id: "add_member" %>
     </div>
@@ -27,7 +27,7 @@
     </div>
     <%= f.hidden_field :members, value: (@member_emails.to_json if @member_emails) %>
     <div id="invited_members">
-      <% @event.independent_members.each do |user| %>
+      <% @event.members.invited.each do |user| %>
         <%= render 'users/invited_user', mustache: user_for_mustache(user) %>
       <% end %>
       <div class="clearfix"></div>

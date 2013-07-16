@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130630001359) do
+ActiveRecord::Schema.define(:version => 20130716031602) do
 
   create_table "accounts", :force => true do |t|
     t.integer  "user_id"
@@ -248,6 +248,7 @@ ActiveRecord::Schema.define(:version => 20130630001359) do
     t.boolean  "cash",                :default => false
     t.integer  "paid_amount_cents"
     t.string   "debit_uri"
+    t.boolean  "organizer",           :default => false
   end
 
   create_table "reminder_users", :force => true do |t|

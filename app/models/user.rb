@@ -61,14 +61,14 @@ class User < ActiveRecord::Base
   has_many :member_groups, class_name: "Group", through: :group_users, source: :group
   has_many :group_users, dependent: :destroy
   
-  has_one :account
-  has_many :cards, dependent: :destroy
+  has_one :account, dependent: :destroy
+  has_many :cards, through: :account, dependent: :destroy
   
   has_many :messages, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :linked_accounts, dependent: :destroy
   has_many :news_items, dependent: :destroy
-  has_many :incoming_payments, class_name: "Payment", foreign_key: "payee_id", dependent: :destroy
+  has_many :incoming_payments, class_name: "Payment", through: :organized_events, source: :payments, dependent: :destroy
   has_many :outgoing_payments, class_name: "Payment", foreign_key: "payer_id", dependent: :destroy
   has_many :incoming_nudges, class_name: "Nudge", foreign_key: "nudgee_id"
   has_many :outgoing_nudges, class_name: "Nudge", foreign_key: "nudger_id"

@@ -35,7 +35,7 @@ class Event < ActiveRecord::Base
     # Currency attributes - don't touch *_cents
     :total, :per_person, :donation_goal, :minimum_donation,
     # Virtual attributes
-    :due_at_date, :due_at_time, :image_type, :items_attributes
+    :due_at_date, :due_at_time, :image_type, :items_attributes, :image
   attr_accessor :due_at_date, :due_at_time, :image_type, :invitation_group
   [:total, :per_person, :donation_goal, :collected, :minimum_donation].each do |field| monetize "#{field}_cents", allow_nil: true end
   has_attached_file :image
@@ -62,6 +62,9 @@ class Event < ActiveRecord::Base
     end
     def unpaid
       where("payments.paid_at IS NULL")
+    end
+    def invited
+      where("organizer = ?", false)
     end
   end
   has_many :messages, dependent: :destroy
@@ -336,6 +339,10 @@ private
   def add_organizer_to_members
     if !members.include?(organizer)
       members << organizer
+      save
+      payment = Payment.where(payer_id: organizer_id, event_id: id).first
+      payment.organizer = true
+      payment.save
     end
   end
 
@@ -355,7 +362,7 @@ private
   end
 
   def create_guest_token
-    if self.guest_token.nil? && self.invitation_type_ids.include?(InvitationType::Type::LINK)
+    if self.guest_token.nil?
       self.guest_token = ::BCrypt::Password.create("#{self.title}#{self.created_at}")
       self.save
     end
