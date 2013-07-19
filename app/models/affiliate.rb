@@ -62,6 +62,7 @@ class Affiliate < ActiveRecord::Base
   end
 
   def amount_of_referred_events
+    # self.referrals.sum('organized_events_count')
     referred_events_count = 0
     referrals.each do |referral|
       referred_events_count += referral.organized_events.count

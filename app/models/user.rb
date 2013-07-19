@@ -31,8 +31,8 @@
 #  completed_at               :datetime
 #  admin                      :boolean
 #  send_emails                :boolean          default(TRUE)
-#  referrer_id                :integer
 #  using_cash                 :boolean          default(FALSE)
+#  referrer_id                :integer
 #
 
 class User < ActiveRecord::Base
