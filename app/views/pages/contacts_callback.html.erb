@@ -15,26 +15,31 @@
 <% end %>
 
 <div class="container">
-  <div class="row">
-    <div class="span5">
-      <h3>Select Contacts to Sync</h3>
-      <div class="well">
+  <%= form_tag 'contacts' do %>
+    <div class="row">
+      <div class="span5">
+        <h3>Select Contacts to Add</h3>
+        <div class="well">
+          <% if @contacts.any? %>
+            <ul class="contacts">
+              <%= render partial: 'contacts/contact', collection: @contacts, as: :contact %>
+            </ul>
+          <% else %>
+            No contacts available!
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="span5">
         <% if @contacts.any? %>
-          <ul class="contacts">
-            <%= render partial: 'contacts/contact', collection: @contacts, as: :contact %>
-          </ul>
-        <% else %>
-          No contacts available!
+          <%= submit_tag "Sync Contacts", class: "btn btn-primary btn-block" %>
+          <!-- <a href="#" id="add_contacts" class="btn btn-primary btn-block">Sync Contacts</a> -->
         <% end %>
       </div>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="span5">
-      <a href="#" id="add_contacts" class="btn btn-primary btn-block">Sync Contacts</a>
-    </div>
-  </div>
+  <% end %>
 </div>
 
 <% content_for(:before_body_end) do %>
@@ -49,69 +54,65 @@
         if ($clicked.hasClass('chosen'))
         {
           $clicked.removeClass('chosen');
+          $clicked.children(':checkbox').attr('checked', false);
         }
         else
         {
           $clicked.addClass('chosen');
+          $clicked.children(':checkbox').attr('checked', true);
         }
       });
 
-      $('#add_contacts').click(function(e)
-      {
-        console.log("adding contacts");
+      // $('#add_contacts').click(function(e)
+      // {
+      //   console.log("adding contacts");
 
-        // Posting to create contacts
-        var path = "/contacts";
-        var method = "post";
-        var params = [];
-        var contact_count = 0;
-        $('.chosen').each(function()
-        {
-          var $this = $(this);
+      //   // Posting to create contacts
+      //   var path = "/contacts";
+      //   var method = "post";
+      //   var params = [];
+      //   var contact_count = 0;
+      //   $('.chosen').each(function()
+      //   {
+      //     var $this = $(this);
 
-          // var object = {
-          //   name: $this.data('name'),
-          //   email: $this.data('email')
-          // };
-          // var json = JSON.stringify([{"name":$this.data('name'),"email":$this.data('email')}]);
-          var object = $this.data('name') + ', ' + $this.data('email');
+      //     // var object = {
+      //     //   name: $this.data('name'),
+      //     //   email: $this.data('email')
+      //     // };
+      //     // var json = JSON.stringify([{"name":$this.data('name'),"email":$this.data('email')}]);
+      //     var object = $this.data('name') + ', ' + $this.data('email');
 
-          // params.push(JSON.stringify(json));
-          // params.push('{"name"=>"' + $this.data('name') + '", "email"=>"' + $this.data('email') + '"}');
-          // params["contact_" + contact_count] = JSON.stringify(json);
-          params["contact_" + contact_count] = object;
+      //     // params.push(JSON.stringify(json));
+      //     // params.push('{"name"=>"' + $this.data('name') + '", "email"=>"' + $this.data('email') + '"}');
+      //     // params["contact_" + contact_count] = JSON.stringify(json);
+      //     params["contact_" + contact_count] = object;
 
-          ++contact_count;
-        });
+      //     ++contact_count;
+      //   });
 
-        // The rest of this code assumes you are not using a library.
-        // It can be made less wordy if you use one.
-        var form = document.createElement("form");
-        form.setAttribute("method", method);
-        form.setAttribute("action", path);
+      //   // The rest of this code assumes you are not using a library.
+      //   // It can be made less wordy if you use one.
+      //   var form = document.createElement("form");
+      //   form.setAttribute("method", method);
+      //   form.setAttribute("action", path);
 
-        // var hiddenField = document.createElement("input");
-        // hiddenField.setAttribute("type", "hidden");
-        // hiddenField.setAttribute("name", "contacts");
-        // hiddenField.setAttribute("value", params);
-        // form.appendChild(hiddenField);
+      //   for(var key in params)
+      //   {
+      //     if(params.hasOwnProperty(key))
+      //     {
+      //       var hiddenField = document.createElement("input");
+      //       hiddenField.setAttribute("type", "hidden");
+      //       hiddenField.setAttribute("name", "contact[" + key + "]");
+      //       hiddenField.setAttribute("value", params[key]);
 
-        for(var key in params)
-        {
-          if(params.hasOwnProperty(key))
-          {
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", "contact[" + key + "]");
-            hiddenField.setAttribute("value", params[key]);
+      //       form.appendChild(hiddenField);
+      //     }
+      //   }
 
-            form.appendChild(hiddenField);
-          }
-        }
-
-        document.body.appendChild(form);
-        form.submit();
-      });
+      //   document.body.appendChild(form);
+      //   form.submit();
+      // });
     });
   </script>
 <% end %>

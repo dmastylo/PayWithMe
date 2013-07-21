@@ -11,5 +11,11 @@
 #
 
 class Contact < ActiveRecord::Base
+
+  # Attr Accessible
   attr_accessible :email, :name, :user_id
+
+  # Scope
+  default_scope order('name ASC')
+
 end

@@ -102,7 +102,7 @@ PayWithMe::Application.routes.draw do
 
   resources :affiliates, only: [:show, :new, :create, :edit, :update, :destroy]
 
-  resources :contacts, only: [:create]
+  resources :contacts, only: [:index, :create, :destroy]
 
   match '/vanity(/:action(/:id(.:format)))', :controller=>:vanity
 

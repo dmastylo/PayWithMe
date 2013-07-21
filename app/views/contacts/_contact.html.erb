@@ -1,8 +1,11 @@
-<li class="contact" data-name="<%= contact[:name] %>" data-email="<%= contact[:email] %>">
-  <div class="name">
-    <h4><%= contact[:name] %></h4>
-  </div>
-  <div class="email">
-    <%= contact[:email] %>
-  </div>
-</li>
+<% unless contact[:exists] %>
+  <li class="contact" data-name="<%= contact[:name] %>" data-email="<%= contact[:email] %>">
+    <%= check_box_tag "contact[" + contact[:email] + "]", contact[:name] + ", " + contact[:email], false, class: "hidden-checkbox" %>
+    <div class="name">
+      <h4><%= contact[:name] %></h4>
+    </div>
+    <div class="email">
+      <%= contact[:email] %>
+    </div>
+  </li>
+<% end %>

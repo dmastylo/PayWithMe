@@ -11,8 +11,11 @@ class PagesController < ApplicationController
 
   def contacts_callback
     @contacts = request.env['omnicontacts.contacts']
-    @gmail_user = request.env['omnicontacts.user']
     @contacts.delete_if { |contact| contact[:email].blank? }
+    @contacts.each do |contact|
+      contact[:exists] = true unless current_user.contacts.find_by_email(contact[:email]).blank?
+    end
+    @contacts.sort_by! { |contact| contact[:name].downcase }
   end
 
 private

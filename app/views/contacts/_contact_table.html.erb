@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="row">
+    <div class="span12">
+      <% if @contacts.any? %>
+        <table class="table table-bordered table-striped">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Delete</th>
+          </tr>
+          <%= render partial: 'contacts/index_contact', collection: @contacts, as: :contact %>
+        </table>
+        <div class="clearfix"></div>
+      <% else %>
+        No contacts available!
+      <% end %>
+    </div>
+  </div>
+</div>
