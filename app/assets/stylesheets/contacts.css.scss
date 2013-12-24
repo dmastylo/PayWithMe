@@ -1,0 +1,35 @@
+// Place all the styles related to the Contacts controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.contacts
+{
+  position: relative;
+  list-style-type: none;
+  margin: 0;
+  height: 380px;
+  overflow-y: scroll;
+
+  .contact
+  {
+    margin-bottom: $smallMargin;
+    margin-right: 10px;
+    border: 2px solid $lightGray;
+
+    .hidden-checkbox
+    {
+      position: absolute;
+      display: none;
+    }
+
+    .email
+    {
+      font-style: italic;
+    }
+  }
+}
+
+.chosen
+{
+  background-color: $green;
+}

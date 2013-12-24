@@ -80,6 +80,7 @@ class User < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   has_many :created_users, class_name: "User", foreign_key: "creator_id"
   belongs_to :referrer, class_name: "Affiliate"
+  has_many :contacts, dependent: :destroy
 
   # Scopes
   # ========================================================

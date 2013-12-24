@@ -1,0 +1,20 @@
+<% provide(:title, "Your Contacts") %>
+
+<% content_for(:wrapper_top) do %>
+  <div class="container">
+    <div class="row">
+      <div class="span8">
+        <div class="page-header">
+          <h2>
+            Your Contacts
+          </h2>
+        </div>
+      </div>
+      <div class="span4">
+        <%= link_to 'Add More Contacts', 'contacts/gmail', class: "btn btn-primary btn-block push-top-title" %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= render partial: 'contacts/contact_table' %>

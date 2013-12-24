@@ -1,0 +1,11 @@
+<tr>
+  <td>
+    <%= contact.name %>
+  </td>
+  <td>
+    <%= contact.email %>
+  </td>
+  <td>
+    <%= link_to "Delete contact", contact, class: "btn btn-block btn-danger", data: { confirm: "Sre you sure you want to delete this contact? You can readd them later if you like." }, method: :delete %>
+  </td>
+</tr>
